@@ -1,0 +1,12 @@
+<template>
+    <div>
+     <v-img
+        width="1200"
+        height="300"
+        :aspect-ratio="1"
+        src="https://media.istockphoto.com/id/1270372113/pt/vetorial/online-shopping-isometric-creative-banner-design-template-with-smartphone-integrated-atm.jpg?s=1024x1024&w=is&k=20&c=GOtN2-DLylb8lOs2Aug_CzETiJ9OlTmOsZH_OIl9g5w="
+        cover
+        align="center"
+      ></v-img>
+    </div>
+</template>
