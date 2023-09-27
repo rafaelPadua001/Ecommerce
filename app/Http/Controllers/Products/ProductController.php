@@ -157,7 +157,6 @@ class ProductController extends Controller
     }
     public function update(Request $request, $id)
     {
-
         try {
             $product = Product::where('id', $id)->first()->update($request->all());
             if ($request->images) {

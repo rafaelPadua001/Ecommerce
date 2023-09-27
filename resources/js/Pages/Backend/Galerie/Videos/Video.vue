@@ -2,14 +2,14 @@
     <div>
         <Dashboard />
     </div>
-
-    <v-container>
+  
         <div v-if="!videos">
             <v-card>
                 <v-card-text>Nenhum Registro encontrado</v-card-text>
             </v-card>
         </div>
-        <v-card width="900">
+        <div v-else>
+            <v-card width="900">
             <v-card-text>
                 <v-data-table :headers="headers" :items="videos" :sort-by="[{ key: 'id', order: 'desc' }]"
                     class="elevation-1">
@@ -61,7 +61,9 @@
                 </v-data-table>
             </v-card-text>
         </v-card>
-    </v-container>
+        </div>
+
+    
 </template>
 
 <script>
@@ -83,10 +85,10 @@ export default {
                 key: 'name',
             },
             { title: 'Link', key: 'link' },
-            { title: 'Plataform', key: 'link' },
-            { title: 'Created', key: 'created_at' },
-            { title: 'product_id', key: 'product_id' },
+            { title: 'Plataform', key: 'plataform' },
+           { title: 'product_id', key: 'product_id' },
             { title: 'user_id', key: 'user_id' },
+            { title: 'Created', key: 'created_at' },
             { title: 'Actions', key: 'actions', sortable: false },
         ],
     }),
@@ -106,16 +108,15 @@ export default {
                 })
         },
         deleteItem(item) {
-            this.editedIndex = this.categories.indexOf(item)
+            this.editedIndex = this.videos.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialogDelete = true
         },
         deleteItemConfirm() {
-            const itemId = this.editedIndex;
-
-            axios.delete(`/api/categories/delete/${itemId}`)
+           
+            axios.delete(`/api/videos/delete/${this.editedItem.id}`)
                 .then((response) => {
-                    this.categories.splice(this.editedIndex, 1);
+                    this.videos.splice(this.editedIndex, 1);
                 })
                 .catch((response) => {
                     alert('Error: ' + response);

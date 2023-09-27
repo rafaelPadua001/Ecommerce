@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ProductVideos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ProductVideos;
+use App\Models\Product;
 use Exception;
 
 class ProductVideoController extends Controller
@@ -30,5 +31,19 @@ class ProductVideoController extends Controller
             return response()->json($e);
         }
         
+    }
+    public function destroy($id){
+        $video = ProductVideos::findOrFail($id);
+        $product_video = Product::where('id', $video->product_id);
+        try{
+            $video->delete();
+            $remove_video_product = $product_video->update([
+                'video' => null,
+            ]);
+            return response()->json();
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
     }
 }

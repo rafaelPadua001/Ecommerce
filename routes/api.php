@@ -8,6 +8,7 @@ use App\Http\Controllers\Subcategories\SubcategoriesController;
 use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProductSeo\ProductSeoController;
 use App\Http\Controllers\ProductStock\ProductStockController;
+use App\Http\Controllers\ProductVideos\ProductVideoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,3 +50,6 @@ Route::post('/stocks/update/{id}', [ProductStockController::class, 'update'])->n
 
 //Images route
 Route::delete('/images/delete/{id}', [ProductImagesController::class, 'destroy'])->name('image.destroy');
+
+//Video route
+Route::delete('/videos/delete/{id}', [ProductVideoController::class, 'destroy'])->name('videos.destroy');

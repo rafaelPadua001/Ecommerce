@@ -5,19 +5,11 @@
 
     <v-container>
         <v-row no-gutters>
-            <div v-if="images.length == 0">
-                <v-col>
-                    <v-card width="900">
-                        <v-card-text>Nenhum registro encontrado</v-card-text>
-                    </v-card>
-                </v-col>
-            </div>
-
-            <div v-else>
-                <v-col v-for="n in 3" :key="n" cols="12" sm="4">
+            
+                <v-col v-for="(image, index) in images" :key="index">
                     <v-sheet class="ma-2 pa-2">
                         <div>
-                            <v-card class="mx-auto" max-width="500" v-for="(image, index) in images" :key="index">
+                            <v-card class="mx-auto" max-width="500">
                                 <v-img :src="'storage/products/' + image.name + '.' + image.extension"
                                     :lazy-src="'./storage/products/' + image.name + '.' + image.extension" class="align-end"
                                     gradient="to bottom, rgba(0, 0, 0, .1), rgba(0,0,0,.5)" height="250px" cover>
@@ -49,7 +41,7 @@
                         </div>
                     </v-sheet>
                 </v-col>
-            </div>
+            
 
         </v-row>
     </v-container>
@@ -98,7 +90,6 @@ export default {
                 })
         },
         deleteItem(item) {
-            console.log(item);
             this.editedIndex = this.images.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialogDelete = true
