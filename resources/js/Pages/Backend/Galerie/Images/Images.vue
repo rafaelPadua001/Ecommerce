@@ -5,11 +5,10 @@
 
     <v-container>
         <v-row no-gutters>
-            
-                <v-col v-for="(image, index) in images" :key="index">
+            <v-col v-for="(image, index) in images" :key="index">
                     <v-sheet class="ma-2 pa-2">
                         <div>
-                            <v-card class="mx-auto" max-width="500">
+                            <v-card class="mx-auto" width="1500" max-width="300">
                                 <v-img :src="'storage/products/' + image.name + '.' + image.extension"
                                     :lazy-src="'./storage/products/' + image.name + '.' + image.extension" class="align-end"
                                     gradient="to bottom, rgba(0, 0, 0, .1), rgba(0,0,0,.5)" height="250px" cover>
