@@ -16,52 +16,45 @@
             <v-col cols="12" sm="4" v-for="category in categories" :key="category.id">
               <div class="d-flex justify-space-around">
                 <v-hover>
-                  <template v-slot:default="{isHovering, props}">
-                    <v-card
-                    v-bind="props" 
-                    width="250"
-                    :color="isHovering ? 'orange-darken-2' : undefined"
-                    :to="'/categories/' + category.id">
-                  <v-icon icon="fas fa-mobile-screen" cover :key="category.id">
-                  </v-icon>
+                  <template v-slot:default="{ isHovering, props }">
+                    <v-card v-bind="props" width="250" :color="isHovering ? 'orange-darken-2' : undefined"
+                      :to="`/subcategories/all/${category.id}`">
+                      <v-icon icon="fas fa-mobile-screen" cover :key="category.id">
+                      </v-icon>
 
-                  <v-card-text>
-                    {{ category.name }}
-                  </v-card-text>
+                      <v-card-text>
+                        {{ category.name }}
+                      </v-card-text>
 
-                </v-card>
+                    </v-card>
                   </template>
-               
+
                 </v-hover>
-               
+
               </div>
             </v-col>
-          <!--  <v-col cols="12" sm="4" v-for="(icon, index) in icons" :key="index">
+            <v-col cols="12" sm="4" v-for="(icon, index) in icons" :key="index">
               <div class="d-flex justify-space-around">
                 <v-hover>
-                  <template v-slot:default="{isHovering, props}">
-                    <v-card
-                    v-bind="props" 
-                    width="250"
-                    :color="isHovering ? 'orange-darken-2' : undefined"
-                    >
+                  <template v-slot:default="{ isHovering, props }">
+                    <v-card v-bind="props" width="250" :color="isHovering ? 'orange-darken-2' : undefined">
 
-                    <v-icon :icon="icon" cover :key="index">
-                    </v-icon>
+                      <v-icon :icon="icon" cover :key="index">
+                      </v-icon>
 
 
-                    <v-card-text>
+                      <v-card-text>
 
-                      {{ icon }}
+                        {{ icon }}
 
-                    </v-card-text>
+                      </v-card-text>
                     </v-card>
                   </template>
                 </v-hover>
-                
+
 
               </div>
-            </v-col>-->
+            </v-col>
           </v-row>
 
         </div>
@@ -145,7 +138,7 @@
                             </v-btn>
 
                             <v-btn class="ms-4 bg-green-darken-4" variant="outlined" color="green" size="small"
-                              elevation="8">
+                              elevation="8" @click="buy(product)">
                               <v-icon icon="fas fa-money-bill-transfer"></v-icon>
                               <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
                             </v-btn>
@@ -162,7 +155,156 @@
               </v-col>
             </v-row>
           </v-container>
+          <v-dialog v-model="buyDialog" max-width="800">
 
+            <v-card>
+              <v-card-title>
+                <v-toolbar>
+                  Buy
+                <template v-slot:append>
+                  <v-btn v-bind="props" icon @click="closeBuy">
+                    <v-icon icon="fas fa-close"></v-icon>
+                  </v-btn>
+                </template>
+              </v-toolbar>
+              </v-card-title>
+            
+              <v-divider></v-divider>
+              <v-spacer></v-spacer>
+
+              <v-card-text>
+                <v-row dense>
+                  <v-col col="12" sm="6">
+                    <v-sheet class="ma-2 pa-2">
+                      <v-row>
+                        <v-col>
+                          <v-card width="250">
+                            <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index">
+                              <v-img v-if="index === 0"  :lazy-src="`./storage/products/${image}`"
+                                :src="`./storage/products/${image}`" height="270"
+                                aspect-ratio="16/9">
+                                <template v-slot:placeholder>
+                                  <div class="d-flex align-center justify-center fill-height">
+                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                                  </div>
+                                </template>
+                              </v-img>
+                            </div>
+
+
+
+
+                          </v-card>
+
+                        </v-col>
+                        
+                      </v-row>
+                      <v-spacer></v-spacer>
+                      <v-divider></v-divider>
+                      <v-row>
+
+                        <v-col v-for="(image, index) in JSON.parse(selectProduct.images)" cols="2" sm="3">
+                          <v-card width="50">
+                            <div :key="index > 0">
+                              <v-img cover :lazy-src="`./storage/products/${image}`" :src="`./storage/products/${image}`">
+                                <template v-slot:placeholder>
+                                  <div class="d-flex align-center justify-center fill-height">
+                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                                  </div>
+                                </template>
+                              </v-img>
+                            </div>
+                          </v-card>
+
+                        </v-col>
+
+                      </v-row>
+                    </v-sheet>
+                  </v-col>
+
+                  <v-col col="12" sm="4">
+                    <div>
+                      {{ selectProduct.name }}
+                    </div>
+                    <div align="end">
+                      R$ {{ selectProduct.price }}
+                    </div>
+                    <v-divider> </v-divider>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+
+
+                    <div v-if="selectProduct.availability == 1" align="end">
+                      availabity here space: {{ selectProduct.availability }}
+                      count availation: (10)
+                    </div>
+                    <div>
+                      <v-text-field
+                      v-model="quantity"
+                      label="Quantity"
+                      :placeholder="1"
+                      value="1"
+                    >
+                    <template v-slot:append>
+                      <v-icon color="red">
+                        fas fa-plus
+                      </v-icon>
+                    </template>
+                    <template v-slot:prepend>
+                      <v-icon color="green">
+                        fas fa-minus
+                      </v-icon>
+                    </template>
+                  </v-text-field>
+                    </div>
+                  
+                
+                    <!-- <div>
+                        {{ selectProduct.description }}
+                      </div>-->
+
+                  </v-col>
+                
+                  <v-col>
+
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col col="6" sm="4"></v-col>
+               
+                  <v-col col="2" sm="4">
+                    
+                  </v-col>
+                </v-row>
+                <v-row>
+
+                  <v-col col="12" sm="12">
+                    <div>
+                      <v-card>
+                        <v-title>Description</v-title>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-divider></v-divider>
+                        <v-card-title>
+                          {{ selectProduct.description }}
+                        </v-card-title>
+                      </v-card>
+
+                    </div>
+                  </v-col>
+                </v-row>
+                <v-spacer></v-spacer>
+
+              </v-card-text>
+
+             <!-- <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn text="Close Dialog" @click="closeBuy"></v-btn>
+              </v-card-actions>-->
+            </v-card> 
+
+          </v-dialog>
         </div>
 
       </v-container>
@@ -185,6 +327,9 @@ export default {
     products: [],
     images: [],
     categories: [],
+    productIndex: -1,
+    selectProduct: {},
+    buyDialog: false,
     icons: [
       'fas fa-clock',
       'fas fa-suitcase-medical',
@@ -200,6 +345,11 @@ export default {
 
     ]
   }),
+  watch: {
+    buyDialog(val) {
+      val || this.closeBuy();
+    }
+  },
   methods: {
     getProducts() {
       axios.get('/products/show')
@@ -222,6 +372,15 @@ export default {
         .catch((response) => {
           return alert('Erro :' + response);
         });
+    },
+    buy(product) {
+      this.productIndex = this.products.indexOf(product);
+      this.selectProduct = Object.assign({}, product);
+      this.buyDialog = true;
+    },
+    closeBuy() {
+      this.buyDialog = false;
+
     }
 
   },
