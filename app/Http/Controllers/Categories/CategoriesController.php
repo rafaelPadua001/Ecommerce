@@ -23,6 +23,10 @@ class CategoriesController extends Controller
         
         return response()->json($categories);
     }
+    public function show(){
+        $categories = Categories::all();
+        return response()->json($categories);
+    }
     public function store(Request $request, $id){
         $data = $request;
         $user = User::findOrFail($id);
