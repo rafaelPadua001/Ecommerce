@@ -76,14 +76,12 @@ Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('log
 
 //Categories routes
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index')->middleware('auth');
-Route::get('/categories/show', [CategoriesController::class, 'show'])->name('categories.show');
 
 //Subcategories routes
 Route::get('/subcategories', [SubcategoriesController::class, 'index'])->name('subcategories.index')->middleware('auth');
 
 //Product routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth');
-Route::get('/products/show', [ProductController::class, 'index'])->name('products.show');
 
 //SEO routes
 Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->middleware('auth');

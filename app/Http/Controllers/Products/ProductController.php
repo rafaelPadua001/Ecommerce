@@ -155,12 +155,6 @@ class ProductController extends Controller
             $user_id
         );
     }
-    public function show(){
-
-        $products = Product::orderBy('id', 'desc')->get();
-
-        return response()->json($products);
-    }
     public function update(Request $request, $id)
     {
         try {
