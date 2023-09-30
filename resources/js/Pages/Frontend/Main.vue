@@ -104,6 +104,7 @@
                           <v-col cols="12">
                             {{ product.name }}, {{ product.description }}
                           </v-col>
+                          
                         </v-row>
                         <v-row>
                           <v-btn-group>
@@ -155,16 +156,25 @@
               </v-col>
             </v-row>
           </v-container>
-          <v-dialog v-model="buyDialog" max-width="800">
+          <v-dialog v-model="buyDialog" :max-width="1200">
 
-            <v-card>
+            <v-card :max-width="1200">
               <v-card-title>
-                <v-toolbar>
+                <v-toolbar class="bg-transparent">
                   Buy
                 <template v-slot:append>
-                  <v-btn v-bind="props" icon @click="closeBuy">
-                    <v-icon icon="fas fa-close"></v-icon>
+                  <v-btn-group>
+                    <v-btn v-bind="props" icon @click="" size="small">
+                    <v-icon icon="fa-regular fa-heart fa-2xs" ></v-icon>
                   </v-btn>
+                  <v-btn v-bind="props" icon @click="" size="small">
+                    <v-icon icon="fas fa-share-nodes fa-2xs" ></v-icon>
+                  </v-btn>
+                  <v-btn v-bind="props" icon @click="closeBuy" size="small">
+                    <v-icon icon="fas fa-close fa-2xs" ></v-icon>
+                  </v-btn>
+                  </v-btn-group>
+                 
                 </template>
               </v-toolbar>
               </v-card-title>
@@ -178,11 +188,11 @@
                     <v-sheet class="ma-2 pa-2">
                       <v-row>
                         <v-col>
-                          <v-card width="250">
+                          <v-card :min-width="150" :max-width="1500">
                             <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index">
-                              <v-img v-if="index === 0"  :lazy-src="`./storage/products/${image}`"
-                                :src="`./storage/products/${image}`" height="270"
-                                aspect-ratio="16/9">
+                              <v-img v-if="index === 0" :lazy-src="`./storage/products/${image}`"
+                                :src="`./storage/products/${image}`" 
+                                aspect-ratio="1/1">
                                 <template v-slot:placeholder>
                                   <div class="d-flex align-center justify-center fill-height">
                                     <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
@@ -190,11 +200,7 @@
                                 </template>
                               </v-img>
                             </div>
-
-
-
-
-                          </v-card>
+                         </v-card>
 
                         </v-col>
                         
@@ -222,51 +228,154 @@
                     </v-sheet>
                   </v-col>
 
-                  <v-col col="12" sm="4">
-                    <div>
-                      {{ selectProduct.name }}
-                    </div>
-                    <div align="end">
-                      R$ {{ selectProduct.price }}
-                    </div>
+                  <v-col col="12" sm="6">
+                    <p justify="start" class="bg-grey-lighten-4">
+                      {{ selectProduct.name }}  
+                    </p>
                     <v-divider> </v-divider>
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+
+                    <p float="end" class="text-h5" color="red">
+                      R$ {{ selectProduct.price }}
+                    </p>
+                  
 
 
-                    <div v-if="selectProduct.availability == 1" align="end">
-                      availabity here space: {{ selectProduct.availability }}
-                      count availation: (10)
+                    <div v-if="selectProduct.availability == 1" 
+                      justify="start"
+                    >
+                      <v-responsive
+                        class="mx-auto"
+                      
+                        
+                      >
+                      <v-rating
+                        v-model="rating"
+                        bg-color="orange-lighten-1"
+                        color="blue"
+                        size="x-small"
+                      ></v-rating>
+                      </v-responsive>
+                     
+                   <!--   count availation: ({{selectProduct.stock_qua}})este 2 -->
+                    </div>
+
+                    <div  justify="start">
+                       <v-responsive
+                        width="150"
+                        max-width="165"
+                        justify="start"
+                      >
+                      
+                        <v-text-field
+                          v-model="quantity"
+                          label="Quantity"
+                          :placeholder="1"
+                         
+                        >
+                        <template v-slot:append>
+                          <v-icon 
+                            class="grey-lighten-4"
+                            size="x-small"
+                            @click="quantityIncrement">
+                            fas fa-plus fa-2xs
+                          </v-icon>
+                        </template>
+                        <template v-slot:prepend>
+                          <v-icon 
+                            class="grey-lighten-4"
+                            size="x-small"
+                            @click="quantityDecrement">
+                            fas fa-minus
+                          </v-icon>
+                        </template>
+                      </v-text-field>
+                      </v-responsive>
+                      
+                    </div>
+                   <!-- <div justify="start">
+                       <v-responsive
+                        class="mx-auto"
+                        width="100"
+                        max-width="100"
+                     >
+                        
+                        <v-text-field
+                          v-model="postal_code"
+                          label="postal code"
+                          :placeholder="1"
+                        >
+
+                      </v-text-field>
+                      <v-btn variant="plain" color="success" size="x-small">
+                          Calcular Frete</v-btn>
+                      </v-responsive>
+                      
+                    </div>-->
+                    <div>
+                      <v-btn-group>
+                        <v-btn 
+                          class="mx-auto"
+                          v-for="icon in social_icons"
+                          :key="icon"
+                          icon
+                          variant="text"
+                        >
+                          <v-icon :icon="icon"></v-icon>
+                        </v-btn>
+                      </v-btn-group>
                     </div>
                     <div>
-                      <v-text-field
-                      v-model="quantity"
-                      label="Quantity"
-                      :placeholder="1"
-                      value="1"
-                    >
-                    <template v-slot:append>
-                      <v-icon color="red">
-                        fas fa-plus
-                      </v-icon>
-                    </template>
-                    <template v-slot:prepend>
-                      <v-icon color="green">
-                        fas fa-minus
-                      </v-icon>
-                    </template>
-                  </v-text-field>
+                      <v-btn-group>
+                        <v-btn variant="outlined" color="success" size="small" :loading="loading"  @click="loading = !loading">
+                          <v-icon icon="fa-solid fa-cart-shopping" size="large"></v-icon>
+                            Comprar
+                             <template v-slot:loader>
+                              <v-progress-circular indeterminate>Loading ...</v-progress-circular>
+                           
+                            </template>
+                        </v-btn>
+                        <v-btn variant="outlined" color="warning" size="small" :loading="loading_cart" @click="loading_cart = !loading_cart">
+                          <v-icon icon="fas fa-cart-plus" size="large"></v-icon>Carrinho
+                          <template v-slot:loader>
+                              <v-progress-circular indeterminate text="teste">   Loading ...</v-progress-circular>
+                           
+                            </template>
+                          
+                        </v-btn>
+                      </v-btn-group>
                     </div>
+
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-divider></v-divider>
+                   
+                    <div>
+                      <v-card>
+                        <v-card-title class="text-h5">Description:</v-card-title>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <v-divider></v-divider>
+                        <v-card-text>
+                          {{ selectProduct.description }}
+                        </v-card-text>
+
+                      </v-card>
+
+                    </div>
+
                   
-                
                     <!-- <div>
                         {{ selectProduct.description }}
                       </div>-->
-
+                      
                   </v-col>
                 
                   <v-col>
-
+                  
                   </v-col>
                 </v-row>
                 <v-row>
@@ -281,12 +390,12 @@
                   <v-col col="12" sm="12">
                     <div>
                       <v-card>
-                        <v-title>Description</v-title>
+                        <v-title>Comments</v-title>
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
                         <v-divider></v-divider>
                         <v-card-title>
-                          {{ selectProduct.description }}
+                          List Coments Here...
                         </v-card-title>
                       </v-card>
 
@@ -330,6 +439,11 @@ export default {
     productIndex: -1,
     selectProduct: {},
     buyDialog: false,
+    quantity: 1,
+    rating: 0,
+    postal_code: 0,
+    loading: false,
+    loading_cart: false,
     icons: [
       'fas fa-clock',
       'fas fa-suitcase-medical',
@@ -343,11 +457,35 @@ export default {
       'fas fa-shirt',
       'fas fa-computer',
 
+    ],
+    social_icons: [
+      'fa-brands fa-facebook',
+      'fa-brands fa-instagram',
+      'fa-brands fa-whatsapp',
+      'fa-brands fa-x-twitter',
+      'fa-brands fa-telegram',
     ]
   }),
+ 
   watch: {
     buyDialog(val) {
       val || this.closeBuy();
+    },
+    loading(val){
+      if(!val) return 
+        setTimeout(() => {
+          this.loading = false
+        }, 2000);
+      
+    },
+    loading_cart(val){
+      if(!val) return
+      alert('Estamos criando o nosso carrinho...');
+        setTimeout(() => {
+          this.loading_cart = false
+         
+        }, 2000);
+      
     }
   },
   methods: {
@@ -381,6 +519,21 @@ export default {
     closeBuy() {
       this.buyDialog = false;
 
+    },
+    quantityIncrement(){
+     this.quantity++;
+    },
+    quantityDecrement(){
+      if(this.quantity >= 1){
+        this.quantity--;  
+      }
+      else{
+        alert('apenas numeros inteiros são aceitos');
+      }
+      
+    },
+    checkout(){
+      alert('Redirect to checkout... wait');
     }
 
   },
