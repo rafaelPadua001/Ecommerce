@@ -59,11 +59,22 @@
 
         </div>
 
-
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
 
+        <div>
+          <h4 align="start">Higlights</h4>
+          <v-divider></v-divider>
+          <v-spacer></v-spacer>
+
+          Produtos em destaque
+        </div>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+
+       
         <div>
           <h4 align="left">All Products</h4>
 
@@ -73,7 +84,8 @@
 
           <v-container>
             <v-row no-gutters>
-              <v-col v-for="product in products" :key="n" cols="12" sm="4">
+              <v-col v-if="!products"><h4>No data to loading...</h4></v-col>
+              <v-col v-else v-for="product in products" :key="n" cols="12" sm="4">
 
                 <v-sheet class="ma-2 pa-2">
                   <v-hover v-slot="{ isHovering, props }">
