@@ -104,7 +104,7 @@
                           <v-col cols="12">
                             {{ product.name }}, {{ product.description }}
                           </v-col>
-                          
+
                         </v-row>
                         <v-row>
                           <v-btn-group>
@@ -162,23 +162,23 @@
               <v-card-title>
                 <v-toolbar class="bg-transparent">
                   Buy
-                <template v-slot:append>
-                  <v-btn-group>
-                    <v-btn v-bind="props" icon @click="" size="small">
-                    <v-icon icon="fa-regular fa-heart fa-2xs" ></v-icon>
-                  </v-btn>
-                  <v-btn v-bind="props" icon @click="" size="small">
-                    <v-icon icon="fas fa-share-nodes fa-2xs" ></v-icon>
-                  </v-btn>
-                  <v-btn v-bind="props" icon @click="closeBuy" size="small">
-                    <v-icon icon="fas fa-close fa-2xs" ></v-icon>
-                  </v-btn>
-                  </v-btn-group>
-                 
-                </template>
-              </v-toolbar>
+                  <template v-slot:append>
+                    <v-btn-group>
+                      <v-btn v-bind="props" icon @click="" size="small">
+                        <v-icon icon="fa-regular fa-heart fa-2xs"></v-icon>
+                      </v-btn>
+                      <v-btn v-bind="props" icon @click="" size="small">
+                        <v-icon icon="fas fa-share-nodes fa-2xs"></v-icon>
+                      </v-btn>
+                      <v-btn v-bind="props" icon @click="closeBuy" size="small">
+                        <v-icon icon="fas fa-close fa-2xs"></v-icon>
+                      </v-btn>
+                    </v-btn-group>
+
+                  </template>
+                </v-toolbar>
               </v-card-title>
-            
+
               <v-divider></v-divider>
               <v-spacer></v-spacer>
 
@@ -191,8 +191,7 @@
                           <v-card :min-width="150" :max-width="1500">
                             <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index">
                               <v-img v-if="index === 0" :lazy-src="`./storage/products/${image}`"
-                                :src="`./storage/products/${image}`" 
-                                aspect-ratio="1/1">
+                                :src="`./storage/products/${image}`" aspect-ratio="1/1">
                                 <template v-slot:placeholder>
                                   <div class="d-flex align-center justify-center fill-height">
                                     <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
@@ -200,10 +199,10 @@
                                 </template>
                               </v-img>
                             </div>
-                         </v-card>
+                          </v-card>
 
                         </v-col>
-                        
+
                       </v-row>
                       <v-spacer></v-spacer>
                       <v-divider></v-divider>
@@ -230,7 +229,7 @@
 
                   <v-col col="12" sm="6">
                     <p justify="start" class="bg-grey-lighten-4">
-                      {{ selectProduct.name }}  
+                      {{ selectProduct.name }}
                     </p>
                     <v-divider> </v-divider>
                     <v-spacer></v-spacer>
@@ -240,62 +239,36 @@
                     <p float="end" class="text-h5" color="red">
                       R$ {{ selectProduct.price }}
                     </p>
-                  
 
 
-                    <div v-if="selectProduct.availability == 1" 
-                      justify="start"
-                    >
-                      <v-responsive
-                        class="mx-auto"
-                      
-                        
-                      >
-                      <v-rating
-                        v-model="rating"
-                        bg-color="orange-lighten-1"
-                        color="blue"
-                        size="x-small"
-                      ></v-rating>
+
+                    <div v-if="selectProduct.availability == 1" justify="start">
+                      <v-responsive class="mx-auto">
+                        <v-rating v-model="rating" bg-color="orange-lighten-1" color="blue" size="x-small"></v-rating>
                       </v-responsive>
-                     
-                   <!--   count availation: ({{selectProduct.stock_qua}})este 2 -->
+
+                      <!--   count availation: ({{selectProduct.stock_qua}})este 2 -->
                     </div>
 
-                    <div  justify="start">
-                       <v-responsive
-                        width="150"
-                        max-width="165"
-                        justify="start"
-                      >
-                      
-                        <v-text-field
-                          v-model="quantity"
-                          label="Quantity"
-                          :placeholder="1"
-                         
-                        >
-                        <template v-slot:append>
-                          <v-icon 
-                            class="grey-lighten-4"
-                            size="x-small"
-                            @click="quantityIncrement">
-                            fas fa-plus fa-2xs
-                          </v-icon>
-                        </template>
-                        <template v-slot:prepend>
-                          <v-icon 
-                            class="grey-lighten-4"
-                            size="x-small"
-                            @click="quantityDecrement">
-                            fas fa-minus
-                          </v-icon>
-                        </template>
-                      </v-text-field>
+                    <div justify="start">
+                      <v-responsive width="150" max-width="165" justify="start">
+
+                        <v-text-field v-model="quantity" label="Quantity" :placeholder="1">
+                          <template v-slot:append>
+                            <v-icon class="grey-lighten-4" size="x-small" @click="quantityIncrement">
+                              fas fa-plus fa-2xs
+                            </v-icon>
+                          </template>
+                          <template v-slot:prepend>
+                            <v-icon class="grey-lighten-4" size="x-small" @click="quantityDecrement">
+                              fas fa-minus
+                            </v-icon>
+                          </template>
+                        </v-text-field>
                       </v-responsive>
-                      
+
                     </div>
-                   <!-- <div justify="start">
+                    <!-- <div justify="start">
                        <v-responsive
                         class="mx-auto"
                         width="100"
@@ -316,34 +289,30 @@
                     </div>-->
                     <div>
                       <v-btn-group>
-                        <v-btn 
-                          class="mx-auto"
-                          v-for="icon in social_icons"
-                          :key="icon"
-                          icon
-                          variant="text"
-                        >
+                        <v-btn class="mx-auto" v-for="icon in social_icons" :key="icon" icon variant="text">
                           <v-icon :icon="icon"></v-icon>
                         </v-btn>
                       </v-btn-group>
                     </div>
                     <div>
                       <v-btn-group>
-                        <v-btn variant="outlined" color="success" size="small" :loading="loading"  @click="loading = !loading">
+                        <v-btn variant="outlined" color="success" size="small" :loading="loading"
+                          @click="loading = !loading">
                           <v-icon icon="fa-solid fa-cart-shopping" size="large"></v-icon>
-                            Comprar
-                             <template v-slot:loader>
-                              <v-progress-circular indeterminate>Loading ...</v-progress-circular>
-                           
-                            </template>
+                          Comprar
+                          <template v-slot:loader>
+                            <v-progress-circular indeterminate>Loading ...</v-progress-circular>
+
+                          </template>
                         </v-btn>
-                        <v-btn variant="outlined" color="warning" size="small" :loading="loading_cart" @click="loading_cart = !loading_cart">
+                        <v-btn variant="outlined" color="warning" size="small" :loading="loading_cart"
+                          @click="loading_cart = !loading_cart">
                           <v-icon icon="fas fa-cart-plus" size="large"></v-icon>Carrinho
                           <template v-slot:loader>
-                              <v-progress-circular indeterminate text="teste">   Loading ...</v-progress-circular>
-                           
-                            </template>
-                          
+                            <v-progress-circular indeterminate text="teste"> Loading ...</v-progress-circular>
+
+                          </template>
+
                         </v-btn>
                       </v-btn-group>
                     </div>
@@ -352,7 +321,7 @@
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
                     <v-divider></v-divider>
-                   
+
                     <div>
                       <v-card>
                         <v-card-title class="text-h5">Description:</v-card-title>
@@ -367,22 +336,22 @@
 
                     </div>
 
-                  
+
                     <!-- <div>
                         {{ selectProduct.description }}
                       </div>-->
-                      
+
                   </v-col>
-                
+
                   <v-col>
-                  
+
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col col="6" sm="4"></v-col>
-               
+
                   <v-col col="2" sm="4">
-                    
+
                   </v-col>
                 </v-row>
                 <v-row>
@@ -406,12 +375,12 @@
 
               </v-card-text>
 
-             <!-- <v-card-actions>
+              <!-- <v-card-actions>
                 <v-spacer></v-spacer>
 
                 <v-btn text="Close Dialog" @click="closeBuy"></v-btn>
               </v-card-actions>-->
-            </v-card> 
+            </v-card>
 
           </v-dialog>
         </div>
@@ -466,26 +435,26 @@ export default {
       'fa-brands fa-telegram',
     ]
   }),
- 
+
   watch: {
     buyDialog(val) {
       val || this.closeBuy();
     },
-    loading(val){
-      if(!val) return 
-        setTimeout(() => {
-          this.loading = false
-        }, 2000);
-      
+    loading(val) {
+      if (!val) return
+      setTimeout(() => {
+        this.loading = false
+      }, 2000);
+
     },
-    loading_cart(val){
-      if(!val) return
+    loading_cart(val) {
+      if (!val) return
       alert('Estamos criando o nosso carrinho...');
-        setTimeout(() => {
-          this.loading_cart = false
-         
-        }, 2000);
-      
+      setTimeout(() => {
+        this.loading_cart = false
+
+      }, 2000);
+
     }
   },
   methods: {
@@ -520,19 +489,19 @@ export default {
       this.buyDialog = false;
 
     },
-    quantityIncrement(){
-     this.quantity++;
+    quantityIncrement() {
+      this.quantity++;
     },
-    quantityDecrement(){
-      if(this.quantity >= 1){
-        this.quantity--;  
+    quantityDecrement() {
+      if (this.quantity >= 1) {
+        this.quantity--;
       }
-      else{
+      else {
         alert('apenas numeros inteiros são aceitos');
       }
-      
+
     },
-    checkout(){
+    checkout() {
       alert('Redirect to checkout... wait');
     }
 
