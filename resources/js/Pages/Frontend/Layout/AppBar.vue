@@ -9,7 +9,7 @@
             <a href="/"><v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon></a>
         </template>
 
-        <v-app-bar-title> <v-btn class="plain" color="white" href="/">EcosssmmerceClone</v-btn></v-app-bar-title>
+        <v-app-bar-title> <v-btn class="plain" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
 
         <v-spacer></v-spacer>
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Categories\CategoriesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\ProductImages\ProductImagesController;
 use App\Http\Controllers\Subcategories\SubcategoriesController;
 use App\Http\Controllers\Products\ProductController;
@@ -86,6 +87,8 @@ Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('log
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index')->middleware('auth');
 Route::get('/categories/show', [CategoriesController::class, 'show'])->name('categories.show');
 
+//Cart Routes
+Route::get('/carts',[CartController::class, 'index'])->name('carts.get')->middleware('auth');
 
 //Subcategories routes
 Route::get('/subcategories', [SubcategoriesController::class, 'index'])->name('subcategories.index')->middleware('auth');

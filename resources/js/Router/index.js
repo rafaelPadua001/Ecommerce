@@ -8,6 +8,7 @@ import Login from '../Pages/Frontend/Auth/Login.vue'
 import Register from '../Pages/Frontend/Auth/Register.vue'
 import Dashboard from '../Pages/Frontend/Auth/Dashboard.vue'
 import SubcategoriesAll from '../Pages/Frontend/Subcategories/Subcategories.vue'
+import Cart from '../Pages/Frontend/Cart/Cart.vue'
 import AdminLogin from '../Pages/Backend/Auth/Login.vue'
 import AdminDashboard from '../Pages/Backend/Auth/Dashboard.vue'
 import Categories from '../Pages/Backend/Categories/Categories.vue'
@@ -63,6 +64,11 @@ const routes = [{
         path: '/subcategories/all/:category_id',
         name: 'sucategories.all',
         component: SubcategoriesAll
+    },
+    {
+        path: '/carts',
+        name: 'carts',
+        component: Cart
     },
     {
         path: '/products',
