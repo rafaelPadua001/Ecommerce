@@ -3,16 +3,20 @@
 
    use App\Models\User;
     use App\Http\Controllers\Controller;
-    use Illuminate\Http\RedirectResponse;
+use App\Models\Customer;
+
     use Illuminate\Support\Facades\Auth;
-    use Illuminate\Support\Facades\Hash;
+    
     use Illuminate\Http\Request;
+    use App\Http\Requests\Auth\LoginRequest;
+    use Illuminate\Http\RedirectResponse;
     
 
     class LoginController extends Controller{
-        
+       
+
         public function Login(Request $request){
-            
+           
             //recebe a url de onde vem a requisicao
             $getAppUrl = $this->getAppUrl();
             
@@ -21,6 +25,7 @@
             // e redirecionar para a dashboard
             
             if($request->url() == $getAppUrl . '/loginAdmin'){
+               
                 $user = User::where('email', $request->email)->first();
         
                 if(password_verify($request->password, $user->password)){
@@ -30,6 +35,7 @@
                 ]);
                 
                     if(Auth::attempt($credentials)){
+                        $request->authenticate();
                         $request->session()->regenerate();
                         $request->session()->put($credentials);
                         
@@ -46,17 +52,26 @@
                ])->onlyInput('email');
             }
             else{
+                $customer = Customer::where('email', $request->email)->first();
+        
+                if(password_verify($request->password, $customer->password)){
+                    $credentials = $request->validate([
+                        'email' => ['required', 'email'],
+                        'password' => ['required'],
+                   ]);
                 
-                $credentials = $request->validate([
-                    'email' => ['required', 'email'],
-                    'password' => ['required'],
-               ]);
-                if(Auth::attempt($credentials)){
-                    $request->session('customer')->regenerate();
-                    
-                    return redirect()->intended('customerDashboard');
-                } 
-
+                    if (Auth::guard('customer')->attempt($credentials)) {
+                       
+                        $request->session('customer')->regenerate();
+                        //$request->session('customer')->put($customer);
+                        //return redirect()->intended('dashboard');
+                        // Redireciona o usuário para a página inicial
+                        return response()->json(['email' => $request->email, 200]);
+                    }
+                }
+               
+                
+              
                 return back()->withErrors([
                     'email' => 'Email não encontrado nos nossos registros.',
                 ])->onlyInput('email');
@@ -67,4 +82,6 @@
             $url = env('APP_URL') . ':8000';
             return $url;
         }
+       
+        
     }

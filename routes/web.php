@@ -65,12 +65,20 @@ Route::get('/admin', function () {
 Route::post('/loginAdmin', [LoginController::class, 'login'])->name('login');
 Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::get('/users', function(){
-    return response()->json(Auth::user());
+    $user = Auth::user();
+    try{
+        return response()->json($user);
+    }
+    catch(Exception $e){
+        return response()->json($e);
+    }
+   
 });
 
 
 //Customer Routes
-Route::post('/login',[ LoginController::class, 'login'])->name('customerLogin');
+Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
+Route::post('/login',[LoginController::class, 'login'])->name('cutomer.login');
 Route::post('/registerCustomer', [CustomerController::class, 'store'])->name('store');
 Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('logout');
 

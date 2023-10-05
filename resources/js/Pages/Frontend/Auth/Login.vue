@@ -1,5 +1,8 @@
 <template>
-    <div>
+    <div v-if="customer.lenght >= 1">
+        usuario logado
+    </div>
+    <div v-else>
         <v-card
         width="800"
         >
@@ -112,8 +115,11 @@
 </template>
 
 <script>
+import axios from 'axios';
+
     export default{
         data: () =>  ({
+            customer: [],
             show1: false,
             show2: true,
             password: '',
@@ -127,11 +133,16 @@
         }),
         methods: {
             login(){
-                
-
+                const token = document.head.querySelector('meta[name="csrf-token"]');
+              
                 const data = {email: this.email,password: this.password};
-                
-                axios.post('/login', data)
+               
+                axios.post('/login', data, 
+                {
+                    headers: {
+                        'X-CSRF-TOKEN': token.content
+                    }
+                })
                 .then((response) => {
                    this.$router.push('/dashboard');
                 })
@@ -139,8 +150,13 @@
                     alert('Error:' + response);
                     return false;
                 });
-            }
+            },
+           
+        },
+        mounted(){
+           // this.getLoged();
         }
+        
     }
 </script>
 

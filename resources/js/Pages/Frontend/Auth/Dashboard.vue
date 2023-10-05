@@ -1,25 +1,34 @@
 <template>
-  <v-layout ref="app" class="rounded rounded-md">
-    <v-app-bar color="grey-lighten-2" name="app-bar">
-      <child v-slot="{ print }">
-        <v-btn class="mx-auto" @click="print('app-bar')">Get data</v-btn>
-      </child>
-    </v-app-bar>
-
+    <div>
+      <AppBar />
+    </div>
+   
+  
     <v-navigation-drawer
-      color="grey-darken-2"
-      permanent
-      name="drawer"
-    >
-      <div class="d-flex justify-center align-center h-100">
-        <child v-slot="{ print }">
-          <v-btn @click="print('drawer')">Get data</v-btn>
-        </child>
-      </div>
-    </v-navigation-drawer>
+        expand-on-hover
+        rail
+      >
+        <v-list>
+          <v-list-item
+            prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
+            :title="customers.first_name + ' ' +customers.last_name"
+            :subtitle="customers.email"
+          ></v-list-item>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list density="compact" nav>
+          <v-list-item prepend-icon="mdi-folder" title="Carrinho" value="myfiles"></v-list-item>
+          <v-list-item prepend-icon="mdi-folder" title="Pedidos" value="myfiles"></v-list-item>
+          <!-- <v-list-item prepend-icon="mdi-account-multiple" title="Pedidos" value="shared"></v-list-item> -->
+          <v-list-item prepend-icon="mdi-star" title="Cupons" value="starred"></v-list-item>
+          <v-list-item prepend-icon="mdi-star" title="Messages" value="starred"></v-list-item>
+        </v-list>
+      </v-navigation-drawer>
 
     <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
-      Main Content
+      Hello {{ customers.first_name }}
     </v-main>
 
     <v-footer
@@ -34,11 +43,13 @@
         Get data
       </v-btn>
     </v-footer>
-  </v-layout>
+  
 </template>
 
 <script>
   import { useLayout } from 'vuetify'
+  import AppBar from '../Layout/AppBar.vue';
+import axios from 'axios';
 
   const Child = {
     setup (props, ctx) {
@@ -53,6 +64,27 @@
   }
 
   export default {
-    components: { Child },
+    components: { Child, AppBar },
+    data: () => ({
+      customers: [],
+    }),
+    methods: {
+      getUser(){
+                axios.get('/customer')
+                .then((response) => {
+                  console.log(response);
+                    return this.customers = response.data;
+                })
+                .catch((response) => {
+                    alert('Error: ' + response);
+                });
+            }
+    },
+    
+    mounted() {
+            this.getUser();
+        }
   }
+  
+  
 </script>

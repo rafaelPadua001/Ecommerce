@@ -3,24 +3,33 @@
 namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use Exception;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
+
 
 class CustomerController extends Controller
 {
     //
-    private $customer;
-
+    protected $customer;
+    //protected $redirectTo = '/dashboard';
     public function __construct(Customer $customer){
         $this->customer = $customer;
     }
 
     public function index(){
-        dd('teste index');
+        try{
+            $customer = Auth::guard('customer')->user();
+         
+            return response()->json($customer);
+        }catch(Exception $e){
+            return response()->json($e);
+        }
+       
     }
     public function store(Request $request){
         $data = $request;
@@ -44,13 +53,20 @@ class CustomerController extends Controller
         }
     }
     public function logout(Request $request){
-        Auth::logout();
+       try{
+            Auth::guard('customer')->logout();
 
-        $request->session('customer')->invalidate();
+            $request->session()->invalidate();
 
-        $request->session('customer')->regenerateToken();
-
-        return redirect('/');
+            $request->session()->regenerateToken();
+            $response = true;
+            return response()->json($request);
+        //redirect('/login');
+       }
+       catch(Exception $e){
+        return response()->json($e);
+       }
+        
     }
      
     
