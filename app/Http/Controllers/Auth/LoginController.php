@@ -35,7 +35,7 @@ use App\Models\Customer;
                 ]);
                 
                     if(Auth::attempt($credentials)){
-                        $request->authenticate();
+                     
                         $request->session()->regenerate();
                         $request->session()->put($credentials);
                         
