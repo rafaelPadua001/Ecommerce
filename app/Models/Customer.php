@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
     use HasFactory;
     protected $fillable = ['first_name', 'last_name', 'email', 'password', ];
+    protected $guarded = 'customer';
     /**
      * The attributes that should be hidden for serialization.
      *

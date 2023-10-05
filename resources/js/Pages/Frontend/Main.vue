@@ -1,5 +1,9 @@
 <template>
+  <div>
+      <AppBar />
+  </div>
   <v-app id="inspire">
+   
     <v-main>
       <v-container>
         <div align='center'>
@@ -13,6 +17,7 @@
         <div>
           <h4 align="left">Categories</h4>
           <v-row dense>
+          
             <v-col cols="12" sm="4" v-for="category in categories" :key="category.id">
               <div class="d-flex justify-space-around">
                 <v-hover>
@@ -64,6 +69,7 @@
         <v-spacer></v-spacer>
 
         <div>
+          
           <h4 align="start">Higlights</h4>
           <v-divider></v-divider>
           <v-spacer></v-spacer>
@@ -84,7 +90,7 @@
 
           <v-container>
             <v-row no-gutters>
-              <v-col v-if="!products"><h4>No data to loading...</h4></v-col>
+              <v-col v-if="products.length == 0"><h4>No data to loading...</h4></v-col>
               <v-col v-else v-for="product in products" :key="n" cols="12" sm="4">
 
                 <v-sheet class="ma-2 pa-2">
@@ -371,7 +377,7 @@
                   <v-col col="12" sm="12">
                     <div>
                       <v-card>
-                        <v-title>Comments</v-title>
+                        <v-card-title>Comments</v-card-title>
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
                         <v-divider></v-divider>
@@ -406,12 +412,13 @@
 
 import axios from 'axios';
 import Banner from '../../Components/Banner.vue';
+import AppBar from './Layout/AppBar.vue';
 
 
 export default {
   components: {
     Banner,
-
+    AppBar
   },
   data: () => ({
     products: [],
