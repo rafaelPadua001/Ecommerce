@@ -53,7 +53,7 @@ use App\Models\Customer;
             }
             else{
                 $customer = Customer::where('email', $request->email)->first();
-        
+               
                 if(password_verify($request->password, $customer->password)){
                     $credentials = $request->validate([
                         'email' => ['required', 'email'],

@@ -10,6 +10,8 @@
           <Banner></banner>
 
         </div>
+
+        
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
@@ -96,10 +98,11 @@
                 <v-sheet class="ma-2 pa-2">
                   <v-hover v-slot="{ isHovering, props }">
                     <v-card class="mx-auto" max-width="250" v-bind="props">
+                    
                       <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
                         <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" :width="250"
-                          max-width="250" height="200" aspect-ratio="16/9" :lazy-src="'./storage/products/' + image"
-                          :src="'./storage/products/' + image" cover>
+                          max-width="250" height="200" aspect-ratio="16/9" 
+                          :src="`./storage/products/${image}`" :lazy-src="`./storage/products/${image}`" cover>
 
                           <template>
                             <div class="d-flex align-center justify-center fill-height">
@@ -323,8 +326,8 @@
 
                           </template>
                         </v-btn>
-                        <v-btn variant="outlined" color="warning" size="small" :loading="loading_cart"
-                          @click="loading_cart = !loading_cart">
+                        <v-btn variant="outlined" color="warning" size="small" :loading="add_cart"
+                          @click="addItem(selectProduct)">
                           <v-icon icon="fas fa-cart-plus" size="large"></v-icon>Carrinho
                           <template v-slot:loader>
                             <v-progress-circular indeterminate text="teste"> Loading ...</v-progress-circular>
@@ -354,10 +357,6 @@
 
                     </div>
 
-
-                    <!-- <div>
-                        {{ selectProduct.description }}
-                      </div>-->
 
                   </v-col>
 
@@ -390,7 +389,27 @@
                   </v-col>
                 </v-row>
                 <v-spacer></v-spacer>
-
+                <div
+                  class="text-center"
+                >
+                <v-snackbar
+                v-model="snackbar"
+                :timeout="20000"
+                color="cyan-darken-3"
+                vertical
+              >
+                
+                <div class="text-subtitle-1 pb-2">Você deve estar logado para adicionar esse item ao carrinho</div>
+                <template v-slot:actions>
+                  <v-btn-group>
+                    <v-btn size="small" variant="plain" color="white">Close</v-btn>
+                    <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
+                  </v-btn-group> 
+                </template>
+                
+              </v-snackbar>
+                </div>
+               
               </v-card-text>
 
               <!-- <v-card-actions>
@@ -398,6 +417,7 @@
 
                 <v-btn text="Close Dialog" @click="closeBuy"></v-btn>
               </v-card-actions>-->
+         
             </v-card>
 
           </v-dialog>
@@ -422,16 +442,19 @@ export default {
   },
   data: () => ({
     products: [],
+    customer: false,
     images: [],
     categories: [],
     productIndex: -1,
     selectProduct: {},
+   
     buyDialog: false,
     quantity: 1,
     rating: 0,
     postal_code: 0,
     loading: false,
-    loading_cart: false,
+    add_cart: false,
+    snackbar: false,
     icons: [
       'fas fa-clock',
       'fas fa-suitcase-medical',
@@ -466,17 +489,25 @@ export default {
       }, 2000);
 
     },
-    loading_cart(val) {
+    add_cart(val) {
       if (!val) return
-      alert('Estamos criando o nosso carrinho...');
       setTimeout(() => {
-        this.loading_cart = false
-
+        this.add_cart = false
       }, 2000);
 
     }
   },
   methods: {
+    getCustomer(){
+      axios.get('/customer')
+      .then((response) => {
+        return this.customer = response.data;
+      })
+      .catch((response) => {
+        return this.customer = false;
+        
+      })
+    },
     getProducts() {
       axios.get('/products/show')
         .then((response) => {
@@ -488,7 +519,7 @@ export default {
         })
         .catch((response) => {
           alert('Error :' + response);
-        })
+        });
     },
     getCategories() {
       axios.get('/categories/show')
@@ -499,10 +530,29 @@ export default {
           return alert('Erro :' + response);
         });
     },
+   
     buy(product) {
       this.productIndex = this.products.indexOf(product);
       this.selectProduct = Object.assign({}, product);
       this.buyDialog = true;
+    },
+    addItem(){
+      const data = {'product': this.selectProduct, 'quantity': this.quantity}
+      if(Object.keys(this.customer).length == 0){
+        this.snackbar = true;
+        
+      }
+      axios.post(`/carts/add`, data)
+      .then((response) => {
+        this.add_cart = false;
+       // this.buyDialog = false;
+        return this.cart = response.data;
+        
+      })
+      .catch((response) => {
+        alert('Error :' + response);
+      });
+      
     },
     closeBuy() {
       this.buyDialog = false;
@@ -526,8 +576,10 @@ export default {
 
   },
   mounted() {
+    this.getCustomer();
     this.getProducts();
     this.getCategories();
+   
   }
 }
 </script>

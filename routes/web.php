@@ -88,7 +88,8 @@ Route::get('/categories', [CategoriesController::class, 'index'])->name('categor
 Route::get('/categories/show', [CategoriesController::class, 'show'])->name('categories.show');
 
 //Cart Routes
-Route::get('/carts',[CartController::class, 'getCarts'])->name('carts.get')->middleware('auth');
+Route::get('/carts',[CartController::class, 'getCarts'])->name('carts.get');
+Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
 
 //Subcategories routes
 Route::get('/subcategories', [SubcategoriesController::class, 'index'])->name('subcategories.index')->middleware('auth');
