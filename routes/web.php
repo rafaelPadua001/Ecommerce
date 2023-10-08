@@ -101,6 +101,9 @@ Route::get('/subcategories/all/{category_id}', [SubcategoriesController::class, 
 //Product routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth');
 Route::get('/products/show', [ProductController::class, 'index'])->name('products.show');
+Route::post('/products/like/{id}', function(){
+    dd('Mais um like nesse produto');
+});
 
 //SEO routes
 Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->middleware('auth');

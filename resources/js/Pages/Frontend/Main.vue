@@ -154,7 +154,7 @@
                             <strong>Solds:</strong> 10
                           </v-col>
                         </v-row>
-                    
+
                       </v-card-text>
                       <v-expand-transition>
                         <div v-if="isHovering"
@@ -192,8 +192,9 @@
                   Buy
                   <template v-slot:append>
                     <v-btn-group>
-                      <v-btn v-bind="props" icon @click="" size="small">
-                        <v-icon icon="fa-regular fa-heart fa-2xs"></v-icon>
+                      <v-btn v-bind="props" icon  size="small" @click="like">
+                        <v-icon icon="fa-regular fa-heart fa-2xs" v-if="liked == 0"></v-icon>
+                        <v-icon color="red-darken-4" icon="fa-regular fa-heart fa-2xs" v-else="liked >= 1"></v-icon>
                       </v-btn>
                       <v-btn v-bind="props" icon @click="" size="small">
                         <v-icon icon="fas fa-share-nodes fa-2xs"></v-icon>
@@ -215,11 +216,46 @@
                   <v-col col="12" sm="6">
                     <v-sheet class="ma-2 pa-2">
                       <v-row>
+                        <v-col v-for="(image, index) in JSON.parse(selectProduct.images)" cols="2" sm="3">
+                          <v-hover
+                            v-slot="{isHovering, props}"
+                            open-delay="200"
+                          >
+                            <v-card 
+                              width="50"
+                              class="mx-auto"
+                              v-bind="props"
+                              :color="isHovering ? 'cyan-darken-4' : undefined"
+                            >
+                              <template
+                                :class="{'on-hover' : isHovering }"
+                                class="mx-auto"
+                                v-bind="props"
+                              >
+                            
+                              </template>
+                              <div :key="index >= 1">
+                                <v-img cover :lazy-src="`./storage/products/${image}`"
+                                  :src="`./storage/products/${image}`" @click="alterImage(index)">
+                                  <template v-slot:placeholder>
+                                    <div class="d-flex align-center justify-center fill-height">
+                                      <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                                    </div>
+                                  </template>
+                                </v-img>
+                              </div>
+                            </v-card>
+                          </v-hover>
+
+
+                        </v-col>
                         <v-col>
                           <v-card :min-width="150" :max-width="1500">
-                            <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index">
-                              <v-img v-if="index === 0" :lazy-src="`./storage/products/${image}`"
-                                :src="`./storage/products/${image}`" aspect-ratio="1/1">
+                            <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index" class="image-container">
+                              <v-img v-if="index === selectImageIndex"
+                                :lazy-src="`./storage/products/${image}`" :src="`./storage/products/${image}`"
+                                aspect-ratio="1/1" class="zoomable-image">
+                              
                                 <template v-slot:placeholder>
                                   <div class="d-flex align-center justify-center fill-height">
                                     <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
@@ -234,24 +270,7 @@
                       </v-row>
                       <v-spacer></v-spacer>
                       <v-divider></v-divider>
-                      <v-row>
-
-                        <v-col v-for="(image, index) in JSON.parse(selectProduct.images)" cols="2" sm="3">
-                          <v-card width="50">
-                            <div :key="index > 0">
-                              <v-img cover :lazy-src="`./storage/products/${image}`" :src="`./storage/products/${image}`">
-                                <template v-slot:placeholder>
-                                  <div class="d-flex align-center justify-center fill-height">
-                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                                  </div>
-                                </template>
-                              </v-img>
-                            </div>
-                          </v-card>
-
-                        </v-col>
-
-                      </v-row>
+                      
                     </v-sheet>
                   </v-col>
 
@@ -285,30 +304,31 @@
                     <div v-if="selectProduct.colors">
                       <p>Colors:</p>
                       <v-row no-gutters>
-                        <v-col cols="2" sm="2" md="2" v-for="(color, index) in JSON.parse(selectProduct.colors)" :key="index">
+                        <v-col cols="2" sm="2" md="2" v-for="(color, index) in JSON.parse(selectProduct.colors)"
+                          :key="index">
                           <v-hover>
                             <template v-slot:default="{ isHovering, props }">
-                              <v-card
-                               @click="getColors(color)"
-                                v-bind="props"
-                                :bg-color="color"
-                                :color="isHovering ? undefined : color"
-                                :width="60">
-                                  <template v-slot:append>
-                                     
-                                  </template>
+                              <v-card @click="getColors(color)" v-bind="props" :bg-color="color"
+                                :color="isHovering ? undefined : color" :width="60">
+                                <template v-slot:append>
+
+                                </template>
                               </v-card>
                             </template>
                           </v-hover>
-                          
+
                         </v-col>
                       </v-row>
-                      
                     </div>
+
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+
                     <div v-if="selectProduct.size >= 1">
                       <p>Size:</p>
                       <v-row>
-                        <v-col cols="2" sm="2" md="2" v-for="(size, index) in JSON.parse(selectProduct.size)" :key="index">
+                        <v-col cols="2" sm="2" md="2" v-for="(size, index) in JSON.parse(selectProduct.size)"
+                          :key="index">
                           <v-card :color="color" :width="40">
                             <template v-slot:append>
                               {{ size }}
@@ -495,6 +515,8 @@ export default {
     loading: false,
     add_cart: false,
     snackbar: false,
+    selectImageIndex: 0,
+    liked: 0,
     icons: [
       'fas fa-clock',
       'fas fa-suitcase-medical',
@@ -571,18 +593,38 @@ export default {
           return alert('Erro :' + response);
         });
     },
-
     buy(product) {
       this.productIndex = this.products.indexOf(product);
       this.selectProduct = Object.assign({}, product);
       this.buyDialog = true;
     },
+    like(){
+      axios.post(`products/like/${this.selectProduct.id}`)
+      .then((response) => {
+        this.liked += 1;
+        console.log(this.liked);
+        return true;
+      })
+      .catch((response) => {
+        alert('Erro: ' . response);
+      })
+    },
+    alterImage(index){
+      
+      if(index == 0){
+        console.log(this.selectImageIndex = index);
+        alert('A imagem Já esta carregada');
+      }
+       return this.selectImageIndex = index;
+     
+    },
     addItem() {
-      const data = { 
+      const data = {
         'product': this.selectProduct,
         'quantity': this.quantity,
-        'color': this.colors }
-      console.log(data);
+        'color': this.colors
+      }
+      
       if (Object.keys(this.customer).length == 0) {
         this.snackbar = true;
 
@@ -598,7 +640,7 @@ export default {
         });
 
     },
-    getColors(color){
+    getColors(color) {
       this.colors = color;
       console.log(this.colors);
     },
@@ -639,5 +681,11 @@ export default {
   justify-content: center;
   position: absolute;
   width: 100%;
+}
+.zoomable-image{
+  transition: transform 0.3s;
+}
+.image-container:hover .zoomable-image{
+  transform: scale(1.3);
 }
 </style>
