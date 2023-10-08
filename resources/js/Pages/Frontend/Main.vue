@@ -1,9 +1,9 @@
 <template>
   <div>
-      <AppBar />
+    <AppBar />
   </div>
   <v-app id="inspire">
-   
+
     <v-main>
       <v-container>
         <div align='center'>
@@ -11,7 +11,7 @@
 
         </div>
 
-        
+
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
@@ -19,7 +19,7 @@
         <div>
           <h4 align="left">Categories</h4>
           <v-row dense>
-          
+
             <v-col cols="12" sm="4" v-for="category in categories" :key="category.id">
               <div class="d-flex justify-space-around">
                 <v-hover>
@@ -71,7 +71,7 @@
         <v-spacer></v-spacer>
 
         <div>
-          
+
           <h4 align="start">Higlights</h4>
           <v-divider></v-divider>
           <v-spacer></v-spacer>
@@ -82,7 +82,7 @@
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
 
-       
+
         <div>
           <h4 align="left">All Products</h4>
 
@@ -92,17 +92,19 @@
 
           <v-container>
             <v-row no-gutters>
-              <v-col v-if="products.length == 0"><h4>No data to loading...</h4></v-col>
+              <v-col v-if="products.length == 0">
+                <h4>No data to loading...</h4>
+              </v-col>
               <v-col v-else v-for="product in products" :key="n" cols="12" sm="4">
 
                 <v-sheet class="ma-2 pa-2">
                   <v-hover v-slot="{ isHovering, props }">
                     <v-card class="mx-auto" max-width="250" v-bind="props">
-                    
+
                       <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
                         <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" :width="250"
-                          max-width="250" height="200" aspect-ratio="16/9" 
-                          :src="`./storage/products/${image}`" :lazy-src="`./storage/products/${image}`" cover>
+                          max-width="250" height="200" aspect-ratio="16/9" :src="`./storage/products/${image}`"
+                          :lazy-src="`./storage/products/${image}`" cover>
 
                           <template>
                             <div class="d-flex align-center justify-center fill-height">
@@ -136,25 +138,30 @@
                         </v-row>
 
                         <v-row>
-                          <v-col align="start">
-                            R$ {{ product.price }}
+                          <v-col align="start" col="4" sm="4">
+                            <strong>R$:</strong> {{ product.price }}
 
                           </v-col>
-                          <v-col align="end">
-                            Solds : 10
+                          <v-col col="3" sm="3">
+                            <p color="red" v-if="product.stock_quantity >= 1">
+                              <strong> {{ product.unity }}:</strong> {{ product.stock_quantity }}
+                            </p>
+                            <p color="red" v-if="product.stock_quantity === 0">
+                              <strong> Fora de Estoque </strong>
+                            </p>
+                          </v-col>
+                          <v-col col="2" sm="4" align="end">
+                            <strong>Solds:</strong> 10
                           </v-col>
                         </v-row>
-                        <!-- <div>Quantidade disponivel: {{ product.stock_quantity }}</div> -->
-
-
-
+                    
                       </v-card-text>
                       <v-expand-transition>
                         <div v-if="isHovering"
                           class="d-flex transition-fast-in-fast-out bg-orange-darken-4 v-card--reveal text-h2">
                           <v-card-actions>
                             <v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1" size="small"
-                              elevation="8">
+                              elevation="8" @click="addItem(selectProduct)">
                               <v-icon icon="fas fa-cart-plus"></v-icon>
                               <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
                             </v-btn>
@@ -261,14 +268,54 @@
                       R$ {{ selectProduct.price }}
                     </p>
 
+                    <p float="end" class="text-h6" color="red" v-if="selectProduct.stock_quantity >= 1">
+                      {{ selectProduct.unity }}: {{ selectProduct.stock_quantity }}
+                    </p>
 
-
+                    <p color="red" v-else>
+                      <strong> Fora de Estoque </strong>
+                    </p>
                     <div v-if="selectProduct.availability == 1" justify="start">
                       <v-responsive class="mx-auto">
                         <v-rating v-model="rating" bg-color="orange-lighten-1" color="blue" size="x-small"></v-rating>
                       </v-responsive>
 
                       <!--   count availation: ({{selectProduct.stock_qua}})este 2 -->
+                    </div>
+                    <div v-if="selectProduct.colors">
+                      <p>Colors:</p>
+                      <v-row no-gutters>
+                        <v-col cols="2" sm="2" md="2" v-for="(color, index) in JSON.parse(selectProduct.colors)" :key="index">
+                          <v-hover>
+                            <template v-slot:default="{ isHovering, props }">
+                              <v-card
+                               @click="getColors(color)"
+                                v-bind="props"
+                                :bg-color="color"
+                                :color="isHovering ? undefined : color"
+                                :width="60">
+                                  <template v-slot:append>
+                                     
+                                  </template>
+                              </v-card>
+                            </template>
+                          </v-hover>
+                          
+                        </v-col>
+                      </v-row>
+                      
+                    </div>
+                    <div v-if="selectProduct.size >= 1">
+                      <p>Size:</p>
+                      <v-row>
+                        <v-col cols="2" sm="2" md="2" v-for="(size, index) in JSON.parse(selectProduct.size)" :key="index">
+                          <v-card :color="color" :width="40">
+                            <template v-slot:append>
+                              {{ size }}
+                            </template>
+                          </v-card>
+                        </v-col>
+                      </v-row>
                     </div>
 
                     <div justify="start">
@@ -344,7 +391,7 @@
                     <v-divider></v-divider>
 
                     <div>
-                      <v-card>
+                      <v-card :max-height="140">
                         <v-card-title class="text-h5">Description:</v-card-title>
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
@@ -389,27 +436,20 @@
                   </v-col>
                 </v-row>
                 <v-spacer></v-spacer>
-                <div
-                  class="text-center"
-                >
-                <v-snackbar
-                v-model="snackbar"
-                :timeout="20000"
-                color="cyan-darken-3"
-                vertical
-              >
-                
-                <div class="text-subtitle-1 pb-2">Você deve estar logado para adicionar esse item ao carrinho</div>
-                <template v-slot:actions>
-                  <v-btn-group>
-                    <v-btn size="small" variant="plain" color="white">Close</v-btn>
-                    <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
-                  </v-btn-group> 
-                </template>
-                
-              </v-snackbar>
+                <div class="text-center">
+                  <v-snackbar v-model="snackbar" :timeout="5500" color="cyan-darken-3" vertical>
+
+                    <div class="text-subtitle-1 pb-2">Você deve estar logado para adicionar esse item ao carrinho</div>
+                    <template v-slot:actions>
+                      <v-btn-group>
+                        <v-btn size="small" variant="plain" color="white">Close</v-btn>
+                        <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
+                      </v-btn-group>
+                    </template>
+
+                  </v-snackbar>
                 </div>
-               
+
               </v-card-text>
 
               <!-- <v-card-actions>
@@ -417,7 +457,7 @@
 
                 <v-btn text="Close Dialog" @click="closeBuy"></v-btn>
               </v-card-actions>-->
-         
+
             </v-card>
 
           </v-dialog>
@@ -447,8 +487,8 @@ export default {
     categories: [],
     productIndex: -1,
     selectProduct: {},
-   
     buyDialog: false,
+    colors: false,
     quantity: 1,
     rating: 0,
     postal_code: 0,
@@ -493,20 +533,21 @@ export default {
       if (!val) return
       setTimeout(() => {
         this.add_cart = false
+        this.buyDialog = false;
       }, 2000);
 
     }
   },
   methods: {
-    getCustomer(){
+    getCustomer() {
       axios.get('/customer')
-      .then((response) => {
-        return this.customer = response.data;
-      })
-      .catch((response) => {
-        return this.customer = false;
-        
-      })
+        .then((response) => {
+          return this.customer = response.data;
+        })
+        .catch((response) => {
+          return this.customer = false;
+
+        })
     },
     getProducts() {
       axios.get('/products/show')
@@ -530,29 +571,36 @@ export default {
           return alert('Erro :' + response);
         });
     },
-   
+
     buy(product) {
       this.productIndex = this.products.indexOf(product);
       this.selectProduct = Object.assign({}, product);
       this.buyDialog = true;
     },
-    addItem(){
-      const data = {'product': this.selectProduct, 'quantity': this.quantity}
-      if(Object.keys(this.customer).length == 0){
+    addItem() {
+      const data = { 
+        'product': this.selectProduct,
+        'quantity': this.quantity,
+        'color': this.colors }
+      console.log(data);
+      if (Object.keys(this.customer).length == 0) {
         this.snackbar = true;
-        
+
       }
       axios.post(`/carts/add`, data)
-      .then((response) => {
-        this.add_cart = false;
-       // this.buyDialog = false;
-        return this.cart = response.data;
-        
-      })
-      .catch((response) => {
-        alert('Error :' + response);
-      });
-      
+        .then((response) => {
+          this.add_cart = false;
+          return this.cart = response.data;
+
+        })
+        .catch((response) => {
+          alert('Error :' + response);
+        });
+
+    },
+    getColors(color){
+      this.colors = color;
+      console.log(this.colors);
     },
     closeBuy() {
       this.buyDialog = false;
@@ -579,7 +627,7 @@ export default {
     this.getCustomer();
     this.getProducts();
     this.getCategories();
-   
+
   }
 }
 </script>

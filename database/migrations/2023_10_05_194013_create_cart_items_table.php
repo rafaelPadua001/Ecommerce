@@ -18,6 +18,8 @@ return new class extends Migration
                 $table->unsignedBigInteger('product_id');
                 $table->unsignedBigInteger('user_id');
                 $table->integer('quantity');
+                $table->text('color')->nullable();
+                $table->text('size')->nullable();
                 $table->decimal('price', 8, 2);
                 $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade');
                 $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cart;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Cart\CartItemController;
+use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Models\Cart;
 use Exception;
 use Illuminate\Http\Request;
@@ -51,7 +52,9 @@ class CartController extends Controller
            
            
             $cart_item = $this->getCartItem($customer->id, $request);
-
+            
+            $stock_quantity = $this->getProduct($request->quantity, $request->color, $cart_item);
+            
             return response()->json($item);
         }
         catch(Exception $e){
@@ -65,4 +68,9 @@ class CartController extends Controller
         $cartItem = new CartItemController();
         return $cartItem->addCartItem($id, $product);
     }
+    public function getProduct($quantity, $cart){
+        $product = new ProductStockController();
+        return $product->reduceQuantity($quantity, $cart);
+    }
+    
 }

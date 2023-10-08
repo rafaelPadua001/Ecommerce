@@ -26,7 +26,7 @@
             </template>
             <v-list :items="carts" item-props lines="three" style="margin-top: 51px; margin-right: -55px">
                 <v-list-item v-for="item in carts" :key="item.id" :value="item.id">
-                    <div v-if="!item">
+                    <div v-if="item.lenght == 0">
                         <p>No item to show...</p>
                     </div>
                     <div>
@@ -38,7 +38,7 @@
                                         <v-btn-group>
 
                                             <v-btn v-bind="props" icon size="x-small" variant="plain">
-                                                <v-icon icon="fas fa-close fa-2xs"></v-icon>
+                                                <v-icon icon="fas fa-close fa-2xs" @click="removeItem(item)"></v-icon>
                                             </v-btn>
                                         </v-btn-group>
 
@@ -68,6 +68,20 @@
                                     </v-col>
                                     <v-col cols="6" sm="4">
                                         Quantity: {{ item.quantity }}
+                                    </v-col>
+                                    
+                                </v-row>
+                                <v-row>
+                                    <v-col>
+                                        <v-card
+                                             v-bind="props"
+                                                :color="item.color "
+                                                :width="60">
+                                                <template v-slot:append>
+                                                    
+                                                </template>
+                                            </v-card>
+                                      
                                     </v-col>
                                 </v-row>
                                </v-card-text>
@@ -141,7 +155,7 @@ export default {
         getUser() {
             axios.get('/customer')
                 .then((response) => {
-                    return this.user = response.data;
+                    return this.user.push(response.data); // = response.data;
                 })
                 .catch((response) => {
                     console.log('not logged.');
@@ -156,6 +170,16 @@ export default {
                 .catch((response) => {
                     return alert('Error :' + response);
                 });
+        },
+        removeItem(item){
+            axios.delete(`/cartItem/delete/${item.id}`)
+            .then((response) => {
+                return this.carts.splice(this.carts.indexOf(item), 1);
+            })
+            .catch((response) => {
+                return alert('Error :' + response);
+            });
+           
         },
         logout() {
             axios.post('/logoutCustomer')

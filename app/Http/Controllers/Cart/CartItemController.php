@@ -17,7 +17,7 @@ class CartItemController extends Controller
     {
         $customer = Customer::findOrFail($id);
         $cart = Cart::where('user_id', '=', $customer->id)->first();
-   
+        
         try {
             $cartItem = CartItem::create([
                 'cart_id' => $cart->id,
@@ -25,11 +25,24 @@ class CartItemController extends Controller
                 'user_id' => $id,
                 'quantity' => $product->quantity,
                 'price' => $product->product['price'],
+                'color' => $product->color,
             ]);
              
-          
+        
             return response()->json($cartItem);
         } catch (Exception $e) {
+            return response()->json($e);
+        }
+    }
+    public function destroy($id){
+    
+        try{
+            $cartItem = CartItem::findOrFail($id)->delete();
+           
+            return true;
+          
+        }
+        catch(Exception $e){
             return response()->json($e);
         }
     }
