@@ -7,6 +7,7 @@ use App\Models\ProductStock;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class ProductStockController extends Controller
 {
@@ -43,6 +44,28 @@ class ProductStockController extends Controller
                 $product->update(['stock_quantity' => $request->stock_quantity]);
                 return response()->json($stock);
             }
+            return response()->json($stock);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function reduceQuantity($quantity, $cart){
+        
+        try{
+            $stock = ProductStock::where('product_id', $cart->original->product_id)->first();
+            $product = Product::where('id', $cart->original->product_id)->first();
+
+            if($stock->stock_quantity > $quantity){
+                $reduceQuantity = $stock->stock_quantity - $quantity;
+                $reduceProduct = $product->stock_quantity - $quantity;
+                $stock->update(['stock_quantity' => $reduceQuantity]);
+                $product->update(['stock_quantity' => $reduceProduct]);
+            }
+            else{
+                throw new Exception('Não é possível adquirir uma quantidade maior do que a temos em estoque.');
+            }
+            
             return response()->json($stock);
         }
         catch(Exception $e){

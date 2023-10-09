@@ -8,6 +8,9 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Categories\CategoriesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Cart\CartItemController;
+use App\Http\Controllers\Likes\LikedProductController;
 use App\Http\Controllers\ProductImages\ProductImagesController;
 use App\Http\Controllers\Subcategories\SubcategoriesController;
 use App\Http\Controllers\Products\ProductController;
@@ -86,6 +89,11 @@ Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('log
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index')->middleware('auth');
 Route::get('/categories/show', [CategoriesController::class, 'show'])->name('categories.show');
 
+//Cart Routes
+Route::get('/carts',[CartController::class, 'getCarts'])->name('carts.get');
+Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
+
+Route::delete('/cartItem/delete/{id}', [CartItemController::class, 'destroy'])->name('cartsItem.destroy');
 
 //Subcategories routes
 Route::get('/subcategories', [SubcategoriesController::class, 'index'])->name('subcategories.index')->middleware('auth');
@@ -94,7 +102,10 @@ Route::get('/subcategories/all/{category_id}', [SubcategoriesController::class, 
 //Product routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth');
 Route::get('/products/show', [ProductController::class, 'index'])->name('products.show');
+Route::post('/products/like/{id}', [ProductController::class , 'like'])->name('product.like');
 
+//Likes Route
+Route::get('/likes', [LikedProductController::class, 'index'])->name('likes.index');
 //SEO routes
 Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->middleware('auth');
 

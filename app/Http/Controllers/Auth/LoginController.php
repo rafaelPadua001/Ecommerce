@@ -35,7 +35,7 @@ use App\Models\Customer;
                 ]);
                 
                     if(Auth::attempt($credentials)){
-                        $request->authenticate();
+                     
                         $request->session()->regenerate();
                         $request->session()->put($credentials);
                         
@@ -53,7 +53,7 @@ use App\Models\Customer;
             }
             else{
                 $customer = Customer::where('email', $request->email)->first();
-        
+               
                 if(password_verify($request->password, $customer->password)){
                     $credentials = $request->validate([
                         'email' => ['required', 'email'],
