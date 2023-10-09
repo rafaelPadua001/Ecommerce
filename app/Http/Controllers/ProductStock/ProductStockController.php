@@ -7,6 +7,7 @@ use App\Models\ProductStock;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class ProductStockController extends Controller
 {

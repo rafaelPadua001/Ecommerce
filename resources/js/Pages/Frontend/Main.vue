@@ -98,14 +98,33 @@
               <v-col v-else v-for="product in products" :key="n" cols="12" sm="4">
 
                 <v-sheet class="ma-2 pa-2">
-                  <v-hover v-slot="{ isHovering, props }">
-                    <v-card class="mx-auto" max-width="250" v-bind="props">
-
+                  <v-hover v-slot="{ isHovering, props }" >
+                    <v-card class="mx-auto" :max-width="250" v-bind="props">
+                     <!-- <v-hover>
+                        <v-expand-transition v-if="isHovering">
+                          <v-card-title class="text-right" style="margin-top: -28px; position: absolute; right: 0; margin-right: -9%">
+                          <v-toolbar class="bg-transparent" :max-height="25" :max-width="250" >
+                            
+                          </v-toolbar>
+                        </v-card-title>
+                     
+                        </v-expand-transition>
+                      </v-hover> -->
+                      <v-btn-group class="float-right">
+                              <v-btn icon size="x-small">
+                                <v-icon icon="fa-regular fa-heart fa-2xs" v-if="!likes" class="bg-transparent" @click="like()"></v-icon>
+                                <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else @click="like()"></v-icon>
+                              </v-btn>
+                              <v-btn icon size="x-small">
+                                <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
+                                
+                              </v-btn>
+                            </v-btn-group>
                       <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
                         <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" :width="250"
                           max-width="250" height="200" aspect-ratio="16/9" :src="`./storage/products/${image}`"
                           :lazy-src="`./storage/products/${image}`" cover>
-
+                          
                           <template>
                             <div class="d-flex align-center justify-center fill-height">
                               <v-progress-circular color="grey-lighten-4">
@@ -193,8 +212,8 @@
                   <template v-slot:append>
                     <v-btn-group>
                       <v-btn v-bind="props" icon  size="small" @click="like">
-                        <v-icon icon="fa-regular fa-heart fa-2xs" v-if="liked == 0"></v-icon>
-                        <v-icon color="red-darken-4" icon="fa-regular fa-heart fa-2xs" v-else="liked >= 1"></v-icon>
+                        <v-icon icon="fa-regular fa-heart fa-2xs" v-if="!likes"></v-icon>
+                        <v-icon color="red-darken-4" icon="fa-solid fa-heart fa-2xs" v-else></v-icon>
                       </v-btn>
                       <v-btn v-bind="props" icon @click="" size="small">
                         <v-icon icon="fas fa-share-nodes fa-2xs"></v-icon>
@@ -250,11 +269,11 @@
 
                         </v-col>
                         <v-col>
-                          <v-card :min-width="150" :max-width="1500">
+                          <v-card :min-width="150" :max-width="1500" :height="430">
                             <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index" class="image-container">
                               <v-img v-if="index === selectImageIndex"
                                 :lazy-src="`./storage/products/${image}`" :src="`./storage/products/${image}`"
-                                aspect-ratio="1/1" class="zoomable-image">
+                                 class="zoomable-image">
                               
                                 <template v-slot:placeholder>
                                   <div class="d-flex align-center justify-center fill-height">
@@ -517,6 +536,7 @@ export default {
     snackbar: false,
     selectImageIndex: 0,
     liked: 0,
+    likes: false,
     icons: [
       'fas fa-clock',
       'fas fa-suitcase-medical',
@@ -599,16 +619,44 @@ export default {
       this.buyDialog = true;
     },
     like(){
-      axios.post(`products/like/${this.selectProduct.id}`)
-      .then((response) => {
-        this.liked += 1;
-        console.log(this.liked);
-        return true;
-      })
-      .catch((response) => {
-        alert('Erro: ' . response);
-      })
+      alert('teste');
+      if (Object.keys(this.customer).length == 0) {
+        this.snackbar = true;
+      }
+      if(this.selectProduct >= 1){
+        axios.post(`products/like/${this.selectProduct.id}`)
+          .then((response) => {
+            this.liked += 1;
+            console.log(this.liked);
+            return true;
+          })
+          .catch((response) => {
+            return;
+          });
+      }
+      else{
+        axios.post(`products/like/${this.product.id}`)
+        .then((response) => {
+          this.liked += 1;
+          console.log(this.liked);
+          return true;
+        })
+        .catch((response) => {
+          return;
+        });
+      }
+     
     },
+    getLikes(){
+            axios.get('/likes')
+            .then((response) => {
+                console.log(response);
+                return this.likes = response.data;
+            })
+            .catch((response) => {
+                alert('Error: ' + response);
+            });
+        },
     alterImage(index){
       
       if(index == 0){
@@ -669,6 +717,7 @@ export default {
     this.getCustomer();
     this.getProducts();
     this.getCategories();
+    this.getLikes();
 
   }
 }
@@ -686,6 +735,6 @@ export default {
   transition: transform 0.3s;
 }
 .image-container:hover .zoomable-image{
-  transform: scale(1.3);
+  transform: scale(1.2);
 }
 </style>

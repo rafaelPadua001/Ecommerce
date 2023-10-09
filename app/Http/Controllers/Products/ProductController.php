@@ -11,12 +11,13 @@ use App\Http\Controllers\ProductImages\ProductImagesController;
 use App\Http\Controllers\ProductVideos\ProductVideoController;
 use App\Http\Controllers\ProductSeo\ProductSeoController;
 use App\Http\Controllers\ProductStock\ProductStockController;
+use App\Http\Controllers\Likes\LikedProductController;
 use App\Models\Product;
 use App\Models\Categories;
 use App\Models\Subcategory;
 
 use Exception;
-
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -160,6 +161,22 @@ class ProductController extends Controller
         $products = Product::orderBy('id', 'desc')->get();
 
         return response()->json($products);
+    }
+    public function like($id){
+        try{
+            $product = Product::findOrFail($id);
+            $customer = Auth::guard('customer')->user();
+            $likedProduct = $this->getLikedController($product, $customer);
+            return response()->json($likedProduct);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+        
+    }
+    public function getLikedController($product, $customer){
+        $like = new LikedProductController();
+        return $like->store($product, $customer);
     }
     public function update(Request $request, $id)
     {

@@ -3,10 +3,10 @@
         <template v-slot:image>
             <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
         </template>
-
-        <template v-slot:prepend>
+       
+        <template v-slot:prepend v-if="user.length >= 1">
             <!-- adicionar Logo aqui -->
-            <a href="/"><v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon></a>
+            <v-btn :to="'/dashboard'" variant="plain"><v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon></v-btn>
         </template>
 
         <v-app-bar-title> <v-btn class="plain" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
@@ -111,7 +111,7 @@
             </template>
             <v-list>
                 <!-- login button -->
-                <v-list-item to="/login">
+                <v-list-item to="/login" v-if="user.length == 0">
                     <v-list-item-title link>
                         <span>
                             <v-icon icon="fa-solid fa-right-to-bracket fa-xs"></v-icon>
@@ -122,7 +122,7 @@
 
                 <!-- logout button -->
 
-                <v-list-item v-if="user" @click="logout()">
+                <v-list-item @click="logout()" v-if="user.length >= 1">
                     <v-list-item-title link>
                         <span>
                             <v-icon icon="fas fa-right-from-bracket"></v-icon>
@@ -155,7 +155,7 @@ export default {
         getUser() {
             axios.get('/customer')
                 .then((response) => {
-                    return this.user.push(response.data); // = response.data;
+                    return this.user.push(response.data);
                 })
                 .catch((response) => {
                     console.log('not logged.');
@@ -165,11 +165,20 @@ export default {
         getCarts() {
             axios.get('/carts')
                 .then((response) => {
-                    return this.carts = response.data;
+                    return this.carts.push(response.data)  //= response.data;
                 })
                 .catch((response) => {
                     return alert('Error :' + response);
                 });
+        },
+        getLikes(){
+            axios.get('/likes')
+            .then((response) => {
+                return this.likes = response.data;
+            })
+            .catch((response) => {
+                alert('Error: ' + response);
+            });
         },
         removeItem(item){
             axios.delete(`/cartItem/delete/${item.id}`)
@@ -196,7 +205,7 @@ export default {
     },
 
     mounted() {
-        // this.getUser();
+        this.getUser();
         this.getCarts();
     }
 }
