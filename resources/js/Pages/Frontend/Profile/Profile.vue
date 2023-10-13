@@ -5,35 +5,68 @@
 
   <v-container>
     <v-row no-gutters>
-      <v-col cols="12" sm="6">
+      <v-col cols="6" sm="6">
         <v-sheet class="ma-2 pa-2">
           <div>
             <v-container>
               <v-row no-gutters>
                 <v-col col="8" sm="4">
                   <v-sheet class="ma-2 pa-2">
-                    <v-card class="mx-auto" max-width="434" rounded="0">
-                      <v-avatar color="grey" size="130" rounded="0">
-                        <v-img cover src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg">
-                          <div class="float-end">
-                            <v-btn icon size="x-small" density="confortable" variant="plain">
-                              <v-icon icon="fa-solid fa-plus fa-2xs" color="primary" @click="uploadProfileImage"></v-icon>
-                            </v-btn>
-                          </div>
-                         
-                        </v-img>
-                      </v-avatar>
-                      <v-list-item :title="customer.first_name" :subtitle="customer.last_name"></v-list-item>
-
-                      <v-list-item :title="customer.email"></v-list-item>
-
-                      <v-list-item title="Personal info"  @click="editCustomerInfo"></v-list-item>
-
-                    </v-card>
+                    <v-hover>
+                    <template v-slot="{isHovering, props}">
+                    
+                      <v-card class="mx-auto" max-width="434" rounded="0" v-bind="props">
+                        <v-avatar color="grey" size="130" rounded="0">
+                          <v-img cover src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg" v-if="!profileImage">
+                            <div class="float-end">
+                              <v-btn icon size="x-small" density="confortable" variant="plain">
+                                <v-icon icon="fa-solid fa-plus fa-2xs" color="orange" @click="uploadProfileImage"></v-icon>
+                              </v-btn>
+                            </div>
+                           
+                          </v-img>
+                          <v-img cover v-if="profileImage" :src="`/storage/avatars/${profileImage.name}`" :lazy-src="`/storage/avatars/${profileImage.name}`">
+                          
+                              
+                                  
+                                    <v-expand-transition>
+                                      <div
+                                        v-if="isHovering"
+                                        class="d-flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal text-h5"
+                                        style="height: 100%"
+                                      >
+                                      
+                                      <v-btn-group>
+                                          <v-btn icon size="x-small" density="confortable" variant="plain">
+                                            <v-icon icon="fas fa-trash fa-2xs" color="white" @click="deleteProfileImage"></v-icon>
+                                          </v-btn>
+                                          <v-btn icon size="x-small" density="confortable" variant="plain">
+                                            <v-icon icon="fa-solid fa-plus fa-2xs" color="white" @click="uploadProfileImage"></v-icon>
+                                          </v-btn>
+                                      </v-btn-group>
+                                      </div>
+                                      
+                                    </v-expand-transition>
+                                  
+                               
+                              
+                       
+                           
+                          </v-img>
+                        </v-avatar>
+                        <v-list-item :title="customer.first_name" :subtitle="customer.last_name"></v-list-item>
+  
+                        <v-list-item :title="customer.email"></v-list-item>
+  
+                        <v-list-item title="Personal info"  @click="editCustomerInfo"></v-list-item>
+  
+                      </v-card>
+                    </template>
+                    </v-hover>
                   </v-sheet>
                 </v-col>
 
-                <v-col col="12" sm="8">
+                <v-col col="8" sm="4">
                   <v-sheet class="ma-2 pa-2">
                     <v-card :width="650">
 
@@ -132,20 +165,19 @@
                         <v-card-title>
                           <v-toolbar color="transparent">
                             Profile image
-                            <v-btn icon>
-                              <v-icon icon="fas fa-close"></v-icon>
+                            <template v-slot:append>
+                              <v-btn icon>
+                              <v-icon icon="fas fa-close" @click="dialogImage = false"></v-icon>
                             </v-btn>
+                            </template>
+                          
                           </v-toolbar>
                         </v-card-title>
 
                         <v-card-text>
                           <v-row>
                             <v-col col="12" sm="12">
-                             
-                                <Upload />
-                             
-                             
-                             
+                               <Upload />
                             </v-col>
                            
                           </v-row>
@@ -172,32 +204,35 @@
                       <v-card class="text-center">
                         <v-card-title>
                           <v-toolbar color="transparent">
-                            Personal Information
-                            <v-btn icon>
+                            Edit Information
+                            <template v-slot:append>
+                              <v-btn icon @click="closeCustomerDialog">
                               <v-icon icon="fas fa-close"></v-icon>
                             </v-btn>
+                            </template>
+                            
                           </v-toolbar>
                         </v-card-title>
 
                         <v-card-text>
                           <v-row>
                             <v-col>
-                              <label>Name:</label>
-                              <v-text-field :label="customer.first_name"></v-text-field>
+                              <label>First name:</label>
+                              <v-text-field v-model="first_name" :label="customer.first_name"></v-text-field>
                             </v-col>
                             <v-col>
                               <label>Last name:</label>
-                              <v-text-field :label="customer.last_name"></v-text-field>
+                              <v-text-field v-model="last_name" :label="customer.last_name"></v-text-field>
                             </v-col>
                           </v-row>
                           <v-row>
                             <v-col>
                               <label>Email:</label>
-                              <v-text-field :label="customer.email"></v-text-field>
+                              <v-text-field v-model="email" :label="customer.email"></v-text-field>
                             </v-col>
                             <v-col>
                               <label>New password:</label>
-                              <v-text-field type="password" label="New Password"></v-text-field>
+                              <v-text-field v-model="password" type="password" label="New Password"></v-text-field>
                             </v-col>
                             <v-col>
                               <label>Confirm password:</label>
@@ -209,7 +244,7 @@
 
                         <v-card-actions>
                           <v-btn-group>
-                            <v-btn>
+                            <v-btn @click="customerUpdate">
                               Save
                             </v-btn>
                             <v-btn
@@ -276,6 +311,7 @@ export default {
   data: () => ({
     customer: false,
     customerAddress: [],
+    profileImage: false,
     address: '',
     number: '',
     complemento: '',
@@ -286,6 +322,13 @@ export default {
     zip_code: '',
     country: '',
     phone: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    email: '',
+
     loading: false,
     loadingUpdate: false,
     dialogImage: false,
@@ -344,6 +387,43 @@ export default {
         .catch((response) => {
           return alert('Error :' + response);
         })
+    },
+    getProfileImage(){
+      axios.get('/profileImage')
+      .then((response) => {
+        return this.profileImage = response.data;
+      })
+      .catch((response) => {
+        return alert('Error: ' + response);
+      })
+    },
+    customerUpdate(){
+      const selectCustomer = Object.assign({},this.customer);
+      let data = {
+        first_name: this.first_name,
+        last_name: this.last_name,
+        email: this.email,
+        password: this.password,
+        
+      };
+      axios.post(`/customer/update/${selectCustomer.id}`, data)
+      .then((response) => {
+        return this.customer.push(response.data);
+      })
+      .catch((response) => {
+        return alert('Error :' + response);
+      })
+    },
+    deleteProfileImage(){
+      const image = Object.assign({}, this.profileImage);
+     
+      axios.delete(`/profileImage/delete/${image.id}`)
+      .then((response) => {
+        this.profileImage.splice(image.id, 1);
+      })
+      .catch((response) => {
+        return alert('Error :' +  response);
+      });
     },
     getAddress() {
       axios.get('/address')
@@ -421,7 +501,20 @@ export default {
   },
   created() {
     this.getCustomer();
+    this.getProfileImage();
     this.getAddress();
   }
 }
 </script>
+
+<style>
+  .v-card--reveal {
+    align-items: center;
+    top: 0;
+    justify-content: end;
+    opacity: .8;
+    position: absolute;
+    width: 100%;
+    max-height: 30%;
+  }
+</style>

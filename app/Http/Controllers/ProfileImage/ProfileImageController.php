@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Storage;
 class ProfileImageController extends Controller
 {
     //
+    public function index(){
+        $customer = Auth::guard('customer')->user();
+        $image = ProfileImage::where('customer_id', $customer->id)->latest()->first();
+        return response()->json($image);
+    }
     public function upload(Request $request){
         try{
             $customer = Auth::guard('customer')->user();
@@ -43,7 +48,7 @@ class ProfileImageController extends Controller
     public function store($image, $customer){
         try{
             foreach($image as $img){
-                $uploadFile = ProfileImage::create([
+                $uploadFile = ProfileImage::updateOrCreate([
                     'name' => $img->getClientOriginalName(),
                     'extension' =>  $img->getClientOriginalExtension(),
                     'size' => $img->getClientOriginalExtension(),
@@ -58,5 +63,13 @@ class ProfileImageController extends Controller
             return response()->json($e);
         }
         
+    }
+    public function destroy($id){
+        try{
+            $profileImage = ProfileImage::findOrFail($id)->delete();
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
     }
 }

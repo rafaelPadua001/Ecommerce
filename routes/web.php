@@ -83,12 +83,15 @@ Route::get('/users', function(){
 
 //Customer Routes
 Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
+Route::post('/customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
 Route::post('/login',[LoginController::class, 'login'])->name('cutomer.login');
 Route::post('/registerCustomer', [CustomerController::class, 'store'])->name('store');
 Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('logout');
 
 //Customer Profile Image
+Route::get('/profileImage', [ProfileImageController::class, 'index'])->name('profile.image.index');
 Route::post('/profileImage/upload', [ProfileImageController::class, 'upload'])->name('profile.image.upload');
+Route::delete('/profileImage/delete/{id}', [ProfileImageController::class, 'destroy'])->name('profile.image.destroy');
 
 //Customer Addresses
 Route::get('/address', [AddressesController::class, 'index'])->name('address.index');
@@ -102,9 +105,6 @@ Route::get('/categories/show', [CategoriesController::class, 'show'])->name('cat
 //Cart Routes
 Route::get('/carts',[CartController::class, 'getCarts'])->name('carts.get');
 Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
-
-//Checkout Routes
-Route::get('/cartsItem/checkout/{id}', [CartItemController::class, 'checkout'])->name('cartsItem.checkout');
 
 Route::delete('/cartItem/delete/{id}', [CartItemController::class, 'destroy'])->name('cartsItem.destroy');
 

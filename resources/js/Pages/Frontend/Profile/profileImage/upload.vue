@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    export default {
+    export default{
         data: () => ({
             image: false,
             loading: false,
