@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressesController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProductSeo\ProductSeoController;
 use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\ProductVideos\ProductVideoController;
+use App\Http\Controllers\ProfileImage\ProfileImageController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -84,6 +86,14 @@ Route::get('/customer', [CustomerController::class, 'index'])->name('customer.in
 Route::post('/login',[LoginController::class, 'login'])->name('cutomer.login');
 Route::post('/registerCustomer', [CustomerController::class, 'store'])->name('store');
 Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('logout');
+
+//Customer Profile Image
+Route::post('/profileImage/upload', [ProfileImageController::class, 'upload'])->name('profile.image.upload');
+
+//Customer Addresses
+Route::get('/address', [AddressesController::class, 'index'])->name('address.index');
+Route::post('/address/save', [AddressesController::class, 'create'])->name('address.create');
+Route::post('/address/update/{id}', [AddressesController::class, 'update'])->name('address.update');
 
 //Categories routes
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index')->middleware('auth');

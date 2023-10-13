@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->integer('likes');
             $table->foreignId('product_id')->constrained(
-                table: 'products', indexName: 'id'
+                table: 'products', indexName: 'likes_products_id'
             );
-            $table->foreignId('user_id')->costrined(
-                table: 'customers', indexName: 'id'
+            $table->foreignId('user_id')->constrained(
+                table: 'customers', indexName: 'likes_customers_id'
             );
             $table->timestamps();
         });
