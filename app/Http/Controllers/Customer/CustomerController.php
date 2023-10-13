@@ -51,6 +51,22 @@ class CustomerController extends Controller
             return throw new Exception($response);
         }
     }
+    public function update(Request $request, $id){
+        try{
+            $customer = Customer::findOrFail($id);
+            
+            if($request->has('password')){
+                //criptografa a nova sernha
+                $request->merge(['password' => bcrypt($request->password)]);
+
+            }
+            $update = $customer->update($request->all());
+            return response()->json($update);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }   
     public function logout(Request $request){
        try{
             Auth::guard('customer')->logout();

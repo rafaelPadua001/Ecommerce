@@ -9,7 +9,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases, fa } from 'vuetify/iconsets/fa'
-import money from 'v-money3'
+//import money from 'v-money3'
 
 import * as labsComponents from 'vuetify/labs/components'
 
@@ -34,5 +34,5 @@ const vuetify = createVuetify({
 createApp(App)
   .use(vuetify)
   .use(router)
-  .use(money)
+ // .use(money)
   .mount('#app');
