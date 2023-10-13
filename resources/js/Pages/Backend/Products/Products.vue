@@ -243,8 +243,7 @@
                         <v-text-field
                           v-model="editedItem.price"
                           label="Price"
-                          
-                          prefix="R$ "
+                           prefix="R$ "
                           v-bind="config" 
                         >
                       </v-text-field>

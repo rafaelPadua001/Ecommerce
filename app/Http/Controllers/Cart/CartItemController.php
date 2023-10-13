@@ -34,6 +34,18 @@ class CartItemController extends Controller
             return response()->json($e);
         }
     }
+    public function checkout($id){
+        try{
+            $cartItem = CartItem::where('cart_items.id', $id)
+                ->join('products', 'cart_items.product_id', '=', 'products.id')
+                ->select('cart_items.*', 'products.*')
+                ->first();
+            return response()->json($cartItem);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }dd($id);
+    }
     public function destroy($id){
     
         try{
