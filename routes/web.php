@@ -93,6 +93,9 @@ Route::get('/categories/show', [CategoriesController::class, 'show'])->name('cat
 Route::get('/carts',[CartController::class, 'getCarts'])->name('carts.get');
 Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
 
+//Checkout Routes
+Route::get('/cartsItem/checkout/{id}', [CartItemController::class, 'checkout'])->name('cartsItem.checkout');
+
 Route::delete('/cartItem/delete/{id}', [CartItemController::class, 'destroy'])->name('cartsItem.destroy');
 
 //Subcategories routes
