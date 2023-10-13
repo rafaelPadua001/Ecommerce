@@ -7,6 +7,7 @@ import Home from '../Pages/Frontend/Main.vue'
 import Login from '../Pages/Frontend/Auth/Login.vue'
 import Register from '../Pages/Frontend/Auth/Register.vue'
 import Dashboard from '../Pages/Frontend/Auth/Dashboard.vue'
+import Profile from '../Pages/Frontend/Profile/Profile.vue'
 import SubcategoriesAll from '../Pages/Frontend/Subcategories/Subcategories.vue'
 import Cart from '../Pages/Frontend/Cart/Cart.vue'
 import Checkout from '../Pages/Frontend/Checkout/Checkout.vue'
@@ -39,6 +40,11 @@ const routes = [{
         path: '/dashboard',
         name: 'dashboard',
         component: Dashboard
+    },
+    {
+        path: '/profileCustomer/:id',
+        name: 'profile',
+        component: Profile
     },
     {
         path: '/admin',

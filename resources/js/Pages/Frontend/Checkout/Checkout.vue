@@ -33,12 +33,18 @@
                                     <div>
                                         <p><strong>Name Product:</strong> {{ itemCart.name }}</p>
                                     </div>
+
+
+                                    <div v-for="colors in JSON.parse(itemCart.colors)">
+                                        <p><strong>Colors:</strong> {{ colors }}</p>
+
                                     <div>
                                         <p><strong>Price:</strong> {{ itemCart.price }}</p>
 
                                     </div>
                                     <div>
                                         <p><strong>Color:</strong> {{ itemCart.color }}</p>
+
 
                                     </div>
                                     <div>
@@ -93,7 +99,9 @@
                                 <v-col col="4" md="4">
 
                                     <div>
-                                        <p><strong>Customer name:</strong> Customer Name Here</p>
+
+                                        <p><strong>Customer name:</strong> {{ itemCart.name }}</p>
+
                                     </div>
 
                                     <div>
@@ -171,7 +179,15 @@
                                     </v-col>
                                     <v-col col="4" md="4">
                                         <div>Meios de Pagamento, credito,depito e pix</div>
+
+                                        <div class="text-h6">
+                                            {{ itemCart.name }}
+                                        </div>
+
                                         <div>
+                        <strong>Cupom</strong> {{ itemCart.quantity }}
+                    </div>
+                                      <div>
                                             <p><strong>Product:</strong> {{ itemCart.name }}</p>
                                         </div>
                                         <div>
@@ -195,6 +211,7 @@
                                         <div>
                                             <strong>Cupom</strong> {{ itemCart.quantity }}
                                         </div>
+
                                     </v-col>
                                 </v-row>
                             </v-card-text>
