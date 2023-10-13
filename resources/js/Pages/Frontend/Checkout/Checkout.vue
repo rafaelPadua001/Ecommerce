@@ -33,9 +33,12 @@
                                     <div>
                                         <p><strong>Name Product:</strong> {{ itemCart.name }}</p>
                                     </div>
+                                    <div>
+                                        <p><strong>Price:</strong> {{ itemCart.price }}</p>
 
-                                    <div v-for="colors in JSON.parse(itemCart.colors)">
-                                        <p><strong>Colors:</strong> {{ colors }}</p>
+                                    </div>
+                                    <div>
+                                        <p><strong>Color:</strong> {{ itemCart.color }}</p>
 
                                     </div>
                                     <div>
@@ -90,7 +93,7 @@
                                 <v-col col="4" md="4">
 
                                     <div>
-                                        <p><strong>Customer name:</strong> {{ itemCart.name }}</p>
+                                        <p><strong>Customer name:</strong> Customer Name Here</p>
                                     </div>
 
                                     <div>
@@ -168,13 +171,30 @@
                                     </v-col>
                                     <v-col col="4" md="4">
                                         <div>Meios de Pagamento, credito,depito e pix</div>
-                                        <div class="text-h6">
-                                            {{ itemCart.name }}
+                                        <div>
+                                            <p><strong>Product:</strong> {{ itemCart.name }}</p>
                                         </div>
+                                        <div>
+                                        <p><strong>product price:</strong> R$ {{ itemCart.price }}</p>
+                                    </div>
+
+                                    <div>
+                                        <p><strong>Discount</strong> Discount value</p>
+
+                                    </div>
+                                    <div>
+                                        <p><strong>Delivery</strong> Delivery value</p>
+
+                                    </div>
+                                    <div>
+                                        <p><strong>Total price:</strong> total value</p>
+
+                                   </div>
+                                  
 
                                         <div>
-                        <strong>Cupom</strong> {{ itemCart.quantity }}
-                    </div>
+                                            <strong>Cupom</strong> {{ itemCart.quantity }}
+                                        </div>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
