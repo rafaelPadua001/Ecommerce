@@ -151,7 +151,9 @@ export default {
     buy(item){
         this.cartIndex = this.carts.indexOf(item);
         this.selectCart = Object.assign({}, item);
-        this.$router.push(`/carts/buy/${this.selectCart.value}`);
+        console.log(this.cartIndex);
+        console.log(this.selectCart);
+        this.$router.push(`/carts/buy/${this.selectCart.id}`);
     
     },
    },

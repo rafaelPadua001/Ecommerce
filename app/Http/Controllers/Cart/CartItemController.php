@@ -38,13 +38,14 @@ class CartItemController extends Controller
         try{
             $cartItem = CartItem::where('cart_items.id', $id)
                 ->join('products', 'cart_items.product_id', '=', 'products.id')
-                ->select('cart_items.*', 'products.*')
+                ->join('addresses', 'cart_items.user_id', '=',  'addresses.user_id')
+                ->select('cart_items.*', 'products.*', 'addresses.*')
                 ->first();
             return response()->json($cartItem);
         }
         catch(Exception $e){
             return response()->json($e);
-        }dd($id);
+        };
     }
     public function destroy($id){
     

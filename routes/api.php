@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Categories\CategoriesController;
+use App\Http\Controllers\MelhorEnvio\MelhorEnvioController;
 use App\Http\Controllers\ProductImages\ProductImagesController;
 use App\Http\Controllers\Subcategories\SubcategoriesController;
 use App\Http\Controllers\Products\ProductController;
@@ -54,3 +55,5 @@ Route::delete('/images/delete/{id}', [ProductImagesController::class, 'destroy']
 //Video route
 Route::delete('/videos/delete/{id}', [ProductVideoController::class, 'destroy'])->name('videos.destroy');
 
+//Melhor envio
+Route::post('/calculateDelivery', [MelhorEnvioController::class, 'calculateDelivery'])->name('calculate.delivery');
