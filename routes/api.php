@@ -43,6 +43,8 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('produ
 Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
+
+
 //SEO route
 Route::post('/seo_product/update/{id}', [ProductSeoController::class, 'update'])->name('seo_product.update');
 
