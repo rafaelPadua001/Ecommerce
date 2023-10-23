@@ -8,14 +8,14 @@
         <v-timeline direction="horizontal">
             <v-timeline-item v-model="confirm" v-if="confirm">
                 <template v-slot:opposite>
-                    <v-card :width="550">
+                    <v-card :width="650">
                         <v-card-text>
                             <v-row>
                                 <v-col col="4" md="6">
                                     <div v-for="(image, index) in JSON.parse(itemCart.images)" :key="index">
-                                        <v-img v-if="index === 0" :vid-id="images" class="align-end text-white" :width="250"
+                                        <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" :width="250"
                                             max-width="250" height="200" aspect-ratio="16/9"
-                                            :src="`/storage/products/${image}`" :lazy-src="`/storage/products/${images}`"
+                                            :src="`/storage/products/${image}`" :lazy-src="`/storage/products/${image}`"
                                             cover>
 
                                             <template>
@@ -60,37 +60,56 @@
                                         </v-row>
                                         <v-row>
                                             <v-col>
-                                                <div>
+                                              
                                                     <v-row>
                                                         <v-col col="12" sm="12">
-                                                            <v-card class="mx-auto" max-width="550">
-                                                                <v-list lines="one">
+                                                            <v-card class="mx-auto" max-width="650">
+                                                                <v-list lines="three">
                                                                     <v-list-item v-for="quotation in quotations"
                                                                         :key="quotation.id"
                                                                         :v-if="!quotation.error"
                                                                     >
+                                                                   
                                                                         <template v-slot:prepend>
-                                                                            <v-avatar color="grey-lighten-1">
+                                                                           
+                                                                            <v-avatar :width="550" color="transparent-lighten-1">
                                                                                 <v-img
-                                                                                    :src="quotation.picture"
-                                                                                    :placeholder="quotation.name"
+                                                                                    :src="quotation.company.picture"
+                                                                                    :lazy-src="quotation.company.picture"
+                                                                                    :placeholder="quotation.company.name"
                                                                                 >
                                                                                 </v-img>
                                                                             </v-avatar>
                                                                         </template>
 
                                                                          <div>
-                                                                                {{quotation.name}}
-                                                                             
-                                                                                <p>Price:</p>{{quotation.currency}} {{quotation.price}}
-                                                                                <p>Discount:</p>{{quotation.discount}}
-                                                                             
-                                                                                <p>total Value
-                                                                                {{ (parseFloat(selectedDelivery.price) + parseFloat(itemCart.price) - parseFloat(selectedDelivery.discount)).toFixed(2) }}
+                                                                                <p class="text-body-2">
+                                                                                    Price:
+                                                                                    <strong>{{quotation.currency}} {{quotation.price}}</strong>
                                                                                 </p>
-                                                                                <p>Prazo de entrega: 
-                                                                                        {{quotation.delivery_time}} 
-                                                                                        dias úteis
+                                                                                <p class="text-body-2">
+                                                                                    Discount:
+                                                                                    <strong>{{quotation.discount}}</strong>
+                                                                                </p>
+                                                                             
+                                                                                <p class="text-body-2" v-if="!quotation.error && itemCart.price">
+                                                                                    total Value
+                                                                                    <strong>
+                                                                                        {{ 
+                                                                                            (
+                                                                                                (parseFloat(selectedDelivery.price) || 0) + 
+                                                                                                (parseFloat(itemCart.price) || 0) - 
+                                                                                                (parseFloat(selectedDelivery.discount) || 0)
+                                                                                            ).toFixed(2) 
+                                                                                        }}
+                                                                                    </strong>
+                                                                                </p>
+                                                                                <p class="text-body-2">
+                                                                                    Prazo de entrega: 
+                                                                                        <strong>
+                                                                                            {{quotation.delivery_time}} 
+                                                                                            dias úteis
+                                                                                        </strong>
                                                                                 </p>
                                                                             </div>
                                                                       
@@ -104,7 +123,7 @@
                                                                            
 
                                                                         </template>
-
+                                                                       
                                                                        
                                                                     </v-list-item>
                                                                 </v-list>
@@ -113,7 +132,7 @@
                                                         </v-col>
                                                     </v-row>
 
-                                                </div>
+                                               
                                             </v-col>
                                         </v-row>
 
@@ -142,7 +161,7 @@
 
             <v-timeline-item>
                 <template v-slot:opposite>
-                    <v-card v-model="dataConfirm" v-if="dataConfirm">
+                    <v-card v-model="dataConfirm" v-if="dataConfirm" :width="650">
                         <v-card-text>
                             <v-row>
                                 <v-col col="4" md="6">
@@ -150,7 +169,7 @@
                                         <v-img v-if="index === 0" :vid-id="images" class="align-end text-white" :width="250"
                                             max-width="250" height="200" aspect-ratio="16/9"
                                             :src="`../../storage/products/${image}`"
-                                            :lazy-src="`../../storage/products/${image}`" cover>
+                                            :lazy-src="`../../storage/products/${images}`" cover>
 
                                             <template>
                                                 <div class="d-flex align-center justify-center fill-height">
@@ -163,43 +182,84 @@
                                     </div>
 
                                 </v-col>
-                                <v-col col="4" md="4">
+                                <v-col col="12" md="4">
 
                                     <div>
 
-                                        <p><strong>Customer name:</strong> {{ itemCart.name }}</p>
-
-                                    </div>
-
-                                    <div>
-                                        <p><strong>CPF:</strong> {{ colors }}</p>
-
-                                    </div>
-                                    <div>
-                                        <p><strong>Telefone:</strong> {{ colors }}</p>
+                                        <p class="text-subititle-1">
+                                            <strong>Customer name:</strong>
+                                             {{ customer.first_name }} 
+                                         
+                                             
+                                        </p>
 
                                     </div>
                                     <div>
-                                        <p><strong>Celular:</strong> {{ colors }}</p>
+
+                                    <p class="text-subititle-1">
+                                        <strong>Customer lastname:</strong>
+                                         {{ customer.last_name }}
+                                        
+                                    </p>
 
                                     </div>
                                     <div>
-                                        <strong>Endereço:</strong> {{ itemCart.quantity }}
+                                        <p class="text-subtitle-2">
+                                            <strong>CPF:</strong>
+                                             {{ colors }}
+                                        </p>
+
+                                    </div>
+                                    <div>
+                                        <p  class="text-subtitle-2">
+                                            <strong>Contact:</strong>
+                                             {{ address.telefone }}
+                                        </p>
+
+                                    </div>
+                                    <div>
+                                        <p  class="text-subtitle-2"><strong>Celular:</strong> {{ colors }}</p>
+
+                                    </div>
+                                    <div>
+                                        <p  class="text-subtitle-2">
+                                            <strong>Endereço:</strong> {{ address.endereco }}
+                                        </p>
+                                        <p  class="text-subtitle-2">
+                                            <strong>Complemento:</strong> {{ address.complemento }}
+                                        </p>
+                                        <p  class="text-subtitle-2">
+                                            <strong>Bairro:</strong> {{ address.bairro }}
+                                        </p>
+                                        <p  class="text-subtitle-2">
+                                            <strong>Cidade:</strong> {{ address.cidade }}
+                                        </p>
                                     </div>
 
                                     <div>
-                                        <strong>Zip Code</strong> {{ itemCart.postal_code }}
+                                        <p  class="text-subtitle-2">
+                                            <strong>Zip Code</strong> {{ address.cep }}
+                                        </p>
+                                        <p  class="text-subtitle-2">
+                                            <strong>UF:</strong> {{ address.UF }}
+                                        </p>
                                     </div>
                                     <div>
-                                        <strong>Delivery Value</strong> 
-                                            {{ selectedDelivery.name }} {{ selectedDelivery.currency }} {{ selectedDelivery.price }} - {{ selectedDelivery.discount }}
+                                        <p  class="text-subtitle-2">
+                                            <strong>Delivery: </strong> 
+                                            {{ selectedDelivery.currency }} {{ selectedDelivery.price }} - {{ selectedDelivery.discount }}
+                                   
+                                        </p>
+                                       
                                     </div>
                                     
-                                    
                                     <div>
-                                        <strong>Total Value</strong> 
+                                        <p>
+                                            <strong>Total Value</strong> 
                                         {{ selectedDelivery.currency }}    
                                             {{ (parseFloat(selectedDelivery.price) + parseFloat(itemCart.price) - parseFloat(selectedDelivery.discount)).toFixed(2) }} 
+                                        </p>
+                                       
                                     </div>
 
                                 </v-col>
@@ -231,15 +291,15 @@
                 </template>
                 <div>
                     <div class="text-h6">
-                        <v-card v-model="finish" v-if="finish">
+                        <v-card v-model="finish" v-if="finish" :width="650">
                             <v-card-text>
                                 <v-row>
-                                    <v-col col="6" md="6">
+                                    <v-col col="4" md="6">
                                         <div v-for="(image, index) in JSON.parse(itemCart.images)" :key="image.id">
                                             <v-img v-if="index === 0" :vid-id="image" class="align-end text-white"
                                                 :width="250" max-width="250" height="200" aspect-ratio="16/9"
                                                 :src="`../../storage/products/${image}`"
-                                                :lazy-src="`../../storage/products/${images}`" cover>
+                                                :lazy-src="`../../storage/products/${image}`" cover>
 
                                                 <template>
                                                     <div class="d-flex align-center justify-center fill-height">
@@ -252,16 +312,80 @@
                                         </div>
 
                                     </v-col>
-                                    <v-col col="4" md="4">
-                                        <div>Meios de Pagamento, credito,depito e pix</div>
+                                    <v-col col="12" md="4">
+                                     
 
                                         <div class="text-h6">
                                             {{ itemCart.name }}
                                         </div>
+                                        <div>
+                                        <p>
+                                            <strong>Total Value</strong> 
+                                        {{ selectedDelivery.currency }}
+                                            {{ (parseFloat(selectedDelivery.price) + parseFloat(itemCart.price) - parseFloat(selectedDelivery.discount)).toFixed(2) }} 
+                                        </p>
+                                       
+                                    </div>
 
                                         <div>
-                        <strong>Cupom</strong> {{ itemCart.quantity }}
-                    </div>
+                                            <strong>Cupom</strong> {{ itemCart.quantity }}
+                                        </div>
+                                    </v-col>
+                                </v-row>
+
+                                <v-row>
+                                    <v-col>
+                                        <v-card>
+                                            <v-card-text>
+                                                <v-row>
+                                                    <v-col col="4" sm="6">
+                                                       <v-radio-group 
+                                                        v-model="paymentType"
+                                                        inline
+                                                    >
+                                                            <v-radio
+                                                                label="Debit"
+                                                                value="debit"
+                                                            >
+
+                                                            </v-radio>
+                                                            <v-radio
+                                                                label="Credit"
+                                                                value="credit"
+                                                            >
+
+                                                            </v-radio>
+                                                            <v-radio
+                                                                label="Pix"
+                                                                value="pix"
+                                                            >
+
+                                                            </v-radio>
+                                                       </v-radio-group>
+                                                    </v-col>
+                                                </v-row>
+
+                                                <v-row>
+                                                    <v-col>
+                                                        <div v-if="paymentType == 'debit'">
+                                                            <v-card>
+                                                                formulario de pagamento por debito
+                                                            </v-card>
+                                                        </div>
+                                                        <div v-if="paymentType == 'credit'">
+                                                            <v-card>
+                                                                formulario de pagamento por credito
+                                                            </v-card>
+                                                        </div>
+                                                        <div v-if="paymentType == 'pix'">
+                                                            <v-card>
+                                                                formulario de pagamento por pix
+                                                            </v-card>
+                                                        </div>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-card-text>
+                                        </v-card>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -313,11 +437,15 @@ export default {
     data: () => ({
         itemCart: [],
         quotations: [],
+        customer: [],
+        address: [], 
         zip_code: false,
         selectedDelivery: false,
         confirm: true,
         dataConfirm: false,
         finish: false,
+        paymentType: false,
+        
     }),
     methods: {
         getProducts() {
@@ -331,7 +459,7 @@ export default {
                 // Converta o número para um valor inteiro
                 itemId = parseInt(itemId[0]);
 
-                axios.get(`/cartsItem/checkout/${itemId}`)
+                axios.get(`/cartItem/checkout/${itemId}`)
                     .then((response) => {
                         return this.itemCart = response.data;
                     })
@@ -341,6 +469,25 @@ export default {
 
             }
 
+        },
+        getCustomer(){
+            axios.get('/customer')
+            .then((response) => {
+                return this.customer = response.data;
+
+            })
+            .catch((response) => {
+                return alert('Error:' + response);
+            });
+        },
+        getAddress(){
+            axios.get('/address')
+            .then((response) => {
+                return this.address = response.data;
+            })
+            .catch((response) => {
+                return alert('Error: ' + response)
+            })
         },
         calculateDelivery() {
             const data = {
@@ -379,9 +526,10 @@ export default {
             this.finish = false;
         }
     },
-
     created() {
         this.getProducts();
+        this.getCustomer();
+        this.getAddress();
     }
 }
 </script>

@@ -25,12 +25,18 @@ class MelhorEnvioController extends Controller
             $calculator->setReceipt(false);
             $calculator->setCollect(false);
             
+            $height = intval($request->height);
+            $width = intval($request->width);
+            $length = intval($request->length);
+            $weight = $request->weight;
+            $price = $request->price;
+            $quantity = $request->quantity;
+            
             $calculator->addProducts(
-                new Product(uniqid(), 40, 30, 50, 10.00, 100.0, 1),
-                new Product(uniqid(), 5, 1, 10, 0.1, 50.0, 1)
+                $product = new Product(uniqid(), $height, $width, $length, $weight, 50.00 /*$price*/, $quantity),
+               
             );
            
-            //$package = $this->createPackage($calculator, $request);
             $quotations = $calculator->calculate();
            // dd($quotations);
             return response()->json($quotations);
@@ -38,21 +44,10 @@ class MelhorEnvioController extends Controller
             return response()->json($e);
         }
 
-        //    return response()->json($quotations);
+            return response()->json($quotations);
 
     }
-    /* public function createPackage($calculator, $request){
-        $calculator->addPackages(
-            $package = new Package(
-                $request->height,
-                $request->width,
-                $request->length,
-                $request->weight,
-                $request->price
-            )
-        );
-        return response()->json($package);
-    }*/
+   
     public function createShipmentInstance()
     {
         $shipment = new Shipment(env('MELHORENVIO_ACCESS_TOKEN', Environment::SANDBOX));
