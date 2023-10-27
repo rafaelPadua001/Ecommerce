@@ -24,6 +24,7 @@
         "vue-tsc": "^1.2.0"
     },
     "dependencies": {
+        "@mercadopago/sdk-js": "^0.0.3",
         "maska": "^2.1.10",
         "v-mask": "^2.3.0",
         "v-money3": "^3.24.0",

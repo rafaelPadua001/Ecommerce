@@ -19,4 +19,7 @@ export default defineConfig({
         }),
         
     ],
+    define: {
+        'import.meta.env.MERCADOPAGO_PUBLICKEY': JSON.stringify(process.env.MERCADOPAGO_PUBLICKEY)
+    }
 });

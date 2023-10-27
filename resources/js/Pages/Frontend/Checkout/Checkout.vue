@@ -299,7 +299,7 @@
                                             <v-img v-if="index === 0" :vid-id="image" class="align-end text-white"
                                                 :width="250" max-width="250" height="200" aspect-ratio="16/9"
                                                 :src="`../../storage/products/${image}`"
-                                                :lazy-src="`../../storage/products/${image}`" cover>
+                                                :lazy-src="`../../storage/products/${images}`" cover>
 
                                                 <template>
                                                     <div class="d-flex align-center justify-center fill-height">
@@ -317,7 +317,7 @@
 
                                         <div class="text-h6">
                                             {{ itemCart.name }}
-                                        </div>
+                                        </div>  
                                         <div>
                                         <p>
                                             <strong>Total Value</strong> 
@@ -369,12 +369,21 @@
                                                     <v-col>
                                                         <div v-if="paymentType == 'debit'">
                                                             <v-card>
-                                                                formulario de pagamento por debito
+                                                                <DebitForm />
                                                             </v-card>
                                                         </div>
                                                         <div v-if="paymentType == 'credit'">
                                                             <v-card>
-                                                                formulario de pagamento por credito
+                                                                <CreditForm 
+                                                                    :paymentType="paymentType"
+                                                                    :name="this.itemCart.name"
+                                                                    :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price) - parseFloat(selectedDelivery.discount)).toFixed(2)"
+                                                                    :quantity="this.itemCart.quantity"
+                                                                    :delivery="selectedDelivery"
+                                                                    :description="this.itemCart.description"
+                                                                />
+
+                                                               
                                                             </v-card>
                                                         </div>
                                                         <div v-if="paymentType == 'pix'">
@@ -420,6 +429,7 @@
 import { ref } from "vue";
 import { vMaska } from "maska";
 
+
 const options = { mask: '#####-####' };
 const myValue = ref('');
 
@@ -429,10 +439,14 @@ const phoneMask = ref('');
 
 <script>
 import Dashboard from '../Auth/Dashboard.vue'
+import DebitForm from '../Payment/DebitForm.vue'
+import CreditForm from '../Payment/CreditForm.vue'
 
 export default {
     components: {
         Dashboard,
+        DebitForm,
+        CreditForm,
     },
     data: () => ({
         itemCart: [],
@@ -445,7 +459,6 @@ export default {
         dataConfirm: false,
         finish: false,
         paymentType: false,
-        
     }),
     methods: {
         getProducts() {
@@ -490,6 +503,8 @@ export default {
             })
         },
         calculateDelivery() {
+          
+
             const data = {
                 postal_code: this.zip_code,
                 height: this.itemCart.height,
@@ -525,6 +540,7 @@ export default {
             this.dataConfirm = true;
             this.finish = false;
         }
+      
     },
     created() {
         this.getProducts();
