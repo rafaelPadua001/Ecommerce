@@ -19,6 +19,7 @@ use App\Http\Controllers\ProductSeo\ProductSeoController;
 use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\ProductVideos\ProductVideoController;
 use App\Http\Controllers\ProfileImage\ProfileImageController;
+use App\Http\Controllers\Payment\PaymentController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -108,6 +109,9 @@ Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
 
 Route::get('/cartItem/checkout/{id}', [CartItemController::class, 'checkout'])->name('cartsItem.checkout');
 Route::delete('/cartItem/delete/{id}', [CartItemController::class, 'destroy'])->name('cartsItem.destroy');
+
+//Payment Routes
+Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
 
 //Subcategories routes
 Route::get('/subcategories', [SubcategoriesController::class, 'index'])->name('subcategories.index')->middleware('auth');
