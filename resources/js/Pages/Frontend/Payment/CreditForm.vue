@@ -37,6 +37,7 @@ export default {
         'totalValue',
         'delivery',
         'description',
+        'image'
     ],
     data: () => ({
         paymentSelected: 'mercadoPago',
@@ -68,7 +69,8 @@ export default {
                 payment: this.paymentSelected,
                 description: this.description,
                 name: this.name,
-                quantity: this.quantity
+                quantity: this.quantity,
+                image: this.image
             };
             axios.post(`/payment`, data)
                 .then((response) => {
