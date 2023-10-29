@@ -21,7 +21,7 @@
                                 New Item
                             </v-btn>
                         </template>
-                      
+
                     </v-dialog>
                     <v-dialog v-model="dialogDelete" max-width="500px">
                         <v-card>
@@ -36,23 +36,30 @@
                     </v-dialog>
                 </v-toolbar>
             </template>
+            <template v-slot:item.images="{ item }">
+                <v-row>
+                    <v-col v-for="(imageName, index) in JSON.parse(item.images)" :key="index">
+                        <v-img :src="`./storage/products/${imageName}`" max-width="100" max-height="100"></v-img>
+                    </v-col>
+                </v-row>
+            </template>
             <template v-slot:item.actions="{ item }">
                 <v-btn-group>
-                    <v-btn icon  @click="buy(item)" size="x-small">
-                    <v-icon class="me-2" icon="fa-solid fa-cart-shopping fa-2xs">
-                  
-                    </v-icon>
-                </v-btn>
-               
-                
-                <v-btn icon size="x-small"  @click="deleteItem(item.raw)">
-                    <v-icon @click="deleteItem(item.raw)" icon="fa-solid fa-trash fa-2xs">
-                    
-                    </v-icon>
-                </v-btn>
+                    <v-btn icon @click="buy(item)" size="x-small">
+                        <v-icon class="me-2" icon="fa-solid fa-cart-shopping fa-2xs">
+
+                        </v-icon>
+                    </v-btn>
+
+
+                    <v-btn icon size="x-small" @click="deleteItem(item.raw)">
+                        <v-icon @click="deleteItem(item.raw)" icon="fa-solid fa-trash fa-2xs">
+
+                        </v-icon>
+                    </v-btn>
                 </v-btn-group>
-                
-                
+
+
             </template>
             <template v-slot:no-data>
                 <v-btn color="primary" @click="initialize">
@@ -75,13 +82,14 @@ export default {
         dialogDelete: false,
         cartIndex: -1,
         headers: [
+
+            { title: 'image', value: 'images', key: 'images' },
             {
                 title: 'Name',
                 align: 'start',
                 sortable: false,
                 key: 'name',
             },
-            { title: 'image', key: 'images' },
             { title: 'quantity', key: 'quantity' },
             { title: 'colors', key: 'color' },
             { title: 'sizes', key: 'size' },
@@ -90,7 +98,7 @@ export default {
             { title: 'Updated', key: 'updated_at' },
             { title: 'Actions', key: 'actions', sortable: false },
         ],
-       
+
     }),
 
     computed: {
@@ -99,64 +107,64 @@ export default {
         },
     },
     watch: {
-      
+
         dialogDelete(val) {
             val || this.closeDelete()
         },
     },
     methods: {
         initialize() {
-      this.categories = [];
-    },
+            this.categories = [];
+        },
         getCart() {
             axios.get('/carts')
                 .then((response) => {
-                   
+
                     return this.carts = response.data;
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);
                 });
         },
-        
 
-    deleteItem(item) {
-      this.editedIndex = this.carts.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
+
+        deleteItem(item) {
+            this.editedIndex = this.carts.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialogDelete = true
+        },
+        deleteItemConfirm() {
+            const itemId = this.editedIndex;
+
+            axios.delete(`/api/categories/delete/${itemId}`)
+                .then((response) => {
+                    this.carts.splice(this.editedIndex, 1);
+                })
+                .catch((response) => {
+                    alert('Error: ' + response);
+                });
+
+            this.closeDelete()
+        },
+
+
+
+        closeDelete() {
+            this.dialogDelete = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
+        buy(item) {
+            this.cartIndex = this.carts.indexOf(item);
+            this.selectCart = Object.assign({}, item);
+            console.log(this.cartIndex);
+            console.log(this.selectCart);
+            this.$router.push(`/carts/buy/${this.selectCart.id}`);
+
+        },
     },
-    deleteItemConfirm() {
-      const itemId = this.editedIndex;
-
-      axios.delete(`/api/categories/delete/${itemId}`)
-        .then((response) => {
-          this.carts.splice(this.editedIndex, 1);
-        })
-        .catch((response) => {
-          alert('Error: ' + response);
-        });
-
-      this.closeDelete()
-    },
-
-   
-
-    closeDelete() {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-    buy(item){
-        this.cartIndex = this.carts.indexOf(item);
-        this.selectCart = Object.assign({}, item);
-        console.log(this.cartIndex);
-        console.log(this.selectCart);
-        this.$router.push(`/carts/buy/${this.selectCart.id}`);
-    
-    },
-   },
     created() {
         this.initialize();
         this.getCart();

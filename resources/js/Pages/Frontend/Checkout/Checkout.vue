@@ -12,20 +12,12 @@
                         <v-card-text>
                             <v-row>
                                 <v-col col="4" md="6">
-                                    <div v-for="(image, index) in JSON.parse(itemCart.images)" :key="index">
-                                        <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" :width="250"
-                                            max-width="250" height="200" aspect-ratio="16/9"
-                                            :src="`/storage/products/${image}`" :lazy-src="`/storage/products/${image}`"
-                                            cover>
+                                    
+                                    <v-img :src="`/storage/products/${productImages}`">
 
-                                            <template>
-                                                <div class="d-flex align-center justify-center fill-height">
-                                                    <v-progress-circular color="grey-lighten-4">
-                                                    </v-progress-circular>
-                                                </div>
-                                            </template>
-
-                                        </v-img>
+                                    </v-img>
+                                    <div v-for="(image, index) in itemCart.images" :key="index">
+                                       
                                     </div>
 
                                 </v-col>
@@ -35,8 +27,8 @@
                                     </div>
 
 
-                                    <div v-for="colors in JSON.parse(itemCart.colors)">
-                                        <p><strong>Colors:</strong> {{ colors }}</p>
+                                    <div>
+                                        <p><strong>Colors:</strong> {{ itemCart.color }}</p>
 
                                     </div>
                                     <div>
@@ -169,7 +161,7 @@
                                         <v-img v-if="index === 0" :vid-id="images" class="align-end text-white" :width="250"
                                             max-width="250" height="200" aspect-ratio="16/9"
                                             :src="`../../storage/products/${image}`"
-                                            :lazy-src="`../../storage/products/${images}`" cover>
+                                            :lazy-src="`../../storage/products/${image}`" cover>
 
                                             <template>
                                                 <div class="d-flex align-center justify-center fill-height">
@@ -381,6 +373,7 @@
                                                                     :quantity="this.itemCart.quantity"
                                                                     :delivery="selectedDelivery"
                                                                     :description="this.itemCart.description"
+                                                                    :image="this.itemCart.images"
                                                                 />
 
                                                                
@@ -459,6 +452,8 @@ export default {
         dataConfirm: false,
         finish: false,
         paymentType: false,
+        productImages: false,
+        colors: false,
     }),
     methods: {
         getProducts() {
@@ -474,6 +469,9 @@ export default {
 
                 axios.get(`/cartItem/checkout/${itemId}`)
                     .then((response) => {
+                        this.productImages = JSON.parse(response.data.images);
+                        this.colors = JSON.parse(response.data.colors);
+                        
                         return this.itemCart = response.data;
                     })
                     .catch((response) => {
