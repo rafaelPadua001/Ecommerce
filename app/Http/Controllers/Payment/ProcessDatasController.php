@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Payment;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use MercadoPago\Client\Payment\PaymentClient;
@@ -23,7 +24,7 @@ class ProcessDatasController extends Controller
         if ($paymentType == 'credit') {
             return $this->creditPayment($request);
         } else if ($paymentType == 'debit') {
-            return $this->debitPayment();
+            return $this->debitPayment($request);
         } else {
             throw new Exception('Ainda não criamos isso !');
         }
@@ -96,8 +97,81 @@ class ProcessDatasController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function debitPayment()
+    public function createDebitPayment($responseData, $request){
+        $payer = Auth::guard('customer')->user();
+      
+        try{
+            $payment = Payment::create([
+                "transaction_id" => $responseData['MerchantOrderId'],
+                "status" => "pendent",
+                "quantity" => $request->quantity,
+                "transaction_amount" => $request->totalValue,
+                "description" => $request->description,
+                "payment_method_id" => $request->paymentType,
+                "payer" => $payer->email,
+                "user_id" => $payer->id
+            ]);
+
+            return response()->json($responseData);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function debitPayment(Request $request)
     {
+       $customer = Auth::guard('customer')->user();
+       
+        try{
+            //Aqui usaremos o guzzle para fazer as requisições HTTP
+            $client = new Client([
+                'base_uri' => 'https://apisandbox.cieloecommerce.cielo.com.br',
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'MerchantId' => env('CIELO_MERCHANT_ID'),
+                    'MerchantKey' => env('CIELO_MERCHANT_KEY'),
+                ]
+            ]);
+
+            //Monta a requisição
+            $req = [
+                'MerchantOrderId' => uniqid(),
+                'Customer' => [
+                    'Name' => $customer->first_name . '' . $customer->last_name,
+                    'Email' => $customer->email,
+                ],
+                'Payment' => [
+                    'Type' => 'CreditCard',
+                    'Amount' => $request->totalValue * 1000,
+                    'Installments' => 1,
+                    'SoftDescription' => $request->name,
+                    'CreditCard' => [
+                        'CardNumber' => $request->cardNumber,
+                        'Holder' => $request->cardHolder,
+                        'ExpirationDate' => $request->expiryDate,
+                        'SecurityCode' => $request->cvv,
+                        'Brand' => $request->brand
+                    ],
+                ],
+
+            ];
+            try{
+                $response = $client->request('POST', '/1/sales', [
+                    'json' => $req
+                ]);
+
+                //Obter o corpo da resposta
+                $responseData = json_decode($response->getBody()->getContents(), true);
+                return $this->createDebitPayment($responseData, $request);
+                //return response()->json($responseData);
+            }
+            catch(Exception $e){
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
     }
 
     public function getAccess()
@@ -113,4 +187,5 @@ class ProcessDatasController extends Controller
 
         return $client;
     }
+ 
 }
