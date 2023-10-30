@@ -43,6 +43,22 @@
                     </v-col>
                 </v-row>
             </template>
+            <template v-slot:item.color="{ item }">
+                <v-row>
+                    <v-col v-if="item.color != 0">
+                        <v-card
+                            :color="item.color"
+                            width="200"
+                        >
+                           color
+                        </v-card>
+                      
+                    </v-col>
+                    <v-col v-else>
+                        <p>no color selected</p>
+                    </v-col>
+                </v-row>
+            </template>
             <template v-slot:item.actions="{ item }">
                 <v-btn-group>
                     <v-btn icon @click="buy(item)" size="x-small">
@@ -90,8 +106,8 @@ export default {
                 sortable: false,
                 key: 'name',
             },
-            { title: 'quantity', key: 'quantity' },
-            { title: 'colors', key: 'color' },
+            { title: 'colors',value: 'color', key: 'color' },
+            { title: 'quantity',  key: 'quantity' },
             { title: 'sizes', key: 'size' },
             { title: 'price', key: 'price' },
             { title: 'Created', key: 'created_at' },

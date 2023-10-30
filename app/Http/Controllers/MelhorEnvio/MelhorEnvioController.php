@@ -15,11 +15,12 @@ class MelhorEnvioController extends Controller
     public function calculateDelivery(Request $request)
     {
         try {
-
+            
             $client_postal_code = str_replace('-', '', $request->postal_code);
+           
             $calculator = $this->createShipmentInstance()->calculator();
            
-            $calculator->postalCode(env('CEP_CLIENT'), '73050140');
+            $calculator->postalCode(env('CEP_CLIENT'), $client_postal_code);
             
             $calculator->setOwnHand();
             $calculator->setReceipt(false);
@@ -31,7 +32,7 @@ class MelhorEnvioController extends Controller
             $weight = $request->weight;
             $price = $request->price;
             $quantity = $request->quantity;
-            
+         
             $calculator->addProducts(
                 $product = new Product(uniqid(), $height, $width, $length, $weight, 50.00 /*$price*/, $quantity),
                
