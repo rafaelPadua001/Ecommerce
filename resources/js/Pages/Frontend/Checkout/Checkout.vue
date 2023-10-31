@@ -403,7 +403,16 @@
                                                         </div>
                                                         <div v-if="paymentType == 'pix'">
                                                             <v-card>
-                                                                formulario de pagamento por pix
+                                                                <PixForm
+                                                                    :paymentType="paymentType"
+                                                                    :name="this.itemCart.name"
+                                                                    :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
+                                                                    :quantity="this.itemCart.quantity"
+                                                                    :delivery="selectedDelivery"
+                                                                    :description="this.itemCart.description"
+                                                                    :image="this.itemCart.images"
+                                                                ></PixForm>
+                                                               
                                                             </v-card>
                                                         </div>
                                                     </v-col>
@@ -456,12 +465,14 @@ const phoneMask = ref('');
 import Dashboard from '../Auth/Dashboard.vue'
 import DebitForm from '../Payment/DebitForm.vue'
 import CreditForm from '../Payment/CreditForm.vue'
+import PixForm from '../Payment/PixForm.vue'
 
 export default {
     components: {
         Dashboard,
         DebitForm,
         CreditForm,
+        PixForm,
     },
     data: () => ({
         itemCart: [],
