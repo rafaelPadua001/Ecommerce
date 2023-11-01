@@ -10,11 +10,12 @@
             
         </v-form>
     -->
-    <p>Você será redirecionado ao mercado pago</p>
-    <v-btn :loading="loading" class="flex-grow-1" variant="tonal" size="small" type="submit" color="blue-darken-2" @click="load">
-        <v-img src="../../../../../storage/app/public/Logos/mercado-pago.png" max-height="20" />
-        Pagar com Mercado Pago
-  </v-btn>
+        <p>Você será redirecionado ao mercado pago</p>
+        <v-btn :loading="loading" class="flex-grow-1" variant="tonal" size="small" type="submit" color="blue-darken-2"
+            @click="load">
+            <v-img src="../../../../../storage/app/public/Logos/mercado-pago.png" max-height="20" />
+            Pagar com Mercado Pago
+        </v-btn>
     </v-container>
 </template>
 
@@ -53,12 +54,12 @@ export default {
         ]
     }),
     methods: {
-        load(){
-                this.loading = true;
-                setTimeout(() => {
-                    this.payment();
-                }, 500);
-            },
+        load() {
+            this.loading = true;
+            setTimeout(() => {
+                this.payment();
+            }, 500);
+        },
         payment() {
             const data = {
                 cardHolderName: this.cardholderName,
@@ -87,9 +88,9 @@ export default {
                     alert('Error:' + response);
                 });
 
-               // this.checkout();
+           
         },
-        
+
 
     }
 }

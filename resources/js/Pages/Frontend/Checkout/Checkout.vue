@@ -5,25 +5,29 @@
     </div>
 
     <div>
-        <v-timeline direction="horizontal" side="start" align="start">
+        <v-row>
+            <v-col class="d-flex align-center flex-column">
+            <v-container>
+                <v-responsive>
+            <v-timeline direction="horizontal" side="center">
             <v-timeline-item v-model="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home" fill-dot
                 size="x-small">
                 <template v-slot:opposite>
                     <v-card class="d-flex align-center flex-column">
                         <v-card-text>
                             <v-row>
-                                <v-col col="4" md="6">
-
-                                    <v-img :src="`/storage/products/${productImages}`"
-                                        :lazy-src="`/storage/products/${productImages}`">
+                                <v-col col="12" md="4">
+                                    <v-img
+                                         :src="`/storage/products/${productImages}`"
+                                        :lazy-src="`/storage/products/${productImages}`"
+                                        cover
+                                    >
 
                                     </v-img>
-                                    <div v-for="(image, index) in itemCart.images" :key="index">
-
-                                    </div>
+                                   
 
                                 </v-col>
-                                <v-col col="12" md="8">
+                                <v-col col="8" md="8">
                                     <div>
                                         <p><strong>Name Product:</strong> {{ itemCart.name }}</p>
                                     </div>
@@ -435,6 +439,13 @@
 
         </v-timeline>
 
+        </v-responsive>
+            </v-container>
+               
+            </v-col>
+        </v-row>
+        
+        
 
     </div>
     <div>
