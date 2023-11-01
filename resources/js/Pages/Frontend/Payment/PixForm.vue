@@ -29,7 +29,7 @@
             <v-col cols="12" md="12">
                 
                 <v-text-field
-                    v-model="paymentResponse.original.point_of_interaction.transaction_data.ticket_url"
+                    v-model="paymentResponse.original.point_of_interaction.transaction_data.qr_code"
                     label="Código PIX"
                     outlined
                     variant="underline"
@@ -100,7 +100,7 @@ import axios from "axios";
                 .then((response) => {
                     console.log(response.data);
                     return this.paymentResponse = response.data;
-                //return this.payment.push(response.data);
+               
                 })
                 .catch((response) => {
                     alert('Error: ', response);
@@ -108,15 +108,12 @@ import axios from "axios";
                 
             },
             copyKey(){
-                const campoCodigo = this.paymentResponse.original.point_of_interaction.transaction_data.ticket_url;
+                const campoCodigo = this.paymentResponse.original.point_of_interaction.transaction_data.qr_code;
                 
                 if (campoCodigo) {
-                 //   campoCodigo.select();
                     document.execCommand("copy");
                     navigator.clipboard.writeText(campoCodigo);
-                 //   campoCodigo.blur();
-                   // this.$toast.success("Código PIX copiado!");
-                   navigator.clipboard.writeText(campoCodigo);
+                    navigator.clipboard.writeText(campoCodigo);
                    alert('Codigo copiado com sucesso');
                 } else {
                     this.$toast.error("Erro ao copiar o código PIX.");

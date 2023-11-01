@@ -5,27 +5,17 @@
     </div>
 
     <div>
-        <v-timeline 
-            direction="horizontal"
-            side="start"
-            align="start"
-        >
-            <v-timeline-item
-                v-model="confirm"
-                v-if="confirm"
-                dot-color="blue-darken-2"
-                icon="fas fa-home"
-                fill-dot
-                 size="x-small"
-                
-                >
+        <v-timeline direction="horizontal" side="start" align="start">
+            <v-timeline-item v-model="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home" fill-dot
+                size="x-small">
                 <template v-slot:opposite>
-                    <v-card :width="450">
+                    <v-card class="d-flex align-center flex-column">
                         <v-card-text>
                             <v-row>
                                 <v-col col="4" md="6">
 
-                                    <v-img :src="`/storage/products/${productImages}`" :lazy-src="`/storage/products/${productImages}`">
+                                    <v-img :src="`/storage/products/${productImages}`"
+                                        :lazy-src="`/storage/products/${productImages}`">
 
                                     </v-img>
                                     <div v-for="(image, index) in itemCart.images" :key="index">
@@ -33,17 +23,15 @@
                                     </div>
 
                                 </v-col>
-                                <v-col col="4" md="6">
+                                <v-col col="12" md="8">
                                     <div>
                                         <p><strong>Name Product:</strong> {{ itemCart.name }}</p>
                                     </div>
 
 
                                     <div>
-                                        <p><strong>Color:</strong> 
-                                            <v-card
-                                                :color="itemCart.color"
-                                            >
+                                        <p><strong>Color:</strong>
+                                            <v-card :color="itemCart.color">
                                                 color
                                             </v-card>
                                         </p>
@@ -53,8 +41,7 @@
                                         <strong>Quantity:</strong> {{ itemCart.quantity }}
                                     </div>
                                     <div>
-
-                                        <v-row>
+                                        <v-row fluid>
                                             <v-col col="8" sm="8">
                                                 <v-text-field v-model="zip_code" v-if="itemCart.cep" v-maska:[options]
                                                     label="postal code" :placeholder="itemCart.cep" :value="itemCart.cep">
@@ -63,29 +50,33 @@
                                                     label="postal code" :placeholder="itemCart.cep">
                                                 </v-text-field>
                                             </v-col>
-                                            <v-col col="4" sm="4">
+                                            <v-col col="8" sm="4">
 
                                                 <v-btn size="x-small" variant="text" color="primary"
                                                     @click="calculateDelivery">calculate</v-btn>
                                                 <v-btn size="x-small" variant="text" color="warning"
                                                     @click="itemCart.cep = ''">Clear</v-btn>
+                                                <v-btn size="x-small" variant="text" color="blue"
+                                                    @click="cepDialogOpen">Buscar Cep</v-btn>
 
 
                                             </v-col>
                                         </v-row>
                                         <v-row>
-                                            <v-col>
 
+                                        </v-row>
+                                        <v-row>
+                                            <v-col col="12" sm="12">
                                                 <v-row>
                                                     <v-col col="12" sm="12">
-                                                        <v-card class="mx-auto" max-width="650">
+                                                        <v-card class="mx-auto" :width="255">
                                                             <v-list lines="three">
                                                                 <v-list-item v-for="quotation in quotations"
                                                                     :key="quotation.id" :v-if="!quotation.error">
 
                                                                     <template v-slot:prepend>
 
-                                                                        <v-avatar :width="550"
+                                                                        <v-avatar :width="120"
                                                                             color="transparent-lighten-1">
                                                                             <v-img :src="quotation.company.picture"
                                                                                 :lazy-src="quotation.company.picture"
@@ -168,17 +159,12 @@
                 </div>
             </v-timeline-item>
 
-            <v-timeline-item
-                dot-color="blue-darken-2"
-                icon="fas fa-check"
-                fill-dot
-                size="x-small"
-            >
+            <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="x-small">
                 <template v-slot:opposite>
-                    <v-card v-model="dataConfirm" v-if="dataConfirm" :width="450">
+                    <v-card v-model="dataConfirm" class="d-flex align-center flex-column" v-if="dataConfirm" :width="500">
                         <v-card-text>
                             <v-row>
-                                <v-col col="4" md="6">
+                                <v-col col="12" md="6">
                                     <div v-for="(image, index) in JSON.parse(itemCart.images)" :key="image.id">
                                         <v-img v-if="index === 0" :vid-id="images" class="align-end text-white" :width="250"
                                             max-width="250" height="200" aspect-ratio="16/9"
@@ -300,18 +286,13 @@
                 </div>
             </v-timeline-item>
 
-            <v-timeline-item
-                dot-color="blue-darken-2"
-                icon="fas fa-truck"
-                fill-dot
-                size="x-small"
-            >
+            <v-timeline-item dot-color="blue-darken-2" icon="fas fa-truck" fill-dot size="x-small">
                 <template v-slot:opposite>
 
                 </template>
                 <div>
                     <div class="text-h6">
-                        <v-card v-model="finish" v-if="finish" :width="450">
+                        <v-card v-model="finish" class="d-flex align-center flex-column" v-if="finish" :width="500">
                             <v-card-text>
                                 <v-row>
                                     <v-col col="4" md="6">
@@ -332,7 +313,7 @@
                                         </div>
 
                                     </v-col>
-                                    <v-col col="12" md="4">
+                                    <v-col col="6" md="4">
 
 
                                         <div class="text-h6">
@@ -356,10 +337,10 @@
 
                                 <v-row>
                                     <v-col>
-                                        <v-card>
+                                        <v-card class="mx-auto" :width="450">
                                             <v-card-text>
                                                 <v-row>
-                                                    <v-col col="4" sm="6">
+                                                    <v-col col="12" sm="8">
                                                         <v-radio-group v-model="paymentType" inline>
                                                             <v-radio label="Debit" value="debit">
 
@@ -378,8 +359,7 @@
                                                     <v-col>
                                                         <div v-if="paymentType == 'debit'">
                                                             <v-card>
-                                                                <DebitForm
-                                                                    :paymentType="paymentType"
+                                                                <DebitForm :paymentType="paymentType"
                                                                     :name="this.itemCart.name"
                                                                     :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
                                                                     :quantity="this.itemCart.quantity"
@@ -403,16 +383,14 @@
                                                         </div>
                                                         <div v-if="paymentType == 'pix'">
                                                             <v-card>
-                                                                <PixForm
-                                                                    :paymentType="paymentType"
+                                                                <PixForm :paymentType="paymentType"
                                                                     :name="this.itemCart.name"
                                                                     :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
                                                                     :quantity="this.itemCart.quantity"
                                                                     :delivery="selectedDelivery"
                                                                     :description="this.itemCart.description"
-                                                                    :image="this.itemCart.images"
-                                                                ></PixForm>
-                                                               
+                                                                    :image="this.itemCart.images"></PixForm>
+
                                                             </v-card>
                                                         </div>
                                                     </v-col>
@@ -425,7 +403,7 @@
                             <v-card-actions>
                                 <v-btn-group>
                                     <v-btn @click="returnConfirmDatas()">Voltar</v-btn>
-                                  
+
 
                                 </v-btn-group>
                             </v-card-actions>
@@ -448,6 +426,63 @@
 
 
     </div>
+    <div>
+        <v-dialog v-model="cepDialog" persistent width="1024">
+            <v-card>
+                <v-card-title>
+                    <span class="text-h5">Busca Cep</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            
+                           <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="uf" label="UF"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="city" label="Cidade"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="bairro" label="Bairro"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="searchAddress" label="Endereço"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="complemento" label="Complemento"></v-text-field>
+                            </v-col>
+                            
+                        </v-row>
+                    </v-container>
+                    <small>*indicates required field</small>
+                  
+               
+                    <div v-if="respSearchAddress.length >= 1">
+                        <v-row>
+                            <v-col>
+                                CEP: {{ respSearchAddress[0].cep }} ,
+                                Logradouro: {{ respSearchAddress[0].logradouro }},
+                                Localidade:  {{ respSearchAddress[0].localidade }},
+                                UF:  {{ respSearchAddress[0].uf }}
+                                DDD:  {{ respSearchAddress[0].ddd }}
+                            </v-col>
+                        </v-row>
+                      
+                    </div>
+                  
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue-darken-1" variant="text" @click="cepDialog = false">
+                        Close
+                    </v-btn>
+                    <v-btn color="blue-darken-1" variant="text" @click="searchToAddress">
+                        Save
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </div>
 </template>
 <script setup>
 import { ref } from "vue";
@@ -466,6 +501,7 @@ import Dashboard from '../Auth/Dashboard.vue'
 import DebitForm from '../Payment/DebitForm.vue'
 import CreditForm from '../Payment/CreditForm.vue'
 import PixForm from '../Payment/PixForm.vue'
+import axios from "axios";
 
 export default {
     components: {
@@ -479,6 +515,7 @@ export default {
         quotations: [],
         customer: [],
         address: [],
+        respSearchAddress: [],
         zip_code: false,
         selectedDelivery: false,
         confirm: true,
@@ -487,6 +524,13 @@ export default {
         paymentType: false,
         productImages: false,
         colors: false,
+        cepDialog: false,
+        searchAddress: null,
+        postal_code: null,
+        uf: null,
+        city: null,
+        bairro: null,
+        complemento: null
     }),
     methods: {
         getProducts() {
@@ -512,7 +556,6 @@ export default {
                     })
 
             }
-
         },
         getCustomer() {
             axios.get('/customer')
@@ -533,9 +576,64 @@ export default {
                     return alert('Error: ' + response)
                 })
         },
+        searchToAddress() {
+            const data = { 
+                address: this.searchAddress,
+                postal_code: this.postal_code,
+                uf: this.uf,
+                city: this.city,
+                bairro: this.bairro,
+                complemento: this.complemento
+            };
+            axios.get(`https://viacep.com.br/ws/${this.uf}/${this.city}/${this.searchAddress}/json/`)
+                .then((response) => {
+                    this.itemCart.cep = " ";
+                    this.itemCart.cep = response.data[0].cep;
+                    this.address.endereco = response.data[0].logradouro;
+                    this.address.bairro = response.data[0].bairro;
+                    this.address.cep = response.data[0].cep;
+                    this.address.cidade = response.data[0].cidade;
+                    this.address.UF = response.data[0].uf;
+                    this.cepDialog = false;
+                    this.saveAddress(
+                        this.itemCart.cep,
+                        this.address.endereco,
+                        this.address.bairro,
+                        this.city,
+                        response.data[0].uf,
+                        response.data[0].ibge,
+                        this.complemento,
+                    );
+                    return this.respSearchAddress.push(response.data[0]);
+                    
+                })  
+                .catch((response) => {
+                    return alert('Error :', response);
+                })
+        },
+        saveAddress(cep, endereco, bairro, city, uf, ibge, complemento, ){
+            console.log(cep, endereco, bairro, city, uf, ibge, complemento);
+       
+          const newData = {
+              address: endereco,
+              postal_code: cep,
+              uf:  uf,
+              city: city,
+              bairro: bairro,
+              code_ibge: ibge,
+              complemento: complemento,
+              
+          };
+          console.log(newData);
+             axios.post('/saveSearchAddress', newData)
+             .then((response) => {
+                 return true;
+             })
+             .catch((response) => {
+                 return alert('ERROR: ', response);
+             });
+        },
         calculateDelivery() {
-
-
             const data = {
                 postal_code: this.zip_code,
                 height: this.itemCart.height,
@@ -548,11 +646,15 @@ export default {
             }
             axios.post('/api/calculateDelivery', data)
                 .then((response) => {
-                    return this.quotations = response.data;
+                  return this.quotations = response.data;
                 })
                 .catch((response) => {
                     alert('Error : ' + response);
                 })
+        },
+        cepDialogOpen() {
+            this.cepDialog = true;
+
         },
         confirmNext() {
 
