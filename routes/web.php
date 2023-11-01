@@ -20,6 +20,7 @@ use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\ProductVideos\ProductVideoController;
 use App\Http\Controllers\ProfileImage\ProfileImageController;
 use App\Http\Controllers\Payment\PaymentController;
+use App\Http\Controllers\Search\SearchToAddressesController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -135,7 +136,9 @@ Route::get('/images', [ProductImagesController::class, 'index'])->name('images.i
 //Videos routes
 Route::get('/videos', [ProductVideoController::class, 'index'])->name('videos.index')->middleware('auth');
 
-
+//Search cep to address
+Route::post('/saveSearchAddress', [SearchToAddressesController::class, 'save'])->name('cep.search');
+ 
 //Products routes
 //Route::get('/products', function(){
 //    dd('teste product routes');

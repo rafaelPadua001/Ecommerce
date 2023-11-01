@@ -49,7 +49,9 @@ class ProcessDatasController extends Controller
                                 "image" => getenv('APP_URL') . '/' . $request->image,
                                 "quantity" => $request->quantity,
                                 "currency_id" => "BRL",
-                                "unit_price" => (float) $request->totalValue
+                                "unit_price" => (float) $request->totalValue,
+                                'notification_url' => env('APP_URL'),
+                                'back_urls' => env('APP_URL')
                             )
                         )
                     ]);
@@ -57,10 +59,7 @@ class ProcessDatasController extends Controller
                     return response()->json($e);
                 }
             }
-
-
-
-            return $this->createPayment($preference, $request);
+             return $this->createPayment($preference, $request);
         } catch (Exception $e) {
             return response()->json($e);
         }
@@ -202,7 +201,7 @@ class ProcessDatasController extends Controller
                     "payer" => $payer->email,
                     "user_id" => $payer->id
                 ]);
-
+                
                 return response()->json($preference);
             }
 
@@ -237,6 +236,7 @@ class ProcessDatasController extends Controller
             return response()->json($e);
         }
     }
+    
     public function getCieloClient()
     {
         $cieloClient = new Client([
