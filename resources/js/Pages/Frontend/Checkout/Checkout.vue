@@ -63,6 +63,17 @@
                                             </v-col>
                                         </v-row>
                                         <v-row>
+                                            <v-col v-if="respSearchAddress.length >= 1">
+                                                <strong>endereco:</strong> {{ address.complemento }},
+                                                <strong>Bairro:</strong> {{ respSearchAddress[0].bairro }},
+                                                <strong>Logradouro:</strong> {{ respSearchAddress[0].logradouro }},
+                                                <strong>CEP:</strong> {{ respSearchAddress[0].cep }} ,
+                                                <strong>Localidade:</strong>  {{ respSearchAddress[0].localidade }},
+                                                <strong>UF:</strong>  {{ respSearchAddress[0].uf }}
+                                                <strong>DDD:</strong>  {{ respSearchAddress[0].ddd }}
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
 
                                         </v-row>
                                         <v-row>
@@ -226,6 +237,7 @@
                                             <strong>Endereço:</strong> {{ address.endereco }}
                                         </p>
                                         <p class="text-subtitle-2">
+                                            
                                             <strong>Complemento:</strong> {{ address.complemento }}
                                         </p>
                                         <p class="text-subtitle-2">
@@ -390,8 +402,7 @@
                                                                     :delivery="selectedDelivery"
                                                                     :description="this.itemCart.description"
                                                                     :image="this.itemCart.images"></PixForm>
-
-                                                            </v-card>
+                                                                </v-card>
                                                         </div>
                                                     </v-col>
                                                 </v-row>
@@ -446,7 +457,7 @@
                                 <v-text-field v-model="bairro" label="Bairro"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                                <v-text-field v-model="searchAddress" label="Endereço"></v-text-field>
+                                <v-text-field v-model="searchAddress" label="logradouro"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
                                 <v-text-field v-model="complemento" label="Complemento"></v-text-field>
@@ -585,7 +596,8 @@ export default {
                 bairro: this.bairro,
                 complemento: this.complemento
             };
-            axios.get(`https://viacep.com.br/ws/${this.uf}/${this.city}/${this.searchAddress}/json/`)
+           
+            axios.get(`https://viacep.com.br/ws/${this.uf}/${this.city}/${this.searchAddress.replace(/\s/g, '+' )}/json/`)
                 .then((response) => {
                     this.itemCart.cep = " ";
                     this.itemCart.cep = response.data[0].cep;
@@ -594,6 +606,7 @@ export default {
                     this.address.cep = response.data[0].cep;
                     this.address.cidade = response.data[0].cidade;
                     this.address.UF = response.data[0].uf;
+                    //this.address.complemento = response.data[0].complemento;
                     this.cepDialog = false;
                     this.saveAddress(
                         this.itemCart.cep,
@@ -604,6 +617,7 @@ export default {
                         response.data[0].ibge,
                         this.complemento,
                     );
+
                     return this.respSearchAddress.push(response.data[0]);
                     
                 })  
@@ -611,9 +625,8 @@ export default {
                     return alert('Error :', response);
                 })
         },
-        saveAddress(cep, endereco, bairro, city, uf, ibge, complemento, ){
-            console.log(cep, endereco, bairro, city, uf, ibge, complemento);
-       
+        saveAddress(cep, endereco, bairro, city, uf, ibge, complemento){
+           
           const newData = {
               address: endereco,
               postal_code: cep,
@@ -627,7 +640,9 @@ export default {
           console.log(newData);
              axios.post('/saveSearchAddress', newData)
              .then((response) => {
-                 return true;
+              
+                return this.address = response.data;
+                
              })
              .catch((response) => {
                  return alert('ERROR: ', response);
