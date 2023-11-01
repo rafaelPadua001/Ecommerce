@@ -8,7 +8,7 @@
       outlined
       v-maska:[cpfOptions]
     ></v-text-field>
-    <v-btn color="primary" size="small" @click="payment">Gerar Qr Code</v-btn>
+    <v-btn :loading="loading" class="flex-grow-1" variant="tonal" color="primary" size="small" @click="load">Gerar Qr Code</v-btn>
     <div v-if="paymentResponse">
         <!-- {{ paymentResponse.original.point_of_interaction.transaction_data.ticket_url}} -->
         
@@ -81,9 +81,16 @@ import axios from "axios";
         data: () => ({
             cpf: null,
             paymentResponse: null,
-            
+            loading: false,
         }),
         methods: {
+            load(){
+                this.loading = true;
+                setTimeout(() => {
+                    this.payment();
+                    
+                }, 30);
+            },
             payment(){
                 const data = {
                     paymentType: 'Pix',
@@ -98,12 +105,12 @@ import axios from "axios";
                 };
                 axios.post('/payment', data)
                 .then((response) => {
-                    console.log(response.data);
+                    this.loading = false;
                     return this.paymentResponse = response.data;
-               
-                })
+               })
                 .catch((response) => {
-                    alert('Error: ', response);
+                 //   this.loading = false;
+                   return alert('Error: ', response);
                 })
                 
             },

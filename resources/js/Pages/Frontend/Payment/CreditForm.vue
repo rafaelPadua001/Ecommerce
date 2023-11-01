@@ -11,9 +11,9 @@
         </v-form>
     -->
     <p>Você será redirecionado ao mercado pago</p>
-    <v-btn size="small" type="submit" color="blue-darken-2" @click="payment">
-    <v-img src="../../../../../storage/app/public/Logos/mercado-pago.png" max-height="20" />
-    Pagar com Mercado Pago
+    <v-btn :loading="loading" class="flex-grow-1" variant="tonal" size="small" type="submit" color="blue-darken-2" @click="load">
+        <v-img src="../../../../../storage/app/public/Logos/mercado-pago.png" max-height="20" />
+        Pagar com Mercado Pago
   </v-btn>
     </v-container>
 </template>
@@ -40,6 +40,7 @@ export default {
         'image'
     ],
     data: () => ({
+        loading: false,
         paymentSelected: 'mercadoPago',
         cardholderName: '',
         cardNumber: '',
@@ -52,8 +53,13 @@ export default {
         ]
     }),
     methods: {
+        load(){
+                this.loading = true;
+                setTimeout(() => {
+                    this.payment();
+                }, 500);
+            },
         payment() {
-
             const data = {
                 cardHolderName: this.cardholderName,
                 cardNumber: this.cardNumber,
@@ -74,10 +80,8 @@ export default {
             };
             axios.post(`/payment`, data)
                 .then((response) => {
-                    console.log(response);
-                    //    console.log(response.data.original.sandbox_init_point);
-                   window.location.href = response.data.original.sandbox_init_point;
-                    
+                    this.loading = false;
+                    window.location.href = response.data.original.sandbox_init_point;
                 })
                 .catch((response) => {
                     alert('Error:' + response);

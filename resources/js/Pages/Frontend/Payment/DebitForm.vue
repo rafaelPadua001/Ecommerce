@@ -11,7 +11,7 @@
                 label="Marca do Cartão"
                 required
             ></v-select>
-            <v-btn type="submit" color="primary" @click="payments">Pagar</v-btn>
+            <v-btn :loading="loading" class="flex-grow-1" variant="tonal" type="submit" color="primary" @click="load">Pagar</v-btn>
         </v-form>
     </v-container>
 </template>
@@ -30,6 +30,7 @@ import axios from 'axios';
             'image'
         ],
         data: () => ({
+            loading: false,
             paymentType: 'debit',
             paymentSelected: 'mercadoPago',
             cardHolder: null,
@@ -45,6 +46,12 @@ import axios from 'axios';
             ],
         }),
         methods:{
+            load(){
+                this.loading = true;
+                setTimeout(() => {
+                   this.payments();
+                }, 500);
+            },
             payments(){
                 const data = {
                     paymentType: this.paymentType,
@@ -63,12 +70,13 @@ import axios from 'axios';
                 };
                 axios.post('/payment', data)
                 .then((response) => {
-                    console.log(response);
+                    this.loading = false;
+                    return alert('Seu pagamento foi recebido pela instituição');
                 })
                 .catch((response) => {
                     return alert('Error: ', response);
                 })
-                console.log(data);
+              
             }
         }
 
