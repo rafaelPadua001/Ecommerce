@@ -22,6 +22,7 @@ import axios from 'axios';
     export default{
         props: [
             'paymentType',
+            'id',
             'name',
             'quantity',
             'totalValue',
@@ -66,7 +67,8 @@ import axios from 'axios';
                     description: this.description,
                     name: this.name,
                     quantity: this.quantity,
-                    image: this.image
+                    image: this.image,
+                    id: this.id
                 };
                 axios.post('/payment', data)
                 .then((response) => {

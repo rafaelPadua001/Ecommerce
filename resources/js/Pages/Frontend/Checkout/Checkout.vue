@@ -391,7 +391,9 @@
                                                     <v-col>
                                                         <div v-if="paymentType == 'debit'">
                                                             <v-card>
-                                                                <DebitForm :paymentType="paymentType"
+                                                                <DebitForm 
+                                                                    :paymentType="paymentType"
+                                                                    :id="this.itemCart.id"
                                                                     :name="this.itemCart.name"
                                                                     :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
                                                                     :quantity="this.itemCart.quantity"
