@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Cart\CartItemController;
 use App\Http\Controllers\Likes\LikedProductController;
+use App\Http\Controllers\Orders\OrderController;
 use App\Http\Controllers\ProductImages\ProductImagesController;
 use App\Http\Controllers\Subcategories\SubcategoriesController;
 use App\Http\Controllers\Products\ProductController;
@@ -124,6 +125,7 @@ Route::get('/products/show', [ProductController::class, 'index'])->name('product
 Route::post('/products/like/{id}', [ProductController::class , 'like'])->name('product.like');
 
 //Likes Route
+
 Route::get('/likes', [LikedProductController::class, 'index'])->name('likes.index');
 //SEO routes
 Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->middleware('auth');
@@ -138,6 +140,9 @@ Route::get('/videos', [ProductVideoController::class, 'index'])->name('videos.in
 
 //Search cep to address
 Route::post('/saveSearchAddress', [SearchToAddressesController::class, 'save'])->name('cep.search');
+
+//Route Orders
+Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
  
 //Products routes
 //Route::get('/products', function(){

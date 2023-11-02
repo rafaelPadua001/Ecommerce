@@ -12,6 +12,21 @@ use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
     //
+    protected $order;
+    
+    public function __construct(Order $order){
+        $this->order = $order;
+    }
+    public function index(){
+        try{
+            $customer = Auth::guard('customer')->user();
+            $orders = Order::where('user_id', $customer->id)->get();
+            return response()->json($orders);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
     public function create(Request $request, $responseData)
     {
         try {
