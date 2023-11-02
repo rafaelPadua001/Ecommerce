@@ -5,21 +5,21 @@
     </div>
 
     <div>
-        <v-row>
-            <v-col class="d-flex align-center flex-column">
-            <v-container>
-                <v-responsive>
-            <v-timeline direction="horizontal" side="center">
+        <v-row align="center" justify="center">
+            <v-col cols="8" sm="8">
+            <v-timeline direction="horizontal" side="center"  line-inset="12">
             <v-timeline-item v-model="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home" fill-dot
                 size="x-small">
                 <template v-slot:opposite>
-                    <v-card class="d-flex align-center flex-column">
+                    <v-card class="d-flex justify-center flex-column" :max-width="500">
                         <v-card-text>
                             <v-row>
-                                <v-col col="12" md="4">
+                                <v-col class="d-flex child-flex" >
                                     <v-img
-                                         :src="`/storage/products/${productImages}`"
+                                        :src="`/storage/products/${productImages}`"
                                         :lazy-src="`/storage/products/${productImages}`"
+                                        aspect-ratio="16/9"
+                                        :width="200"
                                         cover
                                     >
 
@@ -27,7 +27,7 @@
                                    
 
                                 </v-col>
-                                <v-col col="8" md="8">
+                                <v-col>
                                     <div>
                                         <p><strong>Name Product:</strong> {{ itemCart.name }}</p>
                                     </div>
@@ -46,7 +46,7 @@
                                     </div>
                                     <div>
                                         <v-row fluid>
-                                            <v-col col="8" sm="8">
+                                            <v-col>
                                                 <v-text-field v-model="zip_code" v-if="itemCart.cep" v-maska:[options]
                                                     label="postal code" :placeholder="itemCart.cep" :value="itemCart.cep">
                                                 </v-text-field>
@@ -176,16 +176,25 @@
 
             <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="x-small">
                 <template v-slot:opposite>
-                    <v-card v-model="dataConfirm" class="d-flex align-center flex-column" v-if="dataConfirm" :width="500">
+                    <v-card 
+                        v-model="dataConfirm"
+                        class="d-flex align-center flex-column" 
+                        v-if="dataConfirm" 
+                        :width="500"
+                        >
                         <v-card-text>
                             <v-row>
-                                <v-col col="12" md="6">
-                                    <div v-for="(image, index) in JSON.parse(itemCart.images)" :key="image.id">
-                                        <v-img v-if="index === 0" :vid-id="images" class="align-end text-white" :width="250"
-                                            max-width="250" height="200" aspect-ratio="16/9"
-                                            :src="`../../storage/products/${image}`"
-                                            :lazy-src="`../../storage/products/${image}`" cover>
+                                <v-col class="d-flex child-flex" cols="6">
+                                    <div>
+                                        <v-img
+                                        :src="`/storage/products/${productImages}`"
+                                        :lazy-src="`/storage/products/${productImages}`"
+                                        aspect-ratio="16/9"
+                                        :width="200"
+                                        cover
+                                    >
 
+                                   
                                             <template>
                                                 <div class="d-flex align-center justify-center fill-height">
                                                     <v-progress-circular color="grey-lighten-4">
@@ -308,15 +317,24 @@
                 </template>
                 <div>
                     <div class="text-h6">
-                        <v-card v-model="finish" class="d-flex align-center flex-column" v-if="finish" :width="500">
+                        <v-card 
+                            v-model="finish"
+                            class="d-flex align-center flex-column" 
+                            v-if="finish"
+                            :width="500"
+                        >
                             <v-card-text>
                                 <v-row>
-                                    <v-col col="4" md="6">
-                                        <div v-for="(image, index) in JSON.parse(itemCart.images)" :key="image.id">
-                                            <v-img v-if="index === 0" :vid-id="image" class="align-end text-white"
-                                                :width="250" max-width="250" height="200" aspect-ratio="16/9"
-                                                :src="`../../storage/products/${image}`"
-                                                :lazy-src="`../../storage/products/${images}`" cover>
+                                    <v-col class="d-flex child-flex" cols="6">
+                                        <div>
+                                           
+                                                <v-img
+                                                    :src="`/storage/products/${productImages}`"
+                                                    :lazy-src="`/storage/products/${productImages}`"
+                                                    aspect-ratio="16/9"
+                                                    :width="200"
+                                                    cover
+                                                >
 
                                                 <template>
                                                     <div class="d-flex align-center justify-center fill-height">
@@ -326,12 +344,10 @@
                                                 </template>
 
                                             </v-img>
+                                       
                                         </div>
-
                                     </v-col>
-                                    <v-col col="6" md="4">
-
-
+                                    <v-col cols="6" md="4">
                                         <div class="text-h6">
                                             {{ itemCart.name }}
                                         </div>
@@ -352,11 +368,11 @@
                                 </v-row>
 
                                 <v-row>
-                                    <v-col>
+                                    <v-col cols="8" sm="6">
                                         <v-card class="mx-auto" :width="450">
                                             <v-card-text>
                                                 <v-row>
-                                                    <v-col col="12" sm="8">
+                                                    <v-col cols="8" sm="8">
                                                         <v-radio-group v-model="paymentType" inline>
                                                             <v-radio label="Debit" value="debit">
 
@@ -439,8 +455,7 @@
 
         </v-timeline>
 
-        </v-responsive>
-            </v-container>
+       
                
             </v-col>
         </v-row>
