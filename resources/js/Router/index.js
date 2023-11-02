@@ -11,6 +11,7 @@ import Profile from '../Pages/Frontend/Profile/Profile.vue'
 import SubcategoriesAll from '../Pages/Frontend/Subcategories/Subcategories.vue'
 import Cart from '../Pages/Frontend/Cart/Cart.vue'
 import Checkout from '../Pages/Frontend/Checkout/Checkout.vue'
+import Orders from '../Pages/Frontend/Orders/Orders.vue'
 import AdminLogin from '../Pages/Backend/Auth/Login.vue'
 import AdminDashboard from '../Pages/Backend/Auth/Dashboard.vue'
 import Categories from '../Pages/Backend/Categories/Categories.vue'
@@ -96,6 +97,11 @@ const routes = [{
         path: '/stock',
         name: 'stock',
         component: Stock
+    },
+    {
+        path: '/orders',
+        name: 'orders',
+        component: Orders
     },
     {
         path: '/images',

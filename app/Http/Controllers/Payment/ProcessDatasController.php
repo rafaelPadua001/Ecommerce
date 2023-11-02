@@ -13,7 +13,7 @@ use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
-
+use App\Http\Controllers\Orders\OrderController;
 
 class ProcessDatasController extends Controller
 {
@@ -67,7 +67,7 @@ class ProcessDatasController extends Controller
     public function debitPayment(Request $request)
     {
         $customer = Auth::guard('customer')->user();
-
+        
         try {
             //Aqui usaremos o guzzle para fazer as requisições HTTP
             $client = new Client([
@@ -83,7 +83,7 @@ class ProcessDatasController extends Controller
             $req = [
                 'MerchantOrderId' => uniqid(),
                 'Customer' => [
-                    'Name' => $customer->first_name . '' . $customer->last_name,
+                    'Name' => $customer->first_name . ' ' . $customer->last_name,
                     'Email' => $customer->email,
                 ],
                 'Payment' => [
@@ -108,6 +108,7 @@ class ProcessDatasController extends Controller
 
                 //Obter o corpo da resposta
                 $responseData = json_decode($response->getBody()->getContents(), true);
+                $this->getOrder($request, $responseData);
                 return $this->createDebitPayment($responseData, $request);
                 //return response()->json($responseData);
             } catch (Exception $e) {
@@ -116,6 +117,8 @@ class ProcessDatasController extends Controller
         } catch (Exception $e) {
             return response()->json($e);
         }
+
+       
     }
     public function pixPayment(Request $request)
     {
@@ -262,5 +265,10 @@ class ProcessDatasController extends Controller
         $client = new PaymentClient();
 
         return $client;
+    }
+    public function getOrder($request, $responseData){
+       // dd($responseData);
+        $order = new OrderController();
+        return $order->create($request, $responseData);
     }
 }
