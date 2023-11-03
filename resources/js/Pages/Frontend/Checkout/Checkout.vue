@@ -399,7 +399,8 @@
                                                                     :quantity="this.itemCart.quantity"
                                                                     :delivery="selectedDelivery"
                                                                     :description="this.itemCart.description"
-                                                                    :image="this.itemCart.images" />
+                                                                    :image="this.itemCart.images"
+                                                                    :color="this.itemCart.color" />
                                                             </v-card>
                                                         </div>
                                                         <div v-if="paymentType == 'credit'">
@@ -410,7 +411,8 @@
                                                                     :quantity="this.itemCart.quantity"
                                                                     :delivery="selectedDelivery"
                                                                     :description="this.itemCart.description"
-                                                                    :image="this.itemCart.images" />
+                                                                    :image="this.itemCart.images"
+                                                                    :color="this.itemCart.color" />
 
 
                                                             </v-card>

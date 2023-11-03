@@ -1,5 +1,6 @@
 <template>
     <v-container>
+       
         <v-form @submit.prevent="submitForm">
             <v-text-field v-model="cardHolder" label="Nome do titular do cartão" required></v-text-field>
             <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
@@ -28,7 +29,8 @@ import axios from 'axios';
             'totalValue',
             'delivery',
             'description',
-            'image'
+            'image',
+            'color'
         ],
         data: () => ({
             loading: false,
@@ -68,6 +70,7 @@ import axios from 'axios';
                     name: this.name,
                     quantity: this.quantity,
                     image: this.image,
+                    color: this.color,
                     id: this.id
                 };
                 axios.post('/payment', data)
