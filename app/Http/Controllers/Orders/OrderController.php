@@ -31,12 +31,14 @@ class OrderController extends Controller
     {
         try {
             $request_data = $request->input();
+           
             $response = $responseData;
             $customer = Auth::guard('customer')->user();
            //  dd($response['Payment']['ReceivedDate']); 
             $order = Order::create([
                 'client' => $customer->first_name . ' ' . $customer->last_name,
                 'description' => $request_data['description'],
+                'color' => json_encode($request_data['color']),
                 'exec_date' => $response['Payment']['ReceivedDate'],
                 'value' => $request['totalValue'],
                 'status' => 'open',
