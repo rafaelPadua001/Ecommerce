@@ -11,12 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    //
-    protected $order;
-    
-    public function __construct(Order $order){
-        $this->order = $order;
-    }
+  
     public function index(){
         try{
             $customer = Auth::guard('customer')->user();
