@@ -16,6 +16,14 @@ class Order extends Model
         'value',
         'status',
         'user_id',
-        'cart_item_id'
+        'cart_item_id',
+        'address',
+        'cep',
+        'complemento',
+        'bairro',
+        'cidade',
+        'uf',
+        'pais',
+        'order_id'
     ];
 }

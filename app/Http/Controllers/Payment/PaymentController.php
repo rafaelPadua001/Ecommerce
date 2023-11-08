@@ -20,4 +20,5 @@ class PaymentController extends Controller
         $process = new ProcessDatasController();
         return $process->getDatas($request);
     }
+    
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payment;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MelhorEnvio\MelhorEnvioController;
 use App\Models\Payment;
 use Exception;
 use GuzzleHttp\Client;
@@ -87,11 +88,12 @@ class ProcessDatasController extends Controller
                     'Email' => $customer->email,
                 ],
                 'Payment' => [
-                    'Type' => 'CreditCard',
+                    'Type' => 'DebitCard',
                     'Amount' => $request->totalValue * 100,
                     'Installments' => 1,
                     'SoftDescription' => $request->name,
-                    'CreditCard' => [
+                    'ReturnUrl' => 'http://localhost:8000', 
+                    'DebitCard' => [
                         'CardNumber' => $request->cardNumber,
                         'Holder' => $request->cardHolder,
                         'ExpirationDate' => $request->expiryDate,
@@ -105,7 +107,7 @@ class ProcessDatasController extends Controller
                 $response = $client->request('POST', '/1/sales', [
                     'json' => $req
                 ]);
-
+                
                 //Obter o corpo da resposta
                 $responseData = json_decode($response->getBody()->getContents(), true);
                 $this->getOrder($request, $responseData);
@@ -233,7 +235,7 @@ class ProcessDatasController extends Controller
                 "payer" => $payer->email,
                 "user_id" => $payer->id
             ]);
-
+            $this->getMelhorEnvio($request);
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -271,4 +273,10 @@ class ProcessDatasController extends Controller
         $order = new OrderController();
         return $order->create($request, $responseData);
     }
+    public function getMelhorEnvio($request){
+        
+        $melhorEnvio = new MelhorEnvioController();
+        return $melhorEnvio->createCart($request);
+    }
+   
 }

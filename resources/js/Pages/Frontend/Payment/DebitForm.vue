@@ -1,7 +1,8 @@
 <template>
     <v-container>
-       
+        
         <v-form @submit.prevent="submitForm">
+            <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
             <v-text-field v-model="cardHolder" label="Nome do titular do cartão" required></v-text-field>
             <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
             <v-text-field v-model="expiryDate" label="Data de Expiração (MM/AA)" required></v-text-field>
@@ -30,14 +31,16 @@ import axios from 'axios';
             'delivery',
             'description',
             'image',
-            'color'
+            'color',
+            'address',
         ],
         data: () => ({
             loading: false,
             paymentType: 'debit',
-            paymentSelected: 'mercadoPago',
+            paymentSelected: 'cielo',
             cardHolder: null,
             cardNumber: null,
+            document: null,
             expiryDate: null,
             cvv: null,
             cardBrand: null,
@@ -60,6 +63,7 @@ import axios from 'axios';
                     paymentType: this.paymentType,
                     cardHolder: this.cardHolder,
                     cardNumber: this.cardNumber,
+                    document: this.document,
                     expiryDate: this.expiryDate,
                     cvv: this.cvv,
                     cardBrand: this.cardBrand,
@@ -71,7 +75,8 @@ import axios from 'axios';
                     quantity: this.quantity,
                     image: this.image,
                     color: this.color,
-                    id: this.id
+                    id: this.id,
+                    address: this.address,
                 };
                 axios.post('/payment', data)
                 .then((response) => {

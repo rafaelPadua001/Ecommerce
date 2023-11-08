@@ -400,7 +400,9 @@
                                                                     :delivery="selectedDelivery"
                                                                     :description="this.itemCart.description"
                                                                     :image="this.itemCart.images"
-                                                                    :color="this.itemCart.color" />
+                                                                    :color="this.itemCart.color"
+                                                                    :address="this.address"
+                                                                    />
                                                             </v-card>
                                                         </div>
                                                         <div v-if="paymentType == 'credit'">
@@ -412,7 +414,8 @@
                                                                     :delivery="selectedDelivery"
                                                                     :description="this.itemCart.description"
                                                                     :image="this.itemCart.images"
-                                                                    :color="this.itemCart.color" />
+                                                                    :color="this.itemCart.color"
+                                                                 />
 
 
                                                             </v-card>
