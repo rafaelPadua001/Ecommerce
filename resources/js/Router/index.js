@@ -21,6 +21,7 @@ import ProductSeo from '../Pages/Backend/Products/Seo/Seo.vue'
 import Stock from '../Pages/Backend/Products/Stock/Stock.vue'
 import Images from '../Pages/Backend/Galerie/Images/Images.vue'
 import Videos from '../Pages/Backend/Galerie/Videos/Video.vue'
+import allOrders from '../Pages/Backend/Orders/Orders.vue'
 
 const routes = [{
     path: '/',
@@ -112,6 +113,11 @@ const routes = [{
         path: '/videos',
         name: 'videos',
         component: Videos
+    },
+    {
+        path: '/allOrders',
+        name: 'allOrders',
+        component: allOrders
     }
 ];
 

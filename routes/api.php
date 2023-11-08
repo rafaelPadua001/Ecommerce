@@ -59,3 +59,4 @@ Route::delete('/videos/delete/{id}', [ProductVideoController::class, 'destroy'])
 
 //Melhor envio
 Route::post('/calculateDelivery', [MelhorEnvioController::class, 'calculateDelivery'])->name('calculate.delivery');
+Route::post('/generateTicket', [MelhorEnvioController::class, 'generateTicket'])->name('generateTicket.delivery');

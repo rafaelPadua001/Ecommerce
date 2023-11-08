@@ -143,6 +143,7 @@ Route::post('/saveSearchAddress', [SearchToAddressesController::class, 'save'])-
 
 //Route Orders
 Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
+Route::get('/allOrders', [OrderController::class, 'allOrders'])->name('allOrders')->middleware('auth');
  
 //Products routes
 //Route::get('/products', function(){
