@@ -62,3 +62,4 @@ Route::post('/calculateDelivery', [MelhorEnvioController::class, 'calculateDeliv
 Route::post('/generateTicket', [MelhorEnvioController::class, 'generatePrint'])->name('generateTicket.delivery');
 Route::post('/melhorenvio/checkout', [MelhorEnvioController::class, 'checkout'])->name('checkout.delivery');
 Route::post('/melhorenvio/tracking', [MelhorEnvioController::class, 'tracking'])->name('checkout.tracking');
+Route::post('/melhorenvio/delete/{id}', [MelhorEnvioController::class, 'destroy'])->name('checkout.destroy');

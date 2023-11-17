@@ -37,7 +37,7 @@
         </v-list-group>
         
         <v-divider></v-divider>
-        <v-list-item prepend-icon="fas fa-boxes-shopping" title="Orders" value="orders" to="/allOrders"></v-list-item>
+        <v-list-item prepend-icon="fa-brands fa-first-order fa-2xs fa-bounce" title="Orders" value="orders" to="/allOrders"></v-list-item>
         <v-divider></v-divider>
 
         <v-list-item prepend-icon="fas fa-blog fa-2xs fa-bounce" title="Blog" value="Store"></v-list-item>

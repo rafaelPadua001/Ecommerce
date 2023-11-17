@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use MelhorEnvio\Shipment;
 use MelhorEnvio\Enums\Environment;
 use MelhorEnvio\Resources\Shipment\Product;
-
+use App\Models\Order;
 
 
 
@@ -237,6 +237,15 @@ class MelhorEnvioController extends Controller
          
 
             return response()->json(json_decode($body));
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function destroy($id){
+        try{
+            $order = Order::where('id', $id)->delete();
+            return response()->json($order);
         }
         catch(Exception $e){
             return response()->json($e);
