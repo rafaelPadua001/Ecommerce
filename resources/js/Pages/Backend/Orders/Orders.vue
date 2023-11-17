@@ -75,7 +75,7 @@
                                     </v-btn>
                                     
                                     <v-btn>
-                                        <v-icon size="x-small" class="me-2" @click="deleteItem(item)" icon="fas fa-remove"
+                                        <v-icon size="x-small" class="me-2" @click="openRemoveOrderDialog(item)" icon="fas fa-remove"
                                             color="primary"></v-icon>
                                     </v-btn>
                                     
@@ -93,41 +93,61 @@
                         </v-data-table>
                             </v-card-text>
                         </v-card>
-
-                        <v-dialog v-model="trackingDialog" transition="dialog-bottom-transition">
+                        <div>
+                            <v-dialog v-model="trackingDialog" transition="dialog-bottom-transition">
                             <v-card>
                                 <div>
                                     <v-list>
-                                        <v-list-item-group>
+                                        <v-list-item-group v-if="trackingOrder">
                                             <v-list-item v-for="(value, key) in trackingOrder" :key="key">
                                                 <v-list-item-content>
                                                     <v-list-item-title>{{ key }}</v-list-item-title>
                                                     <v-list-item-subtitle v-if="(typeof value === 'object')">
                                                         ID: {{ value.id }}
-                                                        protocol: {{ value.protocol }}
-                                                        status: {{ value.status }}
-                                                        tracking: <v-btn variant="plain" color="primary" size="x-small" @click="trackBack(value.tracking)">{{ value.tracking }}</v-btn>
-                                                        created at: {{ value.created_at }}
-                                                        posted at: {{ value.posted_at }}
-                                                        delivered at:   {{ value.delivered_at }}
-                                                        canceled at:    {{ value.canceled_at }}
-                                                        expired at: {{ value.expired_at }} 
+                                                      
                                                     </v-list-item-subtitle>
                                                     <v-list-item-subtitle v-else>
                                                         {{ value.id }}
                                                     </v-list-item-subtitle>
+
+                                                    <v-list-item>
+                                                        protocol: {{ value.protocol }}
+                                                    </v-list-item>
+                                                    <v-list-item>  status: {{ value.status }}</v-list-item>
+                                                    <v-list-item>tracking: <v-btn variant="plain" color="primary" size="x-small" @click="trackBack(value.tracking)">{{ value.tracking }}</v-btn></v-list-item>
+                                                    <v-list-item> created at: {{ value.created_at }}</v-list-item>
+                                                    <v-list-item>posted at: {{ value.posted_at }}</v-list-item>
+                                                    <v-list-item> delivered at:   {{ value.delivered_at }}</v-list-item>
+                                                    <v-list-item> canceled at:    {{ value.canceled_at }}</v-list-item>
+                                                    <v-list-item>expired at: {{ value.expired_at }} </v-list-item>
                                                 </v-list-item-content>
                                             </v-list-item>
                                         </v-list-item-group>
-                                    </v-list>
-                                
 
+                                        <v-list-item-group v-if="trackingOrder == 0">
+                                            <v-list-item-title>Nenhum registro encontrado</v-list-item-title>
+                                        </v-list-item-group>
+                                    </v-list>
                                 </div>
-                          
+                                <v-card-actions>
+                                    <v-btn color="primary" variant="plain" @click="closeTrackingDialog">Close</v-btn>
+                                </v-card-actions>
                                 
                             </v-card>
                            
                         </v-dialog>
+
+                        <v-dialog v-model="removeOrderDialog">
+                            <v-card>
+                                <v-card-text>Tem certeza que quer remover este pedido ? {{ value }}</v-card-text>
+                                <v-card-actions>
+                                    <v-btn variant="plain">Cancel</v-btn>
+                                    <v-btn variant="plain" color="red" @click="removeOrder">Remove</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        </div>
+                       
                     </v-sheet>
                 </v-col>
             </v-row>
@@ -146,9 +166,11 @@ export default {
         },
         data: () => ({
             orders: [],
+            order: {},
             trackingOrder: null,
             trackingDialog: false,
             dialog: false,
+            removeOrderDialog: false,
             headers: [
             {
                 title: 'id',
@@ -173,6 +195,9 @@ export default {
             },
             trackingDialog(val){
                 val || this.closeTrackingDialog();
+            },
+            removeOrderDialog(val){
+                val || this.closeRemoveOrderDialog();
             }
         },
         created() {
@@ -249,7 +274,28 @@ export default {
             },
             closeTrackingDialog(){
                 this.trackingDialog = false;
+            },
+            openRemoveOrderDialog(item){
+                this.removeOrderDialog = true;
+                this.order = Object.assign({}, item);
+                //return this.removeOrder(item);
+            },
+            removeOrder(item){
+               // alert(item);
+                axios.post(`/api/melhorenvio/delete/${this.order.id}`)
+                .then((response) => {
+                   // this.orders.splice(item, 1);
+                    this.closeOrderDialog();
+                    return this.orders.splice(item, 1);
+                })
+                .catch((response) => {
+                    alert('Error :', response);
+                });
+            },
+            closeOrderDialog(){
+                return this.openRemoveOrderDialog = false;
             }
+
           },
         mounted(){
             this.getOrders();
