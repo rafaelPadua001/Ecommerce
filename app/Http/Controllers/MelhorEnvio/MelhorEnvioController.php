@@ -139,13 +139,116 @@ class MelhorEnvioController extends Controller
             echo $e->getMessage();
         }
     }
+    public function checkout(Request $request){
+        try{
+           
+            $client = $this->getClient();
+            $customer = Auth::guard('customer')->user();
+              //  dd($request->get('order')['order_id']);
+              //dd($request->order['order_id']);
+              $orderIds = [$request->get('order')['order_id']];
+                $response = $client->request('POST', 'https://sandbox.melhorenvio.com.br/api/v2/me/shipment/checkout', [
+                    'json' => ['orders' => [$request->order['order_id']]],
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'Authorization' => 'Bearer ' . env('MELHORENVIO_ACCESS_TOKEN'), // Substitua pelo seu token
+                        'Content-Type' => 'application/json',
+                        'User-Agent' => 'rafael.f.p.faria@hotmail.com',
+                    ],
+                ]);
+                if ($response->getStatusCode() === 200) {
+                    $responseData = json_decode($response->getBody()->getContents(), true);
+                    // Verifique o conteúdo de $responseData
+                    return response()->json($responseData);
+                } else {
+                    return response()->json(['error' => 'Erro na requisição'], $response->getStatusCode());
+                }
+               // echo $response->getBody();
+               $body = $response->getBody()->getContents();
+               
+               // Convertemos a string JSON para um array associativo
+               $data = json_decode($body, true);
+               
+               // Agora $data contém a resposta da API em formato de array
+               return response()->json($data);
+              //  return response()->json($response);
+        }
+        catch(Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+    public function generatePrint(Request $request)
+    {
+        try{
+            $client = $this->getClient();
+            $customer = Auth::guard('customer')->user();
+              //  dd($request->get('order')['order_id']);
+              //dd($request->order['order_id']);
+              $orderIds = [$request->get('order')['order_id']];
+                $response = $client->request('POST', 'https://sandbox.melhorenvio.com.br/api/v2/me/shipment/print', [
+                    'json' => ['orders' => [$request->order['order_id']]],
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'Authorization' => 'Bearer ' . env('MELHORENVIO_ACCESS_TOKEN'), // Substitua pelo seu token
+                        'Content-Type' => 'application/json',
+                        'User-Agent' => 'rafael.f.p.faria@hotmail.com',
+                    ],
+                ]);
+                if ($response->getStatusCode() === 200) {
+                    $responseData = json_decode($response->getBody()->getContents(), true);
+                    // Verifique o conteúdo de $responseData
+                    return response()->json($responseData);
+                } else {
+                    return response()->json(['error' => 'Erro na requisição'], $response->getStatusCode());
+                }
+               // echo $response->getBody();
+               $body = $response->getBody()->getContents();
+               
+               // Convertemos a string JSON para um array associativo
+               $data = json_decode($body, true);
+               
+               // Agora $data contém a resposta da API em formato de array
+               return response()->json($data);
+              //  return response()->json($response);
+        }
+        catch(Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function tracking(Request $request){
+       
+        try{
+            $client = $this->getClient();
+           
+            $orderId = [$request->get('order')['order_id']];
+        
+            $response = $client->request('POST','https://sandbox.melhorenvio.com.br/api/v2/me/shipment/tracking', [
+                'json' => ['orders' =>  [$request->order['order_id']]],
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer ' . env('MELHORENVIO_ACCESS_TOKEN'), // Substitua pelo seu token
+                    'Content-Type' => 'application/json',
+                    'User-Agent' => 'rafael.f.p.faria@hotmail.com',
+                ],
+             ]);
+           
+            $body = $response->getBody()->getContents();
+     
+         
+
+            return response()->json(json_decode($body));
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function getClient(){
+        $client = new Client();
+        return $client;
+    }
     public function getOrder($order, $request){
         $orders = new OrderController();
         return $orders->insertOrderId($request, $order);
-    }
-    public function generateTicket(Request $request)
-    {
-        dd($request);
     }
     
 }
