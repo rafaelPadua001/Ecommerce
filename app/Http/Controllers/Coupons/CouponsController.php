@@ -34,5 +34,26 @@ class CouponsController extends Controller
         catch(Exception $e){
             return response()->json($e);
         }
-    }   
+    }
+    public function update(Request $request, $id){
+        try{
+            $user = Auth::user();
+            $coupon = Coupon::where('id', $id)->update($request->all());
+            $updated = Coupon::where('id', $id)->first();
+            
+           return response()->json($updated);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function destroy($id){
+        try{
+            $coupon = Coupon::where('id', $id)->delete();
+            return response()->json($coupon);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }        
+    }
 }

@@ -1,7 +1,8 @@
 <template>
   <v-card v-if="this.createDialog">
+    
     <v-toolbar title="Coupons Generator">
-      <v-btn icon @click="createDialog = false">
+      <v-btn icon @click="close">
         <v-icon icon="fas fa-close fa-2xs"></v-icon>
       </v-btn>
     </v-toolbar>
@@ -24,22 +25,21 @@
     <v-card-actions>
       <v-btn-group>
         <v-btn @click="createCupon">Save</v-btn>
-        <v-btn @click="createDialog = false">Close</v-btn>
+        <v-btn @click="close">Close</v-btn>
       </v-btn-group>
      
     </v-card-actions>
   </v-card>
 
- {{ cupons }}
 </template>
 
 <script>
 import axios from 'axios';
 
 export default {
-  props: ['createDialog'],
+  props: ['createDialog', 'coupons'],
   data: () => ({
-    coupons: [],
+    //coupons: [],
     code: '',
     discountPercentage: '',
     codeRules: [
@@ -57,6 +57,9 @@ export default {
     },
   },
   methods: {
+    close(){
+      this.$emit('close-dialog');
+    },
     createCupon() {
       const token = document.head.querySelector('meta[name="csrf-token"]').content;
      
@@ -71,8 +74,9 @@ export default {
         }
       })
       .then((response) => {
-        alert('Cupon generated success');
-        return this.coupons.push(response.data);
+        this.$emit('close-dialog');
+        return this.$emit('create', response);
+       
       })
       .catch((response) => {
         alert('Error: ' , response);

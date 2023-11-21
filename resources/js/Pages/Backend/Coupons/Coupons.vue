@@ -60,11 +60,14 @@
 
     <div>
         <v-dialog v-model="createDialog" width="500">
-            <CreateCoupon :createDialog="createDialog" @close-dialog="closeDialog" />
+            <CreateCoupon :createDialog="createDialog" @create="create"  @close-dialog="closeDialog" />
         </v-dialog>
 
         <v-dialog v-model="editDialog">
-            <UpdateCoupon :editCoupon="editCoupon"></UpdateCoupon>
+            <UpdateCoupon :editCoupon="editCoupon" @update-coupon="updateCoupon" @close-dialog="closeUpdateDialog"></UpdateCoupon>
+        </v-dialog>
+        <v-dialog v-model="removeDialog" width="500">
+            <RemoveCoupon :removeCoupon="removeCoupon" @remove="deleteCoupon" @close-dialog="closeRemoveDialog"></RemoveCoupon>
         </v-dialog>
     </div>
 </template>
@@ -73,12 +76,14 @@
 import Dashboard from '../Auth/Dashboard.vue';
 import CreateCoupon from './Dialogs/CreateCoupon.vue';
 import UpdateCoupon from './Dialogs/UpdateCoupon.vue';
+import RemoveCoupon from './Dialogs/RemoveCoupon.vue';
 
 export default {
     components: {
         Dashboard,
         CreateCoupon,
-        UpdateCoupon
+        UpdateCoupon,
+        RemoveCoupon
     },
     data: () => ({
         coupons: [],
@@ -86,6 +91,8 @@ export default {
         menu: false,
         editCoupon: {},
         editDialog: false,
+        removeCoupon: {},
+        removeDialog: false,
     }),
     methods: {
         openCreateDialog() {
@@ -93,6 +100,12 @@ export default {
         },
         closeDialog() {
             this.createDialog = false;
+        },
+        closeUpdateDialog(){
+            this.editDialog = false;
+        },
+        closeRemoveDialog(){
+            this.removeDialog = false;
         },
         getCoupons() {
             axios.get('/coupons/all')
@@ -103,13 +116,29 @@ export default {
                     alert('Error:', response.error);
                 });
         },
+        create(response){
+            return this.coupons.push(response.data);
+        },
         edit(coupon) {
           this.editCoupon = Object.assign({}, coupon);
           this.editDialog = true;
         },
+        updateCoupon(response){
+            const index = this.coupons.findIndex(coupon => coupon.id === response.data.id);
+            if(index !== -1){
+                this.coupons.splice(index, 1, response.data);
+            }
+          // return Object.assign(this.coupons.id[response.data.id], response.data);
+        },
         remove(coupon){
-
+            this.removeCoupon = Object.assign({}, coupon);
+            
+            this.removeDialog = true;
+        },
+        deleteCoupon(removeCoupon){
+            this.coupons.splice(removeCoupon.id, 1)
         }
+        
     },
     mounted() {
         this.getCoupons();
