@@ -149,8 +149,10 @@ Route::get('/allOrders', [OrderController::class, 'allOrders'])->name('allOrders
 //Coupons Routes
 Route::post('/coupons/add', [CouponsController::class, 'create'])->name('coupon.add')->middleware('auth');
 Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index')->middleware('auth');
+Route::post('/coupons/update/{id}', [CouponsController::class, 'update'])->name('coupon.update')->middleware('auth');
+Route::delete('/coupons/delete/{id}', [CouponsController::class, 'destroy'])->name('coupon.destroy')->middleware('auth');
  
 //Products routes
-//Route::get('/products', function(){
+//Route::get('/products', function(){s
 //    dd('teste product routes');
 //});
