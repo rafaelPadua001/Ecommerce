@@ -245,7 +245,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         const token = document.head.querySelector('meta[name="csrf-token"]');
-        console.log(token);
+       
         const data = { name: this.editedItem.name, user_id: this.user.id };
         axios.post(`/api/categories/update/${this.editedItem.id}`, data,
           {
