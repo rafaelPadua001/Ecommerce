@@ -22,6 +22,7 @@ use App\Http\Controllers\ProductVideos\ProductVideoController;
 use App\Http\Controllers\ProfileImage\ProfileImageController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Search\SearchToAddressesController;
+use App\Http\Controllers\Coupons\CouponsController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -144,6 +145,10 @@ Route::post('/saveSearchAddress', [SearchToAddressesController::class, 'save'])-
 //Route Orders
 Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
 Route::get('/allOrders', [OrderController::class, 'allOrders'])->name('allOrders')->middleware('auth');
+
+//Coupons Routes
+Route::post('/coupons/add', [CouponsController::class, 'create'])->name('coupon.add')->middleware('auth');
+Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index')->middleware('auth');
  
 //Products routes
 //Route::get('/products', function(){

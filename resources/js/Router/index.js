@@ -22,6 +22,7 @@ import Stock from '../Pages/Backend/Products/Stock/Stock.vue'
 import Images from '../Pages/Backend/Galerie/Images/Images.vue'
 import Videos from '../Pages/Backend/Galerie/Videos/Video.vue'
 import allOrders from '../Pages/Backend/Orders/Orders.vue'
+import Coupons from '../Pages/Backend/Coupons/Coupons.vue'
 
 const routes = [{
     path: '/',
@@ -118,6 +119,11 @@ const routes = [{
         path: '/allOrders',
         name: 'allOrders',
         component: allOrders
+    },
+    {
+        path: '/coupons',
+        name: 'coupons',
+        component: Coupons
     }
 ];
 
