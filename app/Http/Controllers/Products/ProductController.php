@@ -59,7 +59,8 @@ class ProductController extends Controller
                 'slug'   => $request->slug,
                 'status'  => $request->status,
                 'highlight' => $request->highlights ? true : false,
-                'user_id' => (int) $request->user_id
+                'user_id' => (int) $request->user_id,
+                'discount_id' => $request->has('discount') ? (int)$request->discount : null,
                 
             ]);
             
@@ -100,16 +101,24 @@ class ProductController extends Controller
     public function uploadImg($request)
     {
         $randomNames = [];
-
+    
+        
         foreach ($request->images as $file) {
+            
             if ($file) {
                 $randomName = Str::random(10) . '.webp';
+             
                 $fileName = $file['src'];
-
-                $path = Storage::putFileAs('public/products', $fileName, $randomName);
-
+                
+                $path = Storage::putFileAs('/public/products', $fileName, $randomName);
+               
                 // Adiciona o novo nome de arquivo ao array $randomNames
                 $randomNames[] = $randomName;
+               // dd($randomName);
+                $product = Product::where('name', $request->name)->update([
+                    'images' => json_encode($randomNames, true)              
+                ]);
+               
             }
         }
 
@@ -181,11 +190,13 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $product = Product::where('id', $id)->first()->update($request->all());
+            $product = Product::where('id', $id)->update($request->all());
+           
             if ($request->images) {
                 $this->uploadImg($request);
             }
-            return response()->json($product);
+
+            return response()->json($request);
         } catch (Exception $e) {
             return response()->json($e);
         }
