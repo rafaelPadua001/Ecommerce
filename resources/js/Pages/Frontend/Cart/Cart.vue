@@ -162,9 +162,6 @@ export default {
 
             this.closeDelete()
         },
-
-
-
         closeDelete() {
             this.dialogDelete = false
             this.$nextTick(() => {

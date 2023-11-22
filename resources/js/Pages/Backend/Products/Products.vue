@@ -71,15 +71,14 @@
 
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
-                        
-                        
                         <v-file-input v-model="editedItem.images" @change="previewImages" multiple chips></v-file-input>
                           <div v-if="previewImages">
                             <v-row v-if="images.length > 0">
                               <v-col v-for="(image, index) in images" :key="index" cols="12" md="6">
                                 <v-card>
+                               
                                   <v-img 
-                                      v-model="images" 
+                                      v-model="images"
                                       :src="image.src" 
                                       :lazy-src="image.name"
                                       :alt="'Image ' + index"
@@ -101,14 +100,21 @@
                               <v-spacer></v-spacer>
                               <v-spacer></v-spacer>
                             </v-row>
+                            <v-row v-if="images.length == 0">
+                            <v-col v-for="(imageName, index) in editedItem.images" :key="index">
+                              <v-img :src="`./storage/products/${imageName}`" max-width="100" max-height="100"></v-img>
+                            </v-col>
+                          </v-row>
                           </div>
                           <div v-else>
-                            <v-row>
+                            <v-row v-if="!previewImages">
+                              teste
                               <v-col v-for="(image, index) in editedItem.images" :key="index" cols="12" md="6">
                                 <v-card>
+                                 
                                   <v-img 
                                       v-model="editedItem.images" 
-                                      :src="'./storage/uploads/' + image" 
+                                      :src="'./storage/uploads/' + image"
                                       :lazy-src="image"
                                       :alt="'Image ' + index"
                                       cover
@@ -133,6 +139,7 @@
                             </v-row>
                            
                         </div>
+                        
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="editedItem.platform" label="Platform  (Ex:youtube)"></v-text-field>
@@ -188,7 +195,6 @@
                               class="ma-2"
                               show-swatches
                               swatches-max-height="55px"
-                              
                               width="90%"
                             >
                               
@@ -200,8 +206,20 @@
                             </div>
                           
                         </v-col>
-                        
-                        <v-col cols="8" sm="4" md="2">
+                        <v-col v-if="editedItem.colors >= 1">
+                          <div>
+                            <v-card v-for="(color, index) in JSON.parse(editedItem.colors)" :key="index" :color="color">
+                            <template v-slot:append>
+                                  <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
+                                    <v-icon icon="fas fa-close fa-2xs"></v-icon>
+                                  </v-btn>
+                                </template>
+                          </v-card>
+                            
+                          </div>
+                          
+                        </v-col>
+                        <v-col cols="8" sm="4" md="2" v-else>
                           <v-card v-for="(color, index) in colors" :key="index" :color="color">
                             <template v-slot:append>
                                   <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
@@ -270,8 +288,29 @@
                         <v-text-field v-model="editedItem.length" label="Length" 
                           :suffix="this.editedItem.unity"></v-text-field>
                       </v-col>
+                      
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <h5>Discount</h5>
+                      </v-col>
+                    </v-row>
+
+                    <v-row>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.sku" label="Sku"></v-text-field>
+                        <v-select
+                          v-model="editedItem.discount_id"
+                          :items="discounts"
+                          density="compact"
+                          label="Select Discount"
+                          item-title="code"
+                          item-value="id"
+                        ></v-select>
+                      </v-col>
+                      <v-col>
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field v-model="editedItem.sku" label="Sku"></v-text-field>
+                        </v-col>
                       </v-col>
                     </v-row>
                     <v-row>
@@ -356,13 +395,17 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-            <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-dialog v-model="dialogDelete" max-width="500">
               <v-card>
-                <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+                <v-card-title class="text-h5">Remove </v-card-title>
+                  <v-card-text>
+                    Are you sure you want to delete this item ? 
+                    {{ editedItem.name }}
+                </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-                  <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+                  <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">Remove</v-btn>
                   <v-spacer></v-spacer>
                 </v-card-actions>
               </v-card>
@@ -370,13 +413,42 @@
           </v-toolbar>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon size="small" class="me-2" @click="editItem(item.raw)">
-            mdi-pencil
+          <v-icon size="x-small" class="me-2" @click="editItem(item)" icon="fa-regular fa-pen-to-square">
+            
           </v-icon>
-          <v-icon size="small" @click="deleteItem(item.raw)">
-            mdi-delete
+          <v-icon size="x-small" class="me-2" @click="deleteItem(item)" icon="fas fa-remove fa-2xs">
+           
           </v-icon>
         </template>
+
+        <template v-slot:item.images="{ item }">
+          <v-row>
+            <v-col v-for="(imageName, index) in JSON.parse(item.images)" :key="index">
+              <v-img :src="`./storage/products/${imageName}`" max-width="100" max-height="100"></v-img>
+            </v-col>
+          </v-row>
+        </template>
+
+        <template v-slot:item.colors="{item}" >
+         
+          <v-row v-if="item.colors != 0">
+            <v-col cols="12" md="4" sm="12" v-for="(color, index) in JSON.parse(item.colors)" :key="index">
+              <v-card
+                class="mx-auto"
+               :color="color"
+                
+              >
+              {{ color.trim() }}
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row v-else>
+            <v-col>
+              no color
+            </v-col>
+          </v-row>
+        </template>
+
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">
             Reset
@@ -405,6 +477,7 @@ export default {
     subcategories: [],
     user: [],
     products: [],
+    discounts: [],
     name: '',
     description: '',
     selectedCategory: false,
@@ -422,6 +495,7 @@ export default {
     height: false,
     width: false,
     length: false,
+    discount_id: null,
     sku: false,
     meta_name: false,
     meta_key: false,
@@ -431,27 +505,18 @@ export default {
     Availability: false,
     status: false,
     headers: [
+      { title: 'images', key: 'images' },
       {
         title: 'Name',
         align: 'start',
         sortable: false,
         key: 'name',
       },
-      //{ title: 'Category', key: 'category_name' },
-     // { title: 'Subcategory', key: 'subcategory_name' },
-      //{ title: 'Description', key: 'description' },
-      { title: 'images', key: 'images' },
-     // { title: 'platform', key: 'pĺatform' },
       { title: 'video_link', key: 'video_links' },
       { title: 'colors', key: 'colors' },
       { title: 'size', key: 'size' },
       { title: 'price', key: 'price' },
       { title: 'quantity', key: 'stock_quantity' },
-      // { title: 'weight', key: 'weight' },
-      // { title: 'height', key: 'height' },
-      // { title: 'width', key: 'width' },
-      // { title: 'length', key: 'length' },
-      // { title: 'sku', key: 'sku' },
       { title: 'Actions', key: 'actions', sortable: false },
     ],
     swatches: [
@@ -464,6 +529,7 @@ export default {
     desserts: [],
     editedIndex: -1,
     editedItem: {
+      id: '',
       name: '',
       description: '',
       category_id: 0,
@@ -474,6 +540,7 @@ export default {
       colors: [],
       size: [],
       price: "0.00",
+      discount_id: '',
       quantity: 0,
       unity: '',
       weight: 1.00,
@@ -488,8 +555,10 @@ export default {
       highlights: false,
       availability: false,
       status: true,
+      discount_id: null,
     },
     defaultItem: {
+      id: '',
       name: '',
       description: '',
       category_id: 0,
@@ -501,6 +570,7 @@ export default {
       size: [],
       unity: [],
       price: "0.00",
+      discount: '',
       quantity: 0,
       weight: 1.00,
       height: 1.00,
@@ -542,6 +612,7 @@ export default {
     previewImages(newUrl, oldUrl) {
         // Executar lógica quando a imagem é alterada
         console.log(`A imagem foi alterada de ${oldUrl} para ${newUrl}`);
+        return true;
       },
       
   },
@@ -554,7 +625,8 @@ created() {
       this.user = [],
         this.categories = [],
         this.subcategories = [],
-        this.products = []
+        this.products = [],
+        this.discounts = []
     },
     getAuth() {
       axios.get('/users')
@@ -600,6 +672,15 @@ created() {
           return alert('Error :' + response);
         });
     },
+    getDiscounts(){
+      axios.get('/coupons/all')
+      .then((response) => {
+        return this.discounts = response.data;
+      })
+      .catch((response) => {
+        return alert('Error' + response);
+      });
+    },
     previewImages(event) {
       const files = event.target.files;
       if (files) {
@@ -644,6 +725,7 @@ created() {
       return this.colors.push(selected_colors);
     },
     removeSelectedColor(index){
+      console.log(index);
       return this.colors.splice(index, 1);
     },
     hl_turn(){
@@ -678,11 +760,10 @@ created() {
         this.editedItem.status = this.status;
       }
     },
-    
     editItem(item) {
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
-          // Verifique se editedItem.images é uma string JSON e a converta para um array se necessário
+      
       if (typeof this.editedItem.images === 'string') {
         this.editedItem.images = JSON.parse(this.editedItem.images);
       }
@@ -714,7 +795,7 @@ created() {
       }
       
       
-      this.dialog = true
+      this.dialog = true;
     },
 
     deleteItem(item) {
@@ -754,15 +835,17 @@ created() {
     },
     save() {
       if (this.editedIndex > -1) {
+        
+        const indexProduct = this.editedIndex;
         const data = {
           name: this.editedItem.name,
           description: this.editedItem.description,
           category_id: this.editedItem.category_name,
           subcategory_id: this.editedItem.subcategory_name,
-          images: this.editedItem.images,
+          images: this.images,
           platform: this.editedItem.platform,
           video_link: this.editedItem.video_link,
-          colors: this.editedItem.colors,
+          colors: this.colors,
           unity: this.editedItem.unity,
           size: this.editedItem.size,
           user_id: this.user.id,
@@ -777,10 +860,11 @@ created() {
           meta_key: this.editedItem.meta_key,
           meta_description: this.editedItem.meta_description,
           slug: this.editedItem.slug,
-          highlights: this.editedItem.highlights,
+          highlight: this.editedItem.highlights,
           availability: this.editedItem.availability,
-          status: this.editedItem.status 
-        }
+          status: this.editedItem.status,
+          discount_id: this.editedItem.discount_id,
+        };
 
         axios.post(`/api/products/update/${this.editedItem.id}`, data, {
             headers: {
@@ -789,15 +873,18 @@ created() {
           }
         )
         .then((response) => {
-            this.editedItem = response.data;
-            return true;
-        })
-        .catch((response) => {
-          alert('Error: ' + response);
-          return false;
-        });
+          this.editedItem = response.data;
+          this.close();
+         return Object.assign(this.products[indexProduct], this.editedItem);
+          
+          
+    })
+    .catch((error) => {
+      alert('Error: ' + error);
+    });
+   // Object.assign(this.products[this.editedIndex], this.editedItem);
 
-        Object.assign(this.products[this.editedIndex], this.editedItem)
+        
       } else {
         
         const data = {
@@ -812,6 +899,7 @@ created() {
           unity: this.editedItem.unity,
           size: this.editedItem.size,
           user_id: this.user.id,
+          discount: this.editedItem.discount_id,
           price: this.editedItem.price,
           quantity: this.editedItem.quantity,
           weight: this.editedItem.weight,
@@ -838,7 +926,6 @@ created() {
         )
           .then((response) => {
             this.editedItem = response.data;
-            console.log(response.data);
             return true;
           })
           .catch((response) => {
@@ -856,6 +943,7 @@ created() {
     this.getCategories();
     this.getSubCategories();
     this.getProducts();
+    this.getDiscounts();
   }
 }
 </script>

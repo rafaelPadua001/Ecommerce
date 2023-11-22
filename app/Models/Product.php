@@ -21,6 +21,7 @@ class Product extends Model
         'unity',
         'manufacturer',
         'price',
+        'discount_id',
         'stock_quantity',
         'sku',
         'weight',
