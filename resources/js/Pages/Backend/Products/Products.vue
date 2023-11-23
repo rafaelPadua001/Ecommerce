@@ -76,7 +76,6 @@
                             <v-row v-if="images.length > 0">
                               <v-col v-for="(image, index) in images" :key="index" cols="12" md="6">
                                 <v-card>
-                               
                                   <v-img 
                                       v-model="images"
                                       :src="image.src" 
@@ -429,18 +428,29 @@
           </v-row>
         </template>
 
-        <template v-slot:item.colors="{item}" >
-         
-          <v-row v-if="item.colors != 0">
-            <v-col cols="12" md="4" sm="12" v-for="(color, index) in JSON.parse(item.colors)" :key="index">
-              <v-card
-                class="mx-auto"
-               :color="color"
-                
-              >
-              {{ color.trim() }}
-              </v-card>
+        <template v-slot:item.colors="{ item }">
+          <v-row v-if="item.colors !== '0'">
+            <v-col v-if="typeof item.colors === 'string'">
+              <v-row>
+                  <v-col cols="12" md="2" sm="6" v-for="(color, index) in JSON.parse(item.colors)" :key="index">
+                  <v-card  class="mx-auto" :color="color" >
+                    {{ color }}
+                  </v-card>
+                </v-col>
+              </v-row>
             </v-col>
+            <v-col v-else>
+              <v-row>
+                <v-col  cols="12" md="2" sm="6" v-for="(color, index) in item.colors" :key="index">
+                  <v-card  class="mx-auto" :color="color">
+                  {{ color }}
+                  </v-card>
+                </v-col>
+              </v-row>
+             
+            
+            </v-col>
+             
           </v-row>
           <v-row v-else>
             <v-col>
@@ -448,6 +458,7 @@
             </v-col>
           </v-row>
         </template>
+
 
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">
@@ -865,7 +876,6 @@ created() {
           status: this.editedItem.status,
           discount_id: this.editedItem.discount_id,
         };
-
         axios.post(`/api/products/update/${this.editedItem.id}`, data, {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -876,8 +886,6 @@ created() {
           this.editedItem = response.data;
           this.close();
          return Object.assign(this.products[indexProduct], this.editedItem);
-          
-          
     })
     .catch((error) => {
       alert('Error: ' + error);
