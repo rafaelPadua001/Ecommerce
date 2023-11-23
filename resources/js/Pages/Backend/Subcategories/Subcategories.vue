@@ -63,11 +63,13 @@
                                   md="4"
                                 >
                                 <v-select 
-                                    v-model="this.editedItem.category_name"
+                                    v-model="this.editedItem.category_id"
                                     label="Category"
                                     :items="categories"
                                     item-title="name"
-                                    item-value="id">
+                                    item-value="id"
+                                    
+                                    >
                                    
                                 </v-select>
                                 </v-col>
@@ -134,19 +136,28 @@
                     </v-toolbar>
                   </template>
                   <template v-slot:item.actions="{ item }">
-                    <v-icon
-                      size="small"
-                      class="me-2"
-                      @click="editItem(item.raw)"
-                    >
-                      mdi-pencil
-                    </v-icon>
-                    <v-icon
-                      size="small"
-                      @click="deleteItem(item.raw)"
-                    >
-                      mdi-delete
-                    </v-icon>
+                    <v-btn-group>
+                      <v-btn icon variant="plain"  @click="editItem(item)">
+                      <v-icon
+                          size="small"
+                          class="me-2"
+                        
+                          icon="fas fa-regular fa-pen-to-square fa-2xs"
+                      >
+                        
+                      </v-icon>
+                    </v-btn>
+                    <v-btn icon variant="plain" @click="deleteItem(item)">
+                      <v-icon
+                        size="small"
+                        icon="fas fa-trash fa-2xs"
+                      >
+                      
+                      </v-icon>
+                    </v-btn>
+                    </v-btn-group>
+                    
+                    
                   </template>
                   <template v-slot:no-data>
                     <v-btn
@@ -179,7 +190,6 @@ export default {
     categories: '',
     selectedCategory: [],
     subcategories: [],
-    
     headers: [
       {
         title: 'Name',
@@ -188,12 +198,11 @@ export default {
         key: 'name',
       },
       { title: 'Category', key: 'category_name' },
-      { title: 'Creator', key: 'user_name' },
+     // { title: 'Creator', key: 'user_name' },
       { title: 'created_at', key: 'created_at' },
       { title: 'updated_at', key: 'updated_at' },
       { title: 'Actions', key: 'actions', sortable: false },
     ],
-   
     editedIndex: -1,
     editedItem: {
       name: '',
@@ -204,14 +213,12 @@ export default {
       category_id: '',
     },
   }),
-
-  computed: {
+computed: {
     formTitle () {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
     },
   },
-
-  watch: {
+watch: {
     dialog (val) {
       val || this.close()
     },
@@ -219,12 +226,10 @@ export default {
       val || this.closeDelete()
     },
   },
-
-  created () {
+created () {
     this.initialize()
   },
-
-  methods: {
+methods: {
     initialize () {
         this.categories = [],
         this.subcategories = []
@@ -275,7 +280,6 @@ export default {
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
-
     deleteItemConfirm () {
       axios.delete(`/api/subcategories/delete/${this.editedItem.id}`)
       .then((response) => {
@@ -287,7 +291,6 @@ export default {
       this.subcategories.splice(this.editedIndex, 1);
       this.closeDelete()
     },
-
     close () {
       this.dialog = false
       this.$nextTick(() => {
@@ -324,19 +327,19 @@ export default {
         Object.assign(this.subcategories[this.editedIndex], this.editedItem);
       } else {
         const data = {
-          category_id: this.editedItem.category_name,
+          category_id: this.editedItem.category_id,
           user_id: this.editedItem.user_id,
           name: this.editedItem.name
         };
         axios.post(`/api/subcategories/store/${this.user.id}`, data)
         .then((response) => {
-         
-          return true;
+          return   this.subcategories.push(response.data);
+        
           
         }).catch((response) => {
             alert('Error: ' . response);
         });
-        this.subcategories.push(this.editedItem);
+       // this.subcategories.push(this.editedItem);
       }
       this.close()
     },
