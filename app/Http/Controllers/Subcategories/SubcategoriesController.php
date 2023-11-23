@@ -41,7 +41,7 @@ class SubcategoriesController extends Controller
     }
     public function store(Request $request, $id){
         $category = Categories::where('id', $request->category_id)->first();
-     
+       
         try{
             $subcategory = Subcategory::create([
                 'name' => $request->name,
