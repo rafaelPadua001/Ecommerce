@@ -423,7 +423,8 @@
         <template v-slot:item.images="{ item }">
           <v-row>
             <v-col v-for="(imageName, index) in JSON.parse(item.images)" :key="index">
-              <v-img :src="`./storage/products/${imageName}`" max-width="100" max-height="100"></v-img>
+              <v-img v-if="index === 0" :src="`./storage/products/${imageName}`" lass="align-end text-white" :width="250"
+                          max-width="90" height="90" aspect-ratio="16/9"></v-img>
             </v-col>
           </v-row>
         </template>
