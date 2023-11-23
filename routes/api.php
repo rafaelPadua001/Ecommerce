@@ -10,6 +10,7 @@ use App\Http\Controllers\Products\ProductController;
 use App\Http\Controllers\ProductSeo\ProductSeoController;
 use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\ProductVideos\ProductVideoController;
+use App\Http\Controllers\Coupons\CouponsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +44,8 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('produ
 Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-
+//Route coupons
+Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index');
 
 //SEO route
 Route::post('/seo_product/update/{id}', [ProductSeoController::class, 'update'])->name('seo_product.update');

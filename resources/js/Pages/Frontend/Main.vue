@@ -7,7 +7,7 @@
     <v-main>
       <v-container>
         <div align='center'>
-          <Banner></banner>
+          <Banner></Banner>
 
         </div>
 
@@ -124,14 +124,28 @@
                         <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" :width="250"
                           max-width="250" height="200" aspect-ratio="16/9" :src="`./storage/products/${image}`"
                           :lazy-src="`./storage/products/${image}`" cover>
-                          
-                          <template>
+                            
+                            <div
+                              v-for="discount in discounts"
+                              :key="discount.id"
+                              class="d-flex justify-end text-center">
+                              <v-chip 
+                                class="ma-2"
+                                label color="orange-darken-4"
+                                variant="elevated"
+                                v-if="product.discount_id === discount.id"
+                              >
+                                -{{discount.discount_percentage * 100 }}%
+                              </v-chip>
+                            
+                            </div>
+                           <template>
                             <div class="d-flex align-center justify-center fill-height">
                               <v-progress-circular color="grey-lighten-4">
                               </v-progress-circular>
                             </div>
                           </template>
-
+                          
                         </v-img>
                       </div>
 
@@ -157,8 +171,21 @@
                         </v-row>
 
                         <v-row>
-                          <v-col align="start" col="4" sm="4">
-                            <strong>R$:</strong> {{ product.price }}
+                          <v-col align="start" cols="2" sm="2" md="4">
+                            <div v-if="!product.discount_id">
+                              <strong>R$:</strong> {{ product.price   }}
+                            </div>
+                            <div v-else>
+                              <div v-for="discountValue in discounts" :key="discountValue.id">
+                                <div v-if="discountValue.id === product.discount_id">
+                                  
+                                  <strong>R$:</strong> {{ product.price - (discountValue.discount_percentage * 100) }}
+                                </div>
+                                
+                                
+                              </div>
+                              
+                            </div>
 
                           </v-col>
                           <v-col col="3" sm="3">
@@ -177,7 +204,7 @@
                       </v-card-text>
                       <v-expand-transition>
                         <div v-if="isHovering"
-                          class="d-flex transition-fast-in-fast-out bg-orange-darken-4 v-card--reveal text-h2">
+                          class="d-flex transition-fast-in-fast-out bg-orange-darken-4 v-card-menu--reveal text-h2">
                           <v-card-actions>
                             <v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1" size="small"
                               elevation="8" @click="addItem(selectProduct)">
@@ -193,6 +220,8 @@
                           </v-card-actions>
                         </div>
                       </v-expand-transition>
+
+                      
 
                     </v-card>
 
@@ -261,6 +290,8 @@
                                       <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
                                     </div>
                                   </template>
+                               
+                                  
                                 </v-img>
                               </div>
                             </v-card>
@@ -524,6 +555,7 @@ export default {
     customer: false,
     images: [],
     categories: [],
+    discounts: [],
     productIndex: -1,
     selectProduct: {},
     buyDialog: false,
@@ -612,6 +644,15 @@ export default {
         .catch((response) => {
           return alert('Erro :' + response);
         });
+    },
+    getDiscounts(){
+      axios.get('/api/coupons/all')
+      .then((response) => {
+        return this.discounts = response.data;
+      })
+      .catch((response) => {
+        return alert('Error: ' + response);
+      });
     },
     buy(product) {
       this.productIndex = this.products.indexOf(product);
@@ -715,8 +756,9 @@ export default {
   },
   mounted() {
     this.getCustomer();
-    this.getProducts();
     this.getCategories();
+    this.getProducts();
+    this.getDiscounts();
     this.getLikes();
 
   }
@@ -724,7 +766,7 @@ export default {
 </script>
 
 <style>
-.v-card--reveal {
+.v-card-menu--reveal {
   align-items: center;
   bottom: 0;
   justify-content: center;
