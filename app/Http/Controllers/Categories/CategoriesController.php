@@ -35,6 +35,7 @@ class CategoriesController extends Controller
             $category = Categories::create([
                 'user_id' => $user->id,
                 'name' => $request->name,
+                'icon' => $request->icon,
             ]);
             return response()->json($category);
         }

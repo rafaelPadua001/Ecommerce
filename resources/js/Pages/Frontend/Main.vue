@@ -18,16 +18,14 @@
 
         <div>
           <h4 align="left">Categories</h4>
-          <v-row dense>
-
-            <v-col cols="12" sm="4" v-for="category in categories" :key="category.id">
+          <v-row no-gutters>
+            <v-col cols="12" md="3" sm="3" v-for="category in categories" :key="category.id">
               <div class="d-flex justify-space-around">
                 <v-hover>
                   <template v-slot:default="{ isHovering, props }">
-                    <v-card v-bind="props" width="250" :color="isHovering ? 'orange-darken-2' : undefined"
+                    <v-card class="mx-auto" v-bind="props"  :color="isHovering ? 'grey-darken-1' : undefined"
                       :to="`/subcategories/all/${category.id}`">
-                      <v-icon icon="fas fa-mobile-screen" cover :key="category.id">
-                      </v-icon>
+                      <v-icon :icon="category.icon" cover :key="category.id"></v-icon>
 
                       <v-card-text>
                         {{ category.name }}
@@ -40,28 +38,7 @@
 
               </div>
             </v-col>
-            <v-col cols="12" sm="4" v-for="(icon, index) in icons" :key="index">
-              <div class="d-flex justify-space-around">
-                <v-hover>
-                  <template v-slot:default="{ isHovering, props }">
-                    <v-card v-bind="props" width="250" :color="isHovering ? 'orange-darken-2' : undefined">
-
-                      <v-icon :icon="icon" cover :key="index">
-                      </v-icon>
-
-
-                      <v-card-text>
-
-                        {{ icon }}
-
-                      </v-card-text>
-                    </v-card>
-                  </template>
-                </v-hover>
-
-
-              </div>
-            </v-col>
+           
           </v-row>
 
         </div>
@@ -569,20 +546,6 @@ export default {
     selectImageIndex: 0,
     liked: 0,
     likes: false,
-    icons: [
-      'fas fa-clock',
-      'fas fa-suitcase-medical',
-      'fas fa-baby',
-      'fas fa-paw',
-      'fas fa-car',
-      'fas fa-motorcycle',
-      'fas fa-bag-shopping',
-      'fas fa-gamepad',
-      'fas fa-person-dress',
-      'fas fa-shirt',
-      'fas fa-computer',
-
-    ],
     social_icons: [
       'fa-brands fa-facebook',
       'fa-brands fa-instagram',

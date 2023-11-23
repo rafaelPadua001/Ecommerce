@@ -19,9 +19,9 @@
           <template v-slot:activator="{ props }">
             <v-list-item v-bind="props" prepend-icon="fas fa-bag-shopping fa-2xs fa-bounce" title="To sell"></v-list-item>
           </template>
-          <v-list-item prepend-icon="fas fa-folder fa-2xs" title="Categories" value="categories" to="/categories"></v-list-item>
-          <v-list-item prepend-icon="fas fa-folder fa-2xs" title="Subcategories" value="subcategories" to="/subcategories"></v-list-item>
-          <v-list-item prepend-icon="fa-brands fa-product-hunt fa-2xs" title="Products" value="myfiles" to="/products"></v-list-item>
+          <v-list-item prepend-icon="fas fa-book-bookmark fa-2xs" title="Categories" value="categories" to="/categories"></v-list-item>
+          <v-list-item prepend-icon="fas fa-book-open fa-2xs" title="Subcategories" value="subcategories" to="/subcategories"></v-list-item>
+          <v-list-item prepend-icon="fas fa-bag-shopping fa-2xs" title="Products" value="myfiles" to="/products"></v-list-item>
           <v-list-item prepend-icon="fas fa-code fa-2xs" title="SEO" value="SEO" to="/product_seo"></v-list-item>
           <v-list-item prepend-icon="fas fa-boxes-stacked" title="Stock" value="myfiles" to="/stock"></v-list-item>
          

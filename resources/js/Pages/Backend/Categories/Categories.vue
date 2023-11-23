@@ -3,20 +3,18 @@
     <Dashboard />
   </div>
   <div>
-    <div align="left">
+   <!--  <div align="left">
       <v-breadcrumbs :items="items">
         <template v-slot:title="{ item }">
           {{ item.title.toUpperCase() }}
         </template>
       </v-breadcrumbs>
     </div>
-
-    <v-card width="900">
-
-      <v-divider></v-divider>
+    -->
+    <v-card width="1000">
+    <v-divider></v-divider>
       <v-card-text>
-
-        <v-data-table :headers="headers" :items="categories" :sort-by="[{ key: 'id', order: 'desc' }]"
+      <v-data-table :headers="headers" :items="categories" :sort-by="[{ key: 'id', order: 'desc' }]"
           class="elevation-1">
           <template v-slot:top>
             <v-toolbar flat>
@@ -42,6 +40,44 @@
                             placeholder="Eletronics"></v-text-field>
                         </v-col>
 
+                      </v-row>
+
+                      <v-row>
+                        <v-col cols="12" sm="12" md="12">
+                          <v-combobox
+                            v-model="icons"
+                            :items="itemsIcons"
+                            label="Select icon to category"
+                          >
+                          <template v-slot:selection="data">
+                           
+                            <v-chip
+                              :key="JSON.stringify(data.item)"
+                              v-bind="data.attrs"
+                              :model-value="data.selected"
+                              :disabled="data.disabled"
+                              size="small"
+                              @click:close="data.parent.selectItem(data.item)"
+                            >
+                             
+                              <template v-slot:prepend>
+                                <v-avatar
+                                  class="bg-accent text-uppercase"
+                                  start
+                                >
+                                  <v-icon :icon="data.item.raw.icon"></v-icon>
+                                  
+                                </v-avatar>
+                              </template>
+                              {{ data.item.title }}
+
+                              
+                            </v-chip>
+                          </template>
+                        </v-combobox>
+
+                        Icon selected: <v-icon :icon="this.icons.icon"></v-icon>
+                        </v-col>
                       </v-row>
                     </v-container>
                   </v-card-text>
@@ -71,18 +107,18 @@
             </v-toolbar>
           </template>
           <template v-slot:item.actions="{ item }">
-            <a @click="editItem(item.raw)">
-              edit
-            </a>
-            <v-icon size="small" class="me-2" @click="editItem(item.raw)" icon="fas fa-pencil">
-              Edit
-            </v-icon>
-            <a @click="deleteItem(item.raw)">
-              remove
-            </a>
-            <v-icon size="small" @click="deleteItem(item.raw)" icon="fas fa-delete">
-              Remove
-            </v-icon>
+            <v-btn icon variant="plain" @click="editItem(item.raw)">
+              <v-icon size="small" class="me-2"  icon="fas fa-fa-regular fa-pen-to-square fa-2xs">
+            
+              </v-icon>
+            </v-btn>
+         
+            <v-btn icon variant="plain" @click="deleteItem(item)">
+              <v-icon size="small" icon="fas fa-trash fa-2xs">
+               
+              </v-icon>
+            </v-btn>
+           
           </template>
           <template v-slot:no-data>
             <v-btn color="primary" @click="initialize">
@@ -116,7 +152,8 @@ export default {
         sortable: false,
         key: 'name',
       },
-      { title: 'Creator', key: 'user_name' },
+     // { title: 'Creator', key: 'user_id' },
+      { title: 'Icon', key: 'icon' },
       { title: 'Created', key: 'created_at' },
       { title: 'Updated', key: 'updated_at' },
       { title: 'Actions', key: 'actions', sortable: false },
@@ -137,6 +174,38 @@ export default {
         disabled: true,
         href: 'breadcrumbs_link_2',
       },
+    ],
+    icons: [],
+    itemsIcons: [
+      {
+        title: 'Smartphones',
+        icon: 'fas fa-mobile-screen-button'
+      },
+      {
+        title: 'Eletronics',
+        icon: 'fas fa-plug'
+      },
+      {
+        title: 'Clothing',
+        icon: 'fas fa-shirt'
+      },
+      {
+        title: 'Utensils',
+        icon: 'fas fa-utensils'
+      },
+      {
+        title: 'Cars',
+        icon: 'fas fa-car'
+      },
+      {
+        title: 'Games',
+        icon: 'fas fa-gamepad'
+      },
+      {
+        title: 'PET',
+        icon: 'fas fa-paw'
+      },
+        
     ],
     editedIndex: -1,
     editedItem: {
@@ -214,8 +283,8 @@ export default {
     },
     deleteItemConfirm() {
       const itemId = this.editedIndex;
-
-      axios.delete(`/api/categories/delete/${itemId}`)
+      console.log(this.editedItem.id);
+      axios.delete(`/api/categories/delete/${this.editedItem.id}`)
         .then((response) => {
           this.categories.splice(this.editedIndex, 1);
         })
@@ -225,7 +294,6 @@ export default {
 
       this.closeDelete()
     },
-
     close() {
       this.dialog = false
       this.$nextTick(() => {
@@ -233,7 +301,6 @@ export default {
         this.editedIndex = -1
       })
     },
-
     closeDelete() {
       this.dialogDelete = false
       this.$nextTick(() => {
@@ -241,12 +308,15 @@ export default {
         this.editedIndex = -1
       })
     },
-
     save() {
       if (this.editedIndex > -1) {
         const token = document.head.querySelector('meta[name="csrf-token"]');
        
-        const data = { name: this.editedItem.name, user_id: this.user.id };
+        const data = { 
+          name: this.editedItem.name,
+          user_id: this.user.id,
+          icon: this.icons.icon
+        };
         axios.post(`/api/categories/update/${this.editedItem.id}`, data,
           {
             headers: {
@@ -265,7 +335,7 @@ export default {
         const token = document.head.querySelector('meta[name="csrf-token"]');
         const userId = this.user.id
 
-        const data = { name: this.editedItem.name };
+        const data = { name: this.editedItem.name,  icon: this.icons.icon };
         axios.post(`/api/categories/store/${this.user.id}`, data, {
           headers: {
             'X-CSRF-TOKEN': token
