@@ -41,7 +41,7 @@ class ProductStockController extends Controller
             $stock->update($request->all());
             if($request->stock_quantity){
                 $product = Product::where('id', $stock->product_id)->first();
-                $product->update(['stock_quantity' => $request->stock_quantity]);
+                $product->update($request->all());
                 return response()->json($stock);
             }
             return response()->json($stock);
