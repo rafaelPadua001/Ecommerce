@@ -131,6 +131,7 @@ Route::get('/likes', [LikedProductController::class, 'index'])->name('likes.inde
 //SEO routes
 Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->middleware('auth');
 
+
 //Stocks routes
 Route::get('/stocks', [ProductStockController::class, 'index'])->name('stock.index')->middleware('auth');
 

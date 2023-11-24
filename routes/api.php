@@ -49,7 +49,7 @@ Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.in
 
 //SEO route
 Route::post('/seo_product/update/{id}', [ProductSeoController::class, 'update'])->name('seo_product.update');
-
+Route::delete('/seo_product/delete/{id}', [ProductSeoController::class, 'destroy'])->name('seo_product.delete');
 //Stocks route
 Route::post('/stocks/update/{id}', [ProductStockController::class, 'update'])->name('seo_product.update');
 
