@@ -7,10 +7,9 @@ use App\Models\ProductSeo;
 use Exception;
 use Illuminate\Http\Request;
 
-
 class ProductSeoController extends Controller
 {
-    //
+    
     private $product_seo;
     public function __create(ProductSeo $product_seo){
         $this->product_seo = $product_seo;
@@ -30,7 +29,6 @@ class ProductSeoController extends Controller
     ){
     
         try{
-            
             $product_seo = ProductSeo::create([
                 'name' => $name,
                 'meta_name' => $meta_name,
@@ -52,6 +50,16 @@ class ProductSeoController extends Controller
         try{
             $product->update($request->all());
            
+            return response()->json($product);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function destroy($id){
+        try{
+            $product = ProductSeo::where('id', $id)->delete();
+            
             return response()->json($product);
         }
         catch(Exception $e){
