@@ -73,7 +73,7 @@
                       <v-col cols="12" sm="6" md="4">
                         <v-file-input v-model="editedItem.images" @change="previewImages" multiple chips></v-file-input>
                           <div v-if="previewImages">
-                            <v-row v-if="images.length > 0">
+                            <v-row v-if="images">
                               <v-col v-for="(image, index) in images" :key="index" cols="12" md="6">
                                 <v-card>
                                   <v-img 
@@ -107,7 +107,7 @@
                           </div>
                           <div v-else>
                             <v-row v-if="!previewImages">
-                              teste
+                         
                               <v-col v-for="(image, index) in editedItem.images" :key="index" cols="12" md="6">
                                 <v-card>
                                  
@@ -475,9 +475,6 @@
 import axios from 'axios';
 import Dashboard from '../Auth/Dashboard.vue';
 
-
-
-
 export default {
   components: {
     Dashboard,
@@ -495,6 +492,7 @@ export default {
     selectedCategory: false,
     selectSubcategory: false,
     images: [],
+    productImg: [],
     unity: '',
     size: [],
     platform: '',
@@ -540,63 +538,8 @@ export default {
     ],
     desserts: [],
     editedIndex: -1,
-    editedItem: {
-      id: '',
-      name: '',
-      description: '',
-      category_id: 0,
-      subcategory_id: 0,
-      images: [],
-      platform: '',
-      video_link: '',
-      colors: [],
-      size: [],
-      price: "0.00",
-      discount_id: '',
-      quantity: 0,
-      unity: '',
-      weight: 1.00,
-      height: 1.00,
-      width: 1.0,
-      length: 1.0,
-      sku: '',
-      meta_name: '',
-      meta_key: '',
-      meta_description: '',
-      slug: '',
-      highlights: false,
-      availability: false,
-      status: true,
-      discount_id: null,
-    },
-    defaultItem: {
-      id: '',
-      name: '',
-      description: '',
-      category_id: 0,
-      subcategory_id: 0,
-      images: [],
-      platform: '',
-      video_link: '',
-      colors: [],
-      size: [],
-      unity: [],
-      price: "0.00",
-      discount: '',
-      quantity: 0,
-      weight: 1.00,
-      height: 1.00,
-      width: 1.0,
-      length: 1.0,
-      sku: '',
-      meta_name: '',
-      meta_key: '',
-      meta_description: '',
-      slug: '',
-      highlights: false,
-      availability: false,
-      status: true,
-    },
+    editedItem: {},
+    defaultItem: {},
   }),
   computed: {
     formTitle() {
@@ -609,12 +552,11 @@ export default {
         prefix: "R$ ",
         suffix: "",
         precision: 2,
-        masked: false /* doesn't work with directive */,
+        masked: false 
       };
     },
   },
-
-  watch: {
+ watch: {
     dialog(val) {
       val || this.close()
     },
@@ -628,10 +570,9 @@ export default {
       },
       
   },
-created() {
+  created() {
     this.initialize()
   },
-
   methods: {
     initialize() {
       this.user = [],
@@ -655,13 +596,12 @@ created() {
       axios.get('/categories')
         .then((response) => {
           this.categories = response.data;
-          // return this.categories.push(response.data);
+          
         })
         .catch((response) => {
           alert('Error'.$response.error);
           return false;
         });
-      //  return this.categories.push(response.data);
     },
     getSubCategories() {
       axios.get('/subcategories')
@@ -672,7 +612,6 @@ created() {
           alert('Error: '.response.error);
           return false;
         });
-      // return this.subcategories.push(response.data);
     },
     getProducts(){
       axios.get('/products')
@@ -805,8 +744,6 @@ created() {
         this.status = false;
         this.editedItem.status = this.status;
       }
-      
-      
       this.dialog = true;
     },
 
@@ -825,11 +762,9 @@ created() {
         alert('Error:' . response);
         return false;
       });
-
       this.products.splice(this.editedIndex, 1)
       this.closeDelete()
     },
-
     close() {
       this.dialog = false
       this.$nextTick(() => {
@@ -881,22 +816,18 @@ created() {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
-          }
-        )
+        })
         .then((response) => {
-          this.editedItem = response.data;
           this.close();
-         return Object.assign(this.products[indexProduct], this.editedItem);
-    })
-    .catch((error) => {
-      alert('Error: ' + error);
-    });
-   // Object.assign(this.products[this.editedIndex], this.editedItem);
-
-        
-      } else {
-        
-        const data = {
+          console.log(response);
+         return Object.assign(this.products[indexProduct], response.data);
+        })
+        .catch((error) => {
+          alert('Error: ' + error);
+        });
+    }
+    else {
+      const data = {
           name: this.editedItem.name,
           description: this.editedItem.description,
           category_id: this.editedItem.category_name,
@@ -928,23 +859,19 @@ created() {
         {
           headers: {
             'Content-Type': 'multipart/form-data'
-            
           }
-        }
-        
-        )
-          .then((response) => {
-            this.editedItem = response.data;
-            return true;
-          })
-          .catch((response) => {
-            alert('Error: '.response);
-            return false;
-          });
-
-        this.products.push(this.editedItem);
+        }) 
+        .then((response) => {
+          this.editedItem = response.data;
+          return this.products.push(this.editedItem.original);
+           
+        })
+        .catch((response) => {
+          alert('Error: ' + response);
+          return false;
+        });
       }
-      this.close()
+      this.close();
     },
   },
   mounted() {
