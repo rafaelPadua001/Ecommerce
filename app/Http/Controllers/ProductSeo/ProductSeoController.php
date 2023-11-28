@@ -45,11 +45,17 @@ class ProductSeoController extends Controller
         }
     }
     public function update(Request $request, $id){
-        $product = ProductSeo::where('id', $id)->first();
-        
-        try{
-            $product->update($request->all());
-           
+         try{
+           // $product = ProductSeo::where('product_id', $id)->get(); // ->update($request->all());
+            $product= ProductSeo::where('product_id', $id)->update([
+                'name' => $request->name,
+                'meta_name' => $request->meta_name,
+                'meta_keyword' => $request->meta_key,
+                'meta_description' => $request->meta_description,
+                'slug' => $request->slug,
+                'product_id' => $id,
+                'user_id' => $request->user_id
+            ]);
             return response()->json($product);
         }
         catch(Exception $e){
@@ -58,7 +64,7 @@ class ProductSeoController extends Controller
     }
     public function destroy($id){
         try{
-            $product = ProductSeo::where('id', $id)->delete();
+            $product = ProductSeo::where('product_id', $id)->delete();
             
             return response()->json($product);
         }

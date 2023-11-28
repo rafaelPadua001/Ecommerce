@@ -39,6 +39,7 @@
                     <v-spacer></v-spacer>
 
                     <v-row>
+                      
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="editedItem.name" label="Product name"></v-text-field>
                       </v-col>
@@ -73,7 +74,7 @@
                       <v-col cols="12" sm="6" md="4">
                         <v-file-input v-model="editedItem.images" @change="previewImages" multiple chips></v-file-input>
                           <div v-if="previewImages">
-                            <v-row v-if="images.length > 0">
+                            <v-row v-if="images">
                               <v-col v-for="(image, index) in images" :key="index" cols="12" md="6">
                                 <v-card>
                                   <v-img 
@@ -107,7 +108,7 @@
                           </div>
                           <div v-else>
                             <v-row v-if="!previewImages">
-                              teste
+                         
                               <v-col v-for="(image, index) in editedItem.images" :key="index" cols="12" md="6">
                                 <v-card>
                                  
@@ -475,9 +476,6 @@
 import axios from 'axios';
 import Dashboard from '../Auth/Dashboard.vue';
 
-
-
-
 export default {
   components: {
     Dashboard,
@@ -495,6 +493,7 @@ export default {
     selectedCategory: false,
     selectSubcategory: false,
     images: [],
+    productImg: [],
     unity: '',
     size: [],
     platform: '',
@@ -609,12 +608,11 @@ export default {
         prefix: "R$ ",
         suffix: "",
         precision: 2,
-        masked: false /* doesn't work with directive */,
+        masked: false 
       };
     },
   },
-
-  watch: {
+ watch: {
     dialog(val) {
       val || this.close()
     },
@@ -626,12 +624,10 @@ export default {
         console.log(`A imagem foi alterada de ${oldUrl} para ${newUrl}`);
         return true;
       },
-      
   },
-created() {
+  created() {
     this.initialize()
   },
-
   methods: {
     initialize() {
       this.user = [],
@@ -655,13 +651,12 @@ created() {
       axios.get('/categories')
         .then((response) => {
           this.categories = response.data;
-          // return this.categories.push(response.data);
+          
         })
         .catch((response) => {
           alert('Error'.$response.error);
           return false;
         });
-      //  return this.categories.push(response.data);
     },
     getSubCategories() {
       axios.get('/subcategories')
@@ -672,7 +667,6 @@ created() {
           alert('Error: '.response.error);
           return false;
         });
-      // return this.subcategories.push(response.data);
     },
     getProducts(){
       axios.get('/products')
@@ -729,15 +723,13 @@ created() {
       return this.editedItem.video_link = "";
     },
     onPriceInput(value) {
-      // Aqui você pode tratar o valor inserido conforme necessário
-      console.log(value);
+      
     },
     selectedColor(){
       let selected_colors = this.editedItem.colors;
       return this.colors.push(selected_colors);
     },
     removeSelectedColor(index){
-      console.log(index);
       return this.colors.splice(index, 1);
     },
     hl_turn(){
@@ -805,17 +797,13 @@ created() {
         this.status = false;
         this.editedItem.status = this.status;
       }
-      
-      
       this.dialog = true;
     },
-
     deleteItem(item) {
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
-
     deleteItemConfirm() {
       axios.delete(`/api/products/delete/${this.editedItem.id}`)
       .then((response) => {
@@ -825,11 +813,9 @@ created() {
         alert('Error:' . response);
         return false;
       });
-
       this.products.splice(this.editedIndex, 1)
       this.closeDelete()
     },
-
     close() {
       this.dialog = false
       this.$nextTick(() => {
@@ -847,7 +833,7 @@ created() {
     },
     save() {
       if (this.editedIndex > -1) {
-        
+        const token = document.head.querySelector('meta[name="csrf-token"]').content;
         const indexProduct = this.editedIndex;
         const data = {
           name: this.editedItem.name,
@@ -879,24 +865,21 @@ created() {
         };
         axios.post(`/api/products/update/${this.editedItem.id}`, data, {
             headers: {
+              'X-CSRF-TOKEN': token,
               'Content-Type': 'multipart/form-data'
             }
-          }
-        )
+        })
         .then((response) => {
-          this.editedItem = response.data;
           this.close();
-         return Object.assign(this.products[indexProduct], this.editedItem);
-    })
-    .catch((error) => {
-      alert('Error: ' + error);
-    });
-   // Object.assign(this.products[this.editedIndex], this.editedItem);
-
-        
-      } else {
-        
-        const data = {
+          console.log(response);
+         return Object.assign(this.products[indexProduct], response.data);
+        })
+        .catch((error) => {
+          alert('Error: ' + error);
+        });
+    }
+    else {
+      const data = {
           name: this.editedItem.name,
           description: this.editedItem.description,
           category_id: this.editedItem.category_name,
@@ -928,23 +911,19 @@ created() {
         {
           headers: {
             'Content-Type': 'multipart/form-data'
-            
           }
-        }
-        
-        )
-          .then((response) => {
-            this.editedItem = response.data;
-            return true;
-          })
-          .catch((response) => {
-            alert('Error: '.response);
-            return false;
-          });
-
-        this.products.push(this.editedItem);
+        }) 
+        .then((response) => {
+          this.editedItem = response.data;
+          return this.products.push(this.editedItem.original);
+           
+        })
+        .catch((response) => {
+          alert('Error: ' + response);
+          return false;
+        });
       }
-      this.close()
+      this.close();
     },
   },
   mounted() {

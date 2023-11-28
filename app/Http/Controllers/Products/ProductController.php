@@ -14,17 +14,39 @@ use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\Likes\LikedProductController;
 use App\Models\Product;
 use App\Models\Categories;
+use App\Models\ProductImages;
 use App\Models\Subcategory;
-
+use App\Services\ProductService\ProductService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    //
+    protected $productService;
+    protected $productImages;
+    protected $productVideos;
+    protected $productSeo;
+    protected $productStock;
+
+    public function __construct(
+        ProductService $productService,
+        ProductImagesController $productImages,
+        ProductVideoController $productVideos,
+        ProductSeoController $productSeo,
+        ProductStockController $productStock,
+    )
+    {
+        $this->productService = $productService;
+        $this->productImages = $productImages;
+        $this->productVideos = $productVideos;
+        $this->productSeo = $productSeo;
+        $this->productStock = $productStock;
+
+    }
     public function index()
     {
-        $products = Product::orderBy('id', 'desc')->get();
+        // $products = Product::orderBy('id', 'desc')->get();
+        $products = $this->productService->getAll();
 
         return response()->json($products);
     }
@@ -32,129 +54,121 @@ class ProductController extends Controller
     {
         $category = Categories::where('id', $request->category_id)->first();
         $subcategory = Subcategory::where('id', $request->subcategory_id)->first();
+        $upload_file = $this->uploadImg($request);
 
-        try {
-            $upload_file = $this->uploadImg($request);
-            // $images = implode(',', $upload_file);
-            $product = Product::create([
-                'name' => $request->name,
-                'category_id' =>  $category->id,
-                'subcategory_id' =>  $subcategory->id,
-                'description' => $request->description,
-                'images' => json_encode($upload_file),
-                'platform' => $request->platform,
-                'video_links' => json_encode($request->video_link),
-                'colors' => json_encode($request->colors),
-                'size' => json_encode($request->size),
-                'unity' => $request->unity,
-                'manufacturer' => false,
-                'price' => $request->price,
-                'stock_quantity' => $request->quantity,
-                'sku' => $request->sku,
-                'weight' => $request->weight,
-                'height' => $request->height,
-                'width' => $request->width,
-                'length' => $request->length,
-                'availability' => $request->availability,
-                'slug'   => $request->slug,
-                'status'  => $request->status,
-                'highlight' => $request->highlights ? true : false,
-                'user_id' => (int) $request->user_id,
-                'discount_id' => $request->has('discount') ? (int)$request->discount : null,
-                
-            ]);
+        $product = [
+            'name' => $request->name,
+            'category_id' =>  $category->id,
+            'subcategory_id' =>  $subcategory->id,
+            'description' => $request->description,
+            'images' => json_encode($upload_file),
+            'platform' => $request->platform,
+            'video_links' => json_encode($request->video_link),
+            'colors' => json_encode($request->colors),
+            'size' => json_encode($request->size),
+            'unity' => $request->unity,
+            'manufacturer' => false,
+            'price' => $request->price,
+            'stock_quantity' => $request->quantity,
+            'sku' => $request->sku,
+            'weight' => $request->weight,
+            'height' => $request->height,
+            'width' => $request->width,
+            'length' => $request->length,
+            'availability' => $request->availability,
+            'slug'   => $request->slug,
+            'status'  => $request->status,
+            'highlight' => $request->highlights ? true : false,
+            'user_id' => (int) $request->user_id,
+            'discount_id' => $request->has('discount') ? (int)$request->discount : null,
+        ];
+
+        $newProduct = $this->productService->create($product);
+       
+        $image_class = $this->productImages->store($upload_file,  $newProduct->original['id'], $request->user_id);
             
-            $image_class = $this->getImageClass($upload_file, $product->id, $request->user_id);
-            
-          
-            $video_class = $this->getVideoClass($request->video_link, $product->id, $request->user_id, $request->name, $request->platform);
-         
-           
-            $seo_class = $this->getSeoClass(
-                    $request->name,
-                    $request->meta_name,
-                    $request->meta_key, 
-                    $request->meta_description,
-                    $request->slug,
-                    $product->id,
-                    $request->user_id
-            );
-           
-            $stock_class = $this->getStockClass(
+        $video_class = $this->productVideos->store($request->video_link, $newProduct->original['id'], $request->user_id, $request->name, $request->platform);
+     
+       
+        $seo_class = $this->productSeo->store(
                 $request->name,
-                $request->quantity,
-                $request->size,
-                $request->colors,
-                $product->id,
+                $request->meta_name,
+                $request->meta_key, 
+                $request->meta_description,
+                $request->slug,
+                $newProduct->original['id'],
                 $request->user_id
-            );
-          
-            return response()->json($product);
-        } catch (Exception $e) {
-            $response = $e;
-
-            return response()->json($response);
-        }
-
-        return response()->json($product);
+        );
+       
+        $stock_class = $this->productStock->store(
+            $request->name,
+            $request->quantity,
+            $request->size,
+            $request->colors,
+            $newProduct->original['id'],
+            $request->user_id
+        );
+      
+  
+        return response()->json($newProduct);
     }
     public function uploadImg($request)
     {
         $randomNames = [];
-    
-        
+
+
         foreach ($request->images as $file) {
-            
+
             if ($file) {
                 $randomName = Str::random(10) . '.webp';
-             
+
                 $fileName = $file['src'];
-                
+
                 $path = Storage::putFileAs('/public/products', $fileName, $randomName);
-               
+
                 // Adiciona o novo nome de arquivo ao array $randomNames
                 $randomNames[] = $randomName;
-               // dd($randomName);
+                // dd($randomName);
                 $product = Product::where('name', $request->name)->update([
-                    'images' => json_encode($randomNames, true)              
+                    'images' => json_encode($randomNames, true)
                 ]);
-               
             }
         }
 
         return $randomNames;
     }
-    public function getImageClass($upload_file, $product_id, $user_id)
+    //public function getImageClass($upload_file, $product_id, $user_id)
+    //{
+    //    $product_images = new ProductImagesController();
+    //    return $product_images; //->store($upload_file, $product_id, $user_id);
+    //}
+    public function getVideoClass($video_link, $product_id, $user_id, $product_name, $platform)
     {
-
-        $product_images = new ProductImagesController();
-        return $product_images->store($upload_file, $product_id, $user_id);
-    }
-    public function getVideoClass($video_link, $product_id, $user_id , $product_name, $platform){
         $product_video = new ProductVideoController();
-        return $product_video->store($video_link, $product_id, $user_id , $product_name, $platform);
+        return $product_video->store($video_link, $product_id, $user_id, $product_name, $platform);
     }
     public function getSeoClass(
-        $name, 
+        $name,
         $meta_name,
-        $meta_key, 
+        $meta_key,
         $meta_description,
         $slug,
-        $product_id, 
+        $product_id,
         $user_id
-    ){
+    ) {
         $product_seo = new ProductSeoController();
         return $product_seo->store(
-            $name, 
+            $name,
             $meta_name,
-            $meta_key, 
-            $meta_description, 
+            $meta_key,
+            $meta_description,
             $slug,
-            $product_id, 
+            $product_id,
             $user_id
         );
     }
-    public function getStockClass($name, $quantity, $size, $colors, $product_id, $user_id){
+    public function getStockClass($name, $quantity, $size, $colors, $product_id, $user_id)
+    {
         $product_stock = new ProductStockController();
         return $product_stock->store(
             $name,
@@ -165,47 +179,87 @@ class ProductController extends Controller
             $user_id
         );
     }
-    public function show(){
-
+    public function show()
+    {
         $products = Product::orderBy('id', 'desc')->get();
 
         return response()->json($products);
     }
-    public function like($id){
-        try{
+    public function like($id)
+    {
+        try {
             $product = Product::findOrFail($id);
             $customer = Auth::guard('customer')->user();
             $likedProduct = $this->getLikedController($product, $customer);
             return response()->json($likedProduct);
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($e);
         }
-        
     }
-    public function getLikedController($product, $customer){
+    public function getLikedController($product, $customer)
+    {
         $like = new LikedProductController();
         return $like->store($product, $customer);
     }
     public function update(Request $request, $id)
     {
-        try {
-            $product = Product::where('id', $id)->update($request->all());
-           
-            if ($request->images) {
-                $this->uploadImg($request);
-            }
+        $category = Categories::where('id', $request->category_id)->first();
+        $subcategory = Subcategory::where('id', $request->subcategory_id)->first();
+        $upload_file = $this->uploadImg($request);
 
-            return response()->json($request);
-        } catch (Exception $e) {
-            return response()->json($e);
-        }
+        $product = [
+            'name' => $request->name,
+            'category_id' =>  $category->id,
+            'subcategory_id' =>  $subcategory->id,
+            'description' => $request->description,
+            'images' => json_encode($upload_file),
+            'platform' => $request->platform,
+            'video_links' => json_encode($request->video_link),
+            'colors' => json_encode($request->colors),
+            'size' => json_encode($request->size),
+            'unity' => $request->unity,
+            'manufacturer' => false,
+            'price' => $request->price,
+            'stock_quantity' => $request->quantity,
+            'sku' => $request->sku,
+            'weight' => $request->weight,
+            'height' => $request->height,
+            'width' => $request->width,
+            'length' => $request->length,
+            'availability' => $request->availability,
+            'slug'   => $request->slug,
+            'status'  => $request->status,
+            'highlight' => $request->highlights ? true : false,
+            'user_id' => (int) $request->user_id,
+            'discount_id' => $request->has('discount') ? (int)$request->discount : null,
+        ];
+        
+        $updateProduct = $this->productService->update($product, $id);
+
+        $imageUpdate = $this->productImages->update($upload_file, $id, $request);
+       
+        $videoUpdate = $this->productVideos->update($request, $id);
+
+        $updateSeo = $this->productSeo->update($request, $id);
+       
+        $updateStock = $this->productStock->update($request, $id);
+
+        return response()->json($updateProduct);
+      
     }
     public function destroy($id)
     {
         try {
-            $product = Product::where('id', (int) $id)->delete();
-            return true;
+            $removeProduct = $this->productService->destroy($id);
+
+            $imageDelete = $this->productImages->destroy($id);
+           
+            $videoDelete = $this->productVideos->destroy($id);
+
+            $seoDelete = $this->productSeo->destroy($id);
+          
+            $updateStock = $this->productStock->destroy($id);
+            return response()->json($removeProduct);
         } catch (Exception $e) {
             return response()->json($e);
         }

@@ -42,6 +42,8 @@ Route::delete('/subcategories/delete/{id}', [SubcategoriesController::class, 'de
 //Products route
 Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
 Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
+
+//Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 //Route coupons

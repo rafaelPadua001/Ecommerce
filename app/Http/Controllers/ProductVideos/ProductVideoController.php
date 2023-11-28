@@ -32,15 +32,27 @@ class ProductVideoController extends Controller
         }
         
     }
-    public function destroy($id){
-        $video = ProductVideos::findOrFail($id);
-        $product_video = Product::where('id', $video->product_id);
+    public function update(Request $request, $id){
         try{
-            $video->delete();
-            $remove_video_product = $product_video->update([
-                'video' => null,
+            $video = ProductVideos::where('product_id', $id)->updateOrCreate([
+                'name' => $request->name,
+                'link' => $request->video_link,
+                'plataform' => $request->platform,
+                'user_id' => $request->user_id,
+                'product_id'=>  $id, 
             ]);
-            return response()->json();
+           
+            return response()->json($video);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function destroy($id){
+        try{
+            $product_video = Product::where('product_id', $id)->delete();
+            
+            return response()->json($product_video);
         }
         catch(Exception $e){
             return response()->json($e);

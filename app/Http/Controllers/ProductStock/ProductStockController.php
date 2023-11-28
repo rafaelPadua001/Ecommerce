@@ -36,19 +36,29 @@ class ProductStockController extends Controller
         
     }
     public function update(Request $request, $id){
-        $stock = ProductStock::where('id', $id)->first();
-        try{
-            $stock->update($request->all());
-            if($request->stock_quantity){
-                $product = Product::where('id', $stock->product_id)->first();
-                $product->update($request->all());
-                return response()->json($stock);
-            }
-            return response()->json($stock);
-        }
-        catch(Exception $e){
-            return response()->json($e);
-        }
+        $stock = ProductStock::where('product_id', $id)->update([
+            'name' => $request->name,
+                'stock_quantity' => $request->quantity,
+                'product_size' => json_encode($request->size),
+                'product_colors' => json_encode($request->colors),
+                'product_id' => $id,
+                'user_id' => $request->user_id,
+        ]);
+        
+     //   try{
+     //       $stock->update($request->all());
+     //       if($request->quantity){
+     //           $product = Product::where('product_id', $stock->product_id)->first();
+     //           $product->update($request->all());
+     //           return response()->json($stock);
+     //       }
+     //       return response()->json($stock);
+     //   }
+     //   catch(Exception $e){
+     //       return response()->json($e);
+     //   }
+
+     return response()->json($stock);
     }
     public function reduceQuantity($quantity, $cart){
         
