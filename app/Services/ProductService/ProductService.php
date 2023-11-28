@@ -16,6 +16,7 @@
         public function create($product){
             $productCreate = Product::create($product);
             $response = $productCreate->toArray();
+            
             return response()->json($response);
         }
         public function update($product, $id){

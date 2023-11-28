@@ -14,6 +14,7 @@ use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\Likes\LikedProductController;
 use App\Models\Product;
 use App\Models\Categories;
+use App\Models\ProductImages;
 use App\Models\Subcategory;
 use App\Services\ProductService\ProductService;
 use Exception;
@@ -22,10 +23,25 @@ use Illuminate\Support\Facades\Auth;
 class ProductController extends Controller
 {
     protected $productService;
+    protected $productImages;
+    protected $productVideos;
+    protected $productSeo;
+    protected $productStock;
 
-    public function __construct(ProductService $productService)
+    public function __construct(
+        ProductService $productService,
+        ProductImagesController $productImages,
+        ProductVideoController $productVideos,
+        ProductSeoController $productSeo,
+        ProductStockController $productStock,
+    )
     {
         $this->productService = $productService;
+        $this->productImages = $productImages;
+        $this->productVideos = $productVideos;
+        $this->productSeo = $productSeo;
+        $this->productStock = $productStock;
+
     }
     public function index()
     {
@@ -66,8 +82,34 @@ class ProductController extends Controller
             'user_id' => (int) $request->user_id,
             'discount_id' => $request->has('discount') ? (int)$request->discount : null,
         ];
-        $newProduct = $this->productService->create($product);
 
+        $newProduct = $this->productService->create($product);
+       
+        $image_class = $this->productImages->store($upload_file,  $newProduct->original['id'], $request->user_id);
+            
+        $video_class = $this->productVideos->store($request->video_link, $newProduct->original['id'], $request->user_id, $request->name, $request->platform);
+     
+       
+        $seo_class = $this->productSeo->store(
+                $request->name,
+                $request->meta_name,
+                $request->meta_key, 
+                $request->meta_description,
+                $request->slug,
+                $newProduct->original['id'],
+                $request->user_id
+        );
+       
+        $stock_class = $this->productStock->store(
+            $request->name,
+            $request->quantity,
+            $request->size,
+            $request->colors,
+            $newProduct->original['id'],
+            $request->user_id
+        );
+      
+  
         return response()->json($newProduct);
     }
     public function uploadImg($request)
@@ -95,12 +137,11 @@ class ProductController extends Controller
 
         return $randomNames;
     }
-    public function getImageClass($upload_file, $product_id, $user_id)
-    {
-
-        $product_images = new ProductImagesController();
-        return $product_images->store($upload_file, $product_id, $user_id);
-    }
+    //public function getImageClass($upload_file, $product_id, $user_id)
+    //{
+    //    $product_images = new ProductImagesController();
+    //    return $product_images; //->store($upload_file, $product_id, $user_id);
+    //}
     public function getVideoClass($video_link, $product_id, $user_id, $product_name, $platform)
     {
         $product_video = new ProductVideoController();
@@ -140,7 +181,6 @@ class ProductController extends Controller
     }
     public function show()
     {
-
         $products = Product::orderBy('id', 'desc')->get();
 
         return response()->json($products);
@@ -163,7 +203,6 @@ class ProductController extends Controller
     }
     public function update(Request $request, $id)
     {
-       
         $category = Categories::where('id', $request->category_id)->first();
         $subcategory = Subcategory::where('id', $request->subcategory_id)->first();
         $upload_file = $this->uploadImg($request);
@@ -196,7 +235,15 @@ class ProductController extends Controller
         ];
         
         $updateProduct = $this->productService->update($product, $id);
-      
+
+        $imageUpdate = $this->productImages->update($upload_file, $id, $request);
+       
+        $videoUpdate = $this->productVideos->update($request, $id);
+
+        $updateSeo = $this->productSeo->update($request, $id);
+       
+        $updateStock = $this->productStock->update($request, $id);
+
         return response()->json($updateProduct);
       
     }
@@ -204,7 +251,15 @@ class ProductController extends Controller
     {
         try {
             $removeProduct = $this->productService->destroy($id);
-            return true;
+
+            $imageDelete = $this->productImages->destroy($id);
+           
+            $videoDelete = $this->productVideos->destroy($id);
+
+            $seoDelete = $this->productSeo->destroy($id);
+          
+            $updateStock = $this->productStock->destroy($id);
+            return response()->json($removeProduct);
         } catch (Exception $e) {
             return response()->json($e);
         }

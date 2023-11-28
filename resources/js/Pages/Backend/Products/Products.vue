@@ -39,6 +39,7 @@
                     <v-spacer></v-spacer>
 
                     <v-row>
+                      
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="editedItem.name" label="Product name"></v-text-field>
                       </v-col>
@@ -538,8 +539,63 @@ export default {
     ],
     desserts: [],
     editedIndex: -1,
-    editedItem: {},
-    defaultItem: {},
+    editedItem: {
+      id: '',
+      name: '',
+      description: '',
+      category_id: 0,
+      subcategory_id: 0,
+      images: [],
+      platform: '',
+      video_link: '',
+      colors: [],
+      size: [],
+      price: "0.00",
+      discount_id: '',
+      quantity: 0,
+      unity: '',
+      weight: 1.00,
+      height: 1.00,
+      width: 1.0,
+      length: 1.0,
+      sku: '',
+      meta_name: '',
+      meta_key: '',
+      meta_description: '',
+      slug: '',
+      highlights: false,
+      availability: false,
+      status: true,
+      discount_id: null,
+    },
+    defaultItem: {
+      id: '',
+      name: '',
+      description: '',
+      category_id: 0,
+      subcategory_id: 0,
+      images: [],
+      platform: '',
+      video_link: '',
+      colors: [],
+      size: [],
+      unity: [],
+      price: "0.00",
+      discount: '',
+      quantity: 0,
+      weight: 1.00,
+      height: 1.00,
+      width: 1.0,
+      length: 1.0,
+      sku: '',
+      meta_name: '',
+      meta_key: '',
+      meta_description: '',
+      slug: '',
+      highlights: false,
+      availability: false,
+      status: true,
+    },
   }),
   computed: {
     formTitle() {
@@ -568,7 +624,6 @@ export default {
         console.log(`A imagem foi alterada de ${oldUrl} para ${newUrl}`);
         return true;
       },
-      
   },
   created() {
     this.initialize()
@@ -668,15 +723,13 @@ export default {
       return this.editedItem.video_link = "";
     },
     onPriceInput(value) {
-      // Aqui você pode tratar o valor inserido conforme necessário
-      console.log(value);
+      
     },
     selectedColor(){
       let selected_colors = this.editedItem.colors;
       return this.colors.push(selected_colors);
     },
     removeSelectedColor(index){
-      console.log(index);
       return this.colors.splice(index, 1);
     },
     hl_turn(){
@@ -746,13 +799,11 @@ export default {
       }
       this.dialog = true;
     },
-
     deleteItem(item) {
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
-
     deleteItemConfirm() {
       axios.delete(`/api/products/delete/${this.editedItem.id}`)
       .then((response) => {
@@ -782,7 +833,7 @@ export default {
     },
     save() {
       if (this.editedIndex > -1) {
-        
+        const token = document.head.querySelector('meta[name="csrf-token"]').content;
         const indexProduct = this.editedIndex;
         const data = {
           name: this.editedItem.name,
@@ -814,6 +865,7 @@ export default {
         };
         axios.post(`/api/products/update/${this.editedItem.id}`, data, {
             headers: {
+              'X-CSRF-TOKEN': token,
               'Content-Type': 'multipart/form-data'
             }
         })
