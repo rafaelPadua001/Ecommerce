@@ -8,11 +8,11 @@ use App\Models\ProductStock;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Exception;
-use Illuminate\Support\Facades\Auth;
+
 
 class ProductStockController extends Controller
 {
-    //
+   
     protected $products;
     public function __constuct(ProductController $products){
         $this->products = $products;

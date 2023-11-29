@@ -706,11 +706,9 @@ export default {
       }
     },
     removeImagePreview(index){
-      console.log(index);
       return this.images.splice(index, 1);
     },
     removeImagePreviewEdit(index){
-      console.log(index);
       return this.editedItem.images.splice(index, 1);
     },
     handleFiles() {
@@ -871,7 +869,6 @@ export default {
         })
         .then((response) => {
           this.close();
-          console.log(response);
          return Object.assign(this.products[indexProduct], response.data);
         })
         .catch((error) => {

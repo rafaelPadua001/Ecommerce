@@ -46,9 +46,7 @@ class ProductSeoController extends Controller
         }
     }
     public function update(Request $request, $id){
-      
-         try{
-           // $product = ProductSeo::where('product_id', $id)->get(); // ->update($request->all());
+        try{
             $product= ProductSeo::where('product_id', $id)->update([
                 'name' => $request->name,
                 'meta_name' => $request->meta_name,
@@ -72,8 +70,6 @@ class ProductSeoController extends Controller
                 ]);
                 
             }
-
-          
             return response()->json($product);
         }
         catch(Exception $e){

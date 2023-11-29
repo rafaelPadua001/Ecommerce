@@ -137,40 +137,6 @@ class ProductController extends Controller
 
         return $randomNames;
     }
-    
-   
-    public function getSeoClass(
-        $name,
-        $meta_name,
-        $meta_key,
-        $meta_description,
-        $slug,
-        $product_id,
-        $user_id
-    ) {
-        $product_seo = new ProductSeoController();
-        return $product_seo->store(
-            $name,
-            $meta_name,
-            $meta_key,
-            $meta_description,
-            $slug,
-            $product_id,
-            $user_id
-        );
-    }
-  //  public function getStockClass($name, $quantity, $size, $colors, $product_id, $user_id)
-  //  {
-  //      $product_stock = new ProductStockController();
-  //      return $product_stock->store(
-  //          $name,
-  //          $quantity,
-  //          $size,
-  //          $colors,
-  //          $product_id,
-  //          $user_id
-  //      );
-  //  }
     public function show()
     {
         $products = Product::orderBy('id', 'desc')->get();
