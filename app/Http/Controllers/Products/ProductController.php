@@ -137,16 +137,8 @@ class ProductController extends Controller
 
         return $randomNames;
     }
-    //public function getImageClass($upload_file, $product_id, $user_id)
-    //{
-    //    $product_images = new ProductImagesController();
-    //    return $product_images; //->store($upload_file, $product_id, $user_id);
-    //}
-    public function getVideoClass($video_link, $product_id, $user_id, $product_name, $platform)
-    {
-        $product_video = new ProductVideoController();
-        return $product_video->store($video_link, $product_id, $user_id, $product_name, $platform);
-    }
+    
+   
     public function getSeoClass(
         $name,
         $meta_name,
@@ -167,18 +159,18 @@ class ProductController extends Controller
             $user_id
         );
     }
-    public function getStockClass($name, $quantity, $size, $colors, $product_id, $user_id)
-    {
-        $product_stock = new ProductStockController();
-        return $product_stock->store(
-            $name,
-            $quantity,
-            $size,
-            $colors,
-            $product_id,
-            $user_id
-        );
-    }
+  //  public function getStockClass($name, $quantity, $size, $colors, $product_id, $user_id)
+  //  {
+  //      $product_stock = new ProductStockController();
+  //      return $product_stock->store(
+  //          $name,
+  //          $quantity,
+  //          $size,
+  //          $colors,
+  //          $product_id,
+  //          $user_id
+  //      );
+  //  }
     public function show()
     {
         $products = Product::orderBy('id', 'desc')->get();

@@ -199,6 +199,7 @@ import Dashboard from '../../Auth/Dashboard.vue';
 export default {
   components: { Dashboard },
   data: () => ({
+    users: [],
     stocks: [],
     colors: [],
     dialog: false,
@@ -255,6 +256,17 @@ export default {
   methods: {
     initialize() {
       this.seo = []
+    },
+    getAuth() {
+      axios.get('/users')
+        .then((response) => {
+          this.users = response.data;
+          return true;
+        })
+        .catch((response) => {
+          console.log(response);
+          return false;
+        });
     },
     getStocks() {
       axios.get('/stocks')
@@ -318,11 +330,13 @@ export default {
   update() {
     const indexStock = this.editedIndex;
     if (this.editedIndex > -1) {
+      console.log(this.users);
       const data = {
         name: this.editedItem.name,
         stock_quantity: this.editedItem.stock_quantity,
         product_size: this.editedItem.product_size,
         product_colors: this.colors,
+        user_id: this.users.id
       }
 
       axios.post(`/api/stocks/update/${this.editedItem.id}`, data, {
@@ -348,6 +362,7 @@ export default {
    },
   },
 mounted() {
+  this.getAuth();
     this.getStocks();
   }
 }
