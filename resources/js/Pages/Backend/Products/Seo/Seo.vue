@@ -127,6 +127,7 @@ import Dashboard from '../../Auth/Dashboard.vue';
 export default {
   components: { Dashboard },
   data: () => ({
+    users: [],
     seo: [],
     dialog: false,
     dialogDelete: false,
@@ -184,6 +185,17 @@ export default {
   methods: {
     initialize() {
       this.seo = []
+    },
+    getAuth() {
+      axios.get('/users')
+        .then((response) => {
+          this.users = response.data;
+          return true;
+        })
+        .catch((response) => {
+          console.log(response);
+          return false;
+        });
     },
     getSeo() {
       axios.get('/seo')
@@ -244,6 +256,7 @@ export default {
           meta_keyword: this.editedItem.meta_key,
           meta_description: this.editedItem.meta_description,
           slug: this.editedItem.slug,
+          user_id: this.users.id
         }
 
         axios.post(`/api/seo_product/update/${this.editedItem.id}`, data, {
@@ -270,6 +283,7 @@ export default {
           meta_keyword: this.editedItem.meta_key,
           meta_description: this.editedItem.meta_description,
           slug: this.editedItem.slug,
+          
         };
         axios.post(`/api/products/store`, data,
           {
@@ -297,8 +311,9 @@ export default {
   },
 
   mounted() {
+    this.getAuth();
     this.getSeo();
-
+    
   }
 
 

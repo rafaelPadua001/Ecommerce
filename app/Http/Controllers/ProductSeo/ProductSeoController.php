@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ProductSeo;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductSeoController extends Controller
 {
@@ -45,6 +46,7 @@ class ProductSeoController extends Controller
         }
     }
     public function update(Request $request, $id){
+      
          try{
            // $product = ProductSeo::where('product_id', $id)->get(); // ->update($request->all());
             $product= ProductSeo::where('product_id', $id)->update([
@@ -56,6 +58,22 @@ class ProductSeoController extends Controller
                 'product_id' => $id,
                 'user_id' => $request->user_id
             ]);
+            
+            if(!$product){
+                
+                $product = ProductSeo::where('id', $id)->update([
+                    'name' => $request->name,
+                    'meta_name' => $request->meta_name,
+                    'meta_keyword' => $request->meta_key,
+                    'meta_description' => $request->meta_description,
+                    'slug' => $request->slug,
+                    'product_id' => $id,
+                    'user_id' => $request->user_id
+                ]);
+                
+            }
+
+          
             return response()->json($product);
         }
         catch(Exception $e){
