@@ -115,10 +115,10 @@ class ProductController extends Controller
     public function uploadImg($request)
     {
         $randomNames = [];
-
-
+    
+        
         foreach ($request->images as $file) {
-
+         
             if ($file) {
                 $randomName = Str::random(10) . '.webp';
 
@@ -134,7 +134,7 @@ class ProductController extends Controller
                 ]);
             }
         }
-
+        
         return $randomNames;
     }
     public function show()
@@ -204,6 +204,23 @@ class ProductController extends Controller
 
         return response()->json($updateProduct);
       
+        
+        try {
+            $product = Product::where('id', $id)->update($request->all());
+
+            if ($request->images) {
+                $this->uploadImg($request);
+            }
+            $upload_file = $request->images;
+           
+            $product_id = Product::where('id', $id)->first();
+           // $user_id = Auth::user()->id;
+            $image_class = $this->getImageClass($upload_file, $id, $request->user_id);
+          
+            //return response()->json($request);
+        } catch (Exception $e) {
+            return response()->json($e);
+        }
     }
     public function destroy($id)
     {
