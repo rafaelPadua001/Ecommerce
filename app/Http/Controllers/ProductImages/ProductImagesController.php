@@ -19,16 +19,19 @@ class ProductImagesController extends Controller
         $this->user = $user;
     }
     public function index(){
-        $images = ProductImages::all();
+        $images = ProductImages::join('products', 'product_images.product_id', '=', 'products.id')
+            ->select('product_images.*', 'products.name as product_name')
+            ->get();
+          
         return response()->json($images);
     }
     public function store($upload_file, $product_id, $user_id)
     {
         try {
             foreach ($upload_file as $image) {
-
+               
                 $path_parts = pathinfo($image);
-
+                
                 $name_file = $path_parts['filename']; // Contém o nome do arquivo (sem a extensão)
                 $extension = $path_parts['extension']; // Contém a extensão do arquivo
 
@@ -57,10 +60,7 @@ class ProductImagesController extends Controller
                         $name_file = $path_parts['filename']; // Contém o nome do arquivo (sem a extensão)
                         $extension = $path_parts['extension']; // Contém a extensão do arquivo
                         $updateProduct = ProductImages::where('id', $productImg['id'])->delete();
-                        
-                     
-                       
-                    }
+                     }
                     $product =  ProductImages::create([
                         'name' => $name_file,
                         'extension' => $extension,
@@ -69,10 +69,7 @@ class ProductImagesController extends Controller
                         'user_id' => $request->user_id
                     ]); 
                 }
-                 
-               
-               
-         
+             
              return response()->json($product);
         }
         catch(Exception $e){
@@ -80,7 +77,6 @@ class ProductImagesController extends Controller
         }
     }
     public function destroy($id){
-       
         try{
             $image = ProductImages::where('product_id')->get();
             foreach($image as $img){
@@ -89,12 +85,24 @@ class ProductImagesController extends Controller
                     $delete_register = $image->delete();
                  }
             }
-            
-
             return response()->json($image); 
         }
         catch(Exception $e){
             return response()->json($e);
         }
+    }
+    public function destroyAll($id){
+        try{
+            $image = ProductImages::where('product_id', $id)->get();
+           
+            foreach($image as $img){
+                $img->delete();
+            }
+            return response()->json($img);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+       
     }
 }
