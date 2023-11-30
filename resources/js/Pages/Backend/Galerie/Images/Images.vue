@@ -6,7 +6,7 @@
         <v-row no-gutters>
             <v-col cols="12" sm="12">
                 <v-sheet class="ma-2 pa-2">
-                    <div class="d-flex justify-center mb-6" v-if="images">
+                    <div class="d-flex justify-center mb-6" v-if="images.length >= 1">
                         <div v-for="(image, index) in images" :key="image.id">
                             <v-card v-if="index === 1">
                                 <v-card-title>
