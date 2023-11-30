@@ -57,6 +57,7 @@ Route::post('/stocks/update/{id}', [ProductStockController::class, 'update'])->n
 
 //Images route
 Route::delete('/images/delete/{id}', [ProductImagesController::class, 'destroy'])->name('image.destroy');
+Route::delete('/images/deleteAll/{id}',[ProductImagesController::class, 'destroyAll'])->name('allImages.destroy');
 
 //Video route
 Route::delete('/videos/delete/{id}', [ProductVideoController::class, 'destroy'])->name('videos.destroy');
