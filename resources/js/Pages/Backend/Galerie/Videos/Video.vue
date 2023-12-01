@@ -33,13 +33,7 @@
 
                                     </v-dialog>
                                     <div>
-                                        <v-dialog v-model="dialogEdit">
-                                            <v-card class="mx-auto">
-                                                <v-card-text>
-                                                    {{ this.editedItem }}
-                                                </v-card-text>
-                                            </v-card>
-                                        </v-dialog>
+                                     
                                         <v-dialog v-model="dialogDelete" max-width="500px">
                                         <v-card>
                                             <v-card-title class="text-h5">Are you sure you want to delete this
@@ -75,14 +69,6 @@
                             
                             <template v-slot:item.actions="{ item }">
                                 <v-btn-group>
-                                    <v-btn 
-                                        icon
-                                        variant="plain"
-                                        size="small"
-                                        @click="editItem(item)"
-                                    >
-                                        <v-icon class="me-2" icon="fas fa-pen-to-square fa-2xs"></v-icon>
-                                    </v-btn>
                                     <v-btn 
                                         icon 
                                         variant="plain"
@@ -162,11 +148,6 @@ export default {
             }
             // Cria a URL de incorporação usando o ID do vídeo
             return `https://www.youtube.com/embed/${videoId}`;
-        },
-        editItem(item){
-            this.editedIndex = this.videos.indexOf(item);
-            this.editedItem = Object.assign({}, item);
-            this.dialogEdit = true;
         },
         deleteItem(item) {
             this.editedIndex = this.videos.indexOf(item)
