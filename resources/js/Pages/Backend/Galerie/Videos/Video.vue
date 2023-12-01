@@ -32,7 +32,15 @@
                                         </template>
 
                                     </v-dialog>
-                                    <v-dialog v-model="dialogDelete" max-width="500px">
+                                    <div>
+                                        <v-dialog v-model="dialogEdit">
+                                            <v-card class="mx-auto">
+                                                <v-card-text>
+                                                    {{ this.editedItem }}
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-dialog>
+                                        <v-dialog v-model="dialogDelete" max-width="500px">
                                         <v-card>
                                             <v-card-title class="text-h5">Are you sure you want to delete this
                                                 item?</v-card-title>
@@ -46,6 +54,8 @@
                                             </v-card-actions>
                                         </v-card>
                                     </v-dialog>
+                                    </div>
+                                    
                                 </v-toolbar>
                             </template>
 
@@ -110,6 +120,7 @@ export default {
     data: () => ({
         videos: [],
         dialogDelete: false,
+        dialogEdit: false,
         headers: [
             {
                 title: 'Name',
@@ -125,6 +136,8 @@ export default {
             { title: 'Created', key: 'created_at' },
             { title: 'Actions', key: 'actions', sortable: false },
         ],
+        editedIndex: -1,
+        editedItem: {},
     }),
     watch: {
         dialogDelete(val) {
@@ -149,6 +162,11 @@ export default {
             }
             // Cria a URL de incorporação usando o ID do vídeo
             return `https://www.youtube.com/embed/${videoId}`;
+        },
+        editItem(item){
+            this.editedIndex = this.videos.indexOf(item);
+            this.editedItem = Object.assign({}, item);
+            this.dialogEdit = true;
         },
         deleteItem(item) {
             this.editedIndex = this.videos.indexOf(item)
