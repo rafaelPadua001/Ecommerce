@@ -12,7 +12,9 @@ class ProductVideoController extends Controller
 {
     //
     public function index(){
-        $videos = ProductVideos::all();
+        $videos = ProductVideos::join('products', 'product_videos.product_id', '=', 'products.id')
+        ->select('product_videos.*', 'products.name as product_name')
+        ->get();
         return response()->json($videos);
     }
     public function store($video_link, $product_id, $user_id, $product_name, $platform){
@@ -51,7 +53,6 @@ class ProductVideoController extends Controller
     public function destroy($id){
         try{
             $product_video = Product::where('product_id', $id)->delete();
-            
             return response()->json($product_video);
         }
         catch(Exception $e){
