@@ -14,40 +14,32 @@ Siga os passos abaixo para configurar o projeto localmente:
 
 Clone este repositório.
 
-bash
-Copy code
 git clone https://github.com/seu-usuario/seu-projeto.git
 Navegue até o diretório do projeto.
 
-bash
-Copy code
+
 cd seu-projeto
 Instale as dependências do PHP.
 
-bash
-Copy code
+
 composer install
 Instale as dependências do Node.js.
 
-bash
-Copy code
+
 npm install
 Crie um arquivo .env baseado no .env.example e configure as variáveis de ambiente necessárias, incluindo as credenciais do banco de dados, Cielo e Mercado Pago.
 
 Execute as migrações e seeders para criar o banco de dados e popular com dados de exemplo.
 
-bash
-Copy code
+
 php artisan migrate --seed
 Compile os assets do Vue.
 
-bash
-Copy code
+
 npm run prod
 Inicie o servidor Laravel.
 
-bash
-Copy code
+
 php artisan serve
 Integrações
 Cielo SDK: Consulte a documentação da Cielo para configuração da integração.
