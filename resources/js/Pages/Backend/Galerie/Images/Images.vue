@@ -10,29 +10,30 @@
                         <v-list>
                             <v-list-item-group v-for="(productName, idx) in name.split(' ')" :key="idx">
                                 <v-list-item :key="index">
-                                    <v-list-item-title>
-                                        <v-card>
+                                      <v-card>
                                             <v-toolbar class="bg-transparent">
                                                 <v-toolbar-title>{{ productName }}</v-toolbar-title>
 
                                                 <v-spacer></v-spacer>
 
-                                                <v-btn icon variant="plain" id="menu-activator">
+                                                <v-btn icon variant="plain" :id="'menu-activator-' + index">
                                                     <v-icon icon="fas fa-ellipsis-vertical"></v-icon>
                                                 </v-btn>
 
-                                                <v-menu activator="#menu-activator">
+                                                <v-menu :activator="'#menu-activator-' + index">
                                                     <v-list>
                                                         <v-list-item>
                                                             <v-btn icon variant="plain">
                                                                 <v-icon icon="fas fa-trash fa-2xs"
-                                                                    @click="deleteGaleryDialog(image)"></v-icon>
+                                                                    @click="deleteGaleryDialog(image)">
+                                                                </v-icon>
+                                                                
                                                             </v-btn>
                                                         </v-list-item>
                                                     </v-list>
                                                 </v-menu>
 
-                                                <v-dialog v-model="deleteGalery">
+                                                <v-dialog v-model="deleteGalery" :key="'dialog-' + index">
                                                     <v-card class="d-flex justify-center mx-auto mb-6">
                                                         <v-card-text>
 
@@ -90,21 +91,27 @@
                                                                                 </v-btn-group>
 
                                                                                 <div>
-                                                                                    <v-dialog v-model="preview" :width="900" :height="720" class="d-flex justify-center mb-2 mx-auto flex-column">
-                                                                                            <v-card>
-                                                                                                <v-text>
-                                                                                                    <v-img
+                                                                                    <v-dialog v-model="preview" :width="900"
+                                                                                        :height="720"
+                                                                                        class="d-flex justify-center mb-2 mx-auto flex-column">
+                                                                                        <v-card>
+                                                                                            <v-text>
+                                                                                                <v-img
                                                                                                     class="mx-auto fill-height"
-                                                                                                    aspect-ratio="4/3"
-                                                                                                    cover
+                                                                                                    aspect-ratio="4/3" cover
                                                                                                     :src="`./storage/products/${this.editedItem.name}.${this.editedItem.extension}`"
                                                                                                     :lazy-src="`./storage/products/${this.editedItem.name}.${this.editedItem.extension}`">
-                                                                                                    
+
                                                                                                     <v-spacer></v-spacer>
 
-                                                                                                        <v-btn color="primary" icon id="menu-activator" @click="preview = false" size="x-small">
-                                                                                                            <v-icon icon="fas fa-close"></v-icon>
-                                                                                                        </v-btn>
+                                                                                                    <v-btn color="primary"
+                                                                                                        icon
+                                                                                                        id="menu-activator"
+                                                                                                        @click="preview = false"
+                                                                                                        size="x-small">
+                                                                                                        <v-icon
+                                                                                                            icon="fas fa-close"></v-icon>
+                                                                                                    </v-btn>
                                                                                                     <template
                                                                                                         v-slot:placeholder>
                                                                                                         <div
@@ -115,11 +122,11 @@
                                                                                                             </v-progress-circular>
                                                                                                         </div>
                                                                                                     </template>
-                                                                                                    
+
                                                                                                 </v-img>
-                                                                                                </v-text>
-                                                                                           
-                                                                                       </v-card>
+                                                                                            </v-text>
+
+                                                                                        </v-card>
 
 
                                                                                     </v-dialog>
@@ -150,7 +157,7 @@
                                                 </v-container>
                                             </v-card-text>
                                         </v-card>
-                                    </v-list-item-title>
+                                   
                                 </v-list-item>
                             </v-list-item-group>
                         </v-list>
@@ -291,5 +298,4 @@ export default {
     opacity: .9;
     position: absolute;
     width: 100%;
-}
-</style>
+}</style>
