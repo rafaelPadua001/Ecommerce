@@ -122,7 +122,7 @@ Route::get('/subcategories/all/{category_id}', [SubcategoriesController::class, 
 
 //Product routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth');
-Route::get('/products/show', [ProductController::class, 'index'])->name('products.show');
+Route::get('/products/show', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products/like/{id}', [ProductController::class , 'like'])->name('product.like');
 
 //Likes Route

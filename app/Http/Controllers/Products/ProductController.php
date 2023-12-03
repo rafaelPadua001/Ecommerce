@@ -139,8 +139,18 @@ class ProductController extends Controller
     }
     public function show()
     {
-        $products = Product::orderBy('id', 'desc')->get();
-
+        $products = Product::orderBy('id', 'desc')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->leftJoin('subcategories', 'categories.id', '=', 'subcategories.category_id')
+            ->leftJoin('coupons', 'products.discount_id', '=', 'coupons.id')
+            ->select('products.*',
+                'categories.id as category_id',
+                'subcategories.name as subcategoriy_id',
+                'coupons.id as discount_id',
+                'coupons.discount_percentage as discount_percentage'
+            )
+            ->get();
+        
         return response()->json($products);
     }
     public function like($id)
