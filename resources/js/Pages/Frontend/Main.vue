@@ -59,23 +59,83 @@
               <v-spacer></v-spacer>
               <v-spacer></v-spacer>
 
-              <div v-for="(product, index) in products" :key="index">
-                <div v-if="index < 8 && product.highlight">
+              <div cols="12" md="6" sm="4">
                 <h4 align="start" >Higlights</h4>
                 <v-divider></v-divider>
                 <v-spacer></v-spacer>
+                  <v-container>
+                    <v-row fluid>
+                      <v-col 
+                        class="d-flex justify-center flex-column"
+                        v-for="(product, index) in products"
+                         :key="index"
+                        >
+                        <v-sheet  v-if="index < 6 && product.highlight">
+                          <v-hover v-slot="{ isHovering, props }">
+                            <v-card :max-width="150" :max-height="90" elevation="0" v-bind="props">
+                            <v-carousel
+                            :cycle="timeToCarousel"
+                            :show-arrows="false"
+                            hide-delimiters
+                            inline
+                            >
+                            <v-carousel-item 
+                              v-for="image in JSON.parse(product.images)"
+                              :key="image.id"
+                              :src="`./storage/products/${image}`"
+                              cover
+                              class="align-end text-white" 
+                              :width="150"
+                              inline  
+                              :max-width="150"
+                              :max-height="90" 
+                              aspect-ratio="16/9"
+                              transition="fade-transition"
+                            >
+                            <v-expand-transition>
+                              <div v-if="isHovering"
+                                class="d-flex transition-fast-in-fast-out bg-orange-darken-4 v-card-menu--reveal text-h2">
+                                <v-card-actions>
+                                  <v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
+                                    size="small" elevation="8" @click="addItem(selectProduct)">
+                                    <v-icon icon="fas fa-cart-plus"></v-icon>
+                                    <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
+                                  </v-btn>
 
-                {{product.name}}
+                                  <v-btn class="ms-4 bg-green-darken-4" variant="outlined" color="green" size="small"
+                                    elevation="8" @click="buy(product)">
+                                    <v-icon icon="fas fa-money-bill-transfer"></v-icon>
+                                    <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
+                                  </v-btn>
+                                </v-card-actions>
+                              </div>
+                            </v-expand-transition>
+                            
+                            
+                            </v-carousel-item>
+                            
+                          </v-carousel>
+                          <v-card-text>
+                                {{ product.name }}
+                            </v-card-text>
+
+                          </v-card>
+                          </v-hover>
+                          <div>
+                          
+                          
+                         
+                        </div>
+                        </v-sheet>
+                       
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                   
+                 
+               
                 </div>
-                
-              </div>
-             
-              <v-spacer></v-spacer>
-              <v-spacer></v-spacer>
-              <v-spacer></v-spacer>
-
-
-              <div>
+             <div>
                 <h4 align="left">All Products</h4>
 
                 <v-spacer></v-spacer>
@@ -537,6 +597,7 @@ export default {
     images: [],
     categories: [],
     discounts: [],
+    timeToCarousel: 3000,
     productIndex: -1,
     selectProduct: {},
     buyDialog: false,
