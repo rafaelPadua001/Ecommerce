@@ -64,44 +64,55 @@
                       <v-col cols="2" md="2" sm="2" v-for="(product, index) in products" :key="index">
                         <v-sheet v-if="index < 6 && product.highlight">
                           <v-hover v-slot="{ isHovering, props }">
-                            <v-card :max-width="150" :max-height="90" elevation="0" v-bind="props">
+                            <v-card :max-height="300" elevation="0" v-bind="props">
+                              <div class="float-right">
+                                <v-btn-group>
+                                  <v-btn icon size="x-small">
+                                    <v-icon icon="fa-regular fa-heart fa-2xs" v-if="!likes" class="bg-transparent"
+                                      @click="like()"></v-icon>
+                                    <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else
+                                      @click="like()"></v-icon>
+                                  </v-btn>
+                                  <v-btn icon size="x-small">
+                                    <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
+                                  </v-btn>
+                                </v-btn-group>
+                              </div>
+
                               <v-carousel :cycle="timeToCarousel" :show-arrows="false" hide-delimiters inline>
                                 <v-carousel-item v-for="image in JSON.parse(product.images)" :key="image.id"
-                                  :src="`./storage/products/${image}`" cover class="align-end text-white" :width="150"
-                                  inline :max-width="150" :max-height="90" aspect-ratio="16/9"
-                                  transition="fade-transition">
-                                  <v-expand-transition>
-                                    <div v-if="isHovering"
-                                      class="d-flex transition-fast-in-fast-out bg-orange-darken-4 v-card-menu--reveal text-h2">
-                                      <v-card-actions>
-                                        <v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
-                                          size="small" elevation="8" @click="addItem(selectProduct)">
-                                          <v-icon icon="fas fa-cart-plus"></v-icon>
-                                          <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
-                                        </v-btn>
+                                  :src="`./storage/products/${image}`" class="align-end" :width="150" inline
+                                  :max-width="250" :max-height="210" aspect-ratio="16/9" cover>
+                                  <v-chip class="bg-green-darken-4 float-right ga-2 pa-2" variant="tonal">
+                                    <p>
 
-                                        <v-btn class="ms-4 bg-green-darken-4" variant="outlined" color="green"
-                                          size="small" elevation="8" @click="buy(product)">
-                                          <v-icon icon="fas fa-money-bill-transfer"></v-icon>
-                                          <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
-                                        </v-btn>
-                                      </v-card-actions>
-                                    </div>
-                                  </v-expand-transition>
-
-                                  <v-card-text>
-
-
-                                    <p class="text-white">{{ product.name }}</p>
-                                    <p class="text-white">{{ product.description }}</p>
-                                    <p class="text-white">R$: {{ product.price - (product.discount_percentage * 100) }}
+                                      R$: {{ product.price - (product.discount_percentage * 100) }}
                                     </p>
+                                  </v-chip>
 
-                                  </v-card-text>
+                                  <!-- <p class="text-white">{{ product.description }}</p>-->
                                 </v-carousel-item>
 
                               </v-carousel>
 
+                              <v-expand-transition>
+                                <div v-if="isHovering"
+                                  class="d-flex transition-fast-in-fast-out bg-orange-darken-4 v-card-menu--reveal text-h2">
+                                  <v-card-actions>
+                                    <v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
+                                      size="small" elevation="8" @click="addItem(selectProduct)">
+                                      <v-icon icon="fas fa-cart-plus"></v-icon>
+                                      <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
+                                    </v-btn>
+
+                                    <v-btn class="ms-4 bg-green-darken-4" variant="outlined" color="green" size="small"
+                                      elevation="8" @click="buy(product)">
+                                      <v-icon icon="fas fa-money-bill-transfer"></v-icon>
+                                      <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
+                                    </v-btn>
+                                  </v-card-actions>
+                                </div>
+                              </v-expand-transition>
 
                             </v-card>
                           </v-hover>
