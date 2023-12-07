@@ -10,15 +10,15 @@
                     <template v-slot:prepend>
                         <v-app-bar-title><v-btn class="text" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
                         <div v-if="user.length > 0">
-                            <v-btn :to="'/dashboard'" variant="plain"><v-icon icon="fa-solid fa-house fa-2xs"
-                                color="white" v-if="user != null"></v-icon></v-btn>
+                            <v-btn :to="'/dashboard'" variant="plain"><v-icon icon="fa-solid fa-house fa-2xs" color="white"
+                                    v-if="user != null"></v-icon></v-btn>
                         </div>
-                        
-                       
+
+
                         <!-- adicionar Logo aqui -->
-                      
+
                     </template>
-                   <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
 
                     <v-btn icon variant="plain">
                         <v-icon icon="fas fa-magnifying-glass"></v-icon>
@@ -102,7 +102,7 @@
                         </v-menu>
                     </div>
 
-                    
+
                     <!-- Cria o botao de menu do usuario -->
                     <v-menu>
                         <template v-slot:activator="{ props }">
@@ -114,13 +114,13 @@
                         </template>
                         <v-list>
                             <!-- login button -->
-                            <v-list-item  v-if="!user.length > 0">
+                            <v-list-item v-if="!user.length > 0">
                                 <v-list-item-title link>
                                     <span>
-                                        <v-btn icon variant="plain">
-                                            <v-icon icon="fa-solid fa-right-to-bracket fa-xs" to="/login"></v-icon>
+                                        <v-btn icon variant="plain" to="/login">
+                                            <v-icon icon="fa-solid fa-right-to-bracket fa-xs"></v-icon>
                                         </v-btn>
-                                       
+
                                     </span>
                                     <span>Login</span>
                                 </v-list-item-title>
