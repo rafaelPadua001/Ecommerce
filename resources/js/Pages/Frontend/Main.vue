@@ -2,8 +2,8 @@
   <div>
     <v-responsive>
       <v-row>
-        <v-col class="d-flex justify-center mb-6 flex-column">
-          <AppBar />
+        <v-col class="d-flex justify-center mb-6 flex-column" cols="12" md="8" sm="6">
+          <AppBar class="app-bar" />
         </v-col>
       </v-row>
     </v-responsive>
@@ -13,9 +13,9 @@
   <v-app id="inspire">
     <v-responsive>
       <v-container>
-        <v-row fluid>
+        <v-row no-gutters>
           <v-col class="d-flex justify-center mb-6 flex-column">
-            <v-main>
+            <v-main class="main">
               <v-container>
                 <div align='center'>
                   <Banner></Banner>
@@ -555,8 +555,12 @@
 
               </v-container>
             </v-main>
+
+
           </v-col>
         </v-row>
+
+        
         <div class="text-center">
           <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
@@ -571,23 +575,39 @@
 
           </v-snackbar>
         </div>
-      </v-container>
-    </v-responsive>
 
+
+      </v-container>
+
+
+    </v-responsive>
+    <div>
+
+
+<v-row no-gutters>
+  <v-col cols="12">
+    <FooterBar />
+  </v-col>
+</v-row>
+
+
+</div>
   </v-app>
 </template>
 
 <script>
 
 import axios from 'axios';
-import Banner from '../../Components/Banner.vue';
 import AppBar from './Layout/AppBar.vue';
+import Banner from '../../Components/Banner.vue';
+import FooterBar from './Layout/FooterBar.vue';
 
 
 export default {
   components: {
     Banner,
-    AppBar
+    AppBar,
+    FooterBar
   },
   data: () => ({
     products: [],
@@ -639,8 +659,6 @@ export default {
   methods: {
     async load({ done }) {
       //Perform Api Call
-
-
       setTimeout(() => {
         done('empty');
       }, 1000)
@@ -784,6 +802,15 @@ export default {
 </script>
 
 <style>
+.app-bar {
+  z-index: 1000;
+  position: fixed;
+}
+
+.main {
+  z-index: 1;
+}
+
 .v-card-menu--reveal {
   align-items: center;
   bottom: 0;
@@ -798,5 +825,9 @@ export default {
 
 .image-container:hover .zoomable-image {
   transform: scale(1.2);
+}
+
+.footer {
+  width: 100%;
 }
 </style>
