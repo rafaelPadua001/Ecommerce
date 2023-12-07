@@ -24,6 +24,9 @@ class CustomerController extends Controller
     public function index(){
         try{
             $customer = Auth::guard('customer')->user();
+            if(!$customer){
+                return response()->json($customer);
+            }
            
             return response()->json($customer);
         }catch(Exception $e){
