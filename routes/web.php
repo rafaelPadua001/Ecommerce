@@ -103,7 +103,7 @@ Route::post('/address/save', [AddressesController::class, 'create'])->name('addr
 Route::post('/address/update/{id}', [AddressesController::class, 'update'])->name('address.update');
 
 //Categories routes
-Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index')->middleware('auth');
+Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index');
 Route::get('/categories/show', [CategoriesController::class, 'show'])->name('categories.show');
 
 //Cart Routes

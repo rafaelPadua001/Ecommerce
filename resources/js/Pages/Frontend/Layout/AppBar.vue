@@ -3,17 +3,38 @@
         <v-col cols="12" md="8" sm="6">
             <v-card max-width="448" class="mx-auto" color="transparent-lighten-3">
                 <v-app-bar color="transparent-darken-4" image="https://picsum.photos/1920/1080?random">
+
                     <template v-slot:image>
                         <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
                     </template>
 
                     <template v-slot:prepend>
                         <v-app-bar-title><v-btn class="text" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
-                        <div v-if="user.length > 0">
+                        <div v-if="Object.keys(user).length >= 1">
                             <v-btn :to="'/dashboard'" variant="plain"><v-icon icon="fa-solid fa-house fa-2xs" color="white"
                                     v-if="user != null"></v-icon></v-btn>
                         </div>
 
+                        <div>
+                            <v-btn id="menu-categories" variant="plain">
+                                <v-icon icon="fa-solid fa-grip-vertical fa-2xs" color="white" v-if="user != null">
+                                </v-icon>
+                            </v-btn>
+
+                            <v-menu activator="#menu-categories">
+                                <v-list>
+                                    <v-list-item v-if="!categories">
+                                        no categories registered
+                                    </v-list-item>
+                                    <v-list-item v-else v-for="category in categories" :key="category.id">
+                                        <v-btn icon variant="text" size="xs" :to="`/subcategories/all/${category.id}`">
+                                            <v-icon :icon="category.icon"></v-icon>
+                                            <span>{{ category.name }}</span>
+                                        </v-btn>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </div>
 
                         <!-- adicionar Logo aqui -->
 
@@ -126,7 +147,7 @@
                                 </v-list-item-title>
                             </v-list-item>
 
-                            <!-- logout button -->
+
 
                             <v-list-item @click="logout()" v-else>
                                 <v-list-item-title link>
@@ -138,7 +159,7 @@
                                 </v-list-item-title>
                             </v-list-item>
 
-                            <!-- logout admin button -->
+
 
                         </v-list>
                     </v-menu>
@@ -157,15 +178,24 @@ export default {
     data: () => ({
         user: [],
         carts: [],
+        categories: [],
     }),
     methods: {
+        getCategories() {
+            axios.get('/categories')
+                .then((response) => {
+                    return this.categories = response.data;
+                }).catch((response) => {
+                    return alert('Error: ' + response);
+                });
+        },
         getUser() {
             axios.get('/customer')
                 .then((response) => {
                     return this.user = response.data;
                 })
                 .catch((response) => {
-                    
+
                     return false;
                 });
         },
@@ -213,6 +243,7 @@ export default {
 
     mounted() {
         this.getUser();
+        this.getCategories();
         this.getCarts();
     }
 }
