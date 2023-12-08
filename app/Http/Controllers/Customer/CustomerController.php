@@ -38,13 +38,7 @@ class CustomerController extends Controller
         $data = $request;
         try{
             $insert = Customer::create(
-                [
-                'first_name' => $data->first_name,
-                'last_name' => $data->last_name,
-                'email' => $data->email,
-                'password' => $data->password,
-                
-                ]
+                $request->all()
             );
                 $response = 'Usuario cadastrado com sucesso';
                 return response()->json($response);
