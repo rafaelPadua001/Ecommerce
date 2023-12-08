@@ -3,20 +3,17 @@
 namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use Exception;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
+
 
 
 class CustomerController extends Controller
 {
-    //
     protected $customer;
-    //protected $redirectTo = '/dashboard';
+    
     public function __construct(Customer $customer){
         $this->customer = $customer;
     }
