@@ -9,15 +9,18 @@
                     </template>
 
                     <template v-slot:prepend>
-                        <v-app-bar-title><v-btn class="text" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
-                        <div v-if="Object.keys(user).length >= 1">
-                            <v-btn :to="'/dashboard'" variant="plain"><v-icon icon="fa-solid fa-house fa-2xs" color="white"
-                                    v-if="user != null"></v-icon></v-btn>
+                        <v-app-bar-title>
+                            <v-btn class="text" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
+                        <div v-if="Object.keys(user).length > 0">
+                            <v-btn :to="'/dashboard'" variant="plain">
+                                <v-icon icon="fa-solid fa-house fa-2xs" color="white"
+                                ></v-icon>
+                            </v-btn>
                         </div>
 
                         <div>
                             <v-btn id="menu-categories" variant="plain">
-                                <v-icon icon="fa-solid fa-grip-vertical fa-2xs" color="white" v-if="user != null">
+                                <v-icon icon="fa-solid fa-grip-vertical fa-2xs" color="white">
                                 </v-icon>
                             </v-btn>
 

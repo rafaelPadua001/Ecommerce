@@ -1,12 +1,26 @@
 <template>
-    <div>
-     <v-img
-        width="1200"
-        height="300"
-        :aspect-ratio="1"
-        src="https://media.istockphoto.com/id/1270372113/pt/vetorial/online-shopping-isometric-creative-banner-design-template-with-smartphone-integrated-atm.jpg?s=1024x1024&w=is&k=20&c=GOtN2-DLylb8lOs2Aug_CzETiJ9OlTmOsZH_OIl9g5w="
-        cover
-        align="center"
-      ></v-img>
-    </div>
+  <v-container>
+    <v-row no-gutters>
+      <v-col class="d-flex justify-center flex-column" cols="12" md="8" sm="4">
+        <v-card class="mx-auto" elevation="0" width="1130">
+          <v-card-text>
+            <v-row>
+              <v-col>
+                <v-responsive>
+                  <v-img :height="300"
+                    src="https://img.freepik.com/free-vector/black-friday-sale-banner-with-gift-boxes_1017-34764.jpg?w=900&t=st=1702064958~exp=1702065558~hmac=63cc9b765b4bd3bac1a9ac41201e5ffb2780ed7cd79b3b733b78c906c00bfc7f"
+                    cover aspect-ratio="1"></v-img>
+                </v-responsive>
+
+              </v-col>
+            </v-row>
+          </v-card-text>
+
+
+        </v-card>
+
+
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
