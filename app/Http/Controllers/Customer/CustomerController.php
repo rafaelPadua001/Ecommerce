@@ -3,20 +3,17 @@
 namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use Exception;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
+
 
 
 class CustomerController extends Controller
 {
-    //
     protected $customer;
-    //protected $redirectTo = '/dashboard';
+    
     public function __construct(Customer $customer){
         $this->customer = $customer;
     }
@@ -38,13 +35,7 @@ class CustomerController extends Controller
         $data = $request;
         try{
             $insert = Customer::create(
-                [
-                'first_name' => $data->first_name,
-                'last_name' => $data->last_name,
-                'email' => $data->email,
-                'password' => $data->password,
-                
-                ]
+                $request->all()
             );
                 $response = 'Usuario cadastrado com sucesso';
                 return response()->json($response);

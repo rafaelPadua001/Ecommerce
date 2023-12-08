@@ -114,7 +114,7 @@
                         </template>
                         <v-list>
                             <!-- login button -->
-                            <v-list-item v-if="!user.length > 0">
+                            <v-list-item v-if="user.length === 0">
                                 <v-list-item-title link>
                                     <span>
                                         <v-btn icon variant="plain" to="/login">
