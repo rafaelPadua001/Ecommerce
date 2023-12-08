@@ -24,37 +24,7 @@
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
                 <v-spacer></v-spacer>
-                <div>
-                  <h4 align="left">Categories</h4>
-                  <v-row no-gutters>
-                    <v-col v-for="category in categories" :key="category.id">
-                      <div cols="12" md="6" sm="4">
-                        <v-hover>
-                          <template v-slot:default="{ isHovering, props }">
-                            <v-card class="mx-auto" v-bind="props" :color="isHovering ? 'grey-darken-1' : undefined"
-                              :to="`/subcategories/all/${category.id}`" elevation="0">
-                              <v-icon :icon="category.icon" cover :key="category.id"></v-icon>
-
-                              <v-card-text>
-                                {{ category.name }}
-                              </v-card-text>
-
-                            </v-card>
-                          </template>
-
-                        </v-hover>
-
-                      </div>
-                    </v-col>
-
-                  </v-row>
-
-                </div>
-
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
-
+               
                 <div cols="12" md="6" sm="4">
                   <h4 align="start">Higlights</h4>
                   <v-divider></v-divider>
@@ -85,7 +55,6 @@
                                   :max-width="250" :max-height="210" aspect-ratio="16/9" cover>
                                   <v-chip class="bg-green-darken-4 float-right ga-2 pa-2" variant="tonal">
                                     <p>
-
                                       R$: {{ product.price - (product.discount_percentage * 100) }}
                                     </p>
                                   </v-chip>
@@ -163,18 +132,11 @@
 
                                   <div v-if="discount_id" class="d-flex justify-end text-center">
                                     <v-chip class="ma-2" label color="orange-darken-4" variant="elevated">
-                                      -{{ product.discount_percentage * 100 }}%
+                                      - {{ product.discount_percentage * 100 }}%
                                     </v-chip>
 
                                   </div>
-                                  <!--      <div v-for="discount in discounts" :key="discount.id"
-                                  class="d-flex justify-end text-center">
-                                  <v-chip class="ma-2" label color="orange-darken-4" variant="elevated"
-                                    v-if="product.discount_id === discount.id">
-                                    -{{ discount.discount_percentage * 100 }}%
-                                  </v-chip>
-
-                                </div>-->
+                                 
                                   <template>
                                     <div class="d-flex align-center justify-center fill-height">
                                       <v-progress-circular color="grey-lighten-4">
@@ -185,11 +147,6 @@
                                 </v-img>
                               </div>
 
-                              <!-- <v-card-title class="text-h6"></v-card-title> -->
-
-                              <!-- <v-card-subtitle class="pt-4">
-                        {{ product.description }}
-                      </v-card-subtitle> -->
 
                               <v-card-text>
                                 <v-row>
@@ -542,11 +499,6 @@
 
                       </v-card-text>
 
-                      <!-- <v-card-actions>
-                <v-spacer></v-spacer>
-
-                <v-btn text="Close Dialog" @click="closeBuy"></v-btn>
-              </v-card-actions>-->
 
                     </v-card>
 
