@@ -38,7 +38,7 @@
                               <div class="float-right">
                                 <v-btn-group>
                                   <v-btn icon size="x-small">
-                                    <v-icon icon="fa-regular fa-heart fa-2xs" v-if="!likes" class="bg-transparent"
+                                    <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0" class="bg-transparent"
                                       @click="like()"></v-icon>
                                     <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else
                                       @click="like()"></v-icon>
@@ -112,7 +112,7 @@
 
                               <v-btn-group class="float-right">
                                 <v-btn icon size="x-small">
-                                  <v-icon icon="fa-regular fa-heart fa-2xs" v-if="!likes" class="bg-transparent"
+                                  <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0" class="bg-transparent"
                                     @click="like()"></v-icon>
                                   <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else
                                     @click="like()"></v-icon>
