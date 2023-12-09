@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <v-row no-gutters>
         <v-col cols="12" md="8" sm="6">
             <v-card max-width="448" class="mx-auto" color="transparent-lighten-3">
                 <v-app-bar color="transparent-darken-4" image="https://picsum.photos/1920/1080?random">
@@ -11,10 +11,9 @@
                     <template v-slot:prepend>
                         <v-app-bar-title>
                             <v-btn class="text" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
-                        <div v-if="Object.keys(user).length > 0">
+                        <div v-if="Object.keys(user).length >= 1">
                             <v-btn :to="'/dashboard'" variant="plain">
-                                <v-icon icon="fa-solid fa-house fa-2xs" color="white"
-                                ></v-icon>
+                                <v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon>
                             </v-btn>
                         </div>
 
@@ -48,82 +47,102 @@
                         <v-icon icon="fas fa-magnifying-glass"></v-icon>
                     </v-btn>
                     <!-- Cart Button-->
-                    <div class="d-flex justify-space-around" v-if="carts.length >= 1">
-                        <v-menu>
-                            <template v-slot:activator="{ props }">
-                                <v-btn icon v-bind="props">
-                                    <v-icon icon="fa-solid fa-cart-shopping"></v-icon>
-                                </v-btn>
-                            </template>
-                            <v-list :items="carts" item-props lines="three" style="margin-top: 51px; margin-right: -55px">
-                                <v-list-item v-for="item in carts" :key="item.id" :value="item.id">
-                                    <div v-if="!item">
-                                        <p>No item to show...</p>
-                                    </div>
-                                    <div v-else>
-                                        <v-card>
-                                            <v-card-title>
-                                                <v-toolbar class="bg-transparent">
-                                                    {{ item.name }}
-                                                    <template v-slot:append>
-                                                        <v-btn-group>
-
-                                                            <v-btn v-bind="props" icon size="x-small" variant="plain">
-                                                                <v-icon icon="fas fa-close fa-2xs"
-                                                                    @click="removeItem(item)"></v-icon>
-                                                            </v-btn>
-                                                        </v-btn-group>
-
-                                                    </template>
-                                                </v-toolbar>
-
-
-                                            </v-card-title>
-                                            <v-card-text>
+                    <div class="d-flex justify-space-around" v-if="Object.keys(carts).length >= 1">
+                        <v-row fluid>
+                            <v-col cols="auto">
+                                <v-menu>
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn icon v-bind="props">
+                                            <v-icon icon="fa-solid fa-cart-shopping"></v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <v-list :items="carts" item-props lines="three"
+                                        style="margin-top: 51px; margin-right: -55px">
+                                        <v-list-item v-for="item in carts" :key="item.id" :value="item.id">
+                                            <div v-if="!item">
+                                                <p>No item to show...</p>
+                                            </div>
+                                            <div v-else>
                                                 <v-row>
-                                                    <v-col cols="6" sm="4">
-                                                        <div v-for="(image, index) in JSON.parse(item.images)" :key="index">
-
-                                                            <v-avatar size="62" rounded="0">
-                                                                <v-img v-if="index === 0" :vid-id="image"
-                                                                    class="align-end text-white" aspect-ratio="1/1"
-                                                                    :src="`./storage/products/${image}`"
-                                                                    :lazy-src="`./storage/products/${image}`">
-                                                                </v-img>
-
-                                                            </v-avatar>
-                                                        </div>
-
-
-                                                    </v-col>
-                                                    <v-col cols="6" sm="4">
-                                                        Price: {{ item.price }}
-                                                    </v-col>
-                                                    <v-col cols="6" sm="4">
-                                                        Quantity: {{ item.quantity }}
-                                                    </v-col>
-
-                                                </v-row>
-                                                <v-row>
-                                                    <v-col>
-                                                        <v-card v-bind="props" :color="item.color" :width="60">
+                                                    <v-col cols="auto" md="12" sm="4">
+                                                        <v-card class="mx-auto" elevation="0">
                                                             <template v-slot:append>
+                                                                <v-btn-group>
+
+                                                                    <v-btn v-bind="props" icon size="x-small"
+                                                                        variant="plain">
+                                                                        <v-icon icon="fas fa-close fa-2xs"
+                                                                            @click="removeItem(item)"></v-icon>
+                                                                    </v-btn>
+                                                                </v-btn-group>
 
                                                             </template>
-                                                        </v-card>
 
+                                                            <v-card-text>
+                                                                <v-row no-gutters>
+                                                                    <v-col cols="auto" md="2" sm="4">
+                                                                        <div v-for="(image, index) in JSON.parse(item.images)"
+                                                                            :key="index">
+                                                                            <v-avatar rounded="0" v-if="index === 0">
+                                                                                <v-img :vid-id="image"
+                                                                                    class="align-end text-white"
+                                                                                    aspect-ratio="1"
+                                                                                    :src="`./storage/products/${image}`"
+                                                                                    :lazy-src="`./storage/products/${image}`">
+                                                                                </v-img>
+
+                                                                            </v-avatar>
+                                                                        </div>
+
+
+                                                                    </v-col>
+                                                                    <v-col cols="6" md="4" sm="2">
+                                                                        <div>
+                                                                            <span>{{ item.name }}</span>
+                                                                        </div>
+                                                                    </v-col>
+
+
+                                                                </v-row>
+                                                                <v-row>
+                                                                    <v-col cols="auto" md="2" sm="1">
+                                                                        <v-card v-bind="props" :color="item.color"
+                                                                            :width="30">
+                                                                            <template v-slot:append>
+
+                                                                            </template>
+                                                                        </v-card>
+
+                                                                    </v-col>
+                                                                    <v-col cols="auto" md="5" sm="2">
+                                                                        <span>Price: {{ item.price }}</span>
+                                                                    </v-col>
+                                                                    <v-col cols="auto" md="5" sm="2">
+                                                                        Quantity: {{ item.quantity }}
+                                                                    </v-col>
+                                                                    <v-col cols="auto" sm="2">
+
+                                                                    </v-col>
+
+
+
+                                                                </v-row>
+                                                            </v-card-text>
+                                                        </v-card>
                                                     </v-col>
                                                 </v-row>
-                                            </v-card-text>
-                                        </v-card>
-                                        <v-divider></v-divider>
-                                    </div>
-                                </v-list-item>
 
-                                <v-btn color="cyan-darken-4" variant="tonal" block>Checkout</v-btn>
+                                                <v-divider></v-divider>
+                                            </div>
+                                        </v-list-item>
 
-                            </v-list>
-                        </v-menu>
+                                        <v-btn color="cyan-darken-4" variant="tonal" block>Checkout</v-btn>
+
+                                    </v-list>
+                                </v-menu>
+                            </v-col>
+                        </v-row>
+
                     </div>
 
 

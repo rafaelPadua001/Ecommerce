@@ -193,8 +193,8 @@
                         </div>
                         <div>
                             <v-btn-group>
-                                <v-btn variant="outlined" color="success" size="small" :loading="loading"
-                                    @click="loading = !loading">
+                                <v-btn variant="outlined" color="success" size="small" :loading="checkout_product"
+                                    @click="checkout(selectProduct)">
                                     <v-icon icon="fa-solid fa-cart-shopping" size="large"></v-icon>
                                     Comprar
                                     <template v-slot:loader>
@@ -276,11 +276,18 @@
 
 <script>
 export default {
-    props: ['selectProduct', 'buyDialog'],
+    props: ['selectProduct', 'buyDialog', 'customer'],
     data: () => ({
+        cart: [],
         colors: false,
         quantity: 1,
         selectImageIndex: 0,
+        loading: false,
+        checkoutProduct: false, 
+        add_cart: false,
+        snackbar: false,
+        liked: 0,
+        likes: false,
         social_icons: [
             'fa-brands fa-facebook',
             'fa-brands fa-instagram',
@@ -290,34 +297,38 @@ export default {
         ]
     }),
     watch: {
-    buyDialog(val) {
-      val || this.closeBuy();
-    },
-    loading(val) {
-      if (!val) return
-      setTimeout(() => {
-        this.loading = false
-      }, 2000);
-
-    },
-    add_cart(val) {
-      if (!val) return
-      setTimeout(() => {
-        this.add_cart = false
-        this.buyDialog = false;
-      }, 2000);
-    }
-  },
-    methods: {
-        alterImage(index) {
-            
-            return this.selectImageIndex = index;
+        buyDialog(val) {
+            val || this.closeBuy();
+        },
+        loading(val) {
+            if (!val) return
+            setTimeout(() => {
+                this.loading = false
+            }, 2000);
 
         },
+        add_cart(val) {
+            if (!val) return
+            setTimeout(() => {
+                this.add_cart = false
+                this.closeBuy;
+            }, 2000);
+        },
+        checkout_product(val){
+            if(!val) return
+            setTimeout(() => {
+                this.checkoutProduct = false;
+                this.closeBuy();
+            })
+        }
+    },
+    methods: {
+        alterImage(index) {
+           return this.selectImageIndex = index;
+        },
         addItem() {
-            if (Object.keys(this.customer) == 0) {
-                this.snackbar = true;
-                return;
+            if (Object.keys(this.customer).length == 0) {
+                return this.snackbar = true;
             }
             const data = {
                 'product': this.selectProduct,
@@ -327,7 +338,7 @@ export default {
             axios.post(`/carts/add`, data)
                 .then((response) => {
                     this.add_cart = false;
-                    return this.cart = response.data;
+                    return this.cart.push(response.data);
                 })
                 .catch((response) => {
                     alert('Error :' + response);
@@ -351,7 +362,8 @@ export default {
             }
 
         },
-        checkout() {
+        checkout(selectProduct) {
+            console.log(selectProduct);
             alert('Redirect to checkout... wait');
         }
     }
@@ -359,12 +371,11 @@ export default {
 </script>
 
 <style>
-    .zoomable-image {
-  transition: transform 0.3s;
+.zoomable-image {
+    transition: transform 0.3s;
 }
 
 .image-container:hover .zoomable-image {
-  transform: scale(1.2);
+    transform: scale(1.2);
 }
-
 </style>

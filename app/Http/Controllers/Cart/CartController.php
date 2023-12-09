@@ -55,7 +55,7 @@ class CartController extends Controller
             
             $stock_quantity = $this->getProduct($request->quantity, $request->color, $cart_item);
             
-            return response()->json($item);
+            return response()->json($cart_item);
         }
         catch(Exception $e){
             return response()->json($e);

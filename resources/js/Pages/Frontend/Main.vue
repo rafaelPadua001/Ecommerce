@@ -227,7 +227,13 @@
                       </v-infinite-scroll>
                     </v-row>
                   </v-container>
-                  <ProductDialog v-model="buyDialog" v-if="buyDialog" :selectProduct="selectProduct" :buyDialog="buyDialog" @update:buyDialog="updateBuyDialog"/>
+                  <ProductDialog 
+                    v-if="buyDialog"
+                    v-model="buyDialog"
+                    :selectProduct="selectProduct"
+                    :buyDialog="buyDialog"
+                    @update:buyDialog="updateBuyDialog"
+                    :customer="customer" />
                   
                 </div>
 
@@ -377,6 +383,25 @@ export default {
       
       this.buyDialog = value;
     },
+    addItem() {
+            if (Object.keys(this.customer).length == 0) {
+                this.snackbar = true;
+                return;
+            }
+            const data = {
+                'product': this.selectProduct,
+                'quantity': this.quantity,
+                'color': this.colors
+            }
+            axios.post(`/carts/add`, data)
+                .then((response) => {
+                    this.add_cart = false;
+                    return this.cart = response.data;
+                })
+                .catch((response) => {
+                    alert('Error :' + response);
+                });
+        },
     like() {
       if (Object.keys(this.customer).length == 0) {
         this.snackbar = true;
