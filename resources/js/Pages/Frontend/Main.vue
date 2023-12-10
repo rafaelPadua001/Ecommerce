@@ -2,7 +2,7 @@
   <div>
     <v-responsive>
       <v-row>
-        <v-col class="d-flex justify-center mb-6 flex-column" cols="12" md="8" sm="6">
+        <v-col class="d-flex justify-center mb-6 flex-column" cols="12" md="6" sm="6">
           <AppBar class="app-bar" />
         </v-col>
       </v-row>
@@ -13,19 +13,22 @@
   <v-app id="inspire">
     <v-responsive>
       <v-container>
-        <v-row fluid>
-          <v-col class="d-flex justify-center mb-6 flex-column" cols="auto">
+        <v-row no-gutters>
+          <v-col class="d-flex justify-center flex-column" cols="auto">
             <v-main class="main">
               <v-container>
-                <div align='center'>
-                  <Banner></Banner>
-
-                </div>
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
-                <v-spacer></v-spacer>
-               
-                <div cols="auto" md="4" sm="4">
+                <v-row>
+                  <v-col cols="auto">
+                    <v-banner>
+                    <div>
+                      <Banner></Banner>
+                    </div>
+                   
+                  </v-banner>
+                  </v-col>
+                </v-row>
+                 
+                 <div cols="auto" md="4" sm="4">
                   <h4 align="start">Higlights</h4>
                   <v-divider></v-divider>
                   <v-spacer></v-spacer>
@@ -66,16 +69,15 @@
 
                               <v-expand-transition>
                                 <div v-if="isHovering"
-                                  class="d-flex transition-fast-in-fast-out bg-orange-darken-4 v-card-menu--reveal text-h2">
+                                  class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
                                   <v-card-actions>
-                                    <v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
+                                    <!--<v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
                                       size="small" elevation="8" @click="addItem(selectProduct)">
                                       <v-icon icon="fas fa-cart-plus"></v-icon>
                                       <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
                                     </v-btn>
-
-                                    <v-btn class="ms-4 bg-green-darken-4" variant="outlined" color="green" size="small"
-                                      elevation="8" @click="buy(product)">
+                                    -->
+                                    <v-btn block @click="buy(product)">
                                       <v-icon icon="fas fa-money-bill-transfer"></v-icon>
                                       <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
                                     </v-btn>
@@ -85,16 +87,10 @@
 
                             </v-card>
                           </v-hover>
-                          <div>
-
-
-
-                          </div>
-                        </v-sheet>
-
-                      </v-col>
-                    </v-row>
-                  </v-container>
+                      </v-sheet>
+                    </v-col>
+                  </v-row>
+                </v-container>
               </div>
                 <div cols="auto" md="8" sm="4">
                   <h4 align="left">All Products</h4>
@@ -155,7 +151,7 @@
                                 </v-row>
                                 <v-row>
                                   <v-btn-group>
-                                    <v-btn class="ms-2" size="x-small" variant="outlined" color="orange">
+                                    <v-btn class="ms-2" size="x-small" variant="outlined" color="orange" v-if="product.slug">
                                       {{ product.slug }}
                                     </v-btn>
                                     <v-btn v-if="product.discount_id" class="ms-2" size="x-small" variant="outlined"
@@ -199,17 +195,17 @@
 
                               </v-card-text>
                               <v-expand-transition>
-                                <div v-if="isHovering"
-                                  class="d-flex transition-fast-in-fast-out bg-orange-darken-4 v-card-menu--reveal text-h2">
+                                <div 
+                                  v-if="isHovering"
+                                  class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
                                   <v-card-actions>
-                                    <v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
+                                    <!--<v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
                                       size="small" elevation="8" @click="addItem(selectProduct)">
                                       <v-icon icon="fas fa-cart-plus"></v-icon>
                                       <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
                                     </v-btn>
-
-                                    <v-btn class="ms-4 bg-green-darken-4" variant="outlined" color="green" size="small"
-                                      elevation="8" @click="buy(product)">
+                                    -->
+                                    <v-btn  @click="buy(product)" block>
                                       <v-icon icon="fas fa-money-bill-transfer"></v-icon>
                                       <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
                                     </v-btn>
