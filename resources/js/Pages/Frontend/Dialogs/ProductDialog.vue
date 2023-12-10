@@ -27,7 +27,7 @@
 
             <v-card-text>
                 <v-row no-gutters>
-                    <v-col col="12" md="6" sm="2">
+                    <v-col col="auto" md="6" sm="2">
                         <v-sheet class="ma-2 pa-2">
                             <v-row>
                                 <v-col v-for="(image, index) in JSON.parse(selectProduct.images)" cols="2" sm="3">
@@ -56,7 +56,7 @@
 
                                 </v-col>
                                 <v-col>
-                                    <v-card :min-width="150" :max-width="1500" :height="400" elevation="0">
+                                    <v-card  :min-width="150" :max-width="1500" :height="400" elevation="0">
                                         <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index"
                                             class="image-container">
                                             <v-img v-if="index === selectImageIndex"
@@ -92,7 +92,7 @@
                         <v-spacer></v-spacer>
 
                         <p float="end" class="text-h5" color="red">
-                            R$ {{ selectProduct.price }}
+                            R$ {{ selectProduct.price }} 
                         </p>
 
                         <p float="end" class="text-h6" color="red" v-if="selectProduct.stock_quantity >= 1">
@@ -165,25 +165,11 @@
                             </v-responsive>
 
                         </div>
-                        <!-- <div justify="start">
-                       <v-responsive
-                        class="mx-auto"
-                        width="100"
-                        max-width="100"
-                     >
-                        
-                        <v-text-field
-                          v-model="postal_code"
-                          label="postal code"
-                          :placeholder="1"
-                        >
 
-                      </v-text-field>
-                      <v-btn variant="plain" color="success" size="x-small">
-                          Calcular Frete</v-btn>
-                      </v-responsive>
+                        <div justify="start">
+                            <ZipCodeField :selectProduct="selectProduct" :quantity="this.quantity" @updateShippment="updateShippment"/>
+                        </div>
                       
-                    </div>-->
                         <div>
                             <v-btn-group>
                                 <v-btn class="mx-auto" v-for="icon in social_icons" :key="icon" icon variant="text">
@@ -275,8 +261,13 @@
 </template>
 
 <script>
+import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
+
 export default {
     props: ['selectProduct', 'buyDialog', 'customer'],
+    components: {
+        ZipCodeField
+    },
     data: () => ({
         cart: [],
         colors: false,
@@ -294,7 +285,8 @@ export default {
             'fa-brands fa-whatsapp',
             'fa-brands fa-x-twitter',
             'fa-brands fa-telegram',
-        ]
+        ],
+        shippment: [],
     }),
     watch: {
         buyDialog(val) {
@@ -361,6 +353,18 @@ export default {
                 alert('apenas numeros inteiros são aceitos');
             }
 
+        },
+        updateShippment(selectedShippment){
+            //alert(selectedShippment);
+            console.log('Dados recebidos no componente pai:', selectedShippment);
+            this.shippment.push(selectedShippment);
+            return this.finalValue(selectedShippment);
+            //return this.selectedProduct.price = selectedShippment;
+        },
+        finalValue(selectedShippment){
+            const sumValue = parseFloat(this.selectProduct.price) + parseFloat(selectedShippment.price);
+           return this.selectProduct.price = sumValue.toFixed(2);
+            
         },
         checkout(selectProduct) {
             console.log(selectProduct);
