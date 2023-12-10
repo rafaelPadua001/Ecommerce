@@ -310,6 +310,7 @@ export default {
     snackbar: false,
     liked: 0,
     likes: false,
+     
   }),
   watch: {
     loading(val) {
