@@ -9,6 +9,7 @@ import Register from '../Pages/Frontend/Auth/Register.vue'
 import Dashboard from '../Pages/Frontend/Auth/Dashboard.vue'
 import Profile from '../Pages/Frontend/Profile/Profile.vue'
 import SubcategoriesAll from '../Pages/Frontend/Subcategories/Subcategories.vue'
+import Buy from '../Pages/Frontend/Checkout/Buy.vue'
 import Cart from '../Pages/Frontend/Cart/Cart.vue'
 import Checkout from '../Pages/Frontend/Checkout/Checkout.vue'
 import Orders from '../Pages/Frontend/Orders/Orders.vue'
@@ -76,9 +77,20 @@ const routes = [{
         component: SubcategoriesAll
     },
     {
+        path: '/buy/product',
+        name: 'buy',
+        component: Buy
+
+    },
+    {
         path: '/carts',
         name: 'carts',
         component: Cart
+    },
+    {
+        path: '/item/buy',
+        name: 'item.buy',
+        component: Buy
     },
     {
         path: '/carts/buy/:id',

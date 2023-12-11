@@ -319,9 +319,11 @@ export default {
            return this.selectImageIndex = index;
         },
         addItem() {
-            if (Object.keys(this.customer).length == 0) {
+            
+           /* if (Object.keys(this.customer).length == 0) {
                 return this.snackbar = true;
             }
+           */
             const data = {
                 'product': this.selectProduct,
                 'quantity': this.quantity,
@@ -363,12 +365,13 @@ export default {
         },
         finalValue(selectedShippment){
             const sumValue = parseFloat(this.selectProduct.price) + parseFloat(selectedShippment.price);
-           return this.selectProduct.price = sumValue.toFixed(2);
+            return this.selectProduct.price = sumValue.toFixed(2);
             
         },
         checkout(selectProduct) {
-            console.log(selectProduct);
-            alert('Redirect to checkout... wait');
+          
+           this.addItem();
+            this.$router.push(`/item/buy`);
         }
     }
 }
