@@ -34,13 +34,25 @@ class CartItemController extends Controller
             return response()->json($e);
         }
     }
+    public function buy(){
+        $customer = Auth::guard('customer')->user();
+        $item = CartItem::where('cart_items.user_id', $customer->id)
+        ->join('products', 'products.id', '=', 'cart_items.product_id')
+        ->select('cart_items.*', 'products.images')
+        ->latest()
+        ->first();
+        return response()->json($item);
+        
+    }
     public function checkout($id){
+        
         try{
             $cartItem = CartItem::where('cart_items.id', $id)
                 ->join('products', 'cart_items.product_id', '=', 'products.id')
-                ->join('addresses', 'cart_items.user_id', '=',  'addresses.user_id')
+                //->join('addresses', 'cart_items.user_id', '=',  'addresses.user_id')
                 ->select('cart_items.*', 'products.*', 'addresses.*')
                 ->first();
+            
             return response()->json($cartItem);
         }
         catch(Exception $e){

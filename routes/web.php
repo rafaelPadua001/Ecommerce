@@ -107,10 +107,11 @@ Route::get('/categories', [CategoriesController::class, 'index'])->name('categor
 Route::get('/categories/show', [CategoriesController::class, 'show'])->name('categories.show');
 
 //Cart Routes
-Route::get('/carts',[CartController::class, 'getCarts'])->name('carts.get');
+Route::get('/carts',[CartController::class, 'index'])->name('carts.get');
 Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
 
 Route::get('/cartItem/checkout/{id}', [CartItemController::class, 'checkout'])->name('cartsItem.checkout');
+Route::get('/cartItem/buy', [CartItemController::class, 'buy'])->name('cartsItem.buy');
 Route::delete('/cartItem/delete/{id}', [CartItemController::class, 'destroy'])->name('cartsItem.destroy');
 
 //Payment Routes
