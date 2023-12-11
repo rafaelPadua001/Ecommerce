@@ -38,7 +38,15 @@ class CartItemController extends Controller
         $customer = Auth::guard('customer')->user();
         $item = CartItem::where('cart_items.user_id', $customer->id)
         ->join('products', 'products.id', '=', 'cart_items.product_id')
-        ->select('cart_items.*', 'products.images')
+        ->select(
+            'cart_items.*',
+            'products.name',
+            'products.images',
+            'products.height',
+            'products.width',
+            'products.length',
+            'products.weight'
+        )
         ->latest()
         ->first();
         return response()->json($item);
@@ -50,7 +58,7 @@ class CartItemController extends Controller
             $cartItem = CartItem::where('cart_items.id', $id)
                 ->join('products', 'cart_items.product_id', '=', 'products.id')
                 //->join('addresses', 'cart_items.user_id', '=',  'addresses.user_id')
-                ->select('cart_items.*', 'products.*', 'addresses.*')
+                ->select('cart_items.*', 'products.*', /*'addresses.*'*/)
                 ->first();
             
             return response()->json($cartItem);
