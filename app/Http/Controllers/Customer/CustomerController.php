@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
+use App\Models\ProfileImage;
 use App\Http\Controllers\Controller;
 use Exception;
 
@@ -21,11 +22,21 @@ class CustomerController extends Controller
     public function index(){
         try{
             $customer = Auth::guard('customer')->user();
-            if(!$customer){
+            $customerProfile = ProfileImage::where('customer_id', $customer->id)
+                ->join('customers', 'customers.id', '=', 'profile_images.customer_id')
+                ->select(
+                    'customers.first_name',
+                    'customers.last_name',
+                    'customers.email',
+                    'profile_images.name',
+                    'profile_images.extension')
+                ->first();
+           
+            if(!$customerProfile){
                 return response()->json($customer);
             }
            
-            return response()->json($customer);
+            return response()->json($customerProfile);
         }catch(Exception $e){
             return response()->json($e);
         }

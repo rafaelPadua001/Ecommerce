@@ -169,7 +169,7 @@
                         </div>
 
                         <div justify="start">
-                            <ZipCodeField :selectProduct="selectProduct" :quantity="this.quantity"
+                            <ZipCodeField :selectProduct="selectProduct" :quantity="this.quantity" :customer="this.customer"
                                 @updateShippment="updateShippment" />
                         </div>
 
@@ -237,8 +237,7 @@
                     </v-col>
                 </v-row>
                 <v-row>
-
-                    <v-col col="12" sm="12">
+                    <v-col col="8" md="6" sm="3">
                         <div>
                             <v-card>
                                 <v-card-title>Comments</v-card-title>
@@ -246,6 +245,9 @@
                                 <v-spacer></v-spacer>
                                 <v-divider></v-divider>
                                 <v-card-title>
+                                    <div>
+                                        <CommentsField :customer="this.customer"/>
+                                    </div>
                                     List Coments Here...
                                 </v-card-title>
                             </v-card>
@@ -254,10 +256,21 @@
                     </v-col>
                 </v-row>
                 <v-spacer></v-spacer>
-
-
             </v-card-text>
+            <div class="text-center">
+                <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
+                    <div class="text-subtitle-1 pb-2">Você deve estar logado para adicionar esse item ao carrinho
+                    </div>
+                    <template v-slot:actions>
+                        <v-btn-group>
+                            <v-btn size="small" variant="plain" color="white">Close</v-btn>
+                            <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
+                        </v-btn-group>
+                    </template>
+
+                </v-snackbar>
+            </div>
 
         </v-card>
     </v-dialog>
@@ -265,11 +278,13 @@
 
 <script>
 import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
+import CommentsField from '../Layout/TextFields/Comments.vue';
 
 export default {
     props: ['selectProduct', 'buyDialog', 'customer'],
     components: {
-        ZipCodeField
+        ZipCodeField,
+        CommentsField,
     },
     data: () => ({
         cart: [],
@@ -306,7 +321,7 @@ export default {
         add_cart(val) {
             if (!val) return
             setTimeout(() => {
-                this.add_cart = false
+                this.add_cart = false;
                 this.closeBuy;
             }, 2000);
         },
@@ -323,25 +338,32 @@ export default {
             return this.selectImageIndex = index;
         },
         addItem() {
+            //    if (Object.keys(this.customer).length === 0) {
+            //         this.snackbar = true;
+            //         console.log(this.customer);
+            //         return false;
+            //     }
 
-            /* if (Object.keys(this.customer).length == 0) {
-                 return this.snackbar = true;
-             }
-            */
             const data = {
                 'product': this.selectProduct,
                 'quantity': this.quantity,
                 'color': this.colors,
-
             }
             axios.post(`/carts/add`, data)
                 .then((response) => {
                     this.add_cart = false;
-                    return this.cart.push(response.data);
+                    this.cart.push(response.data)
+                    return true;
                 })
                 .catch((response) => {
+                    this.snackbar = true;
+                    console.log('response:' . response);
                     alert('Error :' + response);
+                    return false;
+
                 });
+
+                return true;
         },
         getColors(color) {
             this.colors = color;
@@ -362,7 +384,6 @@ export default {
 
         },
         updateShippment(selectedShippment, zip_code) {
-
             this.shippment.push(selectedShippment);
             this.zip_code = zip_code;
             return this.finalValue(selectedShippment);
@@ -371,15 +392,37 @@ export default {
         finalValue(selectedShippment) {
             const sumValue = parseFloat(this.selectProduct.price) + parseFloat(selectedShippment.price);
             return sumValue
-            //return this.selectProduct.price = sumValue.toFixed(2);
-
         },
-        checkout() {
-            this.addItem();
-            this.$router.push({
+        async checkout() {
+            try{
+                const resultAdd = await this.addItem();
+                
+                if(!resultAdd){
+                    this.snackbar = true;
+                    return false;
+                }
+                else{
+                    const checkoutRedirect = this.$router.push({
+                    name: 'item.buy',
+                    query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
+                });
+
+                await checkoutRedirect;
+                }
+                }
+            catch(error){
+                this.snackbar = true;
+                return;
+            }
+            
+        },
+        redirectToCheckout() {
+            const checkoutRedirect = this.$router.push({
                 name: 'item.buy',
-                query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
+                query: {shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
             });
+
+
         }
     }
 }

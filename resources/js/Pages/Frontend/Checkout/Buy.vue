@@ -41,8 +41,7 @@
 
                                                     <p>
                                                         <strong>Total: </strong>
-
-                                                        {{ parseFloat(item.price) + parseFloat(product.price) }}
+                                                       {{ parseFloat(item.price) + parseFloat(product.price) }}
                                                     </p>
                                                     <p>
                                                         <strong>Shippment: </strong> {{ item.name }}
@@ -53,18 +52,12 @@
                                                     </p>
                                                 </div>
                                                 </p>
-
                                             </div>
-
-                                            <div>
-
-                                            </div>
-
-                                        </v-col>
-                                    </v-row>
-
-                                </v-card-text>
-
+                                        <div>
+                                    </div>
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
                                 <v-card-actions>
                                     <v-btn-group>
                                         <v-btn @click="confirmNext()">Confirmar</v-btn>
@@ -76,6 +69,21 @@
                 </v-timeline>
             </v-col>
         </v-row>
+
+        <div class="text-center">
+          <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
+
+            <div class="text-subtitle-1 pb-2">Você deve estar logado para adicionar esse item ao carrinho
+            </div>
+            <template v-slot:actions>
+              <v-btn-group>
+                <v-btn size="small" variant="plain" color="white" to="/">back</v-btn>
+                <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
+              </v-btn-group>
+            </template>
+
+          </v-snackbar>
+        </div>
     </div>
 </template>
 
@@ -83,7 +91,7 @@
 import axios from 'axios';
 import ZipCode from '../Layout/TextFields/ZipCode.vue';
 export default {
-    props: ['shippment', 'zip_code'],
+    props: ['shippment', 'zip_code', 'customer'],
     components: {
         ZipCode,
     },
@@ -93,6 +101,7 @@ export default {
         dataConfirm: true,
         finish: true,
         productImages: false,
+        snackbar: false,
         //shippment: [],
     }),
     methods: {
@@ -103,7 +112,8 @@ export default {
                     return this.product = response.data;
                 })
                 .catch((response) => {
-                    return alert('Error:' + response);
+                    this.snackbar = true;
+                    return false;
                 });
         },
         confirmNext() {
@@ -122,7 +132,7 @@ export default {
     },
     created() {
         this.getProducts();
-        console.log(this.zip_code);
+      
 
     }
 
