@@ -90,7 +90,7 @@ export default {
         },
         selectShippment(){
             console.log('Dados a serem enviados para o pai:', this.selectedShippment);
-            return this.$emit('updateShippment', this.selectedShippment);
+            return this.$emit('updateShippment', this.selectedShippment, this.zip_code);
         }
     },
     

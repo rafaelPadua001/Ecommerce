@@ -56,7 +56,7 @@
 
                                 </v-col>
                                 <v-col>
-                                    <v-card  :min-width="150" :max-width="1500" :height="400" elevation="0">
+                                    <v-card :min-width="150" :max-width="1500" :height="400" elevation="0">
                                         <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index"
                                             class="image-container">
                                             <v-img v-if="index === selectImageIndex"
@@ -92,9 +92,11 @@
                         <v-spacer></v-spacer>
 
                         <p float="end" class="text-h5" color="red">
-                            R$ {{ selectProduct.price }} 
+                            Price: R$ {{ selectProduct.price }}
                         </p>
-
+                        <p v-for="item in shippment" :key="item.id">
+                            Delivery: R$ {{ item.price }}
+                        </p>
                         <p float="end" class="text-h6" color="red" v-if="selectProduct.stock_quantity >= 1">
                             {{ selectProduct.unity }}: {{ selectProduct.stock_quantity }}
                         </p>
@@ -167,9 +169,10 @@
                         </div>
 
                         <div justify="start">
-                            <ZipCodeField :selectProduct="selectProduct" :quantity="this.quantity" @updateShippment="updateShippment"/>
+                            <ZipCodeField :selectProduct="selectProduct" :quantity="this.quantity"
+                                @updateShippment="updateShippment" />
                         </div>
-                      
+
                         <div>
                             <v-btn-group>
                                 <v-btn class="mx-auto" v-for="icon in social_icons" :key="icon" icon variant="text">
@@ -274,7 +277,7 @@ export default {
         quantity: 1,
         selectImageIndex: 0,
         loading: false,
-        checkoutProduct: false, 
+        checkoutProduct: false,
         add_cart: false,
         snackbar: false,
         liked: 0,
@@ -287,6 +290,7 @@ export default {
             'fa-brands fa-telegram',
         ],
         shippment: [],
+        zip_code: false,
     }),
     watch: {
         buyDialog(val) {
@@ -306,8 +310,8 @@ export default {
                 this.closeBuy;
             }, 2000);
         },
-        checkout_product(val){
-            if(!val) return
+        checkout_product(val) {
+            if (!val) return
             setTimeout(() => {
                 this.checkoutProduct = false;
                 this.closeBuy();
@@ -316,18 +320,19 @@ export default {
     },
     methods: {
         alterImage(index) {
-           return this.selectImageIndex = index;
+            return this.selectImageIndex = index;
         },
         addItem() {
-            
-           /* if (Object.keys(this.customer).length == 0) {
-                return this.snackbar = true;
-            }
-           */
+
+            /* if (Object.keys(this.customer).length == 0) {
+                 return this.snackbar = true;
+             }
+            */
             const data = {
                 'product': this.selectProduct,
                 'quantity': this.quantity,
-                'color': this.colors
+                'color': this.colors,
+
             }
             axios.post(`/carts/add`, data)
                 .then((response) => {
@@ -356,22 +361,25 @@ export default {
             }
 
         },
-        updateShippment(selectedShippment){
-            //alert(selectedShippment);
-            console.log('Dados recebidos no componente pai:', selectedShippment);
+        updateShippment(selectedShippment, zip_code) {
+
             this.shippment.push(selectedShippment);
+            this.zip_code = zip_code;
             return this.finalValue(selectedShippment);
-            //return this.selectedProduct.price = selectedShippment;
+
         },
-        finalValue(selectedShippment){
+        finalValue(selectedShippment) {
             const sumValue = parseFloat(this.selectProduct.price) + parseFloat(selectedShippment.price);
-            return this.selectProduct.price = sumValue.toFixed(2);
-            
+            return sumValue
+            //return this.selectProduct.price = sumValue.toFixed(2);
+
         },
-        checkout(selectProduct) {
-          
-           this.addItem();
-            this.$router.push(`/item/buy`);
+        checkout() {
+            this.addItem();
+            this.$router.push({
+                name: 'item.buy',
+                query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
+            });
         }
     }
 }
