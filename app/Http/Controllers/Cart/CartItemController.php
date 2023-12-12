@@ -35,20 +35,33 @@ class CartItemController extends Controller
         }
     }
     public function buy(){
-        $customer = Auth::guard('customer')->user();
-        $item = CartItem::where('cart_items.user_id', $customer->id)
-        ->join('products', 'products.id', '=', 'cart_items.product_id')
-        ->select(
-            'cart_items.*',
-            'products.name',
-            'products.images',
-            'products.height',
-            'products.width',
-            'products.length',
-            'products.weight'
-        )
-        ->latest()
-        ->first();
+        try{
+            $customer = Auth::guard('customer')->user();
+            if(!$customer){
+
+                throw new Exception('Customer not logged...');
+                return false;
+            }
+            $item = CartItem::where('cart_items.user_id', $customer->id)
+            ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->select(
+                'cart_items.*',
+                'products.name',
+                'products.images',
+                'products.height',
+                'products.width',
+                'products.length',
+                'products.weight'
+            )
+            ->latest()
+            ->first();
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    
+       
+       
         return response()->json($item);
         
     }

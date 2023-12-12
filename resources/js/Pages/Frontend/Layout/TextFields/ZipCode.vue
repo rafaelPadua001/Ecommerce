@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col class="d-flex child-flex" cols="12" md="12" sm="3">
-            <v-text-field v-model="zip_code" label="zip code:" >
+            <v-text-field v-model="zip_code" label="zip code:" aria-required>
 
             </v-text-field>
         </v-col>
