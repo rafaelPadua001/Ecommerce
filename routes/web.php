@@ -23,6 +23,7 @@ use App\Http\Controllers\ProfileImage\ProfileImageController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Search\SearchToAddressesController;
 use App\Http\Controllers\Coupons\CouponsController;
+use App\Http\Controllers\Delivery\DeliveryController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -113,6 +114,10 @@ Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
 Route::get('/cartItem/checkout/{id}', [CartItemController::class, 'checkout'])->name('cartsItem.checkout');
 Route::get('/cartItem/buy', [CartItemController::class, 'buy'])->name('cartsItem.buy');
 Route::delete('/cartItem/delete/{id}', [CartItemController::class, 'destroy'])->name('cartsItem.destroy');
+
+//Delivery Routes
+Route::get('/delivery', [DeliveryController::class, 'index'])->name('delivery')->middleware('auth');
+Route::post('/delivery/insert', [DeliveryController::class, 'store'])->name('delivery.store')->middleware('auth');
 
 //Payment Routes
 Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
