@@ -46,7 +46,7 @@ class MelhorEnvioController extends Controller
 
             $quotations = $calculator->calculate();
 
-            // dd($quotations);
+          
             return response()->json($quotations);
         } catch (Exception $e) {
             return response()->json($e);
@@ -64,8 +64,6 @@ class MelhorEnvioController extends Controller
         $client = new Client();
         $customer = Auth::guard('customer')->user();
         
-       // $address = Address::where('')
-       
         try {
             $response = $client->post('https://sandbox.melhorenvio.com.br/api/v2/me/cart', [
                 'json' => [
@@ -127,7 +125,7 @@ class MelhorEnvioController extends Controller
                 ],
             ]);
            
-            //echo $response->getBody();
+            
             $order = json_decode($response->getBody());
             
                 
@@ -144,8 +142,6 @@ class MelhorEnvioController extends Controller
            
             $client = $this->getClient();
             $customer = Auth::guard('customer')->user();
-              //  dd($request->get('order')['order_id']);
-              //dd($request->order['order_id']);
               $orderIds = [$request->get('order')['order_id']];
                 $response = $client->request('POST', 'https://sandbox.melhorenvio.com.br/api/v2/me/shipment/checkout', [
                     'json' => ['orders' => [$request->order['order_id']]],
@@ -182,9 +178,7 @@ class MelhorEnvioController extends Controller
         try{
             $client = $this->getClient();
             $customer = Auth::guard('customer')->user();
-              //  dd($request->get('order')['order_id']);
-              //dd($request->order['order_id']);
-              $orderIds = [$request->get('order')['order_id']];
+            $orderIds = [$request->get('order')['order_id']];
                 $response = $client->request('POST', 'https://sandbox.melhorenvio.com.br/api/v2/me/shipment/print', [
                     'json' => ['orders' => [$request->order['order_id']]],
                     'headers' => [
@@ -216,8 +210,7 @@ class MelhorEnvioController extends Controller
         }
     }
     public function tracking(Request $request){
-       
-        try{
+       try{
             $client = $this->getClient();
            
             $orderId = [$request->get('order')['order_id']];
@@ -233,9 +226,6 @@ class MelhorEnvioController extends Controller
              ]);
            
             $body = $response->getBody()->getContents();
-     
-         
-
             return response()->json(json_decode($body));
         }
         catch(Exception $e){

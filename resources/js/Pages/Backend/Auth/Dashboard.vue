@@ -43,6 +43,9 @@
         <v-list-item prepend-icon="fas fa-regular fa-tag fa-2xs fa-bounce" title="Coupons" value="Coupons" to="/coupons"></v-list-item>
         <v-divider></v-divider>
 
+        <v-list-item prepend-icon="fas fa-regular fa-truck fa-2xs fa-bounce" title="Delivery" value="Delivery" to="delivery"></v-list-item>
+        <v-divider></v-divider>
+        
         <v-list-item prepend-icon="fas fa-store fa-2xs fa-bounce" title="Store" value="Store"></v-list-item>
         <v-divider></v-divider>
 
