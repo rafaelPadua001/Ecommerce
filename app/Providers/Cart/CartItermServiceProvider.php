@@ -2,13 +2,14 @@
 
 namespace App\Providers\Cart;
 
+use App\Models\CartItem;
 use App\Models\Cart;
-use App\Services\CartService\CartService;
 use App\Services\CartService\CartItemService;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
 
-class CartServiceProvider extends ServiceProvider
+
+class CartItermServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -16,8 +17,8 @@ class CartServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
-        $this->app->singleton(CartService::class, function(Application $app){
-           return new CartService($app->make(Cart::class), $app->make(CartItemService::class));
+        $this->app->singleton(CartItemService::class, function(Application $app){
+            return new CartItemService($app->make(CartItem::class), $app->make(Cart::class));
         });
     }
 
@@ -28,5 +29,4 @@ class CartServiceProvider extends ServiceProvider
     {
         //
     }
-
 }

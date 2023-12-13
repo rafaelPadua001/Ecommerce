@@ -3,8 +3,6 @@
         <Dashboard />
     </div>
 
-
-
     <div v-if="carts.length == 0">
         <h5>Você ainda não possui itens em seu carrinho</h5>
     </div>
@@ -68,7 +66,7 @@
                     </v-btn>
 
 
-                    <v-btn icon size="x-small" @click="deleteItem(item.raw)">
+                    <v-btn icon size="x-small" @click="deleteItem(item)">
                         <v-icon @click="deleteItem(item.raw)" icon="fa-solid fa-trash fa-2xs">
 
                         </v-icon>
@@ -83,6 +81,21 @@
                 </v-btn>
             </template>
         </v-data-table>
+
+        <div class="text-center">
+          <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
+
+            <div class="text-subtitle-1 pb-2">{{this.message}}
+            </div>
+            <template v-slot:actions>
+              <v-btn-group>
+                <v-btn size="small" variant="plain" color="white" @click="snackbar = false">Close</v-btn>
+                <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
+              </v-btn-group>
+            </template>
+
+          </v-snackbar>
+        </div>
     </div>
 </template>
 
@@ -97,6 +110,8 @@ export default {
         dialog: false,
         dialogDelete: false,
         cartIndex: -1,
+        snackbar: false,
+        message: '',
         headers: [
 
             { title: 'image', value: 'images', key: 'images' },
@@ -142,21 +157,24 @@ export default {
                     return alert('Error: ' + response);
                 });
         },
-
-
         deleteItem(item) {
             this.editedIndex = this.carts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialogDelete = true
         },
         deleteItemConfirm() {
-            const itemId = this.editedIndex;
+            console.log(this.editedItem);
+            const itemId = this.editedItem.id;
 
-            axios.delete(`/api/categories/delete/${itemId}`)
+            axios.delete(`/cartItem/delete/${itemId}`)
                 .then((response) => {
-                    this.carts.splice(this.editedIndex, 1);
+                    this.snackbar = true;
+                    this.message = 'item removed';
+                    return this.carts.splice(this.editedIndex, 1);
                 })
                 .catch((response) => {
+                    this.snackbar = true;
+                    this.message = 'Erro on remove item';
                     alert('Error: ' + response);
                 });
 

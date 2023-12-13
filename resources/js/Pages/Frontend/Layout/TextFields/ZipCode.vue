@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col class="d-flex child-flex" cols="12" md="12" sm="3">
-            <v-text-field v-model="zip_code" label="zip code:" aria-required>
+            <v-text-field v-model="zip_code" v-maska:[options] label="zip code" aria-required>
 
             </v-text-field>
         </v-col>
@@ -11,24 +11,34 @@
 
         </v-col>
     </v-row>
-    <v-row no-gutters>
-        <v-col class="d-flex flex-column" cols="12">
-            <v-list>
+    <v-row>
+        <v-col class="d-flex justify-center mb-2 flex-column" cols="12" md="6" sm="4">
+            <v-card class="mx-auto">
+                <v-card-text>
+                    <v-list>
                 <v-list-item v-for="shipping in shipping_companys" :key="shipping.id">
                     <div v-if="!shipping.error" v-for="delivery in shipping" :key="delivery.id">
                         <div v-if="!delivery.error">
-                            <v-list-item-avatar>
-                                <v-img :max-width="120" :max-height="15" :src="delivery.company.picture" :lazy-src="delivery.company.picture"
-                                    :placeholder="delivery.company.name">
-                                </v-img>
-                                
-                            </v-list-item-avatar>
-
-                            <p class="text-body">
-                                <v-radio-group v-model="selectedShippment">
-                                    <v-radio :value="delivery" @change="selectShippment"></v-radio>
-                                </v-radio-group>
-                            </p>
+                            <v-row no-gutters>
+                                <v-col cols="auto">
+                                    
+                                    <v-radio-group v-model="selectedShippment">
+                                                <v-radio :value="delivery" @change="selectShippment">
+                                                        
+                                                    </v-radio>
+                                    </v-radio-group>
+                          
+                                </v-col>
+                                <v-col>
+                                    <v-list-item-avatar>
+                                            <v-img :max-width="200" :max-height="25" :src="delivery.company.picture" :lazy-src="delivery.company.picture"
+                                                :placeholder="delivery.company.name">
+                                            </v-img>
+                                    </v-list-item-avatar>
+                                </v-col>
+                            </v-row>
+                          
+                               
 
                             <p class="text-body">
                                 {{ delivery.name }}
@@ -53,14 +63,27 @@
                     <template v-slot:prepend>
 
                     </template>
-
+                   
 
                 </v-list-item>
+                
             </v-list>
+                </v-card-text>
+            </v-card>
+            
         </v-col>
     </v-row>
 </template>
+<script setup>
+import { ref } from "vue";
+import { vMaska } from "maska";
 
+
+const options = { mask: '#####-####' };
+const myValue = ref('');
+
+
+</script>
 <script>
 export default {
     props: ['selectProduct', 'quantity'],
