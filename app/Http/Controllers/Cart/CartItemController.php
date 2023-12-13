@@ -3,67 +3,34 @@
 namespace App\Http\Controllers\Cart;
 
 use App\Http\Controllers\Controller;
+use App\Services\CartService\CartItemService;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Customer;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartItemController extends Controller
 {
-   
-    public function addCartItem($id, $product)
-    {
-        $customer = Customer::findOrFail($id);
-        $cart = Cart::where('user_id', '=', $customer->id)->first();
-        
-        try {
-            $cartItem = CartItem::create([
-                'cart_id' => $cart->id,
-                'product_id' => $product->product['id'],
-                'user_id' => $id,
-                'quantity' => $product->quantity,
-                'price' => $product->product['price'],
-                'color' => $product->color,
-            ]);
-             
-        
-            return response()->json($cartItem);
-        } catch (Exception $e) {
-            return response()->json($e);
-        }
+    protected $cartItemService;
+    public function __construct(CartItemService $cartItemService){
+        $this->cartItemService = $cartItemService;
     }
     public function buy(){
         try{
             $customer = Auth::guard('customer')->user();
+            $userId = $customer->id;
             if(!$customer){
-
                 throw new Exception('Customer not logged...');
                 return false;
             }
-            $item = CartItem::where('cart_items.user_id', $customer->id)
-            ->join('products', 'products.id', '=', 'cart_items.product_id')
-            ->select(
-                'cart_items.*',
-                'products.name',
-                'products.images',
-                'products.height',
-                'products.width',
-                'products.length',
-                'products.weight'
-            )
-            ->latest()
-            ->first();
+            $cartItem = $this->cartItemService->buy($userId);
+
+            return response()->json($cartItem);
         }
         catch(Exception $e){
             return response()->json($e);
         }
-    
-       
-       
-        return response()->json($item);
-        
     }
     public function checkout($id){
         
@@ -80,16 +47,19 @@ class CartItemController extends Controller
             return response()->json($e);
         };
     }
-    public function destroy($id){
-    
-        try{
-            $cartItem = CartItem::findOrFail($id)->delete();
-           
-            return true;
-          
-        }
-        catch(Exception $e){
-            return response()->json($e);
-        }
+    public function destroy($id)
+    {
+        $cart_item = $this->cartItemService->destroy($id);
+
+        return response()->json($cart_item);
+       // try{
+       //     $cartItem = CartItem::findOrFail($id)->delete();
+       //    
+       //     return true;
+       //   
+       // }
+       // catch(Exception $e){
+       //     return response()->json($e);
+       // }
     }
 }
