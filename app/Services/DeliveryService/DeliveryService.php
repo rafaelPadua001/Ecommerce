@@ -2,6 +2,7 @@
 namespace App\Services\DeliveryService;
 
 use App\Models\Delivery;
+use App\Http\Controllers\MelhorEnvio\MelhorEnvioController;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,6 +61,12 @@ class DeliveryService {
         ]);
         return $delivery_update;
     }
+    public function calculate(Request $request, $shippment_company){
+        if($shippment_company){
+            $send_calc = $this->getDeliveryController($request);
+            return $send_calc;
+        }
+    }
     public function destroy($id){
         try{
             $this->delivery->findOrFail($id)->delete();
@@ -68,5 +75,9 @@ class DeliveryService {
         catch(Exception $e){
             return response()->json($e->getMessage());
         }
+    }
+    public function getDeliveryController($request){
+        $company = new MelhorEnvioController();
+        return $company->calculate($request); 
     }
 }

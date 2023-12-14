@@ -9,9 +9,9 @@ class ShippmentService{
     public function __construct(Shippment $shippment){
         $this->shippment = $shippment;
     }
-    public function store($product){
-       
-        $store_shippment = $this->shippment->create([$product]);
+    public function store($request){
+       dd($request);
+        $store_shippment = $this->shippment->create([$request]);
 
         return $store_shippment;
     }

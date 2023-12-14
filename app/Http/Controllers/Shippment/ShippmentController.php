@@ -16,13 +16,15 @@ class ShippmentController extends Controller
         $this->shippmentService = $shippmentService;
     }
     public static function create(Request $request){
-        dd($request->delivery);
+       
         $customer = Auth::guard('customer')->user();
         if(!$customer){
             throw new Exception('Not logged user');
         }
        
-        //$this->shippmentsService->store();
+        $shippment_store = $this->shippmentService->store($request->delivery);
+
+        return response()->json($shippment_store);
 
     }
 }
