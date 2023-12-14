@@ -288,6 +288,7 @@ export default {
     },
     data: () => ({
         cart: [],
+        deliveries: [],
         colors: false,
         quantity: 1,
         selectImageIndex: 0,
@@ -348,6 +349,7 @@ export default {
                 'product': this.selectProduct,
                 'quantity': this.quantity,
                 'color': this.colors,
+                'delivery': this.shippment,
             }
             axios.post(`/carts/add`, data)
                 .then((response) => {
@@ -403,7 +405,7 @@ export default {
                 }
                 else{
                     const checkoutRedirect = this.$router.push({
-                    name: 'item.buy',
+                    name: 'item.buy',   
                     query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
                 });
 
@@ -421,8 +423,6 @@ export default {
                 name: 'item.buy',
                 query: {shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
             });
-
-
         }
     }
 }
