@@ -2,6 +2,7 @@
 namespace App\Services\DeliveryService;
 
 use App\Models\Delivery;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -46,11 +47,26 @@ class DeliveryService {
         }
         
         return $delivery_store;
-     //   dd($request);
+    
     }
     public function uploadImage($imagePath, $imageName){
         
         $path = Storage::putFileAs('public/delivery', $imagePath, $imageName);
         return $path;
+    }
+    public function alterStatus($data){
+        $delivery_update = $this->delivery->findOrFail($data['id'])->update([
+            'activated' => $data['status']
+        ]);
+        return $delivery_update;
+    }
+    public function destroy($id){
+        try{
+            $this->delivery->findOrFail($id)->delete();
+            return true;
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }
     }
 }

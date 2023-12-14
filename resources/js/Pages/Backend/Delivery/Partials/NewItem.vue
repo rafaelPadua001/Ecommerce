@@ -1,7 +1,4 @@
 <template>
-    <v-container>
-        {{ deliveries }}
-    </v-container>
     <v-row>
         <v-col class="d-flex justify-center flex-column">
             <v-sheet>

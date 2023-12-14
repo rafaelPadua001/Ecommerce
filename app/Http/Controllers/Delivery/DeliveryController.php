@@ -23,4 +23,18 @@ class DeliveryController extends Controller
         
         return response()->json($delivery_store);
     }
+    public function status(Request $request, $id){
+        
+        $data = [
+            'status' => $request->status,
+            'id' => $id
+        ];
+        $delivery_status = $this->deliveryService->alterStatus($data);
+
+        return $delivery_status;
+    }
+    public function delete($id){
+        $delivery_delete = $this->deliveryService->destroy($id);
+        return response()->json($delivery_delete);
+    }
 }
