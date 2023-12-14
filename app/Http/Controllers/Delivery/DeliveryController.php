@@ -4,13 +4,17 @@ namespace App\Http\Controllers\Delivery;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Delivery;
 use App\Services\DeliveryService\DeliveryService;
+use Exception;
 use Illuminate\Http\Request;
 
 class DeliveryController extends Controller
 {
     protected $deliveryService;
-    public function __construct(DeliveryService $deliveryService){
+    protected $delivery;
+    public function __construct(DeliveryService $deliveryService, Delivery $delivery){
+        $this->delivery = $delivery;
         $this->deliveryService = $deliveryService;
     }
     public function index(){
@@ -32,6 +36,16 @@ class DeliveryController extends Controller
         $delivery_status = $this->deliveryService->alterStatus($data);
 
         return $delivery_status;
+    }
+    public function calculateDelivery(Request $request){
+        try{
+            $shippment_company = $this->delivery->where('name', '=', $request->shippment)->first();
+            return $this->deliveryService->calculate($request, $shippment_company,);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+      
     }
     public function delete($id){
         $delivery_delete = $this->deliveryService->destroy($id);

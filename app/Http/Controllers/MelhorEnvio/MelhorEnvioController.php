@@ -18,7 +18,7 @@ use App\Models\Order;
 class MelhorEnvioController extends Controller
 {
     //
-    public function calculateDelivery(Request $request)
+    public function calculate($request)
     {
         try {
 

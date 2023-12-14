@@ -1,16 +1,5 @@
 <template>
-    <v-row>
-        <v-col class="d-flex child-flex" cols="12" md="8" sm="3">
-            <v-text-field v-model="zip_code" v-maska:[options] label="zip code" aria-required>
-
-            </v-text-field>
-        </v-col>
-        <v-col cols="2">
-
-            <v-btn variant="text" size="x-small" @click="calculateDelivery()">Calcular frete</v-btn>
-
-        </v-col>
-    </v-row>
+   
     <v-row>
         <v-col class="d-flex justify-center mb-2 flex-column" cols="12" md="8" sm="4">
             <v-card class="mx-auto" width="350px">
@@ -24,6 +13,7 @@
                             :value="delivery.id"
                             color="primary"
                             grow
+                            
                         >
                             <v-tab
                                v-if="delivery.activated == 1"
@@ -39,19 +29,33 @@
 
                                 </v-img>
                                 {{ delivery.name }}
+                                
                             </v-tab>
                         </v-tabs>
                     </template>  
                 </v-toolbar>
                 
                 <v-card-text>
+                    
                     <v-window v-model="tabs" v-for="delivery in deliveries"
                             :key="delivery.id"
                             :value="delivery.id"
-                    >
+                    >   
                         <v-window-item
                             v-if="delivery.activated == 1"
                         >
+                        <v-row>
+                        <v-col class="d-flex child-flex" cols="12" md="8" sm="3">
+                            <v-text-field v-model="zip_code" v-maska:[options] label="zip code" aria-required>
+
+                            </v-text-field>
+                        </v-col>
+                        <v-col cols="2">
+
+                            <v-btn variant="text" size="x-small" @click="calculateDelivery(delivery)">Calcular frete</v-btn>
+
+                        </v-col>
+                    </v-row>
                         <v-list>
                 <v-list-item v-for="shipping in shipping_companys" :key="shipping.id">
                     <div v-if="!shipping.error" v-for="delivery in shipping" :key="delivery.id">
@@ -132,6 +136,7 @@ export default {
         tabs: true,
         deliveries: [],
         zip_code: '',
+        shippment: false,
         shipping_companys: [],
         selectedShippment: {},
     }),
@@ -145,7 +150,9 @@ export default {
                 return alert('Error :' + response);
             });
         },
-        calculateDelivery() {
+        calculateDelivery(delivery) {
+            const name = delivery.name;
+           
             const data = {
                 postal_code: this.zip_code,
                 height: this.selectProduct.height,
@@ -154,6 +161,7 @@ export default {
                 weight: this.selectProduct.weight,
                 price: this.selectProduct.price,
                 quantity: this.quantity,
+                shippment: name,
             };
             axios.post('/api/calculateDelivery', data)
                 .then((response) => {
