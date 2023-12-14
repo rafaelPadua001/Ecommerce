@@ -118,6 +118,8 @@ Route::delete('/cartItem/delete/{id}', [CartItemController::class, 'destroy'])->
 //Delivery Routes
 Route::get('/delivery', [DeliveryController::class, 'index'])->name('delivery')->middleware('auth');
 Route::post('/delivery/insert', [DeliveryController::class, 'store'])->name('delivery.store')->middleware('auth');
+Route::post('/delivery/status/{id}', [DeliveryController::class, 'status'])->name('delivery.status')->middleware('auth');
+Route::delete('/delivery/delete/{id}', [DeliveryController::class, 'delete'])->name('delivery.delete')->middleware('auth');
 
 //Payment Routes
 Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
