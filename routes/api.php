@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductSeo\ProductSeoController;
 use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\ProductVideos\ProductVideoController;
 use App\Http\Controllers\Coupons\CouponsController;
+use App\Http\Controllers\Delivery\DeliveryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,9 @@ Route::post('/products/update/{id}', [ProductController::class, 'update'])->name
 
 //Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+//Delivery Routes
+Route::get('/delivery', [DeliveryController::class, 'index'])->name('delivery.index');
 
 //Route coupons
 Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index');

@@ -3,6 +3,7 @@ namespace App\Services\CartService;
 
 use App\Models\CartItem;
 use App\Models\Cart;
+use App\Http\Controllers\Shippment\ShippmentController;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,10 +14,10 @@ class CartItemService{
     public function __construct(CartItem $cartItem, Cart $cart){
         $this->cartItem = $cartItem;
         $this->cart = $cart;
+        
     }
     public function addCartItem($id, $product)
     {
-        
        try {
             $cart = $this->cart->where('user_id', '=', $id)->first();
           
@@ -29,8 +30,8 @@ class CartItemService{
                'color' => $product->color,
             ]);
            
-           //$store = $this->cartItemService->store($cartItem);
-          
+         
+            $store_shippment = ShippmentController::create($product);
            return response()->json($cartItem);
         } catch (Exception $e) {
             return response()->json($e);

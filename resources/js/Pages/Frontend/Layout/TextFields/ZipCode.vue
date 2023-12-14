@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col class="d-flex child-flex" cols="12" md="12" sm="3">
+        <v-col class="d-flex child-flex" cols="12" md="8" sm="3">
             <v-text-field v-model="zip_code" v-maska:[options] label="zip code" aria-required>
 
             </v-text-field>
@@ -12,10 +12,47 @@
         </v-col>
     </v-row>
     <v-row>
-        <v-col class="d-flex justify-center mb-2 flex-column" cols="12" md="6" sm="4">
-            <v-card class="mx-auto">
+        <v-col class="d-flex justify-center mb-2 flex-column" cols="12" md="8" sm="4">
+            <v-card class="mx-auto" width="350px">
+                <v-card-title>Deliveries</v-card-title>
+                <v-toolbar class="px-0" color="transparent">
+                    <template v-slot:extension>
+                        <v-tabs
+                            v-model="tabs"
+                            v-for="(delivery, index) in deliveries"
+                            :key="index"
+                            :value="delivery.id"
+                            color="primary"
+                            grow
+                        >
+                            <v-tab
+                               v-if="delivery.activated == 1"
+                            >
+                                <v-img
+                                    :src="`./storage/delivery/${delivery.thumbnail}`"
+                                    :lazy-src="`./storage/delivery/${delivery.thumbnail}`"
+                                    cover
+                                    :aspect-ratio="1/1"
+                                    :width="25"
+                                    :max-height="50"
+                                >
+
+                                </v-img>
+                                {{ delivery.name }}
+                            </v-tab>
+                        </v-tabs>
+                    </template>  
+                </v-toolbar>
+                
                 <v-card-text>
-                    <v-list>
+                    <v-window v-model="tabs" v-for="delivery in deliveries"
+                            :key="delivery.id"
+                            :value="delivery.id"
+                    >
+                        <v-window-item
+                            v-if="delivery.activated == 1"
+                        >
+                        <v-list>
                 <v-list-item v-for="shipping in shipping_companys" :key="shipping.id">
                     <div v-if="!shipping.error" v-for="delivery in shipping" :key="delivery.id">
                         <div v-if="!delivery.error">
@@ -23,9 +60,9 @@
                                 <v-col cols="auto">
                                     
                                     <v-radio-group v-model="selectedShippment">
-                                                <v-radio :value="delivery" @change="selectShippment">
+                                        <v-radio :value="delivery" @change="selectShippment">
                                                         
-                                                    </v-radio>
+                                        </v-radio>
                                     </v-radio-group>
                           
                                 </v-col>
@@ -39,7 +76,7 @@
                             </v-row>
                           
                                
-
+                           
                             <p class="text-body">
                                 {{ delivery.name }}
                                 <span>
@@ -68,6 +105,9 @@
                 </v-list-item>
                 
             </v-list>
+                        </v-window-item>
+                    </v-window>
+                   
                 </v-card-text>
             </v-card>
             
@@ -77,6 +117,7 @@
 <script setup>
 import { ref } from "vue";
 import { vMaska } from "maska";
+import axios from "axios";
 
 
 const options = { mask: '#####-####' };
@@ -88,11 +129,22 @@ const myValue = ref('');
 export default {
     props: ['selectProduct', 'quantity'],
     data: () => ({
+        tabs: true,
+        deliveries: [],
         zip_code: '',
         shipping_companys: [],
-        selectedShippment: '',
+        selectedShippment: {},
     }),
     methods: {
+        getDeliveries(){
+            axios.get('/api/delivery')
+            .then((response) => {
+                return this.deliveries = response.data;
+            })
+            .catch((response) => {
+                return alert('Error :' + response);
+            });
+        },
         calculateDelivery() {
             const data = {
                 postal_code: this.zip_code,
@@ -116,6 +168,9 @@ export default {
             return this.$emit('updateShippment', this.selectedShippment, this.zip_code);
         }
     },
+    created() {
+        this.getDeliveries();
+    }
     
 }
 </script>
