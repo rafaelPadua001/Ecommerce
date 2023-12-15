@@ -24,6 +24,7 @@ use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Search\SearchToAddressesController;
 use App\Http\Controllers\Coupons\CouponsController;
 use App\Http\Controllers\Delivery\DeliveryController;
+use App\Http\Controllers\Shippment\ShippmentController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -121,6 +122,8 @@ Route::post('/delivery/insert', [DeliveryController::class, 'store'])->name('del
 Route::post('/delivery/status/{id}', [DeliveryController::class, 'status'])->name('delivery.status')->middleware('auth');
 Route::delete('/delivery/delete/{id}', [DeliveryController::class, 'delete'])->name('delivery.delete')->middleware('auth');
 
+//Shippments Routes
+Route::get('/shippments', [ShippmentController::class, 'index'])->name('shippments.index')->middleware('auth');
 //Payment Routes
 Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
 

@@ -307,6 +307,7 @@ export default {
         ],
         shippment: [],
         zip_code: false,
+        delivery_name: false,
     }),
     watch: {
         buyDialog(val) {
@@ -350,6 +351,7 @@ export default {
                 'quantity': this.quantity,
                 'color': this.colors,
                 'delivery': this.shippment,
+                'delivery_name': this.delivery_name,
             }
             axios.post(`/carts/add`, data)
                 .then((response) => {
@@ -385,9 +387,10 @@ export default {
             }
 
         },
-        updateShippment(selectedShippment, zip_code) {
+        updateShippment(selectedShippment, zip_code, delivery_name) {
             this.shippment.push(selectedShippment);
             this.zip_code = zip_code;
+            this.delivery_name = delivery_name;
             return this.finalValue(selectedShippment);
 
         },

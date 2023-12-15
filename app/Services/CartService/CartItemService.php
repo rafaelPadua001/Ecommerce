@@ -3,21 +3,29 @@ namespace App\Services\CartService;
 
 use App\Models\CartItem;
 use App\Models\Cart;
-use App\Http\Controllers\Shippment\ShippmentController;
+use App\Services\ShippmentService\ShippmentService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class CartItemService{
     protected $cart;
     protected $cartItem;
+    protected $shippmentService;
     
-    public function __construct(CartItem $cartItem, Cart $cart){
-        $this->cartItem = $cartItem;
-        $this->cart = $cart;
+    public function __construct(
+        CartItem $cartItem,
+        Cart $cart,
+        ShippmentService $shippmentService,
+    )
+    {
+            $this->cartItem = $cartItem;
+            $this->cart = $cart;
+            $this->shippmentService = $shippmentService;
         
     }
     public function addCartItem($id, $product)
     {
+        
        try {
             $cart = $this->cart->where('user_id', '=', $id)->first();
           
@@ -30,13 +38,24 @@ class CartItemService{
                'color' => $product->color,
             ]);
            
-         
-            $store_shippment = ShippmentController::create($product);
+            $delivery_item = [
+                'delivery' => $product['delivery'],
+                'delivery_name' => $product['delivery_name'],
+                'product_id' => $product->product['id'],
+                'user_id' => $id,
+                'cart_id' => $cart->id,
+                'cart_item_id' => $cartItem->id,
+                
+            ];
+           
+            $store_shippment = $this->shippmentService->store($delivery_item);
+      
            return response()->json($cartItem);
         } catch (Exception $e) {
             return response()->json($e);
         }
     }
+    
     public function buy($userId){
         try{
             $item = $this->cartItem->where('cart_items.user_id', $userId)

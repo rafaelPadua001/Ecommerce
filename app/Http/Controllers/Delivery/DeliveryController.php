@@ -44,11 +44,12 @@ class DeliveryController extends Controller
         }
         catch(Exception $e){
             return response()->json($e);
-        }
+        }   
       
     }
     public function delete($id){
         $delivery_delete = $this->deliveryService->destroy($id);
         return response()->json($delivery_delete);
     }
+    
 }

@@ -28,9 +28,7 @@ return new class extends Migration
             $table->foreignId('cart_item_id')->constrained('cart_items')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreignId('delivery_id')->constrained('deliveries')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->string('delivery_id');
             $table->timestamps();
         });
     }
