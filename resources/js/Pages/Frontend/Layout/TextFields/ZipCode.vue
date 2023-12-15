@@ -9,14 +9,15 @@
                         <v-tabs
                             v-model="tabs"
                             v-for="(delivery, index) in deliveries"
-                            :key="index"
-                            :value="delivery.id"
+                            :key="delivery.id"
+                            :value="index"
                             color="primary"
                             grow
                             
                         >
                             <v-tab
-                               v-if="delivery.activated == 1"
+                                :value="index"  
+                                v-if="delivery.activated == 1"
                             >
                                 <v-img
                                     :src="`./storage/delivery/${delivery.thumbnail}`"
@@ -37,14 +38,14 @@
                 
                 <v-card-text>
                     
-                    <v-window v-model="tabs" v-for="delivery in deliveries"
-                            :key="delivery.id"
-                            :value="delivery.id"
-                    >   
+                    <v-window v-model="tabs" >   
                         <v-window-item
-                            v-if="delivery.activated == 1"
+                            v-for="(delivery, index) in deliveries"
+                            :key="delivery.id"
+                            :value="index"
+                           
                         >
-                        <v-row>
+                        <v-row v-model="delivery.id"  v-if="delivery.activated == 1">
                         <v-col class="d-flex child-flex" cols="12" md="8" sm="3">
                             <v-text-field v-model="zip_code" v-maska:[options] label="zip code" aria-required>
 
@@ -66,8 +67,8 @@
                                     <v-radio-group v-model="selectedShippment">
                                         <v-radio :value="delivery" @change="selectShippment">
                                                         
-                                        </v-radio>
-                                    </v-radio-group>
+                                    </v-radio>
+                                </v-radio-group>
                           
                                 </v-col>
                                 <v-col>
@@ -134,11 +135,13 @@ export default {
     props: ['selectProduct', 'quantity'],
     data: () => ({
         tabs: true,
+        tabs2: true,
         deliveries: [],
         zip_code: '',
         shippment: false,
         shipping_companys: [],
         selectedShippment: {},
+        delivery_name: false,
     }),
     methods: {
         getDeliveries(){
@@ -151,7 +154,8 @@ export default {
             });
         },
         calculateDelivery(delivery) {
-            const name = delivery.name;
+            const deliveryId = delivery.id;
+            this.delivery_name = delivery.name;
            
             const data = {
                 postal_code: this.zip_code,
@@ -161,7 +165,7 @@ export default {
                 weight: this.selectProduct.weight,
                 price: this.selectProduct.price,
                 quantity: this.quantity,
-                shippment: name,
+                shippment: this.delivery_name,
             };
             axios.post('/api/calculateDelivery', data)
                 .then((response) => {
@@ -173,7 +177,7 @@ export default {
         },
         selectShippment(){
             console.log('Dados a serem enviados para o pai:', this.selectedShippment);
-            return this.$emit('updateShippment', this.selectedShippment, this.zip_code);
+            return this.$emit('updateShippment', this.selectedShippment, this.zip_code, this.delivery_name);
         }
     },
     created() {

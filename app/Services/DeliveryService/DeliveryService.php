@@ -62,7 +62,7 @@ class DeliveryService {
         return $delivery_update;
     }
     public function calculate(Request $request, $shippment_company){
-        if($shippment_company){
+        if($request->shippment === $shippment_company->name){
             $send_calc = $this->getDeliveryController($request);
             return $send_calc;
         }
