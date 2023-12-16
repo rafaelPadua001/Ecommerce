@@ -2,6 +2,7 @@
 namespace App\Services\ShippmentService;
 
 use App\Models\Shippment;
+use Illuminate\Support\Facades\DB;
 use Exception;
 
 class ShippmentService { 
@@ -11,7 +12,19 @@ class ShippmentService {
     }
     public function getAll(){
         try{
-            $shippments = $this->shippment->all();
+            $shippments = DB::table('shippments')
+            ->join('products', 'shippments.product_id', '=', 'products.id')
+            ->join('customers', 'shippments.user_id', '=', 'customers.id')
+            ->select(
+                'shippments.*',
+                'products.name as product_name',
+                'customers.first_name',
+                'customers.last_name'
+            )
+            ->get();
+            
+           
+            // $this->shippment->all();
             return $shippments;
         }
         catch(Exception $e){
