@@ -113,6 +113,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Dashboard from '../Auth/Dashboard.vue';
 
 export default {
@@ -172,7 +173,7 @@ export default {
         updateDialog: false,
         deleteDialog: false,
         editedIndex: -1,
-        editedItem: [],
+        editedItem: {},
         defaultItem: [],
     }),
     watch: {
@@ -226,6 +227,13 @@ export default {
             this.deleteDialog = true;
         },
         deleteItemConfirm() {
+            axios.delete(`/shippments/delete/${this.editedItem.id}`)
+            .then((response) => {
+                return this.shippments.splice({}, this.editedIndex, 1);
+            })
+            .catch((error) => {
+                return alert('Error:' + error); 
+            });
             this.shippments.splice(this.editedIndex, 1);
             this.closeDeleteDialog();
         },
@@ -237,8 +245,32 @@ export default {
             });
         },
         save() {
-            Object.assign(this.shippments[this.editedIndex], this.editedItem);
+            const token = document.querySelector('meta[name="csrf-token"]');
+            const data = {
+                name: this.editedItem.name,
+                company: this.editedItem.company,
+                price: this.editedItem.price,
+                deadline: this.editedItem.deadline,
+                quantity: this.editedItem.quantity
+            };
+            axios.post(`/shippments/update/${this.editedItem.id}`, data, 
+            {
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                }
+            }
+            )
+            .then((response) => {
+                this.close();
+                Object.assign(this.shippments[this.editedIndex], this.editedItem);                  
+            })  
+            .catch((error) => {
+                console.log(error);
+                return alert('Erro :' + error);
+            });
             this.close();
+            //Object.assign(this.shippments[this.editedIndex], this.editedItem);
+            
         }
     },
     mounted() {

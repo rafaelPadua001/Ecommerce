@@ -52,6 +52,16 @@ class ShippmentService {
         
         return $store_shippment;
     }
-   
+    public function update($id, $request){
+        
+        $shippment_update = $this->shippment->findOrFail($id);
+        $update = $shippment_update->update($request->all());
+     
+        return response()->json($request);
+    }
+   public function destroy($id){
+        $shippment_delete = $this->shippment->findOrFail($id)->delete();
+        return $shippment_delete;
+   }
 
 } 
