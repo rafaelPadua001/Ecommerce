@@ -20,19 +20,18 @@ class ShippmentController extends Controller
       return response()->json($shippments);
     }
     public function update(Request $request, $id){
-      try{
+      try {
          $shippment_update = $this->shippmentService->update($id, $request);
-         if(!$shippment_update){
-            return response()->json(['error' => 'Update error. Please try again later.'], 500);
+         
+         if (!$shippment_update) {
+             return response()->json(['error' => 'Update error. Please try again later.'], 500);
          }
-       
-         return response()->json($request->all());
-      }
-      catch(Exception $e){
-         return response()->json($e);
-      }
-
-      return response()->json($request);
+         
+         return response()->json($shippment_update);
+     } catch (Exception $e) {
+      
+         return response()->json(['error' => $e->getMessage()], 500);
+     }
     }
     public function remove($id){
       try{
