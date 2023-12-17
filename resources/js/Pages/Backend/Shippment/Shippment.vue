@@ -176,6 +176,11 @@ export default {
         editedItem: {},
         defaultItem: [],
     }),
+    computed: {
+        formTitle(){
+            return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+        },
+    },
     watch: {
         close(val) {
             val || this.close();
@@ -229,13 +234,14 @@ export default {
         deleteItemConfirm() {
             axios.delete(`/shippments/delete/${this.editedItem.id}`)
             .then((response) => {
-                return this.shippments.splice({}, this.editedIndex, 1);
+                return true;
             })
             .catch((error) => {
                 return alert('Error:' + error); 
             });
-            this.shippments.splice(this.editedIndex, 1);
             this.closeDeleteDialog();
+            this.shippments.splice(this.editedIndex, 1);
+           
         },
         closeDeleteDialog() {
             this.deleteDialog = false;
@@ -247,7 +253,7 @@ export default {
         save() {
             const token = document.querySelector('meta[name="csrf-token"]');
             const data = {
-                name: this.editedItem.name,
+                name: this.editedItem.name.toLowerCase(),
                 company: this.editedItem.company,
                 price: this.editedItem.price,
                 deadline: this.editedItem.deadline,
@@ -258,19 +264,17 @@ export default {
                 headers: {
                     'X-CSRF-TOKEN': token,
                 }
-            }
-            )
+            })
             .then((response) => {
-                this.close();
-                Object.assign(this.shippments[this.editedIndex], this.editedItem);                  
+                return true;
+                   
             })  
-            .catch((error) => {
-                console.log(error);
-                return alert('Erro :' + error);
+            .catch((response) => {
+              
+                return alert('Erro :' + response);
             });
             this.close();
-            //Object.assign(this.shippments[this.editedIndex], this.editedItem);
-            
+            Object.assign(this.shippments[this.editedIndex], response.data);
         }
     },
     mounted() {
