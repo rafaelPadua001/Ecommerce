@@ -124,6 +124,8 @@ Route::delete('/delivery/delete/{id}', [DeliveryController::class, 'delete'])->n
 
 //Shippments Routes
 Route::get('/shippments', [ShippmentController::class, 'index'])->name('shippments.index')->middleware('auth');
+Route::post('/shippments/update/{id}', [ShippmentController::class, 'update'])->name('shippments.upate')->middleware('auth');
+Route::delete('/shippments/delete/{id}', [ShippmentController::class, 'remove'])->name('shippments.remove')->middleware('auth');
 //Payment Routes
 Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
 
