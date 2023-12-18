@@ -60,6 +60,7 @@ class CartItemService{
         try{
             $item = $this->cartItem->where('cart_items.user_id', $userId)
             ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->leftJoin('addresses', 'addresses.user_id', '=', 'cart_items.user_id')
             ->select(
                 'cart_items.*',
                 'products.name',
@@ -67,7 +68,13 @@ class CartItemService{
                 'products.height',
                 'products.width',
                 'products.length',
-                'products.weight'
+                'products.weight',
+                'addresses.endereco',
+                'addresses.complemento',
+                'addresses.bairro',
+                'addresses.cidade',
+                'addresses.estado',
+
             )
             ->latest()
             ->first();

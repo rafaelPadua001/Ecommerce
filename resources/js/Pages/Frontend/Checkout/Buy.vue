@@ -41,23 +41,55 @@
 
                                                     <p>
                                                         <strong>Total: </strong>
-                                                       {{ parseFloat(item.price) + parseFloat(product.price) }}
+                                                        {{ parseFloat(item.price) + parseFloat(product.price) }}
                                                     </p>
                                                     <p>
                                                         <strong>Shippment: </strong> {{ item.name }}
                                                     </p>
                                                     <p>
+                                                        <v-row fluid>
+                                                            <v-col>
+                                                                <v-text-field v-model="postal_code" v-maska:[options]
+                                                                    label="postal code" :placeholder="zip_code"
+                                                                    :value="zip_code" v-if="zip_code">
+                                                                </v-text-field>
+                                                                <v-text-field v-model="postal_code" v-maska:[options]
+                                                                    label="postal code" :placeholder="zip_code" v-else>
+                                                                </v-text-field>
+                                                            </v-col>
+                                                            <v-col col="8" sm="4">
+                                                                <v-btn size="x-small" variant="text" color="primary"
+                                                                    @click="calculateDelivery">calculate</v-btn>
+                                                                <v-btn size="x-small" variant="text" color="warning"
+                                                                    @click="itemCart.cep = ''">Clear</v-btn>
+                                                                <v-btn size="x-small" variant="text" color="blue"
+                                                                    @click="searchToAddress">Buscar Cep</v-btn>
 
-                                                        <strong>Cep:</strong> {{ zip_code }}
-                                                    </p>
+
+                                                            </v-col>
+                                                        </v-row>
+                                                     </p>
+                                                    <p>
+                                                    <v-col v-if="address">
+                                                        <strong >endereco:</strong> {{ address[0].complemento }},
+                                                        <strong>Bairro:</strong> {{ address[0].bairro }},
+                                                        <strong>Logradouro:</strong> {{ address[0].logradouro }},
+                                                        <strong>CEP:</strong> {{ address[0].cep }} ,
+                                                        <strong>Localidade:</strong>  {{ address[0].localidade }},
+                                                        <strong>UF:</strong>  {{ address[0].uf }}
+                                                        <strong>DDD:</strong>  {{ address[0].ddd }} 
+                                                    </v-col>
+                                                </p>
                                                 </div>
                                                 </p>
+                                               
                                             </div>
-                                        <div>
-                                    </div>
-                                    </v-col>
-                                </v-row>
-                            </v-card-text>
+                                            <div>
+                                            </div>
+                                        </v-col>
+                                        
+                                    </v-row>
+                                </v-card-text>
                                 <v-card-actions>
                                     <v-btn-group>
                                         <v-btn @click="confirmNext()">Confirmar</v-btn>
@@ -71,18 +103,19 @@
         </v-row>
 
         <div class="text-center">
-          <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
+            <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
-            <div class="text-subtitle-1 pb-2">Você deve estar logado para adicionar esse item ao carrinho
-            </div>
-            <template v-slot:actions>
-              <v-btn-group>
-                <v-btn size="small" variant="plain" color="white" to="/">back</v-btn>
-                <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
-              </v-btn-group>
-            </template>
+                <div class="text-subtitle-1 pb-2">
+                    {{ message }}
+                </div>
+                <template v-slot:actions>
+                    <v-btn-group>
+                        <v-btn size="small" variant="plain" color="white" to="/">back</v-btn>
+                        <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
+                    </v-btn-group>
+                </template>
 
-          </v-snackbar>
+            </v-snackbar>
         </div>
     </div>
 </template>
@@ -102,6 +135,9 @@ export default {
         finish: true,
         productImages: false,
         snackbar: false,
+        message: false,
+        postal_code: false,
+        address: [],
         //shippment: [],
     }),
     methods: {
@@ -113,6 +149,8 @@ export default {
                 })
                 .catch((response) => {
                     this.snackbar = true;
+                    console.log(response);
+                    this.message = response;
                     return false;
                 });
         },
@@ -128,11 +166,49 @@ export default {
             this.dataConfirm = true;
             this.finish = false;
         },
+        searchToAddress() {
+            const cepToFound = this.postal_code != false ? this.postal_code : this.zip_code;
+            const data = { 
+                postal_code: cepToFound,
+            };
+           
+            axios.get(`https://viacep.com.br/ws/${cepToFound}/json/`)
+                .then((response) => {
+                  //  this.address.complemento = response.data[0].complemento;
+                  
+                    return this.address.push(response.data);
+                  
+                    //this.itemCart.cep = " ";
+                    //this.itemCart.cep = response.data[0].cep;
+                    //this.address.endereco = response.data[0].logradouro;
+                    //this.address.bairro = response.data[0].bairro;
+                    //this.address.cep = response.data[0].cep;
+                    //this.address.cidade = response.data[0].cidade;
+                    //this.address.UF = response.data[0].uf;
+                    //this.address.complemento = response.data[0].complemento;
+                    
+                    //this.saveAddress(
+                    //    this.itemCart.cep,
+                    //    this.address.endereco,
+                    //    this.address.bairro,
+                    //    this.city,
+                    //    response.data[0].uf,
+                    //    response.data[0].ibge,
+                    //    this.complemento,
+                    //);
+
+                   // return this.respSearchAddress.push(response.data[0]);
+                    
+                })  
+                .catch((response) => {
+                    return alert('Error :', response);
+                })
+        },
 
     },
     created() {
         this.getProducts();
-      
+
 
     }
 
