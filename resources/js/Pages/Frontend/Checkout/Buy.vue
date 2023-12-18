@@ -70,8 +70,8 @@
                                                         </v-row>
                                                      </p>
                                                     <p>
-                                                    <v-col v-if="address">
-                                                        <strong >endereco:</strong> {{ address[0].complemento }},
+                                                    <v-col v-if="address.length >= 1">
+                                                        <strong v-if="address[0].complemento !== ''">endereco:</strong> {{ address[0].complemento }},
                                                         <strong>Bairro:</strong> {{ address[0].bairro }},
                                                         <strong>Logradouro:</strong> {{ address[0].logradouro }},
                                                         <strong>CEP:</strong> {{ address[0].cep }} ,
