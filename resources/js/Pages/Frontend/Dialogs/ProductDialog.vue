@@ -260,7 +260,8 @@
             <div class="text-center">
                 <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
-                    <div class="text-subtitle-1 pb-2">Você deve estar logado para adicionar esse item ao carrinho
+                    <div class="text-subtitle-1 pb-2">
+                        {{ message }}
                     </div>
                     <template v-slot:actions>
                         <v-btn-group>
@@ -296,6 +297,7 @@ export default {
         checkoutProduct: false,
         add_cart: false,
         snackbar: false,
+        message: false,
         liked: 0,
         likes: false,
         social_icons: [
@@ -361,6 +363,7 @@ export default {
                 })
                 .catch((response) => {
                     this.snackbar = true;
+                    this.message = response.error;
                     console.log('response:' . response);
                     alert('Error :' + response);
                     return false;
