@@ -293,7 +293,48 @@
                                     </v-row>
                                     <v-row>
                                         <v-col>
-                                            Componets de pagamento
+                                            <div v-if="paymentType == 'debit'">
+                                                            <v-card>
+                                                                <DebitForm 
+                                                                    :paymentType="paymentType"
+                                                                    :id="this.product.id"
+                                                                    :name="this.product.name"
+                                                                    :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
+                                                                    :quantity="this.product.quantity"
+                                                                    :delivery="shippment"
+                                                                    :description="this.product.description"
+                                                                    :image="this.product.images"
+                                                                    :color="this.product.color"
+                                                                    :address="this.address[0]"
+                                                                    />
+                                                            </v-card>
+                                                        </div>
+                                                        <div v-if="paymentType == 'credit'">
+                                                            <v-card>
+                                                                <CreditForm :paymentType="paymentType"
+                                                                    :name="this.product.name"
+                                                                    :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
+                                                                    :quantity="this.product.quantity"
+                                                                    :delivery="shippment"
+                                                                    :description="this.product.description"
+                                                                    :image="this.product.images"
+                                                                    :color="this.product.color"
+                                                                 />
+                                                            </v-card>
+                                                        </div>
+                                                        <div v-if="paymentType == 'pix'">
+                                                            <v-card>
+                                                                <PixForm :paymentType="paymentType"
+                                                                    :name="this.product.name"
+                                                                    :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
+                                                                    :quantity="this.product.quantity"
+                                                                    :delivery="shippment"
+                                                                    :description="this.product.description"
+                                                                    :image="this.product.images"
+                                                                >
+                                                                </PixForm>
+                                                            </v-card>
+                                                        </div>
                                         </v-col>
                                     </v-row>
 
@@ -302,7 +343,6 @@
                                 <v-card-actions>
                                 <v-btn-group>
                                     <v-btn @click="returnConfirmDatas()">Voltar</v-btn>
-
 
                                 </v-btn-group>
                             </v-card-actions>
@@ -360,11 +400,18 @@
 import axios from 'axios';
 import Dashboard from '../Auth/Dashboard.vue';
 import ZipCode from '../Layout/TextFields/ZipCode.vue';
+import DebitForm from '../Payment/DebitForm.vue'
+import CreditForm from '../Payment/CreditForm.vue'
+import PixForm from '../Payment/PixForm.vue'
+
 export default {
     props: ['shippment', 'zip_code', 'customer'],
     components: {
         Dashboard,
         ZipCode,
+        DebitForm,
+        CreditForm,
+        PixForm,
     },
     data: () => ({
         product: [],
@@ -380,6 +427,7 @@ export default {
         postal_code: false,
         address: [],
         address_dialog: false,
+        paymentType: false,
         //shippment: [],
     }),
     watch: {
