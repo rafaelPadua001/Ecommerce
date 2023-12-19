@@ -31,9 +31,10 @@ class SearchToAddressesController extends Controller
 
     }
     public function save(Request $request){
-   //    dd($request);
+       
         try{
             $customer = Auth::guard('customer')->user();
+            
             $address = SearchToAddress::create([
                 'postal_code' => $request->postal_code,
                 'type_postal_code'=> 'CEP',
@@ -41,11 +42,11 @@ class SearchToAddressesController extends Controller
                 'cidade' => $request->city,
                 'bairro' => $request->bairro,
                 'endereco' => $request->address,
-                'complemento' => $request->complemento,
+                'complemento' => $request->complemento ? 'null' : false,
                 'codigoIBGE' => $request->code_ibge,
                 'user_id'=> $customer->id
             ]);
-
+            
             return response()->json($address);
         }
         catch(Exception $e){

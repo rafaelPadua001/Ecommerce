@@ -1,5 +1,8 @@
 <template>
     <div>
+        <Dashboard />
+    </div>
+    <div>
         <v-row no-gutters>
             <v-col class="d-flex flex-column justify-center">
                 <v-timeline direction="horizontal" side="center" line-inset="12">
@@ -68,26 +71,36 @@
 
                                                             </v-col>
                                                         </v-row>
-                                                     </p>
+                                                    </p>
                                                     <p>
-                                                    <v-col v-if="address.length >= 1">
-                                                        <strong v-if="address[0].complemento !== ''">endereco:</strong> {{ address[0].complemento }},
-                                                        <strong>Bairro:</strong> {{ address[0].bairro }},
-                                                        <strong>Logradouro:</strong> {{ address[0].logradouro }},
-                                                        <strong>CEP:</strong> {{ address[0].cep }} ,
-                                                        <strong>Localidade:</strong>  {{ address[0].localidade }},
-                                                        <strong>UF:</strong>  {{ address[0].uf }}
-                                                        <strong>DDD:</strong>  {{ address[0].ddd }} 
-                                                    </v-col>
-                                                </p>
+                                                        <v-col v-if="address.length >= 1">
+                                                            <strong>Logradouro:</strong> {{ address[0].logradouro }},
+                                                            <strong
+                                                                v-if="address[0].complemento.length >= 1">endereco:</strong>
+                                                            {{ address[0].complemento }},
+                                                            <div v-if="address[0].complemento == ''">
+                                                                <strong v-if="address[0].complemento == ''">
+                                                                    <v-btn class="mb-2" size="xs" variant="text"
+                                                                        color="blue" @click="openAddressDialog">
+                                                                        Click to add address
+                                                                    </v-btn></strong>
+                                                            </div>
+                                                            <strong>Bairro:</strong> {{ address[0].bairro }},
+
+                                                            <strong>CEP:</strong> {{ address[0].cep }} ,
+                                                            <strong>Localidade:</strong> {{ address[0].localidade }},
+                                                            <strong>UF:</strong> {{ address[0].uf }}
+                                                            <strong>DDD:</strong> {{ address[0].ddd }}
+                                                        </v-col>
+                                                    </p>
                                                 </div>
                                                 </p>
-                                               
+
                                             </div>
                                             <div>
                                             </div>
                                         </v-col>
-                                        
+
                                     </v-row>
                                 </v-card-text>
                                 <v-card-actions>
@@ -95,6 +108,30 @@
                                         <v-btn @click="confirmNext()">Confirmar</v-btn>
                                     </v-btn-group>
                                 </v-card-actions>
+                            </v-card>
+                        </template>
+                    </v-timeline-item>
+
+                    <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="xs">
+                        <template v-slot:opposite>
+                            <v-card
+                                v-model="shippmentConfirm"
+                                v-if="shippmentConfirm" 
+                                :width="500"
+                            >
+                            <v-card-text>
+                                <v-row>
+                                    <v-col class="d-flex justify-center flex-column">
+                                        <div>
+                                            Aqui vou carregar a confirmação de entrega
+                                        </div>
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+                            
+                            <v-card-actions>
+                                <v-btn @click="returnConfirm()">Voltar</v-btn>
+                            </v-card-actions>
                             </v-card>
                         </template>
                     </v-timeline-item>
@@ -116,34 +153,74 @@
                 </template>
 
             </v-snackbar>
+
+            <v-dialog v-model="address_dialog">
+                <v-card class="mx-auto" max-width="800">
+                    <v-toolbar>
+                        <v-toolbar-title class="bg-transparent-accent">Address form</v-toolbar-title>
+                        <template v-slot:append>
+                            <v-btn icon variant="plain">
+                                <v-icon icon="fas fa-close" @click="closeAddressDialog"></v-icon>
+                            </v-btn>
+                        </template>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-row no-gutters>
+                            <v-col cols="12">
+                                <v-text-field v-model="addressToShippment" label="Address to shippment">
+
+                                </v-text-field>
+                            </v-col>
+                            <v-col>
+                                <v-btn variant="plain" color="primary" size="xs" @click="saveAddress">Salvar</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
         </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Dashboard from '../Auth/Dashboard.vue';
 import ZipCode from '../Layout/TextFields/ZipCode.vue';
 export default {
     props: ['shippment', 'zip_code', 'customer'],
     components: {
+        Dashboard,
         ZipCode,
     },
     data: () => ({
         product: [],
         confirm: true,
+        shippmentConfirm: false,
+        addressToShippment: false,
         dataConfirm: true,
         finish: true,
         productImages: false,
         snackbar: false,
-        message: false,
+        message:  '',
         postal_code: false,
         address: [],
+        address_dialog: false,
         //shippment: [],
     }),
+    watch: {
+        closeAddressDialog(val) {
+            val || this.closeAddressDialog();
+        }
+    },
     methods: {
         getProducts() {
             axios.get(`/cartItem/buy`)
                 .then((response) => {
+                    if(!response.address){
+                        this.message = 'No address found...';
+                        this.snackbar = true;
+                       
+                    }
                     this.productImages = JSON.parse(response.data.images);
                     return this.product = response.data;
                 })
@@ -162,48 +239,72 @@ export default {
             this.dataConfirm = false;
             return this.finish = true;
         },
-        returnConfirmDatas() {
-            this.dataConfirm = true;
-            this.finish = false;
-        },
         searchToAddress() {
             const cepToFound = this.postal_code != false ? this.postal_code : this.zip_code;
-            const data = { 
+            const data = {
                 postal_code: cepToFound,
             };
-           
             axios.get(`https://viacep.com.br/ws/${cepToFound}/json/`)
                 .then((response) => {
-                  //  this.address.complemento = response.data[0].complemento;
-                  
                     return this.address.push(response.data);
-                  
-                    //this.itemCart.cep = " ";
-                    //this.itemCart.cep = response.data[0].cep;
-                    //this.address.endereco = response.data[0].logradouro;
-                    //this.address.bairro = response.data[0].bairro;
-                    //this.address.cep = response.data[0].cep;
-                    //this.address.cidade = response.data[0].cidade;
-                    //this.address.UF = response.data[0].uf;
-                    //this.address.complemento = response.data[0].complemento;
-                    
-                    //this.saveAddress(
-                    //    this.itemCart.cep,
-                    //    this.address.endereco,
-                    //    this.address.bairro,
-                    //    this.city,
-                    //    response.data[0].uf,
-                    //    response.data[0].ibge,
-                    //    this.complemento,
-                    //);
-
-                   // return this.respSearchAddress.push(response.data[0]);
-                    
-                })  
+                })
                 .catch((response) => {
                     return alert('Error :', response);
-                })
+                });
         },
+        openAddressDialog() {
+            this.address_dialog = true;
+        },
+        saveAddress() {
+            
+            this.closeAddressDialog();
+            return this.address[0].complemento = this.addressToShippment;
+        },
+        confirmNext(){
+            this.createAddress(
+                this.address[0].cep,
+                this.addressToShippment,
+                this.address[0].bairro,
+                this.address[0].localidade,
+                this.address[0].uf,
+                this.address[0].ibge,
+                this.address[0].complemento,
+            );
+            this.shippmentConfirm = true;
+            return this.confirm = false;
+        },
+        returnConfirm(){
+            this.confirm = true;
+            return this.shippmentConfirm = false;
+        },
+        createAddress(cep, endereco, bairro, city, uf, ibge, complemento){
+           
+           const newData = {
+               address: endereco,
+               postal_code: cep,
+               uf:  uf,
+               city: city,
+               bairro: bairro,
+               code_ibge: ibge,
+               complemento: complemento ? 'null' : false,
+               
+           };
+          
+              axios.post('/saveSearchAddress', newData)
+              .then((response) => {
+               
+                 return this.address = response.data;
+                 
+              })
+              .catch((response) => {
+                  return alert('ERROR: ', response);
+              });
+
+              this.closeAddressDialog();
+         },
+        closeAddressDialog() {
+            this.address_dialog = false;
+        }
 
     },
     created() {
