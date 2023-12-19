@@ -10,6 +10,7 @@
                         size="x-small">
                         <template v-slot="opposite">
                             <v-card :max-width="800" elevation="0">
+
                                 <v-card-text>
                                     <v-row>
                                         <v-col v-for="(image, index) in this.productImages" :key="index">
@@ -28,6 +29,7 @@
                                         <v-col cols="auto">
                                             <div>
                                                 <strong>{{ product.name }}</strong>
+
                                             </div>
                                             <div>
                                                 <v-card :color="product.color" v-if="product.color">
@@ -75,8 +77,9 @@
                                                     <p>
                                                         <v-col v-if="address.length >= 1">
                                                             <strong>Logradouro:</strong> {{ address[0].logradouro }},
-                                                            <strong
-                                                                v-if="address[0].complemento.length >= 1">endereco:</strong>
+                                                            <strong v-if="address[0].complemento.length >= 1">
+                                                                endereco:
+                                                            </strong>
                                                             {{ address[0].complemento }},
                                                             <div v-if="address[0].complemento == ''">
                                                                 <strong v-if="address[0].complemento == ''">
@@ -114,23 +117,194 @@
 
                     <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="xs">
                         <template v-slot:opposite>
-                            <v-card
-                                v-model="shippmentConfirm"
-                                v-if="shippmentConfirm" 
-                                :width="500"
-                            >
-                            <v-card-text>
-                                <v-row>
-                                    <v-col class="d-flex justify-center flex-column">
-                                        <div>
-                                            Aqui vou carregar a confirmação de entrega
-                                        </div>
-                                    </v-col>
-                                </v-row>
-                            </v-card-text>
-                            
-                            <v-card-actions>
-                                <v-btn @click="returnConfirm()">Voltar</v-btn>
+                            <v-card v-model="shippmentConfirm" v-if="shippmentConfirm" :width="500">
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col class="d-flex justify-center flex-column">
+                                            <div>
+                                                <v-img :src="`/storage/products/${productImages[0]}`"
+                                                    :lazy-src="`/storage/products/${productImages[0]}`" aspect-ratio="16/9"
+                                                    :width="200" cover>
+
+                                                    <template>
+                                                        <div class="d-flex align-center justify-center fill-height">
+                                                            <v-progress-circular color="grey-lighten-4">
+                                                            </v-progress-circular>
+                                                        </div>
+                                                    </template>
+                                                </v-img>
+
+                                            </div>
+                                        </v-col>
+
+                                        <v-col>
+                                            <div>
+
+                                                <p class="text-subititle-1">
+                                                    <strong>Customer name:</strong>
+                                                    {{ product.first_name }} {{ product.last_name }}
+
+                                                </p>
+
+                                            </div>
+
+                                            <!--  <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>CPF:</strong>
+
+                                                </p>
+
+                                            </div>
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Contact:</strong>
+                                                    {{ address.telefone }}
+                                                </p>
+
+                                            </div>
+                                            <div>
+                                                <p class="text-subtitle-2"><strong>Celular:</strong> </p>
+
+                                            </div> -->
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Logradouro:</strong>
+                                                    {{ address[0].logradouro }}
+                                                </p>
+                                                <p class="text-subtitle-2" v-if="address[0].complemento.length >= 1">
+                                                    <strong>Endereço:</strong> {{ address[0].complemento }}
+                                                </p>
+
+                                                <!--  <p class="text-subtitle-2">
+
+                                                    <strong>Complemento:</strong> {{ address[0].complemento }}
+                                                </p> -->
+                                                <p class="text-subtitle-2">
+                                                    <strong>Bairro:</strong> {{ address[0].bairro }}
+                                                </p>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Cidade:</strong> {{ address[0].localidade }}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Zip Code</strong> {{ address[0].cep }}
+                                                </p>
+                                                <p class="text-subtitle-2">
+                                                    <strong>UF:</strong> {{ address[0].uf }}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Delivery: </strong>
+                                                    {{ shippment[0].currency }} {{ shippment[0].price }}
+
+                                                </p>
+
+                                            </div>
+
+                                            <div>
+                                                <p>
+                                                    <strong>Total Value</strong>
+                                                    {{ shippment[0].currency }}
+                                                    {{ (parseFloat(shippment[0].price) +
+                                                        parseFloat(shippment[0].price)).toFixed(2)
+                                                    }}
+                                                </p>
+
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+
+                                <v-card-actions>
+                                    <v-btn-group>
+                                        <v-btn @click="returnConfirm">Voltar</v-btn>
+                                        <v-btn @click="confirmFinish()">Confirmar</v-btn>
+                                    </v-btn-group>
+                                </v-card-actions>
+                            </v-card>
+                        </template>
+                    </v-timeline-item>
+
+                    <v-timeline-item dot-color="blue" icon="fas fa-truck" fill-dot size="xs">
+                        <template v-slot:opposite>
+                            <v-card v-model="finishConfirm" v-if="finishConfirm" :width="500">
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col class="d-flex justify-center flex-column" cols="6">
+                                            <v-img :src="`/storage/products/${productImages[0]}`"
+                                                :lazy-src="`/storage/products/${productImages[0]}`" aspect-ratio="16/9"
+                                                :width="200" cover>
+
+                                                <template>
+                                                    <div class="d-flex align-center justify-center fill-height">
+                                                        <v-progress-circular color="grey-lighten-4">
+                                                        </v-progress-circular>
+                                                    </div>
+                                                </template>
+
+                                            </v-img>
+                                        </v-col>
+                                        <v-col cols="6" md="4">
+                                            <p>
+                                                <strong>{{ product.name }}</strong>
+                                            </p>
+
+                                            <div>
+                                                <p>
+                                                    <strong>Total Value</strong>
+                                                    {{ shippment[0].currency }}
+                                                    {{ (parseFloat(shippment[0].price) +
+                                                        parseFloat(shippment[0].price)).toFixed(2) }}
+                                                </p>
+
+                                            </div>
+
+                                            <div>
+                                                <strong>Cupom:</strong>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col  cols="8" sm="6">
+                                            <v-card class="mx-auto" :width="400">
+                                                <v-card-text>
+                                                    <v-row>
+                                                        <v-col  cols="8" sm="8">
+                                                            <v-radio-group v-model="paymentType" inline>
+                                                                <v-radio label="Debit" value="debit">
+
+                                                                </v-radio>
+                                                                <v-radio label="Credit" value="credit">
+
+                                                                </v-radio>
+                                                                <v-radio label="Pix" value="pix">
+
+                                                                </v-radio>
+                                                            </v-radio-group>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-card-text>
+                                            </v-card>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col>
+                                            Componets de pagamento
+                                        </v-col>
+                                    </v-row>
+
+                                </v-card-text>
+
+                                <v-card-actions>
+                                <v-btn-group>
+                                    <v-btn @click="returnConfirmDatas()">Voltar</v-btn>
+
+
+                                </v-btn-group>
                             </v-card-actions>
                             </v-card>
                         </template>
@@ -196,12 +370,13 @@ export default {
         product: [],
         confirm: true,
         shippmentConfirm: false,
+        finishConfirm: false,
         addressToShippment: false,
         dataConfirm: true,
         finish: true,
         productImages: false,
         snackbar: false,
-        message:  '',
+        message: '',
         postal_code: false,
         address: [],
         address_dialog: false,
@@ -216,17 +391,15 @@ export default {
         getProducts() {
             axios.get(`/cartItem/buy`)
                 .then((response) => {
-                    if(!response.address){
+                    if (!response.address) {
                         this.message = 'No address found...';
                         this.snackbar = true;
-                       
                     }
                     this.productImages = JSON.parse(response.data.images);
                     return this.product = response.data;
                 })
                 .catch((response) => {
                     this.snackbar = true;
-                    console.log(response);
                     this.message = response;
                     return false;
                 });
@@ -256,11 +429,11 @@ export default {
             this.address_dialog = true;
         },
         saveAddress() {
-            
+
             this.closeAddressDialog();
             return this.address[0].complemento = this.addressToShippment;
         },
-        confirmNext(){
+        confirmNext() {
             this.createAddress(
                 this.address[0].cep,
                 this.addressToShippment,
@@ -273,39 +446,43 @@ export default {
             this.shippmentConfirm = true;
             return this.confirm = false;
         },
-        returnConfirm(){
-            this.confirm = true;
+        returnConfirm() {
+            this.shippmentConfirm = false;
+
+            return this.confirm = true;
+        },
+        createAddress(cep, endereco, bairro, city, uf, ibge, complemento) {
+
+            const newData = {
+                address: endereco,
+                postal_code: cep,
+                uf: uf,
+                city: city,
+                bairro: bairro,
+                code_ibge: ibge,
+                complemento: complemento ? 'null' : false,
+
+            };
+
+            axios.post('/saveSearchAddress', newData)
+                .then((response) => {
+
+                    return this.address = response.data;
+
+                })
+                .catch((response) => {
+                    return alert('ERROR: ', response);
+                });
+
+            this.closeAddressDialog();
+        },
+        confirmFinish() {
+            this.finishConfirm = true;
             return this.shippmentConfirm = false;
         },
-        createAddress(cep, endereco, bairro, city, uf, ibge, complemento){
-           
-           const newData = {
-               address: endereco,
-               postal_code: cep,
-               uf:  uf,
-               city: city,
-               bairro: bairro,
-               code_ibge: ibge,
-               complemento: complemento ? 'null' : false,
-               
-           };
-          
-              axios.post('/saveSearchAddress', newData)
-              .then((response) => {
-               
-                 return this.address = response.data;
-                 
-              })
-              .catch((response) => {
-                  return alert('ERROR: ', response);
-              });
-
-              this.closeAddressDialog();
-         },
         closeAddressDialog() {
             this.address_dialog = false;
         }
-
     },
     created() {
         this.getProducts();

@@ -427,7 +427,7 @@ export default {
         redirectToCheckout() {
             const checkoutRedirect = this.$router.push({
                 name: 'item.buy',
-                query: {shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
+                query: {shippment: JSON.stringify(this.shippment), zip_code: this.zip_code}
             });
         }
     }
