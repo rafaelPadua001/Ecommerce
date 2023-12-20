@@ -18,19 +18,19 @@ use App\Http\Controllers\Orders\OrderController;
 
 class ProcessDatasController extends Controller
 {
-    public function getDatas(Request $request)
-    {
-
-        $paymentType = $request->paymentType;
-        if ($paymentType == 'credit') {
-            return $this->creditPayment($request);
-        } else if ($paymentType == 'debit') {
-            return $this->debitPayment($request);
-        } else {
-            return $this->pixPayment($request);
-            // throw new Exception('Ainda não criamos isso !');
-        }
-    }
+    //public function getDatas(Request $request)
+    //{
+//
+    //    $paymentType = $request->paymentType;
+    //    if ($paymentType == 'credit') {
+    //        return $this->creditPayment($request);
+    //    } else if ($paymentType == 'debit') {
+    //        return $this->debitPayment($request);
+    //    } else {
+    //        return $this->pixPayment($request);
+    //        // throw new Exception('Ainda não criamos isso !');
+    //    }
+    //}
     public function creditPayment(Request $request)
     {
 
@@ -65,7 +65,7 @@ class ProcessDatasController extends Controller
             return response()->json($e);
         }
     }
-    public function debitPayment(Request $request)
+    /*public function debitPayment(Request $request)
     {
         $customer = Auth::guard('customer')->user();
         
@@ -121,7 +121,7 @@ class ProcessDatasController extends Controller
         }
 
        
-    }
+    } **/
     public function pixPayment(Request $request)
     {
         $access = $this->getAccess();
@@ -220,7 +220,7 @@ class ProcessDatasController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function createDebitPayment($responseData, $request)
+    /*public function createDebitPayment($responseData, $request)
     {
         $payer = Auth::guard('customer')->user();
 
@@ -240,7 +240,7 @@ class ProcessDatasController extends Controller
         } catch (Exception $e) {
             return response()->json($e);
         }
-    }
+    } */
     
     public function getCieloClient()
     {
