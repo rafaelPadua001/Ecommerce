@@ -12,11 +12,16 @@ use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
+use App\Services\CartService\CartItemService;
 
 class PaymentService {
     protected $payment;
-    public function __construct(Payment $payment){
+    protected $carItemService;
+    public function __construct(
+        Payment $payment,
+        CartItemService $cartItemService){
         $this->payment = $payment;
+        $this->carItemService = $cartItemService;
     }
     public function paymentType(Request $request){
         $paymentType = $request->paymentType;
@@ -31,6 +36,7 @@ class PaymentService {
     }
     public function debitPayment(Request $request)
     {
+       
         $customer = Auth::guard('customer')->user();
         
         try {
@@ -100,6 +106,8 @@ class PaymentService {
                 "user_id" => $payer->id
             ]);
             $this->getMelhorEnvio($request);
+            $itemId = $request['id'];
+            $this->removeItemToCart($itemId);
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -204,6 +212,10 @@ class PaymentService {
             }
             
         }
+    }
+    public function removeItemToCart($id){
+        return $this->carItemService->destroy($id);
+        
     }
     public function getCieloClient()
     {

@@ -106,15 +106,15 @@ class CartItemService{
         };
     }
     public function destroy($id)
-    {
-        
+    {   
         try{
-            $cartItem = $this->cartItem->findOrFail($id)->delete();
-           
-            return true;
-          
+            $remove_cartItem = $this->cartItem->findOrFail($id);
+            $remove_cartItem->delete();
+        
+            return $remove_cartItem;
         }
         catch(Exception $e){
+            dd($e->getMessage()); 
             return response()->json($e);
         }
     }
