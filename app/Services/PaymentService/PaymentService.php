@@ -142,7 +142,7 @@ class PaymentService {
     public function createCreditPayment($preference, $request)
     {   
         $payer = Auth::guard('customer')->user();
-
+        
         try {
             $client = $this->getClient();
             if ($client) {

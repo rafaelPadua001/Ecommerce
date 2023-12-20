@@ -1,15 +1,6 @@
 <template>
     <v-container>
-        <!-- <v-form @submit.prevent="submitForm">
-            <v-text-field v-model="cardholderName" label="Nome do Titular do Cartão" required></v-text-field>
-            <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
-            <v-text-field v-model="expiryDate" label="Data de Expiração (MM/AA)" required></v-text-field>
-            <v-text-field v-model="cvv" label="CVV" required></v-text-field>
-            <v-text-field v-model="bank" label="Banco" required></v-text-field>
-            <v-select v-model="installments" :items="installmentOptions" label="Parcelas" required></v-select> 
-            
-        </v-form>
-    -->
+      
         <p>Você será redirecionado ao mercado pago</p>
         <v-btn :loading="loading" class="flex-grow-1" variant="tonal" size="small" type="submit" color="blue-darken-2"
             @click="load">
