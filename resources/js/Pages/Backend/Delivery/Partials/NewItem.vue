@@ -201,7 +201,6 @@ export default {
                 }
             })
             .then((response) => {
-                
                 this.$emit('close-dialog');
                 return this.$emit('create', response);
                 

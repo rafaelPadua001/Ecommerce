@@ -65,6 +65,7 @@ class CartItemService{
             ->select(
                 'cart_items.*',
                 'products.name',
+                'products.description',
                 'products.images',
                 'products.height',
                 'products.width',
@@ -78,11 +79,10 @@ class CartItemService{
                 'addresses.bairro',
                 'addresses.cidade',
                 'addresses.estado',
-
             )
             ->latest()
             ->first();
-           
+          
             return $item;
         }
         catch(Exception $e){

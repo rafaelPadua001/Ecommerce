@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        
+       
         <v-form @submit.prevent="submitForm">
             <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
             <v-text-field v-model="cardHolder" label="Nome do titular do cartão" required></v-text-field>
@@ -15,7 +15,27 @@
             ></v-select>
             <v-btn :loading="loading" class="flex-grow-1" variant="tonal" type="submit" color="primary" @click="load">Pagar</v-btn>
         </v-form>
+
+       
     </v-container>
+    <div>
+            <v-alert v-model="snackbar" :timeout="1500" color="cyan-darken-3" vertical>
+                <template v-slot:append>
+                    <v-btn icon class="me-6" variant="plain" size="xs">
+                        <v-icon icon="fas fa-close" @click="snackbarClose()"></v-icon>
+                    </v-btn>
+                </template>
+                <div class="text-subtitle-1 pb-2">
+                    {{ message }}
+                </div>
+                <template v-slot:actions>
+                    <v-btn-group>
+                        <v-btn size="small" variant="plain" color="white" to="/">back</v-btn>
+                        <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
+                    </v-btn-group>
+                </template>
+            </v-alert>
+        </div>
 </template>
 
 <script>
@@ -50,7 +70,14 @@ import axios from 'axios';
                 'Maestro',
                 'Elo',
             ],
+            snackbar: false,
+            message: false,
         }),
+        watch: {
+            snackbarClose(val){
+                val || this.snackbarClose();
+            }
+        },
         methods:{
             load(){
                 this.loading = true;
@@ -80,14 +107,24 @@ import axios from 'axios';
                 };
                 axios.post('/payment', data)
                 .then((response) => {
+                    this.message = 'Seu pagamento foi recebido pela instituição',
+                    this.snackbar = true;
                     this.loading = false;
-                    return alert('Seu pagamento foi recebido pela instituição');
+                    return this.updateCompleted();
+                   
                 })
                 .catch((response) => {
+                    this.loading = false;
                     return alert('Error: ', response);
-                })
-              
+                });
+            },
+            snackbarClose(){
+                this.snackbar = false;
+            },
+            updateCompleted(){
+                this.$emit('completed');
             }
+
         }
 
 

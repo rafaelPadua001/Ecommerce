@@ -269,11 +269,11 @@
                                         </v-col>
                                     </v-row>
                                     <v-row>
-                                        <v-col  cols="8" sm="6">
+                                        <v-col cols="8" sm="6">
                                             <v-card class="mx-auto" :width="400">
                                                 <v-card-text>
                                                     <v-row>
-                                                        <v-col  cols="8" sm="8">
+                                                        <v-col cols="8" sm="8">
                                                             <v-radio-group v-model="paymentType" inline>
                                                                 <v-radio label="Debit" value="debit">
 
@@ -294,58 +294,81 @@
                                     <v-row>
                                         <v-col>
                                             <div v-if="paymentType == 'debit'">
-                                                            <v-card>
-                                                                <DebitForm 
-                                                                    :paymentType="paymentType"
-                                                                    :id="this.product.id"
-                                                                    :name="this.product.name"
-                                                                    :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
-                                                                    :quantity="this.product.quantity"
-                                                                    :delivery="shippment"
-                                                                    :description="this.product.description"
-                                                                    :image="this.product.images"
-                                                                    :color="this.product.color"
-                                                                    :address="this.address[0]"
-                                                                    />
-                                                            </v-card>
-                                                        </div>
-                                                        <div v-if="paymentType == 'credit'">
-                                                            <v-card>
-                                                                <CreditForm :paymentType="paymentType"
-                                                                    :name="this.product.name"
-                                                                    :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
-                                                                    :quantity="this.product.quantity"
-                                                                    :delivery="shippment"
-                                                                    :description="this.product.description"
-                                                                    :image="this.product.images"
-                                                                    :color="this.product.color"
-                                                                 />
-                                                            </v-card>
-                                                        </div>
-                                                        <div v-if="paymentType == 'pix'">
-                                                            <v-card>
-                                                                <PixForm :paymentType="paymentType"
-                                                                    :name="this.product.name"
-                                                                    :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
-                                                                    :quantity="this.product.quantity"
-                                                                    :delivery="shippment"
-                                                                    :description="this.product.description"
-                                                                    :image="this.product.images"
-                                                                >
-                                                                </PixForm>
-                                                            </v-card>
-                                                        </div>
+                                                <v-card>
+                                                    <DebitForm :paymentType="paymentType" :id="this.product.id"
+                                                        :name="this.product.name"
+                                                        :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
+                                                        :quantity="this.product.quantity" :delivery="shippment"
+                                                        :description="this.product.description" :image="this.product.images"
+                                                        :color="this.product.color" :address="this.address"
+                                                        @completed="completed" />
+                                                </v-card>
+                                            </div>
+                                            <div v-if="paymentType == 'credit'">
+                                                <v-card>
+                                                    <CreditForm :paymentType="paymentType" :name="this.product.name"
+                                                        :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
+                                                        :quantity="this.product.quantity" :delivery="shippment"
+                                                        :description="this.product.description" :image="this.product.images"
+                                                        :color="this.product.color" />
+                                                </v-card>
+                                            </div>
+                                            <div v-if="paymentType == 'pix'">
+                                                <v-card>
+                                                    <PixForm :paymentType="paymentType" :name="this.product.name"
+                                                        :totalValue="(parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2)"
+                                                        :quantity="this.product.quantity" :delivery="shippment"
+                                                        :description="this.product.description"
+                                                        :image="this.product.images">
+                                                    </PixForm>
+                                                </v-card>
+                                            </div>
                                         </v-col>
                                     </v-row>
 
                                 </v-card-text>
 
                                 <v-card-actions>
-                                <v-btn-group>
-                                    <v-btn @click="returnConfirmDatas()">Voltar</v-btn>
+                                    <v-btn-group>
+                                        <v-btn @click="returnConfirmDatas()">Voltar</v-btn>
 
-                                </v-btn-group>
-                            </v-card-actions>
+                                    </v-btn-group>
+                                </v-card-actions>
+                            </v-card>
+                        </template>
+                    </v-timeline-item>
+                    <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="xs">
+                        <template v-slot:opposite>
+                            <v-card v-if="completedConfirm" :width="500">
+                                <v-card-title class="headline">Pedido Finalizado</v-card-title>
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col>
+                                            <v-icon dot-color="green-darken-2" color="green" fill-dot icon="fas fa-check" size="x-large"> </v-icon>
+                                        </v-col>
+                                    </v-row>
+                                    <!--
+                                    <div>
+                                        <v-img :src="`/storage/products/${productImages[0]}`"
+                                            :lazy-src="`/storage/products/${productImages[0]}`" aspect-ratio="16/9"
+                                            :width="200" cover
+                                        >
+                                          
+                                            <template>
+                                                <div class="d-flex align-center justify-center fill-height">
+                                                    <v-progress-circular color="grey-lighten-4">
+                                                    </v-progress-circular>
+                                                </div>
+                                            </template>
+                                        </v-img>
+
+                                    </div> -->
+
+                                    <v-spacer></v-spacer>
+                                    <v-btn class="me-2 bg-green" variant="text" @click="redirect()">
+                                        Continuar comprando.
+                                    </v-btn>
+                                </v-card-text>
                             </v-card>
                         </template>
                     </v-timeline-item>
@@ -413,11 +436,13 @@ export default {
         CreditForm,
         PixForm,
     },
+    emits: ['completed'],
     data: () => ({
         product: [],
         confirm: true,
         shippmentConfirm: false,
         finishConfirm: false,
+        completedConfirm: false,
         addressToShippment: false,
         dataConfirm: true,
         finish: true,
@@ -460,6 +485,10 @@ export default {
             this.dataConfirm = false;
             return this.finish = true;
         },
+        completed() {
+            this.finishConfirm = false;
+            return this.completedConfirm = true;
+        },
         searchToAddress() {
             const cepToFound = this.postal_code != false ? this.postal_code : this.zip_code;
             const data = {
@@ -496,7 +525,6 @@ export default {
         },
         returnConfirm() {
             this.shippmentConfirm = false;
-
             return this.confirm = true;
         },
         createAddress(cep, endereco, bairro, city, uf, ibge, complemento) {
@@ -529,7 +557,11 @@ export default {
             return this.shippmentConfirm = false;
         },
         closeAddressDialog() {
-            this.address_dialog = false;
+            return this.address_dialog = false;
+        },
+        redirect(){
+            
+            return window.location.href='/';
         }
     },
     created() {
