@@ -31,9 +31,9 @@ class ProcessDatasController extends Controller
     //        // throw new Exception('Ainda não criamos isso !');
     //    }
     //}
-    public function creditPayment(Request $request)
+   /* public function creditPayment(Request $request)
     {
-
+        
         try {
             $getAccess = $this->getAccess();
             $getClient = $this->getClient();
@@ -121,7 +121,7 @@ class ProcessDatasController extends Controller
         }
 
        
-    } **/
+    } 
     public function pixPayment(Request $request)
     {
         $access = $this->getAccess();
@@ -186,9 +186,9 @@ class ProcessDatasController extends Controller
         catch(Exception $e){
             return response()->json($e);
         }
-        */
+        
     }
-    public function createPayment($preference, $request)
+    /*public function createPayment($preference, $request)
     {   
         $payer = Auth::guard('customer')->user();
 
@@ -240,7 +240,7 @@ class ProcessDatasController extends Controller
         } catch (Exception $e) {
             return response()->json($e);
         }
-    } */
+    } 
     
     public function getCieloClient()
     {
@@ -278,5 +278,6 @@ class ProcessDatasController extends Controller
         $melhorEnvio = new MelhorEnvioController();
         return $melhorEnvio->createCart($request);
     }
+    */
    
 }
