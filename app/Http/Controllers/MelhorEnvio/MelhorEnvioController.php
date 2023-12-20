@@ -63,7 +63,7 @@ class MelhorEnvioController extends Controller
     public function createCart(Request $request){
         $client = new Client();
         $customer = Auth::guard('customer')->user();
-        
+       
         try {
             $response = $client->post('https://sandbox.melhorenvio.com.br/api/v2/me/cart', [
                 'json' => [
@@ -71,11 +71,11 @@ class MelhorEnvioController extends Controller
                     'agency' => $request['delivery']['company']['id'],
                     'from' => [
                         'name' => env('APP_NAME'),
-                        "phone"=> 556195051731, //env('EMPLOYE_PHONE'),
-                        "email"=> env('EMPLOYE_MAIL'),
-                        "address"=> env('EMPLOYE_ADDRESS'),
-                        "city"=> env('EMPLOYE_CITY'),
-                        "postal_code"=> env('EMPLOYE_POSTALCODE'),
+                        "phone" => 556195051731, //env('EMPLOYE_PHONE'),
+                        "email" => env('EMPLOYE_MAIL'),
+                        "address" => env('EMPLOYE_ADDRESS'),
+                        "city" => env('EMPLOYE_CITY'),
+                        "postal_code" => env('EMPLOYE_POSTALCODE'),
                         "document" => env('EMPLOYE_DOCUMENT')
                         // Preencha os detalhes de origem aqui
                     ],
@@ -127,8 +127,8 @@ class MelhorEnvioController extends Controller
            
             
             $order = json_decode($response->getBody());
+          
             
-                
             $this->getOrder($order, $request);
             
             
@@ -246,6 +246,7 @@ class MelhorEnvioController extends Controller
         return $client;
     }
     public function getOrder($order, $request){
+        dd($order, $request);
         $orders = new OrderController();
         return $orders->insertOrderId($request, $order);
     }

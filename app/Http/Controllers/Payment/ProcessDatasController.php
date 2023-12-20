@@ -189,7 +189,7 @@ class ProcessDatasController extends Controller
         */
     }
     public function createPayment($preference, $request)
-    {
+    {   
         $payer = Auth::guard('customer')->user();
 
         try {
@@ -269,7 +269,7 @@ class ProcessDatasController extends Controller
         return $client;
     }
     public function getOrder($request, $responseData){
-       // dd($responseData);
+        
         $order = new OrderController();
         return $order->create($request, $responseData);
     }
