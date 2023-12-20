@@ -210,7 +210,7 @@
                                                     <strong>Total Value</strong>
                                                     {{ shippment[0].currency }}
                                                     {{ (parseFloat(shippment[0].price) +
-                                                        parseFloat(shippment[0].price)).toFixed(2)
+                                                        parseFloat(product.price)).toFixed(2)
                                                     }}
                                                 </p>
 
@@ -257,8 +257,7 @@
                                                 <p>
                                                     <strong>Total Value</strong>
                                                     {{ shippment[0].currency }}
-                                                    {{ (parseFloat(shippment[0].price) +
-                                                        parseFloat(shippment[0].price)).toFixed(2) }}
+                                                    {{ (parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2) }}
                                                 </p>
 
                                             </div>
