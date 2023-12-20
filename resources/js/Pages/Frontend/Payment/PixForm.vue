@@ -1,4 +1,5 @@
 <template>
+   
     <v-text-field v-model="cpf" label="CPF" mask="###.###.###-##" hint="Informe seu CPF" persistent-hint outlined
         v-maska:[cpfOptions]></v-text-field>
     <v-btn :loading="loading" class="flex-grow-1" variant="tonal" color="primary" size="small" @click="load">Gerar Qr
@@ -90,7 +91,8 @@ export default {
             axios.post('/payment', data)
                 .then((response) => {
                     this.loading = false;
-                    return this.paymentResponse.push(response.data);
+                    
+                    return this.paymentResponse = response.data;
                 })
                 .catch((response) => {
                     //   this.loading = false;
