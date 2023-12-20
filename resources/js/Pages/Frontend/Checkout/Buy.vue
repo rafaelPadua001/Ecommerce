@@ -344,7 +344,8 @@
                                 <v-card-text>
                                     <v-row>
                                         <v-col>
-                                            <v-icon dot-color="green-darken-2" color="green" fill-dot icon="fas fa-check" size="x-large"> </v-icon>
+                                            <v-icon dot-color="green-darken-2" color="green" fill-dot icon="fas fa-check"
+                                                size="x-large"> </v-icon>
                                         </v-col>
                                     </v-row>
                                     <!--
@@ -559,9 +560,9 @@ export default {
         closeAddressDialog() {
             return this.address_dialog = false;
         },
-        redirect(){
-            
-            return window.location.href='/';
+        redirect() {
+
+            return window.location.href = '/';
         }
     },
     created() {
