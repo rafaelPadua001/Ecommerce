@@ -1,7 +1,7 @@
 <template>
    
-    <v-text-field v-model="cpf" label="CPF" mask="###.###.###-##" hint="Informe seu CPF" persistent-hint outlined
-        v-maska:[cpfOptions]></v-text-field>
+    <!-- <v-text-field v-model="cpf" label="CPF" mask="###.###.###-##" hint="Informe seu CPF" persistent-hint outlined
+        v-maska:[cpfOptions]></v-text-field> -->
     <v-btn :loading="loading" class="flex-grow-1" variant="tonal" color="primary" size="small" @click="load">Gerar Qr
         Code</v-btn>
     <div v-if="paymentResponse">
@@ -18,7 +18,7 @@
             <v-col>
                 Pix copia e cola
             </v-col>
-            <v-col cols="12" md="12">
+            !--<v-col cols="12" md="12">
 
                 <v-text-field v-model="paymentResponse.original.point_of_interaction.transaction_data.qr_code"
                     label="Código PIX" outlined variant="underline" append-inner-icon="fas fa-copy"
@@ -86,7 +86,7 @@ export default {
                 name: this.name,
                 quantity: this.quantity,
                 image: this.image,
-                cpfPayer: this.cpf
+           //     cpfPayer: this.cpf
             };
             axios.post('/payment', data)
                 .then((response) => {
