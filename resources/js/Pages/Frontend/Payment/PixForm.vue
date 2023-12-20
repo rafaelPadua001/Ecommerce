@@ -90,7 +90,7 @@ export default {
             axios.post('/payment', data)
                 .then((response) => {
                     this.loading = false;
-                    return this.paymentResponse = response.data;
+                    return this.paymentResponse.push(response.data);
                 })
                 .catch((response) => {
                     //   this.loading = false;
