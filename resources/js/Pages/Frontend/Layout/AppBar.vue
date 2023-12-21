@@ -57,12 +57,9 @@
                                         </v-btn>
                                     </template>
                                     <v-list :items="carts" item-props lines="three"
-                                        style="margin-top: 51px; margin-right: -55px">
+                                        style="margin-top: 10px; margin-right: -55px">
                                         <v-list-item v-for="item in carts" :key="item.id" :value="item.id">
-                                            <div v-if="!item">
-                                                <p>No item to show...</p>
-                                            </div>
-                                            <div v-else>
+                                            <div v-if="item && item.is_active == 1">
                                                 <v-row>
                                                     <v-col cols="auto" md="12" sm="4">
                                                         <v-card class="mx-auto" elevation="0">
@@ -134,6 +131,7 @@
 
                                                 <v-divider></v-divider>
                                             </div>
+                                         
                                         </v-list-item>
 
                                         <v-btn color="cyan-darken-4" variant="tonal" block>Checkout</v-btn>
@@ -145,7 +143,9 @@
 
                     </div>
 
-
+                    <div v-else>
+                        Not to show
+                    </div>
                     <!-- Cria o botao de menu do usuario -->
                     <v-menu>
                         <template v-slot:activator="{ props }">

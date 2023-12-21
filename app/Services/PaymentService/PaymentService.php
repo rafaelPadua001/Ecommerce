@@ -80,7 +80,7 @@ class PaymentService {
                 
                 //Obter o corpo da resposta
                 $responseData = json_decode($response->getBody()->getContents(), true);
-                $this->getOrder($request, $responseData);
+               
                 return $this->createDebitPayment($responseData, $request);
                 //return response()->json($responseData);
             } catch (Exception $e) {
@@ -106,8 +106,10 @@ class PaymentService {
                 "user_id" => $payer->id
             ]);
             $this->getMelhorEnvio($request);
+            $createOrder = $this->getOrder($request, $responseData);
             $itemId = $request['id'];
-            $this->removeItemToCart($itemId);
+            $this->alterStatusItem($itemId);
+            
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -213,8 +215,9 @@ class PaymentService {
             
         }
     }
-    public function removeItemToCart($id){
-        return $this->carItemService->destroy($id);
+    public function alterStatusItem($id){
+       
+        return $this->carItemService->updateActive($id);
         
     }
     public function getCieloClient()

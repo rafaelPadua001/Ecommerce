@@ -21,7 +21,7 @@ class CartService
     {
         $cart = $this->carts->where('carts.user_id', $userId)
             ->join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
-            ->join('products', 'cart_items.product_id', '=', 'products.id')
+            ->leftJoin('products', 'cart_items.product_id', '=', 'products.id')
             ->select(
                 'carts.id as cart_id',
                 'cart_items.*',
