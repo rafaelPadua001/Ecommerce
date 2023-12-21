@@ -105,6 +105,13 @@ class CartItemService{
             return response()->json($e);
         };
     }
+    public function updateActive($id){
+        $cartItemStatus = $this->cartItem->where('cart_items.id', $id)->update([
+            'is_active' => false
+        ]);
+        
+        return true;
+    }
     public function destroy($id)
     {   
         try{
