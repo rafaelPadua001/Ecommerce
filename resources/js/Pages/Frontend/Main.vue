@@ -255,8 +255,6 @@
 
           </v-snackbar>
         </div>
-
-
       </v-container>
 
 
@@ -297,6 +295,8 @@ export default {
     images: [],
     categories: [],
     discounts: [],
+    address: [],
+    addressDialog: false,
     timeToCarousel: 3000,
     productIndex: -1,
     selectProduct: {},
@@ -306,8 +306,6 @@ export default {
     rating: 0,
     postal_code: 0,
     loading: false,
-    add_cart: false,
-    snackbar: false,
     liked: 0,
     likes: false,
      
@@ -362,6 +360,7 @@ export default {
           return alert('Erro :' + response);
         });
     },
+    
     /*getDiscounts() {
       axios.get('/api/coupons/all')
         .then((response) => {

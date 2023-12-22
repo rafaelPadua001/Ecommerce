@@ -143,9 +143,7 @@
 
                     </div>
 
-                    <div v-else>
-                        Not to show
-                    </div>
+                    
                     <!-- Cria o botao de menu do usuario -->
                     <v-menu>
                         <template v-slot:activator="{ props }">
