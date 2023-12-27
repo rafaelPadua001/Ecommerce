@@ -30,31 +30,12 @@
     </v-container>
   </v-main>
 
-  <div>
-    <v-dialog v-model="addressDialog">
-      <v-card v-if="addressDialog" class="mx-auto" :width="500">
-        <v-toolbar>
-          <template v-slot:append>
-            <v-btn icon @click="closeAddressDialog">
-              <v-icon icon="fas fa-close"></v-icon>
-            </v-btn>
-          </template>
-        </v-toolbar>
-        <v-card-text>
-          Você não possui endereço cadastrado, vamos cadastrar um ?
-          no menu clique em Profile e cadastre um endereço para receber seus pedidos.
-        </v-card-text>
-
-
-        <v-card-actions>
-          <v-btn-group>
-            <v-btn blocked  :to="`/profileCustomer/${this.customers.id}`" variant="text">Go</v-btn>
-          </v-btn-group>
-        </v-card-actions>
-      </v-card>
-
-
-    </v-dialog>
+  <div  >
+    <AddressForm 
+      v-model="addressDialog"
+      v-if="addressDialog"
+      :customer="this.customers"
+      @close-dialog="closeAddressDialog"/>
   </div>
 
   <v-footer app name="footer">
@@ -68,6 +49,7 @@
 import { useLayout } from 'vuetify'
 import AppBar from '../Layout/AppBar.vue';
 import axios from 'axios';
+import AddressForm from '../Dialogs/AddressForm.vue';
 
 const Child = {
   setup(props, ctx) {
@@ -82,11 +64,12 @@ const Child = {
 }
 
 export default {
-  components: { Child, AppBar },
+  components: { Child, AppBar, AddressForm },
   data: () => ({
     customers: [],
     address: [],
     addressDialog: false,
+    
   }),
   watch: {
     closeAddessDialog(val) {
