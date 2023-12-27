@@ -1,9 +1,8 @@
 <template>
     <v-dialog>
-       
       <v-card class="mx-auto">
-        <v-toolbar>
-            <v-toolbar-title> {{ customer.first_name }} {{ customer.last_name }}</v-toolbar-title>
+        <v-toolbar color="transparent">
+            <v-toolbar-title> Address Form</v-toolbar-title>
           <template v-slot:append>
             <v-btn icon @click="closeAddressDialog">
               <v-icon icon="fas fa-close"></v-icon>
