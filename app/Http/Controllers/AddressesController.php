@@ -16,6 +16,7 @@ class AddressesController extends Controller
         return response()->json($address);
     }
     public function create(Request $request){
+        
         try{
             $customer = Auth::guard('customer')->user();
            
@@ -29,6 +30,7 @@ class AddressesController extends Controller
                     'UF' => $request->uf,
                     'pais' => $request->country,
                     'telefone' => $request->phone,
+                    'number' => $request->number,
                     'user_id' => $customer->id
                 ]);
                 
