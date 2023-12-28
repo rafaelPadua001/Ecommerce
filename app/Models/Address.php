@@ -18,6 +18,7 @@ class Address extends Model
         'UF',
         'pais',
         'telefone',
+        'number',
         'user_id'
     ];
 }

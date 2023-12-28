@@ -30,7 +30,7 @@
     </v-container>
   </v-main>
 
-  <div  >
+  <div>
     <AddressForm 
       v-model="addressDialog"
       v-if="addressDialog"

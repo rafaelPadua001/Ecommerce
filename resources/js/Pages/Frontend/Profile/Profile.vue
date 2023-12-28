@@ -94,16 +94,18 @@
 
                                   </v-col>
 
-                                  <v-col cols="auto" md="3">
-                                    <label>N°</label>
-                                    <v-text-field v-model="number" required hide-details :label="customerAddress.number"
-                                      :placeholder="customerAddress.number"></v-text-field>
-                                  </v-col>
+                                 
                                   <v-col cols="auto" sm="5">
                                     <label>Complement:</label>
                                     <v-text-field v-model="complemento" required hide-details
                                       :label="customerAddress.complemento"
                                       :placeholder="customerAddress.complemento"></v-text-field>
+                                  </v-col>
+                                  
+                                  <v-col cols="auto" md="3">
+                                    <label>N°</label>
+                                    <v-text-field v-model="number" required hide-details :label="customerAddress.number"
+                                      :placeholder="customerAddress.number"></v-text-field>
                                   </v-col>
 
                                   <v-col cols="auto" sm="4">
@@ -161,13 +163,13 @@
                                 <v-col col="8" sm="6">
                                   <v-btn :disabled="loadingUpdate" :loading="loadingUpdate" block class="text-none mb-4"
                                     color="indigo-darken-3" size="x-large" variant="flat"
-                                    @click="editAddress(customerAddress)" v-if="customerAddress">
+                                    @click="editAddress(customerAddress)" v-if="Object.keys(customerAddress).length >= 1">
                                     Update
                                   </v-btn>
                                   <v-btn :disabled="loading" :loading="loading" block class="text-none mb-4"
                                     color="indigo-darken-3" size="x-large" variant="flat" @click="loading = !loading"
-                                    v-if="!customerAddress">
-                                    Verify and continue
+                                    v-else="object.keys(customerAddress).length == 0">
+                                    Save and continue
                                   </v-btn>
                                 </v-col>
                               </v-row>
@@ -325,7 +327,7 @@ export default {
     profileImage: false,
     panel: ['first_address', 'secondary_address'],
     address: '',
-    number: '',
+    number: 0,
     complemento: '',
     bairro: '',
     uf: '',
@@ -340,7 +342,6 @@ export default {
     password: '',
     confirmPassword: '',
     email: '',
-
     loading: false,
     loadingUpdate: false,
     dialogImage: false,
@@ -393,7 +394,6 @@ export default {
     getCustomer() {
       axios.get('/customer')
         .then((response) => {
-          console.log(response.data);
           return this.customer = response.data;
         })
         .catch((response) => {
@@ -424,7 +424,7 @@ export default {
         })
         .catch((response) => {
           return alert('Error :' + response);
-        })
+        });
     },
     deleteProfileImage() {
       const image = Object.assign({}, this.profileImage);
@@ -446,7 +446,7 @@ export default {
           return alert('Erro : ' + response);
         });
     },
-    editCustomerInfo() {
+    editCustomerInfo(item) {
       this.editedItem = Object.assign({}, this.customerAddress);
       this.customerDialog = true;
 
@@ -476,11 +476,11 @@ export default {
       };
       axios.post('/address/save', data)
         .then((response) => {
-          return this.customerAddress.push(response.data);
+          return this.customerAddress = response.data;
         })
         .catch((response) => {
           return alert('Error :' + response);
-        })
+        });
 
     },
     editAddress() {
@@ -488,7 +488,6 @@ export default {
       return this.update();
     },
     update() {
-      console.log(this.editedItem);
       const data = {
         endereco: this.editedItem.endereco,
         // number: this.number,
@@ -501,10 +500,10 @@ export default {
         pais: this.editedItem.country,
         telefone: this.editedItem.phone,
       }
-
+    
       axios.post(`/address/update/${this.customerAddress.id}`, data)
         .then((response) => {
-          return this.customerAddress.push(response.data);
+          return this.customerAddress = Object.assign({},response.data);
         })
         .catch((response) => {
           return alert('Error: ' + response);
