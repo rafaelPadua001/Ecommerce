@@ -1,19 +1,20 @@
 <template>
-    <v-row no-gutters>
-        <v-col col="12" sm="6">
+    <v-row fluid>
+        <v-col class="d-flex justify-center flex-column" cols="auto" sm="12">
             <div>
-                <label>Upload image:</label>
+                <label>image:</label>
                 <v-file-input
                     v-model="image"
-                    label="fileUpload"
+                    label="image"
                 ></v-file-input>
                 <v-btn 
                     :loading="loading"
                     class="flex-grow-1"
-                    variant="tonal"
+                    variant="text"
+                    color="success"
                     @click="load"
                 >
-                    Upload file
+                    Upload file 
                 </v-btn>
             </div>
             
@@ -40,7 +41,8 @@
                     }
                 })
                 .then((response) => {
-                    return this.image.push(response.data) ;
+                    this.$emit('close-dialog');
+                    return this.image.push(response.data);
                 })
                 .catch((response) => {
                     return alert('Error :' + response);

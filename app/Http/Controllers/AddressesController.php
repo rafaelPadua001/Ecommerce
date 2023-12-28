@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AddressesController extends Controller
 {
-    //
     public function index(){
         $customer = Auth::guard('customer')->user();
         $address = Address::where('user_id', $customer->id)->first();
+      
         return response()->json($address);
     }
     public function create(Request $request){
@@ -35,8 +35,6 @@ class AddressesController extends Controller
                 ]);
                 
                 return response()->json($address);             
-            
-           
         }
         catch(Exception $e){
             return response()->json($e);
