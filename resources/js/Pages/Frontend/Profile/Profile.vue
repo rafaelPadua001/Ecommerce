@@ -177,45 +177,13 @@
 
                             </v-card>
                             <div>
-                              <v-dialog v-model="dialogImage" v-if="dialogImage" width="1024">
-                                <v-card class="text-center">
-                                  <v-card-title>
-                                    <v-toolbar color="transparent">
-                                      Profile image
-                                      <template v-slot:append>
-                                        <v-btn icon>
-                                          <v-icon icon="fas fa-close" @click="dialogImage = false"></v-icon>
-                                        </v-btn>
-                                      </template>
+                              <ProfileUpload
+                                v-model="dialogImage"
+                                v-if="dialogImage"
+                                @close-dialog="this.dialogImage = false"
+                              />
 
-                                    </v-toolbar>
-                                  </v-card-title>
-
-                                  <v-card-text>
-                                    <v-row>
-                                      <v-col cols="12" sm="12">
-                                        <Upload />
-                                      </v-col>
-
-                                    </v-row>
-
-                                  </v-card-text>
-
-                                  <v-card-actions>
-                                    <v-btn-group>
-                                      <v-btn>
-                                        Save
-                                      </v-btn>
-                                      <v-btn @click="dialogImage = false">
-                                        Cancel
-                                      </v-btn>
-                                    </v-btn-group>
-                                  </v-card-actions>
-                                </v-card>
-
-                              </v-dialog>
-
-                              <v-dialog v-model="customerDialog" v-if="customerDialog" width="1024">
+                             <v-dialog v-model="customerDialog" v-if="customerDialog" width="1024">
                                 <v-card class="text-center">
                                   <v-card-title>
                                     <v-toolbar color="transparent">
@@ -313,12 +281,14 @@ const phoneMask = ref('');
 <script>
 //import Dashboard from '../Auth/Dashboard.vue';
 import axios from "axios";
-import Upload from '../Profile/profileImage/upload.vue'
+
+import ProfileUpload from '../Dialogs/ProfileImage.vue'
 
 export default {
   components: {
     //  Dashboard,
-    Upload
+//    Upload,
+    ProfileUpload,
 
   },
   data: () => ({

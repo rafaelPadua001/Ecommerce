@@ -91,12 +91,13 @@ export default {
       axios.get('/address')
         .then((response) => {
           if (Object.keys(response.data).length == 0) {
-            console.log(response.data);
+            
             this.addressDialog = true;
-            return;
+            return this.address = response.data;
+            
           }
 
-          return this.address = response.data;
+          
         })
         .catch((response) => {
           return alert('Erro :' + response);
