@@ -2,10 +2,13 @@
     <v-row fluid>
         <v-col class="d-flex justify-center flex-column" cols="auto" sm="12">
             <div>
-                <label>image:</label>
                 <v-file-input
                     v-model="image"
                     label="image"
+                    :rules="rules"
+                    accept="image/png, image/jpg, image/jpeg, image/bmp"
+                    placeholder="pick an avatar"
+                    prepend-icon="fas fa-camera"
                 ></v-file-input>
                 <v-btn 
                     :loading="loading"
@@ -26,8 +29,13 @@
 <script>
     export default{
         data: () => ({
-            image: false,
+            image: [],
             loading: false,
+            rules: [
+                value => {
+                    return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 Mb !'
+                },
+            ],
         }),
         methods: {
             uploadFile(){
@@ -41,13 +49,16 @@
                     }
                 })
                 .then((response) => {
+                 
+                    this.$emit('update-avatar', response);
                     this.$emit('close-dialog');
                     return this.image.push(response.data);
+                    
                 })
                 .catch((response) => {
                     return alert('Error :' + response);
-                })
-                console.log(data);
+                });
+                
             },
             load(){
                 this.loading = true;
@@ -55,7 +66,8 @@
                     this.loading = false;
                     return this.uploadFile();
                 }, 3000);
-            }
+            },
+            
         }
     }
 </script>

@@ -18,7 +18,9 @@
                     <v-card-text>
                         <v-row>
                             <v-col cols="12" sm="12">
-                                <UploadInput @close-dialog="closeUploadDialog"/>
+                                <UploadInput
+                                    @close-dialog="closeUploadDialog"
+                                    @update-avatar="updateAvatar"/>
                             </v-col>
 
                         </v-row>
@@ -37,8 +39,9 @@ import UploadInput from '../Profile/profileImage/upload.vue';
 
 export default {
     components: { UploadInput },
+    emits: ['update-avatar', 'close-dialog'],
     data: () => ({
-
+        image: [],
     }),
     watch: {
         closeUploadDialog(val) {
@@ -47,7 +50,10 @@ export default {
     },
     methods: {
         closeUploadDialog() {
-            this.$emit('close-dialog');
+            return this.$emit('close-dialog');
+        },
+        updateAvatar(response){
+         return this.$emit('update-avatar', response);
         }
     },
 }
