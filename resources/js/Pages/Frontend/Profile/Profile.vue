@@ -181,6 +181,7 @@
                                 v-model="dialogImage"
                                 v-if="dialogImage"
                                 @close-dialog="this.dialogImage = false"
+                                @update-avatar="updateAvatar"
                               />
 
                              <v-dialog v-model="customerDialog" v-if="customerDialog" width="1024">
@@ -420,6 +421,9 @@ export default {
       this.editedItem = Object.assign({}, this.customerAddress);
       this.customerDialog = true;
 
+    },
+    updateAvatar(response){
+      return this.profileImage = Object.assign({}, response.data.original);
     },
     closeCustomerDialog() {
       this.customerDialog = false;
