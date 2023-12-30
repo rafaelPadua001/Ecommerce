@@ -272,6 +272,7 @@
         v-if="deleteImageDialog"
         :image="this.imageRemove"
         @close-dialog="closeDeleteAvatarDialog"
+        @delete-image="deleteAvatar"
       />
     </div>
   </v-container>
@@ -294,7 +295,7 @@ import axios from "axios";
 import ProfileUpload from '../Dialogs/ProfileImage.vue'
 import DeleteImageProfile from "../Profile/profileImage/deleteImageProfile.vue";
 export default {
-  emits: ['close-dialog'],
+  emits: ['close-dialog', 'delete-image'],
   components: {
     ProfileUpload,
     DeleteImageProfile
@@ -417,10 +418,12 @@ export default {
     closeDeleteAvatarDialog(){
       this.deleteImageDialog = false;
     },
+    deleteAvatar(image){
+      return this.profileImage = '';
+    },
     deleteProfileImage(item){
       //this.imageId = this.profileImage.indexOf(item);
-     
-       return this.removeProfileImage();
+     return this.removeProfileImage();
     },
     removeProfileImage() {
       const image = Object.assign({}, this.profileImage);

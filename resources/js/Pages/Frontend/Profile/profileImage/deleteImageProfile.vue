@@ -61,7 +61,16 @@ import axios from 'axios';
                 this.$emit('close-dialog');
             },
             remove(image){
-                console.log(image);
+                axios.delete(`/profileImage/delete/${image.id}`)
+                .then((response) => {
+                    this.close();
+                    return this.$emit('delete-image', image);
+                   
+                    //return this.image.splice(this.imageId, 1);
+                })
+                .catch((response) => {
+                return alert('Error :' + response);
+                });
             }
         },
     }
