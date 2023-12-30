@@ -63,4 +63,10 @@ class ProfileImageService
             return response()->json($e);
         }
     }
+    public function destroy($id)
+    {
+        $profileImage = $this->profileImage->findOrFail($id);
+        $profileImage->delete();
+        return response($profileImage);
+    }
 }

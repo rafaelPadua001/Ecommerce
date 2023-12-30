@@ -44,7 +44,7 @@
                                   <v-btn-group>
                                     <v-btn icon size="x-small" density="confortable" variant="plain">
                                       <v-icon icon="fas fa-trash fa-2xs" color="white"
-                                        @click="deleteProfileImage"></v-icon>
+                                        @click="openDeleteAvatarDialog(profileImage)"></v-icon>
                                     </v-btn>
                                     <v-btn icon size="x-small" density="confortable" variant="plain">
                                       <v-icon icon="fa-solid fa-plus fa-2xs" color="white"
@@ -265,6 +265,15 @@
         </v-sheet>
       </v-col>
     </v-row>
+
+    <div>
+      <DeleteImageProfile
+        v-model="deleteImageDialog"
+        v-if="deleteImageDialog"
+        :image="this.imageRemove"
+        @close-dialog="closeDeleteAvatarDialog"
+      />
+    </div>
   </v-container>
 </template>
 
@@ -282,20 +291,18 @@ const phoneMask = ref('');
 <script>
 //import Dashboard from '../Auth/Dashboard.vue';
 import axios from "axios";
-
 import ProfileUpload from '../Dialogs/ProfileImage.vue'
-
+import DeleteImageProfile from "../Profile/profileImage/deleteImageProfile.vue";
 export default {
+  emits: ['close-dialog'],
   components: {
-    //  Dashboard,
-//    Upload,
     ProfileUpload,
-
-  },
+    DeleteImageProfile
+ },
   data: () => ({
     customer: false,
     customerAddress: [],
-    profileImage: false,
+    profileImage: [],
     panel: ['first_address', 'secondary_address'],
     address: '',
     number: 0,
@@ -317,6 +324,9 @@ export default {
     loadingUpdate: false,
     dialogImage: false,
     customerDialog: false,
+    deleteImageDialog: false,
+    imageId: -1,
+    imageRemove: false,
     ufs: [{
       state: 'Distrito Federal', uf: 'DF',
       state: 'Goiás', uf: 'Go',
@@ -397,12 +407,28 @@ export default {
           return alert('Error :' + response);
         });
     },
-    deleteProfileImage() {
-      const image = Object.assign({}, this.profileImage);
+    openDeleteAvatarDialog(item){
 
+      this.imageRemove = Object.assign({}, item);
+      this.imageId = this.imageRemove.id;
+      this.deleteImageDialog = true;
+      console.log(this.deleteImageDialog);
+    },
+    closeDeleteAvatarDialog(){
+      this.deleteImageDialog = false;
+    },
+    deleteProfileImage(item){
+      //this.imageId = this.profileImage.indexOf(item);
+     
+       return this.removeProfileImage();
+    },
+    removeProfileImage() {
+      const image = Object.assign({}, this.profileImage);
+     
       axios.delete(`/profileImage/delete/${image.id}`)
         .then((response) => {
-          this.profileImage.splice(image.id, 1);
+          console.log(this.profileImage);
+          return this.profileImage.splice(this.imageId, 1);
         })
         .catch((response) => {
           return alert('Error :' + response);
@@ -496,8 +522,8 @@ export default {
 .v-card--reveal {
   align-items: center;
   top: 0;
-  justify-content: start;
-  opacity: .1;
+  justify-content: center;
+  opacity: .8;
   position: absolute;
   width: 100%;
   max-height: 30%;

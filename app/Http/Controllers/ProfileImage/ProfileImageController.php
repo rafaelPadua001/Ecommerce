@@ -35,7 +35,9 @@ class ProfileImageController extends Controller
     public function destroy($id)
     {
         try {
-            $profileImage = ProfileImage::findOrFail($id)->delete();
+            $profileImage = $this->profileImageService->destroy($id);
+            
+            return response()->json($profileImage); //ProfileImage::findOrFail($id)->delete();
         } catch (Exception $e) {
             return response()->json($e);
         }
