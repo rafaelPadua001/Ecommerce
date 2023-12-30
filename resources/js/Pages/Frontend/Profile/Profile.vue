@@ -88,7 +88,7 @@
                                 <v-row>
                                   <v-col cols="auto" md="12">
                                     <label>Address:</label>
-                                    <v-text-field v-model="address" required hide-details
+                                    <v-text-field v-model="editedItem.address" required hide-details
                                       :label="customerAddress.endereco">
                                     </v-text-field>
 
@@ -97,20 +97,20 @@
                                  
                                   <v-col cols="auto" sm="5">
                                     <label>Complement:</label>
-                                    <v-text-field v-model="complemento" required hide-details
+                                    <v-text-field v-model="editedItem.complemento" required hide-details
                                       :label="customerAddress.complemento"
                                       :placeholder="customerAddress.complemento"></v-text-field>
                                   </v-col>
                                   
                                   <v-col cols="auto" md="3">
                                     <label>N°</label>
-                                    <v-text-field v-model="number" required hide-details :label="customerAddress.number"
+                                    <v-text-field v-model="editedItem.number" required hide-details :label="customerAddress.number"
                                       :placeholder="customerAddress.number"></v-text-field>
                                   </v-col>
 
                                   <v-col cols="auto" sm="4">
                                     <label>Bairro:</label>
-                                    <v-text-field v-model="bairro" required hide-details :label="customerAddress.bairro"
+                                    <v-text-field v-model="editedItem.bairro" required hide-details :label="customerAddress.bairro"
                                       :placeholder="customerAddress.bairro"></v-text-field>
                                   </v-col>
                                 </v-row>
@@ -118,7 +118,7 @@
 
                                   <v-col cols="auto" md="3">
                                     <label>UF:</label>
-                                    <v-select v-model="uf" :label="customerAddress.uf" :items="ufs" item-title="uf"
+                                    <v-select v-model="editedItem.uf" :label="customerAddress.uf" :items="ufs" item-title="uf"
                                       placeholder="UF" return-object single-line :placeholder="customerAddress.uf">
 
                                     </v-select>
@@ -126,21 +126,21 @@
                                   </v-col>
                                   <v-col cols="auto" sm="4">
                                     <label>State:</label>
-                                    <v-text-field v-model="estado" required hide-details :placeholder="uf.state"
+                                    <v-text-field v-model="editedItem.estado" required hide-details :placeholder="uf.state"
                                       :label="customerAddress.estado"></v-text-field>
                                   </v-col>
                                 </v-row>
                                 <v-row>
                                   <v-col cols="auto" sm="4">
                                     <label>Postal code:</label>
-                                    <v-text-field v-model="zip_code" v-maska:[options] :label="customerAddress.cep"
+                                    <v-text-field v-model="editedItem.zip_code" v-maska:[options] :label="customerAddress.cep"
                                       :placeholder="customerAddress.cep"></v-text-field>
 
 
                                   </v-col>
                                   <v-col cols="auto" sm="4">
                                     <label>Cidade:</label>
-                                    <v-text-field v-model="cidade" required hide-details :label="customerAddress.cidade"
+                                    <v-text-field v-model="editedItem.cidade" required hide-details :label="customerAddress.cidade"
                                       :placeholder="customerAddress.cidade"></v-text-field>
                                   </v-col>
 
@@ -150,14 +150,14 @@
                               <v-row>
                                 <v-col cols="auto" sm="4">
                                   <label>Pais:</label>
-                                  <v-select v-model="country" aria-required hide-details :label="customerAddress.pais"
+                                  <v-select v-model="editedItem.country" aria-required hide-details :label="customerAddress.pais"
                                     :items="countryItems" :placeholder="customerAddress.pais">
 
                                   </v-select>
                                 </v-col>
                                 <v-col cols="auto" sm="5">
                                   <label>Phone:</label>
-                                  <v-text-field v-model="phone" required hide-details :label="customerAddress.telefone"
+                                  <v-text-field v-model="editedItem.phone" required hide-details :label="customerAddress.telefone"
                                     v-maska:[phoneOptions] :placeholder="customerAddress.telefone"></v-text-field>
                                 </v-col>
                                 <v-col col="8" sm="6">
@@ -409,7 +409,6 @@ export default {
         });
     },
     openDeleteAvatarDialog(item){
-
       this.imageRemove = Object.assign({}, item);
       this.imageId = this.imageRemove.id;
       this.deleteImageDialog = true;
@@ -479,6 +478,7 @@ export default {
       };
       axios.post('/address/save', data)
         .then((response) => {
+          
           return this.customerAddress = response.data;
         })
         .catch((response) => {
@@ -487,12 +487,12 @@ export default {
 
     },
     editAddress() {
-      this.editedItem = Object.assign({}, this.customerAddress);
+      //this.editedItem = Object.assign({}, this.customerAddress);
       return this.update();
     },
     update() {
       const data = {
-        endereco: this.editedItem.endereco,
+        endereco: this.editedItem.address,
         // number: this.number,
         complemento: this.editedItem.complemento,
         bairro: this.editedItem.bairro,
@@ -506,6 +506,7 @@ export default {
     
       axios.post(`/address/update/${this.customerAddress.id}`, data)
         .then((response) => {
+         
           return this.customerAddress = Object.assign({},response.data);
         })
         .catch((response) => {

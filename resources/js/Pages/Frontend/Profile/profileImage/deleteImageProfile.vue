@@ -32,7 +32,7 @@
                             <v-btn class="me-2" variant="plain" color="error" @click="remove(image)">
                                 Remove 
                             </v-btn>
-                            <v-btn class="me-2" variant="plain" color="error" @click="close()">
+                            <v-btn class="me-2" variant="plain"  @click="close()">
                                 Cancel
                             </v-btn>
                         </v-btn-group>
