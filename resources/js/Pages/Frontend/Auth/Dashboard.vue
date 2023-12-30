@@ -96,8 +96,6 @@ export default {
             return this.address = response.data;
             
           }
-
-          
         })
         .catch((response) => {
           return alert('Erro :' + response);
