@@ -8,13 +8,16 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-class CustomerService{
+class CustomerService
+{
     protected $customer;
-    public function __construct(Customer $customer){
+    public function __construct(Customer $customer)
+    {
         $this->customer = $customer;
     }
-    public function getCustomer(){
-        try{
+    public function getCustomer()
+    {
+        try {
             $customer = Auth::guard('customer')->user();
             $customerProfile = ProfileImage::where('customer_id', $customer->id)
                 ->join('customers', 'customers.id', '=', 'profile_images.customer_id')
@@ -23,30 +26,57 @@ class CustomerService{
                     'customers.last_name',
                     'customers.email',
                     'profile_images.name',
-                    'profile_images.extension')
+                    'profile_images.extension'
+                )
                 ->first();
-           
-            if(!$customerProfile){
+
+            if (!$customerProfile) {
                 return $customer;
             }
-           
+
             return $customerProfile;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($e);
         }
     }
-    public function create(Request $request){
-        try{
-            $insert = Customer::create(
-                $request->all()
-            );
-                $response = 'Usuario cadastrado com sucesso';
-                return response()->json($response);
+    public function create(Request $request)
+    {
+        try {
+            $insert = Customer::create($request->all());
+
+            return response()->json($insert);
+        } catch (Exception $e) {
+            return throw new Exception($e);
         }
-        catch(Exception $e){
-            $response = $e;
-            
-            return throw new Exception($response);
+    }
+    public function update(Request $request, $id)
+    {
+        try {
+            $customer = Customer::findOrFail($id);
+
+            if ($request->has('password')) {
+                //criptografa a nova senha
+                $request->merge(['password' => bcrypt($request->password)]);
+            }
+            $update = $customer->update($request->all());
+            return $request;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    public function clearSession(Request $request)
+    {
+        try {
+            Auth::guard('customer')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+            $response = true;
+            return response()->json($request);
+            //redirect('/login');
+        } catch (Exception $e) {
+            return response()->json($e);
         }
     }
 }
