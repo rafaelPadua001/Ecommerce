@@ -103,6 +103,7 @@ Route::delete('/profileImage/delete/{id}', [ProfileImageController::class, 'dest
 Route::get('/address', [AddressesController::class, 'index'])->name('address.index');
 Route::post('/address/save', [AddressesController::class, 'create'])->name('address.create');
 Route::post('/address/update/{id}', [AddressesController::class, 'update'])->name('address.update');
+Route::delete('/address/delete/{id}', [AddressesController::class, 'destroy'])->name('address.delete');
 
 //Categories routes
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index');

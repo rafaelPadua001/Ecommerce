@@ -37,4 +37,14 @@ class AddressesController extends Controller
             return response()->json($e);
         }
     }
+    public function destroy($id){
+        try{
+            $delete = $this->addressService->delete($id);
+            return response()->json($delete);
+        }
+        catch(Exception $e)
+        {
+            return response()->json($e);
+        }
+    }
 }
