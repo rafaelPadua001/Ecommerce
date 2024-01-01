@@ -61,7 +61,7 @@
                           <v-list-item :title="customer.email"></v-list-item>
 
                           <v-list-item>
-                            <v-btn class="me-2" color="primary" variant="text" @click="editCustomerInfo" size="x-small">
+                            <v-btn class="me-2" color="primary" variant="text" @click="openDialogCustomerInfo(profileImage)" size="x-small">
                               Personal info
                             </v-btn>
                           </v-list-item>
@@ -161,16 +161,24 @@
                                     v-maska:[phoneOptions] :placeholder="customerAddress.telefone"></v-text-field>
                                 </v-col>
                                 <v-col col="8" sm="6">
-                                  <v-btn :disabled="loadingUpdate" :loading="loadingUpdate" block class="text-none mb-4"
-                                    color="indigo-darken-3" size="x-large" variant="flat"
+                                  <v-btn-group>
+                                    <v-btn :disabled="loadingUpdate" :loading="loadingUpdate" class="text-none mb-4"
+                                    color="indigo-darken-3" size="large" variant="plain"
                                     @click="editAddress(customerAddress)" v-if="Object.keys(customerAddress).length >= 1">
                                     Update
+                                  </v-btn>
+                                  <v-btn v-if="Object.keys(customerAddress).length >= 1" class="text-none mb-4" color="error" size="large" variant="plain" 
+                                    @click="openDialogRemoveAddress(customerAddress)">
+                                    Remove address
                                   </v-btn>
                                   <v-btn :disabled="loading" :loading="loading" block class="text-none mb-4"
                                     color="indigo-darken-3" size="x-large" variant="flat" @click="loading = !loading"
                                     v-else="object.keys(customerAddress).length == 0">
                                     Save and continue
                                   </v-btn>
+                                
+                                  </v-btn-group>
+                                  
                                 </v-col>
                               </v-row>
 
@@ -183,63 +191,21 @@
                                 @close-dialog="this.dialogImage = false"
                                 @update-avatar="updateAvatar"
                               />
+                              <ProfileCustomerDialog 
+                                v-model="customerDialog" 
+                                v-if="customerDialog"
+                                :customer="this.customer"
+                                @close-dialog="this.customerDialog = false"
+                              />
 
-                             <v-dialog v-model="customerDialog" v-if="customerDialog" width="1024">
-                                <v-card class="text-center">
-                                  <v-card-title>
-                                    <v-toolbar color="transparent">
-                                      Edit Information
-                                      <template v-slot:append>
-                                        <v-btn icon @click="closeCustomerDialog">
-                                          <v-icon icon="fas fa-close"></v-icon>
-                                        </v-btn>
-                                      </template>
-
-                                    </v-toolbar>
-                                  </v-card-title>
-
-                                  <v-card-text>
-                                    <v-row>
-                                      <v-col>
-                                        <label>First name:</label>
-                                        <v-text-field v-model="first_name" :label="customer.first_name"></v-text-field>
-                                      </v-col>
-                                      <v-col>
-                                        <label>Last name:</label>
-                                        <v-text-field v-model="last_name" :label="customer.last_name"></v-text-field>
-                                      </v-col>
-                                    </v-row>
-                                    <v-row>
-                                      <v-col>
-                                        <label>Email:</label>
-                                        <v-text-field v-model="email" :label="customer.email"></v-text-field>
-                                      </v-col>
-                                      <v-col>
-                                        <label>New password:</label>
-                                        <v-text-field v-model="password" type="password"
-                                          label="New Password"></v-text-field>
-                                      </v-col>
-                                      <v-col>
-                                        <label>Confirm password:</label>
-                                        <v-text-field label="Confirm new password"></v-text-field>
-                                      </v-col>
-                                    </v-row>
-
-                                  </v-card-text>
-
-                                  <v-card-actions>
-                                    <v-btn-group>
-                                      <v-btn @click="customerUpdate">
-                                        Save
-                                      </v-btn>
-                                      <v-btn @click="customerDialog = false">
-                                        Cancel
-                                      </v-btn>
-                                    </v-btn-group>
-                                  </v-card-actions>
-                                </v-card>
-
-                              </v-dialog>
+                              <!-- Aqui vou carregar o dialog para remover o address-->
+                              <RemoveAddressDialog 
+                                v-model="dialogRemoveAddress"
+                                v-if="dialogRemoveAddress"
+                                :address="this.customerAddress"
+                                @close-dialog="this.dialogRemoveAddress = false"
+                              />
+                            
                             </div>
 
                           </v-sheet>
@@ -290,15 +256,20 @@ const phoneMask = ref('');
 </script>
 
 <script>
-//import Dashboard from '../Auth/Dashboard.vue';
+
 import axios from "axios";
 import ProfileUpload from '../Dialogs/ProfileImage.vue'
 import DeleteImageProfile from "../Profile/profileImage/deleteImageProfile.vue";
+import ProfileCustomerDialog from '../Profile/partials/ProfileCustomerDialog.vue';
+import RemoveAddressDialog from '../Profile/partials/removeAddress.vue';
+
 export default {
   emits: ['close-dialog', 'delete-image'],
   components: {
     ProfileUpload,
-    DeleteImageProfile
+    ProfileCustomerDialog,
+    DeleteImageProfile,
+    RemoveAddressDialog
  },
   data: () => ({
     customer: false,
@@ -326,6 +297,7 @@ export default {
     dialogImage: false,
     customerDialog: false,
     deleteImageDialog: false,
+    dialogRemoveAddress: false,
     imageId: -1,
     imageRemove: false,
     ufs: [{
@@ -391,28 +363,11 @@ export default {
           return alert('Error: ' + response);
         })
     },
-    customerUpdate() {
-      const selectCustomer = Object.assign({}, this.customer);
-      let data = {
-        first_name: this.first_name,
-        last_name: this.last_name,
-        email: this.email,
-        password: this.password,
-
-      };
-      axios.post(`/customer/update/${selectCustomer.id}`, data)
-        .then((response) => {
-          return this.customer.push(response.data);
-        })
-        .catch((response) => {
-          return alert('Error :' + response);
-        });
-    },
     openDeleteAvatarDialog(item){
       this.imageRemove = Object.assign({}, item);
       this.imageId = this.imageRemove.id;
       this.deleteImageDialog = true;
-      console.log(this.deleteImageDialog);
+      
     },
     closeDeleteAvatarDialog(){
       this.deleteImageDialog = false;
@@ -445,36 +400,39 @@ export default {
           return alert('Erro : ' + response);
         });
     },
-    editCustomerInfo(item) {
+    openDialogCustomerInfo(item) {
+     
       this.editedItem = Object.assign({}, this.customerAddress);
+     
       this.customerDialog = true;
-
+      console.log(this.customerDialog);
     },
     updateAvatar(response){
       return this.profileImage = Object.assign({}, response.data.original);
     },
-    closeCustomerDialog() {
-      this.customerDialog = false;
-
-    },
     closeImageDialog() {
       this.dialogImage = false;
+    },
+    openDialogRemoveAddress(item){
+     // this.editedItem = Object.assign({}, item);
+    //  this.editedIndex = this.customerAddress.indexOf(item);
+      this.dialogRemoveAddress = true;
     },
     uploadProfileImage() {
       this.dialogImage = true;
     },
     save() {
       const data = {
-        address: this.address,
-        number: this.number,
-        complemento: this.complemento,
-        bairro: this.bairro,
-        uf: this.uf.uf,
-        state: this.uf.state,
-        postal_code: this.zip_code,
-        city: this.cidade,
-        country: this.country,
-        phone: this.phone,
+        address: this.editedItem.address,
+        number: this.editedItem.number,
+        complemento: this.editedItem.complemento,
+        bairro: this.editedItem.bairro,
+        uf: this.editedItem.uf.uf,
+        state: this.editedItem.uf.state,
+        postal_code: this.editedItem.zip_code,
+        city: this.editedItem.cidade,
+        country: this.editedItem.country,
+        phone: this.editedItem.phone,
       };
       axios.post('/address/save', data)
         .then((response) => {
@@ -487,13 +445,12 @@ export default {
 
     },
     editAddress() {
-      //this.editedItem = Object.assign({}, this.customerAddress);
       return this.update();
     },
     update() {
       const data = {
         endereco: this.editedItem.address,
-        // number: this.number,
+        number: this.editedItem.number,
         complemento: this.editedItem.complemento,
         bairro: this.editedItem.bairro,
         uf: this.editedItem.uf,

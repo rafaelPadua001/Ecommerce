@@ -57,6 +57,15 @@ class AddressService{
             return response()->json($e);
         }
     }
+    public function delete($id){
+        try{
+            $address = $this->address->findOrFail($id)->delete();
+            return response()->json($address);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
     
 
 }
