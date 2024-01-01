@@ -93,6 +93,7 @@ Route::post('/customer/update/{id}', [CustomerController::class, 'update'])->nam
 Route::post('/login',[LoginController::class, 'login'])->name('cutomer.login');
 Route::post('/registerCustomer', [CustomerController::class, 'store'])->name('store');
 Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('logout');
+Route::delete('/customer/delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
 
 //Customer Profile Image
 Route::get('/profileImage', [ProfileImageController::class, 'index'])->name('profile.image.index');

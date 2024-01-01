@@ -56,6 +56,15 @@ class CustomerController extends Controller
        }
         
     }
+    public function destroy($id){
+        try{
+            $delete = $this->customerService->destroyAccount($id);
+            return response()->json($delete);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
      
     
 
