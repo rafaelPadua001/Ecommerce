@@ -5,56 +5,38 @@ namespace App\Http\Controllers\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Customer;
-use App\Models\ProfileImage;
 use App\Http\Controllers\Controller;
 use Exception;
+use App\Services\CustomerService\CustomerService;
 
 
 
 class CustomerController extends Controller
 {
-    protected $customer;
     
-    public function __construct(Customer $customer){
-        $this->customer = $customer;
+    protected $customerService;
+    
+    public function __construct(CustomerService $customerService){
+        $this->customerService = $customerService;
     }
 
     public function index(){
         try{
-            $customer = Auth::guard('customer')->user();
-            $customerProfile = ProfileImage::where('customer_id', $customer->id)
-                ->join('customers', 'customers.id', '=', 'profile_images.customer_id')
-                ->select(
-                    'customers.first_name',
-                    'customers.last_name',
-                    'customers.email',
-                    'profile_images.name',
-                    'profile_images.extension')
-                ->first();
-           
-            if(!$customerProfile){
-                return response()->json($customer);
-            }
-           
-            return response()->json($customerProfile);
-        }catch(Exception $e){
+            $customer = $this->customerService->getCustomer();
+            return response()->json($customer);
+        }
+        catch(Exception $e){
             return response()->json($e);
         }
-       
     }
     public function store(Request $request){
         $data = $request;
         try{
-            $insert = Customer::create(
-                $request->all()
-            );
-                $response = 'Usuario cadastrado com sucesso';
-                return response()->json($response);
+            $insert = $this->customerService->create($request);
+            return response()->json($insert);
         }
         catch(Exception $e){
-            $response = $e;
-            
-            return throw new Exception($response);
+            return throw new Exception($e);
         }
     }
     public function update(Request $request, $id){
@@ -62,7 +44,7 @@ class CustomerController extends Controller
             $customer = Customer::findOrFail($id);
             
             if($request->has('password')){
-                //criptografa a nova sernha
+                //criptografa a nova senha
                 $request->merge(['password' => bcrypt($request->password)]);
 
             }
