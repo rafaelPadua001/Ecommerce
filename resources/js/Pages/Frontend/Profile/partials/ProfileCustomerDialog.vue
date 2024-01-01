@@ -65,7 +65,14 @@
 <script>
 export default {
     props: ['customer'],
-    data: () => ({}),
+    data: () => ({
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        email: '',
+    }),
     methods: {
         customerUpdate() {
             const selectCustomer = Object.assign({}, this.customer);
@@ -78,7 +85,8 @@ export default {
             };
             axios.post(`/customer/update/${selectCustomer.id}`, data)
                 .then((response) => {
-                    return this.customer.push(response.data);
+                    this.$emit('close-dialog');
+                    return this.$emit('update-customer', response);
                 })
                 .catch((response) => {
                     return alert('Error :' + response);

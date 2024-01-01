@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Customer;
 use App\Http\Controllers\Controller;
 use Exception;
 use App\Services\CustomerService\CustomerService;
@@ -13,7 +12,6 @@ use App\Services\CustomerService\CustomerService;
 
 class CustomerController extends Controller
 {
-    
     protected $customerService;
     
     public function __construct(CustomerService $customerService){
@@ -30,7 +28,6 @@ class CustomerController extends Controller
         }
     }
     public function store(Request $request){
-        $data = $request;
         try{
             $insert = $this->customerService->create($request);
             return response()->json($insert);
@@ -41,15 +38,8 @@ class CustomerController extends Controller
     }
     public function update(Request $request, $id){
         try{
-            $customer = Customer::findOrFail($id);
-            
-            if($request->has('password')){
-                //criptografa a nova senha
-                $request->merge(['password' => bcrypt($request->password)]);
-
-            }
-            $update = $customer->update($request->all());
-            return response()->json($update);
+           $update = $this->customerService->update($request, $id);
+           return response()->json($update);
         }
         catch(Exception $e){
             return response()->json($e);
@@ -57,13 +47,8 @@ class CustomerController extends Controller
     }   
     public function logout(Request $request){
        try{
-            Auth::guard('customer')->logout();
-
-            $request->session()->invalidate();
-
-            $request->session()->regenerateToken();
-            $response = true;
-            return response()->json($request);
+            $clearSession = $this->customerService->clearSession($request);
+            return response()->json($clearSession);
         //redirect('/login');
        }
        catch(Exception $e){

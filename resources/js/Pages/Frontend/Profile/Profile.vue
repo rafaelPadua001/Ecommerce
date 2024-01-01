@@ -195,6 +195,7 @@
                                 v-model="customerDialog" 
                                 v-if="customerDialog"
                                 :customer="this.customer"
+                                @update-customer="update"
                                 @close-dialog="this.customerDialog = false"
                               />
 
@@ -442,28 +443,9 @@ export default {
     editAddress() {
       return this.update();
     },
-    update() {
-      const data = {
-        endereco: this.editedItem.address,
-        number: this.editedItem.number,
-        complemento: this.editedItem.complemento,
-        bairro: this.editedItem.bairro,
-        uf: this.editedItem.uf,
-        estado: this.editedItem.state,
-        cep: this.editedItem.zip_code,
-        cidade: this.editedItem.cidade,
-        pais: this.editedItem.country,
-        telefone: this.editedItem.phone,
-      }
-    
-      axios.post(`/address/update/${this.customerAddress.id}`, data)
-        .then((response) => {
-         
-          return this.customerAddress = Object.assign({},response.data);
-        })
-        .catch((response) => {
-          return alert('Error: ' + response);
-        });
+    update(response) {
+      alert(response);
+      return this.customer = Object.assign({}, response.data);
     }
   },
   created() {

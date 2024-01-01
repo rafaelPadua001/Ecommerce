@@ -16,19 +16,13 @@
                                         cover
                                         class="text-white"
                                     >
-                                       
                                     </v-img>
-
                                 </v-card>
                             </v-col>
 
                             <v-col cols="6">
                                 <v-card class="mx-auto" elevation="0">
-                                    
-                                        
-                                    <v-divider></v-divider>
-
-                                    <v-card-text>
+                                  <v-card-text>
                                         <v-form>
                                             <v-img
                                                 class="mx-auto my-2"
@@ -36,11 +30,13 @@
                                                 src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"
                                                 >
                                             </v-img>
+
+                                            <v-divider></v-divider>
                                             <v-card-text>
                                                 <v-row no-gutters>
                                                     <v-col class="d-flex justify-center flex-column" cols="auto">
                                                           <div v-if="!error">
-                                                                <v-alert title="success !" text="você será redirecionado em breve"
+                                                                <v-alert title="success !" :text="message"
                                                                     v-model="alert" type="success">
                                                                 </v-alert>
                                                             </div>
@@ -157,6 +153,7 @@ export default {
         password: null,
         confirmPassoword: null,
         alert: null,
+        message: false,
         error: null,
         //address: null,
         //city: null,
@@ -227,6 +224,7 @@ export default {
 
             axios.post('/registerCustomer', data)
                 .then((response) => {
+                    this.message = 'Usuario cadastrado com sucesso, você será redirecionado em breve.';
                     this.alert = true;
                     setTimeout(() => {
                         window.location.href = "/login";
@@ -241,7 +239,7 @@ export default {
                         setTimeout(() => {
                             this.alert = false;
                            
-                        }, 10000);
+                        }, 3500);
                     }
                  return false;
                 })

@@ -282,7 +282,6 @@ export default {
                     if (response) {
                         this.$router.push('/login');
                     }
-                    alert(response);
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);
