@@ -1,10 +1,8 @@
 <template>
     <v-dialog>
-
-
-        <v-row>
-            <v-col cols="auto" md="8">
-                <v-card class="text-center">
+        <v-row fluid>
+            <v-col class="d-flex justify-center mb-6 flex-column" cols="12">
+                <v-card class="text-center mx-auto" :width="800">
                     <v-card-title>
                         <v-toolbar color="transparent">
                             Edit Information
@@ -87,8 +85,8 @@ export default {
                 });
         },
         closeCustomerDialog(){
-        this.$emit('close-dialog');
-    }
+            this.$emit('close-dialog');
+        }
     },
     
 }

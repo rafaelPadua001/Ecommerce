@@ -337,9 +337,6 @@ export default {
       this.update();
       setTimeout(() => (this.loadingUpdate = false, 20000));
     },
-    customerDialog(val) {
-      val || this.closeCustomerDialog();
-    },
     dialogImage(val) {
       val || this.closeImageDialog();
     }
@@ -376,7 +373,6 @@ export default {
       return this.profileImage = '';
     },
     deleteProfileImage(item){
-      //this.imageId = this.profileImage.indexOf(item);
      return this.removeProfileImage();
     },
     removeProfileImage() {
@@ -401,11 +397,10 @@ export default {
         });
     },
     openDialogCustomerInfo(item) {
-     
       this.editedItem = Object.assign({}, this.customerAddress);
      
       this.customerDialog = true;
-      console.log(this.customerDialog);
+      
     },
     updateAvatar(response){
       return this.profileImage = Object.assign({}, response.data.original);
