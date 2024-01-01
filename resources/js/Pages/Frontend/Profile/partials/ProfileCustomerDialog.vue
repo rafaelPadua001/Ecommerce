@@ -40,7 +40,11 @@
                                 <v-text-field label="Confirm new password"></v-text-field>
                             </v-col>
                         </v-row>
-
+                        <v-row>
+                            <v-col>
+                                <v-btn class="me-2" variant="plain" color="error" @click="openDeleteAccount(customer)">Delete account</v-btn>
+                            </v-col>
+                        </v-row>
                     </v-card-text>
 
                     <v-card-actions>
@@ -55,6 +59,14 @@
                     </v-card-actions>
                 </v-card>
 
+                <div>
+                    <DeleteAccount 
+                        v-model="deleteAccountDialog"
+                        v-if="deleteAccountDialog"
+                        :customer="this.customer"
+                        @close-dialog="deleteAccountDialog = false"
+                    />
+                </div>
             </v-col>
         </v-row>
 
@@ -63,8 +75,13 @@
 </template>
 
 <script>
+import DeleteAccount from './DeleteAccount.vue';
+
 export default {
     props: ['customer'],
+    components: {
+        DeleteAccount
+    },
     data: () => ({
         first_name: '',
         last_name: '',
@@ -72,6 +89,7 @@ export default {
         password: '',
         confirmPassword: '',
         email: '',
+        deleteAccountDialog: false,
     }),
     methods: {
         customerUpdate() {
@@ -94,6 +112,10 @@ export default {
         },
         closeCustomerDialog(){
             this.$emit('close-dialog');
+        },
+        openDeleteAccount(){
+            return this.deleteAccountDialog = true;
+           
         }
     },
     

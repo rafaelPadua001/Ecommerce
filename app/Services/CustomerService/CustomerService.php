@@ -22,6 +22,7 @@ class CustomerService
             $customerProfile = ProfileImage::where('customer_id', $customer->id)
                 ->join('customers', 'customers.id', '=', 'profile_images.customer_id')
                 ->select(
+                    'customers.id',
                     'customers.first_name',
                     'customers.last_name',
                     'customers.email',
@@ -77,6 +78,16 @@ class CustomerService
             //redirect('/login');
         } catch (Exception $e) {
             return response()->json($e);
+        }
+    }
+    public function destroyAccount($id){
+        try{
+            $delete = $this->customer->findOrFail($id)->delete();
+           
+            return $delete;
+        }
+        catch(Exception $e){
+            return $e;
         }
     }
 }
