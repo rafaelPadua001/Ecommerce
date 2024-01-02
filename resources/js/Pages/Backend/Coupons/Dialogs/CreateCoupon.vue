@@ -2,7 +2,8 @@
   <v-dialog 
       fullscreen
       :scrim="false"
-      transition="dialog-bottom-transition">
+      transition="dialog-bottom-transition"
+  >
     <v-card class="mx-auto" v-if="this.createDialog">
       <v-toolbar title="Coupons Generator">
         <v-btn icon @click="close">
@@ -64,6 +65,11 @@
             {{ end_hour }}
           </v-col>
         </v-row>
+        <v-row>
+          <v-col cols="12" sm="6">
+            <v-switch v-model="display" inset hide-details :label="`Display on main page: ${display.toString()}`" color="success"></v-switch>
+          </v-col>
+        </v-row>
       </v-card-text>
 
       <v-card-actions>
@@ -90,6 +96,7 @@ export default {
     end_date: '',
     init_hour: '',
     end_hour: '',
+    display: false, 
     codeRules: [
       v => !!v || 'Código do cupom é obrigatório',
       v => (v && v.length <= 10) || 'Máximo de 10 caracteres para o código',
@@ -118,6 +125,7 @@ export default {
         end_date: this.end_date ? this.end_date.toISOString().split('T')[0] : null,
         init_hour: this.init_hour,
         end_hour: this.end_hour,
+        display: this.display
       };
 
       axios.post('/coupons/add', data, {

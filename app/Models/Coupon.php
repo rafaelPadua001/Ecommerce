@@ -16,6 +16,7 @@ class Coupon extends Model
         'init_hour',
         'end_hour',
         'user_id',
-        'is_used'
+        'is_used',
+        'is_displayed'
     ];
 }
