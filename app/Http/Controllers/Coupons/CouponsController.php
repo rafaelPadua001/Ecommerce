@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Coupons;
 
 use App\Http\Controllers\Controller;
+use App\Services\CouponService\CouponService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Coupon;
@@ -11,9 +12,13 @@ use Exception;
 class CouponsController extends Controller
 {
     //
+    protected $couponService;
+    public function __construct(CouponService $couponService){
+        $this->couponService = $couponService;
+    }
     public function index(){
         try{
-            $coupons = Coupon::all();
+            $coupons = $this->couponService->getAll();
             return response()->json($coupons);
         }
         catch(Exception $e){
@@ -23,15 +28,7 @@ class CouponsController extends Controller
     public function create(Request $request){
         try{
             $user = Auth::user();
-            $coupon = Coupon::create([
-                'code' => $request->code_coupon,
-                'discount_percentage' => $request->value_coupon,
-                'init_date' => $request->init_date,
-                'end_date' => $request->end_date,
-                'init_hour' => $request->init_hour,
-                'end_hour' => $request->end_hour,
-                'user_id' => $user->id 
-            ]);
+            $coupon = $this->couponService->store($request);
             
             return response()->json($coupon);
         }
@@ -41,9 +38,8 @@ class CouponsController extends Controller
     }
     public function update(Request $request, $id){
         try{
-            $user = Auth::user();
-            $coupon = Coupon::where('id', $id)->update($request->all());
-            $updated = Coupon::where('id', $id)->first();
+            
+            $updated = $this->couponService->updateCoupon($request, $id);
             
            return response()->json($updated);
         }
@@ -53,11 +49,11 @@ class CouponsController extends Controller
     }
     public function destroy($id){
         try{
-            $coupon = Coupon::where('id', $id)->delete();
+            $coupon = $this->couponService->delete($id);
             return response()->json($coupon);
         }
         catch(Exception $e){
-            return response()->json($e->getMessage());
+            return response()->json($e);
         }        
     }
 }

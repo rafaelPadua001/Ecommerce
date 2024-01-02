@@ -19,7 +19,7 @@
                     <v-card-text>
 
                         <v-list density="compact">
-                            <v-list-item v-for="coupon in coupons" :key="coupon.id" color="primary" variant="plain">
+                            <v-list-item v-for="(coupon, index) in coupons" :key="index" color="primary" variant="plain">
                                 <template v-slot:append>
                                     <v-menu>
                                         <template v-slot:activator="{ props }">
@@ -59,11 +59,10 @@
 
 
     <div>
-        
         <CreateCoupon v-model="createDialog" :createDialog="createDialog" @create="create"  @close-dialog="closeDialog" />
-        <v-dialog >
-            <UpdateCoupon v-model="editDialog" :editCoupon="editCoupon" @update-coupon="updateCoupon" @close-dialog="closeUpdateDialog"></UpdateCoupon>
-        </v-dialog>
+   
+            <UpdateCoupon v-model="editDialog" v-if="editDialog" :editCoupon="editCoupon" @update-coupon="updateCoupon" @close-dialog="closeUpdateDialog" />
+       
         <v-dialog v-model="removeDialog" width="500">
             <RemoveCoupon :removeCoupon="removeCoupon" @remove="deleteCoupon" @close-dialog="closeRemoveDialog"></RemoveCoupon>
         </v-dialog>
@@ -115,11 +114,12 @@ export default {
                 });
         },
         create(response){
+            this.closeDialog();
             return this.coupons.push(response.data);
         },
         edit(coupon) {
           this.editCoupon = Object.assign({}, coupon);
-          this.editDialog = true;
+          return this.editDialog = true;
         },
         updateCoupon(response){
             const index = this.coupons.findIndex(coupon => coupon.id === response.data.id);

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('end_date');
             $table->time('init_hour');
             $table->time('end_hour');
+            $table->boolean('is_displayed')->default(false);
             $table->boolean('is_used')->default(false);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
