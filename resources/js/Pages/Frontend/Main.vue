@@ -20,15 +20,15 @@
                 <v-row>
                   <v-col cols="auto">
                     <v-banner>
-                    <div>
-                      <Banner></Banner>
-                    </div>
-                   
-                  </v-banner>
+                      <div>
+                        <Banner></Banner>
+                      </div>
+
+                    </v-banner>
                   </v-col>
                 </v-row>
-                 
-                 <div cols="auto" md="4" sm="4">
+
+                <div cols="auto" md="4" sm="4">
                   <h4 align="start">Higlights</h4>
                   <v-divider></v-divider>
                   <v-spacer></v-spacer>
@@ -41,8 +41,8 @@
                               <div class="float-right">
                                 <v-btn-group>
                                   <v-btn icon size="x-small">
-                                    <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0" class="bg-transparent"
-                                      @click="like()"></v-icon>
+                                    <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
+                                      class="bg-transparent" @click="like()"></v-icon>
                                     <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else
                                       @click="like()"></v-icon>
                                   </v-btn>
@@ -87,11 +87,11 @@
 
                             </v-card>
                           </v-hover>
-                      </v-sheet>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </div>
+                        </v-sheet>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </div>
                 <div cols="auto" md="8" sm="4">
                   <h4 align="left">All Products</h4>
 
@@ -101,15 +101,16 @@
 
                   <v-container>
                     <v-row fluid>
-                      <v-col class="d-flex justify-center flex-column" cols="auto" md="4" sm="2" v-for="product in products" :key="item">
+                      <v-col class="d-flex justify-center flex-column" cols="auto" md="4" sm="2"
+                        v-for="product in products" :key="item">
                         <v-sheet class="ma-2 pa-2">
                           <v-hover v-slot="{ isHovering, props }">
                             <v-card class="mx-auto" :max-width="250" v-bind="props" elevation="0">
 
                               <v-btn-group class="float-right">
                                 <v-btn icon size="x-small">
-                                  <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0" class="bg-transparent"
-                                    @click="like()"></v-icon>
+                                  <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
+                                    class="bg-transparent" @click="like()"></v-icon>
                                   <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else
                                     @click="like()"></v-icon>
                                 </v-btn>
@@ -120,8 +121,8 @@
                               </v-btn-group>
                               <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
                                 <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" :width="250"
-                                  :max-width="250" :max-height="200"  aspect-ratio="16/9" :src="`./storage/products/${image}`"
-                                  :lazy-src="`./storage/products/${image}`" cover>
+                                  :max-width="250" :max-height="200" aspect-ratio="16/9"
+                                  :src="`./storage/products/${image}`" :lazy-src="`./storage/products/${image}`" cover>
 
                                   <div v-if="discount_id" class="d-flex justify-end text-center">
                                     <v-chip class="ma-2" label color="orange-darken-4" variant="elevated">
@@ -129,7 +130,7 @@
                                     </v-chip>
 
                                   </div>
-                                 
+
                                   <template>
                                     <div class="d-flex align-center justify-center fill-height">
                                       <v-progress-circular color="grey-lighten-4">
@@ -151,7 +152,8 @@
                                 </v-row>
                                 <v-row>
                                   <v-btn-group>
-                                    <v-btn class="ms-2" size="x-small" variant="outlined" color="orange" v-if="product.slug">
+                                    <v-btn class="ms-2" size="x-small" variant="outlined" color="orange"
+                                      v-if="product.slug">
                                       {{ product.slug }}
                                     </v-btn>
                                     <v-btn v-if="product.discount_id" class="ms-2" size="x-small" variant="outlined"
@@ -195,8 +197,7 @@
 
                               </v-card-text>
                               <v-expand-transition>
-                                <div 
-                                  v-if="isHovering"
+                                <div v-if="isHovering"
                                   class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
                                   <v-card-actions>
                                     <!--<v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
@@ -205,7 +206,7 @@
                                       <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
                                     </v-btn>
                                     -->
-                                    <v-btn  @click="buy(product)" block>
+                                    <v-btn @click="buy(product)" block>
                                       <v-icon icon="fas fa-money-bill-transfer"></v-icon>
                                       <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
                                     </v-btn>
@@ -223,14 +224,9 @@
                       </v-infinite-scroll>
                     </v-row>
                   </v-container>
-                  <ProductDialog 
-                    v-if="buyDialog"
-                    v-model="buyDialog"
-                    :selectProduct="selectProduct"
-                    :buyDialog="buyDialog"
-                    @update:buyDialog="updateBuyDialog"
-                    :customer="customer" />
-                  
+                  <ProductDialog v-if="buyDialog" v-model="buyDialog" :selectProduct="selectProduct"
+                    :buyDialog="buyDialog" @update:buyDialog="updateBuyDialog" :customer="customer" />
+
                 </div>
 
               </v-container>
@@ -240,7 +236,7 @@
           </v-col>
         </v-row>
 
-        
+
         <div class="text-center">
           <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
@@ -255,6 +251,10 @@
 
           </v-snackbar>
         </div>
+
+        <div>
+          <WelcomeDiscount v-model="discountDialog" v-if="discountDialog" :coupon="this.welcomeDiscount"/>
+        </div>
       </v-container>
 
 
@@ -262,14 +262,14 @@
     <div>
 
 
-<v-row no-gutters>
-  <v-col cols="12">
-    <FooterBar />
-  </v-col>
-</v-row>
+      <v-row no-gutters>
+        <v-col cols="12">
+          <FooterBar />
+        </v-col>
+      </v-row>
 
 
-</div>
+    </div>
   </v-app>
 </template>
 
@@ -279,6 +279,7 @@ import axios from 'axios';
 import AppBar from './Layout/AppBar.vue';
 import Banner from '../../Components/Banner.vue';
 import ProductDialog from './Dialogs/ProductDialog.vue';
+import WelcomeDiscount from './Coupons/partials/Welcome.vue';
 import FooterBar from './Layout/FooterBar.vue';
 
 
@@ -287,6 +288,7 @@ export default {
     Banner,
     AppBar,
     ProductDialog,
+    WelcomeDiscount,
     FooterBar
   },
   data: () => ({
@@ -295,6 +297,8 @@ export default {
     images: [],
     categories: [],
     discounts: [],
+    welcomeDiscount: [],
+    discountDialog: false,
     address: [],
     addressDialog: false,
     timeToCarousel: 3000,
@@ -308,7 +312,7 @@ export default {
     loading: false,
     liked: 0,
     likes: false,
-     
+
   }),
   watch: {
     loading(val) {
@@ -336,9 +340,13 @@ export default {
     getCustomer() {
       axios.get('/customer')
         .then((response) => {
+          if(Object.keys(this.customer).length == 0){
+            this.openDiscountDialog();
+          }
           return this.customer = response.data;
         })
         .catch((response) => {
+          
           return this.customer = false;
         })
     },
@@ -360,7 +368,16 @@ export default {
           return alert('Erro :' + response);
         });
     },
-    
+    getWelcomeDiscount() {
+      axios.get(`/coupons/getWelcome`)
+        .then((response) => {
+          return this.welcomeDiscount = response.data;
+
+        })
+        .catch((response) => {
+          return alert('Error:' + response);
+        });
+    },
     /*getDiscounts() {
       axios.get('/api/coupons/all')
         .then((response) => {
@@ -376,28 +393,28 @@ export default {
       this.buyDialog = true;
     },
     updateBuyDialog(value) {
-      
+
       this.buyDialog = value;
     },
     addItem() {
-            if (Object.keys(this.customer).length == 0) {
-                this.snackbar = true;
-                return;
-            }
-            const data = {
-                'product': this.selectProduct,
-                'quantity': this.quantity,
-                'color': this.colors
-            }
-            axios.post(`/carts/add`, data)
-                .then((response) => {
-                    this.add_cart = false;
-                    return this.cart = response.data;
-                })
-                .catch((response) => {
-                    alert('Error :' + response);
-                });
-        },
+      if (Object.keys(this.customer).length == 0) {
+        this.snackbar = true;
+        return;
+      }
+      const data = {
+        'product': this.selectProduct,
+        'quantity': this.quantity,
+        'color': this.colors
+      }
+      axios.post(`/carts/add`, data)
+        .then((response) => {
+          this.add_cart = false;
+          return this.cart = response.data;
+        })
+        .catch((response) => {
+          alert('Error :' + response);
+        });
+    },
     like() {
       if (Object.keys(this.customer).length == 0) {
         this.snackbar = true;
@@ -435,13 +452,18 @@ export default {
           alert('Error: ' + response);
         });
     },
-   
+    openDiscountDialog(){
+      alert('teste');
+      return this.discountDialog = true;
+    }
+
   },
   mounted() {
     this.getCustomer();
     this.getCategories();
     this.getProducts();
-   // this.getDiscounts();
+    this.getWelcomeDiscount();
+    // this.getDiscounts();
     this.getLikes();
 
   }
