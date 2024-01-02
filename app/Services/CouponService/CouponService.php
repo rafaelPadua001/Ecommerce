@@ -20,6 +20,15 @@ class CouponService{
             return $e;
         }
     }
+    public function getWelcome(){
+        try{
+            $coupons = $this->coupon->where('code', '=', 'welcome')->first();
+            return $coupons;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
     public function store(Request $request){
         try{
             $user = Auth::user();

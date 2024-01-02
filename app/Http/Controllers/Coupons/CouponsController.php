@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Services\CouponService\CouponService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Coupon;
 use Exception;
 
 class CouponsController extends Controller
@@ -19,6 +18,15 @@ class CouponsController extends Controller
     public function index(){
         try{
             $coupons = $this->couponService->getAll();
+            return response()->json($coupons);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function getInitDiscount(){
+        try{
+            $coupons = $this->couponService->getWelcome();
             return response()->json($coupons);
         }
         catch(Exception $e){
