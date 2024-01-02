@@ -5,7 +5,7 @@
 
     <div>
         <v-row fluid>
-            <v-col cols="12" sm="12">
+            <v-col class="d-flex justify-center flex-column" cols="12" sm="12">
                 <v-card class="mx-auto" width="500">
                     <v-toolbar title="Coupons" prominent>
                         <template v-slot:append>
@@ -59,12 +59,10 @@
 
 
     <div>
-        <v-dialog v-model="createDialog" width="500">
-            <CreateCoupon :createDialog="createDialog" @create="create"  @close-dialog="closeDialog" />
-        </v-dialog>
-
-        <v-dialog v-model="editDialog">
-            <UpdateCoupon :editCoupon="editCoupon" @update-coupon="updateCoupon" @close-dialog="closeUpdateDialog"></UpdateCoupon>
+        
+        <CreateCoupon v-model="createDialog" :createDialog="createDialog" @create="create"  @close-dialog="closeDialog" />
+        <v-dialog >
+            <UpdateCoupon v-model="editDialog" :editCoupon="editCoupon" @update-coupon="updateCoupon" @close-dialog="closeUpdateDialog"></UpdateCoupon>
         </v-dialog>
         <v-dialog v-model="removeDialog" width="500">
             <RemoveCoupon :removeCoupon="removeCoupon" @remove="deleteCoupon" @close-dialog="closeRemoveDialog"></RemoveCoupon>

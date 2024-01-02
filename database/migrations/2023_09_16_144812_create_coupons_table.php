@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->decimal('discount_percentage', 5, 2);
+            $table->date('init_date');
+            $table->date('end_date');
+            $table->time('init_hour');
+            $table->time('end_hour');
             $table->boolean('is_used')->default(false);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
