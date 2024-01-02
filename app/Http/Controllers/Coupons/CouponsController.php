@@ -26,6 +26,10 @@ class CouponsController extends Controller
             $coupon = Coupon::create([
                 'code' => $request->code_coupon,
                 'discount_percentage' => $request->value_coupon,
+                'init_date' => $request->init_date,
+                'end_date' => $request->end_date,
+                'init_hour' => $request->init_hour,
+                'end_hour' => $request->end_hour,
                 'user_id' => $user->id 
             ]);
             
