@@ -154,30 +154,30 @@
                         </template>
                         <v-list>
                             <!-- login button -->
-                            <v-list-item v-if="Object.keys(user).length === 0">
-                                <v-list-item-title link>
-                                    <span>
-                                        <v-btn icon variant="plain" to="/login">
-                                            <v-icon icon="fa-solid fa-right-to-bracket fa-xs"></v-icon>
-                                        </v-btn>
+                                <v-list-item v-if="user === 0 || !user">
+                                    <v-list-item-title link>
+                                        <span>
+                                            <v-btn icon variant="plain" to="/login">
+                                                <v-icon icon="fa-solid fa-right-to-bracket fa-xs"></v-icon>
+                                            </v-btn>
 
-                                    </span>
-                                    <span>Login</span>
-                                </v-list-item-title>
-                            </v-list-item>
+                                        </span>
+                                        <span>Login</span>
+                                    </v-list-item-title>
+                                </v-list-item>
 
-                            
-
-                            <v-list-item @click="logout()" v-else>
                                 
-                                <v-list-item-title link>
-                                    <span>
-                                        <v-icon icon="fas fa-right-from-bracket"></v-icon>
-                                    </span>
 
-                                    <span>Logout</span>
-                                </v-list-item-title>
-                            </v-list-item>
+                                <v-list-item v-else @click="logout()" >
+                                    
+                                    <v-list-item-title link>
+                                        <span>
+                                            <v-icon icon="fas fa-right-from-bracket"></v-icon>
+                                        </span>
+
+                                        <span>Logout</span>
+                                    </v-list-item-title>
+                                </v-list-item>
 
                             <v-list-item @click="openAddressDialog()">
                                 
@@ -235,6 +235,13 @@ export default {
         getUser() {
             axios.get('/customer')
                 .then((response) => {
+                    console.log(Object.keys(response.data.original).length);
+                    if(!Object.keys(response.data.original).length){
+                        alert('Largura 0');
+                        return this.user = 0;
+                         
+                        console.log('User' + this.user);
+                    }
                     return this.user = response.data;
                 })
                 .catch((response) => {

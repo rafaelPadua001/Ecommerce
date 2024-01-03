@@ -6,10 +6,10 @@ import Dashboard from '@/Pages/Dashboard.vue';
     </div>
     <div>
         <v-container>
-            <v-row fluid>
+            <v-row no-gutters>
                 <v-col class="d-flex justify-center flex-column" cols="12" md="8" sm="4">
                     <v-sheet>
-                        <v-card class="mx-auto pa-2" :width="800">
+                        <v-card class="mx-auto" :width="800">
                             <v-card-text>
                                 <v-data-table
                                     class="elevation-0"
@@ -18,9 +18,14 @@ import Dashboard from '@/Pages/Dashboard.vue';
                                     :sort-by="[{ key: 'coupon_name', order: 'desc' }]"
                                 >
 
+                                <template v-slot:item.discount_percentage="{value}">
+                                    <v-chip variant='flat' color="orange-darken-2">
+                                        {{ value * 100}}%
+                                    </v-chip>
+                                </template>
                                 <template v-slot:item.actions="{item}">
                                     <v-btn-group>
-                                        <v-btn class="me-2" icon variant="plain" size="xs">
+                                        <v-btn class="mr-2" icon variant="plain" size="x-small">
                                             <v-icon icon="fas fa-trash" @click="openRemoveCouponDialog(item)"></v-icon>
                                         </v-btn>
                                     </v-btn-group>
@@ -65,7 +70,7 @@ import RemoveCoupon from './partials/Remove.vue';
                 key: 'coupon_name',
                 sortable: false,
             },
-            { title: 'value', key: 'discount_percentage' },
+            { title: 'value', key: 'discount_percentage'},
             { title: 'expiration', key: 'end_date' },
             { title: 'Actions', key: 'actions', sortable: false },
             ],
