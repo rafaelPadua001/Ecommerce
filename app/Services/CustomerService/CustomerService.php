@@ -52,7 +52,7 @@ class CustomerService
     {
         try {
             $insert = Customer::create($request->all());
-            $coupon = $this->couponCustomerService->rescue($insert);
+            $coupon = $this->couponCustomerService->rescueWelcome($insert);
             return response()->json($insert);
         } catch (Exception $e) {
             return throw new Exception($e);

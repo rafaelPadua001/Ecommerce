@@ -172,6 +172,9 @@ Route::delete('/coupons/delete/{id}', [CouponsController::class, 'destroy'])->na
  
 //Route Coupons to Customer
 Route::get('/couponsCustomer', [CouponCustomerController::class, 'getAll'])->name('coupon.all');
+Route::delete('/couponsCustomer/delete/{id}', [CouponCustomerController::class, 'remove'])->name('coupon.remove');
+
+
 //Products routes
 //Route::get('/products', function(){s
 //    dd('teste product routes');

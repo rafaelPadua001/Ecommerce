@@ -16,7 +16,7 @@
                
             </v-card-title>
             <v-card-text>
-                Aqui será o dialog de remoção de cupon
+               Remove this coupon <strong>{{ coupons.coupon_name }}</strong> ?
             </v-card-text>
 
             <v-card-actions>
@@ -24,7 +24,7 @@
                     <v-btn class="mr-2" variant="text">
                         cancel
                     </v-btn>
-                    <v-btn class="mr-2" color="error" variant="text">
+                    <v-btn class="mr-2" color="error" variant="text" @click="removeCoupon()">
                         Remove
                     </v-btn>
                     
@@ -35,3 +35,23 @@
     </v-dialog>
    
 </template>
+
+<script>
+    export default {
+        props: ['coupons'],
+        methods: {
+        removeCoupon(){
+               axios.delete(`/couponsCustomer/delete/${this.coupons.id}`)
+                .then((response) => {
+                    this.$emit('close-dialog');
+                   return this.$emit('remove-coupon', this.coupons);
+                   // this.coupons.splice(this.editedIndex, 1);
+                })
+                .catch((response) => {
+                    alert('Error: ' + response);
+                })
+            }
+        }
+    }
+   
+</script>

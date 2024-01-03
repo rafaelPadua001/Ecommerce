@@ -16,7 +16,7 @@ class CouponCustomerService {
         $this->couponCustomer = $couponCustomer;
         $this->couponService = $couponService;
     }
-    public function rescue($customer){
+    public function rescueWelcome($customer){
         try{
             $coupon = $this->couponService->getWelcome();
             $register_coupon = $this->couponCustomer->create([
@@ -39,5 +39,15 @@ class CouponCustomerService {
         dd($customerId);
         //return $customer;
         //dd('teste dessa porra');
+    }
+    public function destroy($id){
+        dd($id);
+        try{
+            $delete = $this->couponCustomer->findOrFail($id)->delete();
+            return $delete;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        } 
     }
 }
