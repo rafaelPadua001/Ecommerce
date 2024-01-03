@@ -2,9 +2,9 @@
 namespace App\Services\CouponService\CouponCustomer;
 
 use App\Models\CuponCustomer;
-use App\Models\Customer;
 use App\Services\CouponService\CouponService;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class CouponCustomerService {
     protected $couponCustomer;
@@ -34,5 +34,10 @@ class CouponCustomerService {
         catch(Exception $e){
             return $e;
         }
+    }
+    public function getAll($customerId){
+        dd($customerId);
+        //return $customer;
+        //dd('teste dessa porra');
     }
 }

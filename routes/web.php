@@ -23,6 +23,7 @@ use App\Http\Controllers\ProfileImage\ProfileImageController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Search\SearchToAddressesController;
 use App\Http\Controllers\Coupons\CouponsController;
+use App\Http\Controllers\Coupons\CouponCustomer\CouponCustomerController;
 use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Shippment\ShippmentController;
 use Illuminate\Support\Facades\Auth;
@@ -169,6 +170,8 @@ Route::get('/coupons/getWelcome', [CouponsController::class, 'getInitDiscount'])
 Route::post('/coupons/update/{id}', [CouponsController::class, 'update'])->name('coupon.update')->middleware('auth');
 Route::delete('/coupons/delete/{id}', [CouponsController::class, 'destroy'])->name('coupon.destroy')->middleware('auth');
  
+//Route Coupons to Customer
+Route::get('/couponsCustomer', [CouponCustomerController::class, 'getAll'])->name('coupon.all');
 //Products routes
 //Route::get('/products', function(){s
 //    dd('teste product routes');
