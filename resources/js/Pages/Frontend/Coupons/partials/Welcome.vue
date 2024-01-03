@@ -26,7 +26,7 @@
                                
                                 <p>
                                     <v-btn class="mr-2" block rounded="xl" variant="text" :to="`/register`">
-                                        Join Us
+                                        {{coupon.code}}
                                     </v-btn>
                                 </p>
                                

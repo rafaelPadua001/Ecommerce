@@ -4,16 +4,24 @@ namespace App\Services\CustomerService;
 
 use App\Models\Customer;
 use App\Models\ProfileImage;
+use App\Services\CouponService\CouponCustomer\CouponCustomerService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+
 class CustomerService
 {
     protected $customer;
-    public function __construct(Customer $customer)
+    protected $couponCustomerService;
+
+    public function __construct(
+        Customer $customer,
+        CouponCustomerService $couponCustomerService
+    )
     {
         $this->customer = $customer;
+        $this->couponCustomerService = $couponCustomerService;
     }
     public function getCustomer()
     {
@@ -44,7 +52,7 @@ class CustomerService
     {
         try {
             $insert = Customer::create($request->all());
-
+            $coupon = $this->couponCustomerService->rescue($insert);
             return response()->json($insert);
         } catch (Exception $e) {
             return throw new Exception($e);
