@@ -1,0 +1,38 @@
+<?php
+namespace App\Services\CouponService\CouponCustomer;
+
+use App\Models\CuponCustomer;
+use App\Models\Customer;
+use App\Services\CouponService\CouponService;
+use Exception;
+
+class CouponCustomerService {
+    protected $couponCustomer;
+    protected $couponService;
+    public function __construct(
+        CuponCustomer $couponCustomer,
+        CouponService $couponService
+    ){
+        $this->couponCustomer = $couponCustomer;
+        $this->couponService = $couponService;
+    }
+    public function rescue($customer){
+        try{
+            $coupon = $this->couponService->getWelcome();
+            $register_coupon = $this->couponCustomer->create([
+                'user_id' => $customer->id,
+                'coupon_id' => $coupon->id,
+                'coupon_name' => $coupon->code,
+                'discount_percentage' => $coupon->discount_percentage,
+                'init_date' => $coupon->init_date,
+                'end_date' => $coupon->end_date,
+            ]);
+            
+            return response()->json($register_coupon);
+            
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
+}

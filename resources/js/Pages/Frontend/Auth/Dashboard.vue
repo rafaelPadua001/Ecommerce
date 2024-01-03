@@ -17,7 +17,7 @@
         :to="`/ProfileCustomer/${customers.id}`"></v-list-item> -->
       <v-list-item prepend-icon="fas fa-cart-shopping fa-2xs" title="Carts" value="carts" to="/carts"></v-list-item>
       <v-list-item prepend-icon="fas fa-bag-shopping" title="Pedidos" value="myfiles" to="/orders"></v-list-item>
-      <v-list-item prepend-icon="fas fa-tag fa-2xs" title="Cupons" value="starred"></v-list-item>
+      <v-list-item prepend-icon="fas fa-tag fa-2xs" title="Cupons" value="starred" to="/couponCustomer"></v-list-item>
       <v-list-item prepend-icon="fas fa-message fa-2xs" title="Messages" value="starred"></v-list-item>
     </v-list>
   </v-navigation-drawer>
