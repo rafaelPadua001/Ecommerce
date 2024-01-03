@@ -32,7 +32,12 @@ import Dashboard from '@/Pages/Dashboard.vue';
                         </v-card>
 
                         <div>
-                            <RemoveCoupon v-model="removeCouponDialog" v-if="removeCouponDialog"/>
+                            <RemoveCoupon 
+                                v-model="removeCouponDialog"
+                                v-if="removeCouponDialog"
+                                :coupons="this.removeCouponItem"
+                                @remove-coupon="this.removeItem"
+                                @close-dialog="this.removeCouponDialog = false"/>
                         </div>
                     </v-sheet>
                 </v-col>
@@ -82,7 +87,11 @@ import RemoveCoupon from './partials/Remove.vue';
                 this.removeCouponIndex = this.coupons.indexOf(item);
                 this.removeCouponItem = Object.assign({}, item);
                 this.removeCouponDialog = true;
+            },
+            removeItem(item){
+                return this.coupons.splice(item, 1);
             }
+           
         },
         mounted(){
             this.getCuponsCustomer();

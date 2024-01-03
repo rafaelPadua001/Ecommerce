@@ -15,7 +15,7 @@ class CouponCustomerProvider extends ServiceProvider
     {
         //
         $this->app->singleton(CouponCustomerService::class, function(Application $app){
-            return new CouponCustomerService(config('couponCustomerService'));
+            return new CouponCustomerService(config('cuponCustomerService'));
         });
     }
 

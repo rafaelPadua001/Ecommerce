@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Services\CouponService\CouponCustomer\CouponCustomerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Exception;
 
 class CouponCustomerController extends Controller
 {
@@ -19,8 +20,17 @@ class CouponCustomerController extends Controller
     public function getAll(){
         $customer = Auth::guard('customer')->user();
      
-        $coupon = CuponCustomer::where('user_id','=',$customer->id)->get();
+        $coupon = CuponCustomer::where('user_id', '=', $customer->id)->get();
        
         return response()->json($coupon);
+    }
+    public function remove($id){
+       try{
+        $coupon = CuponCustomer::findOrFail($id)->delete();
+        return response()->json($coupon);
+       }
+       catch(Exception $e){
+            return response()->json($e->getMessage());
+       }
     }
 }
