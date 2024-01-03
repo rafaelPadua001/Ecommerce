@@ -131,7 +131,7 @@
 
                                                 <v-divider></v-divider>
                                             </div>
-                                         
+
                                         </v-list-item>
 
                                         <v-btn color="cyan-darken-4" variant="tonal" block>Checkout</v-btn>
@@ -154,7 +154,7 @@
                         </template>
                         <v-list>
                             <!-- login button -->
-                            <v-list-item v-if="Object.keys(user).length === 0">
+                            <v-list-item v-if="user === 0 || !user">
                                 <v-list-item-title link>
                                     <span>
                                         <v-btn icon variant="plain" to="/login">
@@ -166,10 +166,10 @@
                                 </v-list-item-title>
                             </v-list-item>
 
-                            
 
-                            <v-list-item @click="logout()" v-else>
-                                
+
+                            <v-list-item v-else @click="logout()">
+
                                 <v-list-item-title link>
                                     <span>
                                         <v-icon icon="fas fa-right-from-bracket"></v-icon>
@@ -180,28 +180,25 @@
                             </v-list-item>
 
                             <v-list-item @click="openAddressDialog()">
-                                
-                                <v-list-item-title  link>
+
+                                <v-list-item-title link>
                                     <span>
                                         <v-icon icon="far fa-user"></v-icon>
                                     </span>
 
                                     <span>Profile</span>
                                 </v-list-item-title>
-                            </v-list-item> 
+                            </v-list-item>
 
                         </v-list>
                     </v-menu>
                 </v-app-bar>
-                
+
             </v-card>
 
             <div>
-                <AddressForm 
-                v-model="addressDialog"
-                v-if="addressDialog"
-                :customer="this.customers"
-                @close-dialog="closeAddressDialog"/>
+                <AddressForm v-model="addressDialog" v-if="addressDialog" :customer="this.customers"
+                    @close-dialog="closeAddressDialog" />
             </div>
         </v-col>
     </v-row>
@@ -211,7 +208,7 @@
 import axios from 'axios';
 import AddressForm from '../Dialogs/Address.vue';
 export default {
-    components: {AddressForm},
+    components: { AddressForm },
     data: () => ({
         user: [],
         carts: [],
@@ -219,7 +216,7 @@ export default {
         addressDialog: false,
     }),
     watch: {
-        closeAddressDialog(val){
+        closeAddressDialog(val) {
             val || this.closeAddressDialog();
         }
     },
@@ -235,6 +232,10 @@ export default {
         getUser() {
             axios.get('/customer')
                 .then((response) => {
+                    if (!Object.keys(response.data.original).length) {
+                        return this.user = 0;
+
+                    }
                     return this.user = response.data;
                 })
                 .catch((response) => {
@@ -260,10 +261,10 @@ export default {
                     alert('Error: ' + response);
                 });
         },
-        openAddressDialog(){
+        openAddressDialog() {
             this.addressDialog = true;
         },
-        closeAddressDialog(){
+        closeAddressDialog() {
             this.addressDialog = false;
         },
         removeItem(item) {

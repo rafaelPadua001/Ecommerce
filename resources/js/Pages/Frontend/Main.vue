@@ -345,7 +345,7 @@ export default {
     getCustomer() {
       axios.get('/customer')
         .then((response) => {
-          if(Object.keys(this.customer).length == 0){
+          if(Object.keys(response.data.original).length == 0){
             this.openDiscountDialog();
           }
           return this.customer = response.data;
