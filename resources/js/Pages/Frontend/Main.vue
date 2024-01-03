@@ -252,8 +252,13 @@
           </v-snackbar>
         </div>
 
-        <div>
-          <WelcomeDiscount v-model="discountDialog" v-if="discountDialog" :coupon="this.welcomeDiscount"/>
+        <div class="justify-center" align-center>
+          <WelcomeDiscount 
+            v-model="discountDialog"
+            v-if="discountDialog"
+            :coupon="this.welcomeDiscount"
+            @close-welcome-dialog="this.discountDialog = false"
+          />
         </div>
       </v-container>
 
@@ -453,7 +458,6 @@ export default {
         });
     },
     openDiscountDialog(){
-      alert('teste');
       return this.discountDialog = true;
     }
 
