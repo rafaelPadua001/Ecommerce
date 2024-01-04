@@ -23,6 +23,15 @@ import Dashboard from '@/Pages/Dashboard.vue';
                                         {{ value * 100}}%
                                     </v-chip>
                                 </template>
+
+                                <template v-slot:item.is_used="{value}">
+                                    <v-chip v-if="!value || value == 0" variant="flat" color="green">
+                                        not used
+                                    </v-chip>
+                                    <v-chip v-else variant="flat" color="red">
+                                       used
+                                    </v-chip>
+                                </template>
                                 <template v-slot:item.actions="{item}">
                                     <v-btn-group>
                                         <v-btn class="mr-2" icon variant="plain" size="x-small">
@@ -72,6 +81,7 @@ import RemoveCoupon from './partials/Remove.vue';
             },
             { title: 'value', key: 'discount_percentage'},
             { title: 'expiration', key: 'end_date' },
+            {title: 'used', key: 'is_used'},
             { title: 'Actions', key: 'actions', sortable: false },
             ],
             removeCouponDialog: false,

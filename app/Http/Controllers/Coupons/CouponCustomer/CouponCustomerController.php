@@ -27,6 +27,7 @@ class CouponCustomerController extends Controller
     public function remove($id){
        try{
         $coupon = CuponCustomer::findOrFail($id)->delete();
+       
         return response()->json($coupon);
        }
        catch(Exception $e){

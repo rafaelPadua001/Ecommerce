@@ -255,7 +255,7 @@
         <div class="justify-center" align-center>
           <WelcomeDiscount 
             v-model="discountDialog"
-            v-if="discountDialog"
+            v-if="discountDialog && this.welcomeDiscount.is_displayed && !this.welcomeDiscount.is_used"
             :coupon="this.welcomeDiscount"
             @close-welcome-dialog="this.discountDialog = false"
           />

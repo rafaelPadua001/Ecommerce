@@ -11,7 +11,7 @@
                     <template v-slot:prepend>
                         <v-app-bar-title>
                             <v-btn class="text" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
-                        <div v-if="Object.keys(user).length >= 1">
+                        <div v-if="user === 1 || user">
                             <v-btn :to="'/dashboard'" variant="plain">
                                 <v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon>
                             </v-btn>

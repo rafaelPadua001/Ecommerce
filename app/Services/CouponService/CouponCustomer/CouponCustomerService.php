@@ -19,6 +19,7 @@ class CouponCustomerService {
     public function rescueWelcome($customer){
         try{
             $coupon = $this->couponService->getWelcome();
+           
             $register_coupon = $this->couponCustomer->create([
                 'user_id' => $customer->id,
                 'coupon_id' => $coupon->id,
@@ -26,8 +27,9 @@ class CouponCustomerService {
                 'discount_percentage' => $coupon->discount_percentage,
                 'init_date' => $coupon->init_date,
                 'end_date' => $coupon->end_date,
+                'is_used' => false
             ]);
-            
+          
             return response()->json($register_coupon);
             
         }
@@ -35,19 +37,5 @@ class CouponCustomerService {
             return $e;
         }
     }
-    public function getAll($customerId){
-        dd($customerId);
-        //return $customer;
-        //dd('teste dessa porra');
-    }
-    public function destroy($id){
-        dd($id);
-        try{
-            $delete = $this->couponCustomer->findOrFail($id)->delete();
-            return $delete;
-        }
-        catch(Exception $e){
-            return $e->getMessage();
-        } 
-    }
+    
 }
