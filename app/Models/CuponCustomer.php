@@ -15,5 +15,6 @@ class CuponCustomer extends Model
         'discount_percentage',
         'init_date',
         'end_date',
+        'is_used'
     ];
 }

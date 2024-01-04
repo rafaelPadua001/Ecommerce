@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('discount_percentage');
             $table->date('init_date');
             $table->date('end_date');
+            $table->boolean('is_used');
             $table->timestamps();
         });
     }
