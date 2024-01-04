@@ -3,6 +3,7 @@
         <Dashboard />
     </div>
     <div>
+       
         <v-row no-gutters>
             <v-col class="d-flex flex-column justify-center">
                 <v-timeline direction="horizontal" side="center" line-inset="12">
@@ -262,8 +263,8 @@
 
                                             </div>
 
-                                            <div>
-                                                <strong>Cupom:</strong>
+                                            <div v-if="product.coupon_id && product.is_used == 0">
+                                                <strong>Cupom: {{ product.coupon_name }}</strong>
                                             </div>
                                         </v-col>
                                     </v-row>

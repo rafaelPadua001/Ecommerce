@@ -60,6 +60,7 @@ class CartItemService{
         try{
             $item = $this->cartItem->where('cart_items.user_id', $userId)
             ->join('customers', 'customers.id', '=', 'cart_items.user_id')
+            ->leftJoin('cupon_customers', 'cupon_customers.user_id', '=', 'customers.id')
             ->join('products', 'products.id', '=', 'cart_items.product_id')
             ->leftJoin('addresses', 'addresses.user_id', '=', 'cart_items.user_id')
             ->select(
@@ -74,11 +75,17 @@ class CartItemService{
                 'customers.first_name',
                 'customers.last_name',
                 'customers.email',
+                'cupon_customers.coupon_id',
+                'cupon_customers.coupon_name',
+                'cupon_customers.discount_percentage',
+                'cupon_customers.end_date',
+                'cupon_customers.is_used',
                 'addresses.endereco',
                 'addresses.complemento',
                 'addresses.bairro',
                 'addresses.cidade',
                 'addresses.estado',
+                
             )
             ->latest()
             ->first();

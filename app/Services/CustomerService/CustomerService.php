@@ -27,6 +27,7 @@ class CustomerService
     {
         try {
             $customer = Auth::guard('customer')->user();
+            
             $customerProfile = ProfileImage::where('customer_id', $customer->id)
                 ->join('customers', 'customers.id', '=', 'profile_images.customer_id')
                 ->select(
@@ -35,15 +36,14 @@ class CustomerService
                     'customers.last_name',
                     'customers.email',
                     'profile_images.name',
-                    'profile_images.extension'
+                    'profile_images.extension',
                 )
                 ->first();
 
             if (!$customerProfile) {
                 return $customer;
             }
-
-            return $customerProfile;
+           return $customerProfile;
         } catch (Exception $e) {
             return response()->json($e);
         }
