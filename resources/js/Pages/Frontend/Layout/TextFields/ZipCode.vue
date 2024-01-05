@@ -1,9 +1,10 @@
 <template>
-    <v-row>
-        <v-col class="d-flex justify-center mb-2 flex-column" cols="12" sm="8" md="8">
+    <v-row no-gutters>
+        <v-col class="d-flex  mb-2 flex-column" cols="12" md="4" sm="3" >
             <v-card class="mx-auto" width="350px">
-                <v-card-title>Deliveries</v-card-title>
-                <v-toolbar class="px-0" color="transparent">
+                <v-card-title>
+                    <v-toolbar class="px-0" color="transparent">
+                        Deliveries
                     <template v-slot:extension>
                         <v-tabs 
                             v-model="tabs" 
@@ -29,23 +30,24 @@
                         </v-tabs>
                     </template>
                 </v-toolbar>
+                </v-card-title>
+                
 
                 <v-card-text>
 
                     <v-window v-model="tabs">
                         <v-window-item v-for="(delivery, index) in deliveries" :key="index" :value="index">
-                            <v-row v-model="delivery.id" v-if="delivery.activated == 1">
-                                <v-col class="d-flex child-flex" cols="12" md="8" sm="3">
+                            <v-row v-model="delivery.id" v-if="delivery.activated == 1" fluid>
+                                <v-col class="d-flex child-flex" cols="12" md="12" sm="6">
                                     <v-text-field v-model="zip_code" v-maska:[options] label="zip code" aria-required>
-
+                                        <template v-slot:append>
+                                            <v-btn variant="plain" size="xs" @click="calculateDelivery(delivery)">
+                                                delivery
+                                            </v-btn>
+                                        </template>
                                     </v-text-field>
                                 </v-col>
-                                <v-col cols="2">
-
-                                    <v-btn variant="text" size="x-small" @click="calculateDelivery(delivery)">Calcular
-                                        frete</v-btn>
-
-                                </v-col>
+                                
                             </v-row>
                             <v-list>
                                 <v-list-item v-for="shipping in shipping_companys" :key="shipping.id">
