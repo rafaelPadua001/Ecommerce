@@ -41,6 +41,7 @@ class CustomerService
                 ->first();
 
             if (!$customerProfile) {
+              
                 return $customer;
             }
            return $customerProfile;

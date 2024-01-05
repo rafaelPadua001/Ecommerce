@@ -346,14 +346,15 @@ export default {
     getCustomer() {
       axios.get('/customer')
         .then((response) => {
-          if(Object.keys(response.data.original).length == 0){
-            this.openDiscountDialog();
+         
+          if(Object.keys(response.data).length == 0){
+            return this.openDiscountDialog();
           }
           return this.customer = response.data;
         })
         .catch((response) => {
-          
-          return this.customer = false;
+         
+          return alert('Error:' + response);
         })
     },
     getProducts() {
@@ -428,7 +429,6 @@ export default {
         axios.post(`products/like/${this.selectProduct.id}`)
           .then((response) => {
             this.liked += 1;
-            console.log(this.liked);
             return true;
           })
           .catch((response) => {
@@ -439,7 +439,6 @@ export default {
         axios.post(`products/like/${this.product.id}`)
           .then((response) => {
             this.liked += 1;
-            console.log(this.liked);
             return true;
           })
           .catch((response) => {
@@ -450,7 +449,7 @@ export default {
     getLikes() {
       axios.get('/likes')
         .then((response) => {
-          console.log(response);
+          
           return this.likes = response.data;
         })
         .catch((response) => {

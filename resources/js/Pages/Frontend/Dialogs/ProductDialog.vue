@@ -257,9 +257,38 @@
                                 <v-divider></v-divider>
                                 <v-card-text>
                                     <div>
-                                        <CommentsField :customer="this.customer" />
+                                        <CommentsField :customer="this.customer" :product="selectProduct" />
+
+
                                     </div>
-                                    List Coments Here...
+                                    <v-divider></v-divider>
+                                    <div>
+
+                                        <v-list lines="three">
+                                            <v-list-item v-for="comment in comments" :key="comment.id">
+                                                <v-card>
+                                                    <v-card-title>
+                                                        <v-toolbar color="transparent">
+                                                            <v-toolbar-title>
+                                                                {{ customer.first_name }}
+                                                                {{ customer.last_name }}
+                                                            </v-toolbar-title>
+                                                        </v-toolbar>
+                                                        
+                                                    </v-card-title>
+                                                    <v-card-text>
+                                                        {{ comment.message }}
+                                                    </v-card-text>
+                                                    {{ comment.created_at }}
+                                                    
+                                                </v-card>
+                                                
+                                            </v-list-item>
+                                        </v-list>
+
+
+                                    </div>
+                                   
                                 </v-card-text>
                             </v-card>
                         </div>
@@ -285,7 +314,7 @@
             </div>
         </v-card>
         <div>
-            <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu" :icons="social_icons"/>
+            <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu" :icons="this.social_icons" />
         </div>
 
     </v-dialog>
@@ -295,6 +324,7 @@
 import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
 import CommentsField from '../Layout/TextFields/Comments.vue';
 import MenuBottomSheet from '../Layout/BottomSheet.vue';
+import axios from 'axios';
 
 export default {
     props: ['selectProduct', 'buyDialog', 'customer', 'likes'],
@@ -306,6 +336,7 @@ export default {
     data: () => ({
         cart: [],
         deliveries: [],
+        comments: [],
         colors: false,
         quantity: 1,
         selectImageIndex: 0,
@@ -354,6 +385,15 @@ export default {
         }
     },
     methods: {
+        getComments() {
+            axios.get(`/api/comment`)
+                .then((response) => {
+                    return this.comments = response.data;
+                })
+                .catch((response) => {
+                    return alert('Error:' + response);
+                })
+        },
         alterImage(index) {
             return this.selectImageIndex = index;
         },
@@ -488,6 +528,9 @@ export default {
                 query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
             });
         }
+    },
+    mounted() {
+        this.getComments();
     }
 }
 </script>
