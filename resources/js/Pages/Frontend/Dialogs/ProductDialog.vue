@@ -1,18 +1,17 @@
 <template>
     <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
-
-        <v-card :max-width="1200">
+        <v-card>
             <v-card-title>
                 <v-toolbar class="bg-transparent">
                     Buy
                     <template v-slot:append>
                         <v-btn-group>
-                            <v-btn v-bind="props" icon size="small" @click="like">
-                                <v-icon icon="fa-regular fa-heart fa-2xs" v-if="!likes"></v-icon>
-                                <v-icon color="red-darken-4" icon="fa-solid fa-heart fa-2xs" v-else></v-icon>
+                            <v-btn v-bind="props" icon size="small">
+                                <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0" @click="like()"></v-icon>
+                                <v-icon v-else color="red-darken-4" icon="fa-solid fa-heart fa-2xs"  @click="dislike()"></v-icon>
                             </v-btn>
                             <v-btn v-bind="props" icon @click="" size="small">
-                                <v-icon icon="fas fa-share-nodes fa-2xs"></v-icon>
+                                <v-icon icon="fas fa-share-nodes fa-2xs" @click="openBottomMenu"></v-icon>
                             </v-btn>
                             <v-btn v-bind="props" icon @click="closeBuy()" size="small">
                                 <v-icon icon="fas fa-close fa-2xs"></v-icon>
@@ -133,7 +132,7 @@
                                     <v-hover>
                                         <template v-slot:default="{ isHovering, props }">
                                             <v-card @click="getColors(color)" v-bind="props" :bg-color="color"
-                                                :color="isHovering ? undefined : color" :width="60" >
+                                                :color="isHovering ? undefined : color" :width="60">
                                                 <template v-slot:append>
 
                                                 </template>
@@ -182,7 +181,7 @@
                                     </v-text-field>
                                 </v-col>
                             </v-row>
-                           
+
 
                         </div>
 
@@ -191,10 +190,10 @@
                                 @updateShippment="updateShippment" />
                         </div>
 
-                        
+
                         <div>
                             <v-btn-group>
-                                <v-btn variant="flat" color="success"  :loading="checkout_product"
+                                <v-btn variant="flat" color="success" :loading="checkout_product"
                                     @click="checkout(selectProduct)">
                                     <v-icon icon="fa-solid fa-cart-shopping" size="large"></v-icon>
                                     Comprar
@@ -218,7 +217,7 @@
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
                         <v-spacer></v-spacer>
-                       
+
 
                         <div>
                             <v-card :max-height="140">
@@ -266,6 +265,7 @@
                 </v-row>
                 <v-spacer></v-spacer>
             </v-card-text>
+
             <div class="text-center">
                 <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
@@ -274,27 +274,34 @@
                     </div>
                     <template v-slot:actions>
                         <v-btn-group>
-                            <v-btn size="small" variant="plain" color="white">Close</v-btn>
+                            <v-btn size="small" variant="plain" color="white" @click="this.snackbar = false">Close</v-btn>
                             <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
                         </v-btn-group>
                     </template>
 
                 </v-snackbar>
-            </div>
 
+                <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu"/>
+                
+            </div>
         </v-card>
+       
+        <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu"/>
+        
     </v-dialog>
 </template>
 
 <script>
 import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
 import CommentsField from '../Layout/TextFields/Comments.vue';
+import MenuBottomSheet from '../Layout/BottomSheet.vue';
 
 export default {
-    props: ['selectProduct', 'buyDialog', 'customer'],
+    props: ['selectProduct', 'buyDialog', 'customer', 'likes'],
     components: {
         ZipCodeField,
         CommentsField,
+        MenuBottomSheet,
     },
     data: () => ({
         cart: [],
@@ -308,7 +315,7 @@ export default {
         snackbar: false,
         message: false,
         liked: 0,
-        likes: false,
+        bottomMenu: false,
         social_icons: [
             'fa-brands fa-facebook',
             'fa-brands fa-instagram',
@@ -398,6 +405,48 @@ export default {
                 alert('apenas numeros inteiros são aceitos');
             }
 
+        },
+        like() {
+            if (this.customer.length == 0) {
+                this.snackbar = true;
+                return this.message = 'you need login to exec this action.';
+            }
+
+            axios.post(`products/like/${this.selectProduct.id}`)
+                .then((response) => {
+                    this.liked += 1;
+                    
+                    return this.likes.push(response.data);
+                })
+                .catch((response) => {
+                    return alert('Error: ' + response);
+                });
+
+
+        },
+        dislike() {
+            if (this.customer.length == 0) {
+                this.snackbar = true;
+              return   this.message = 'you need login to exec this action.';
+            }
+
+            axios.delete(`products/dislike/${this.selectProduct.id}`)
+                .then((response) => {
+                    this.liked -= 1;
+                    console.log(this.liked);
+                    let likeIndex = this.likes.indexOf(this.likes.id);
+                    return this.likes.splice(likeIndex, 1);
+                    //return true;
+                })
+                .catch((response) => {
+                    return alert('Error' + response);
+                });
+
+
+        },
+        openBottomMenu(){
+           
+           return this.bottomMenu = true;
         },
         updateShippment(selectedShippment, zip_code, delivery_name) {
             this.shippment.push(selectedShippment);

@@ -140,10 +140,13 @@ Route::get('/subcategories/all/{category_id}', [SubcategoriesController::class, 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth');
 Route::get('/products/show', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products/like/{id}', [ProductController::class , 'like'])->name('product.like');
+Route::delete('/products/dislike/{id}', [ProductController::class, 'dislike'])->name('product.dislike');
 
 //Likes Route
 
 Route::get('/likes', [LikedProductController::class, 'index'])->name('likes.index');
+Route::delete('/likes/delete/{id}', [LikedProductController::class, 'destroy'])->name('likes.destroy');
+
 //SEO routes
 Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->middleware('auth');
 
