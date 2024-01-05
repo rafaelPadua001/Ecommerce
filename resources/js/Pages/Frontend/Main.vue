@@ -58,7 +58,7 @@
                                   :max-width="250" :max-height="210" aspect-ratio="16/9" cover>
                                   <v-chip class="bg-green-darken-4 float-right ga-2 pa-2" variant="tonal">
                                     <p>
-                                      R$: {{ product.price - (product.discount_percentage * 100) }}
+                                      R$: {{( product.price - (product.price * product.discount_percentage)).toFixed(2) }}
                                     </p>
                                   </v-chip>
 
@@ -176,8 +176,8 @@
                                         <div>
                                           <p>
                                             <strong>R$:</strong>
-                                            {{ product.price - (product.discount_percentage * 100) }}
-                                          </p><strong>R$:</strong>
+                                             {{ (product.price - (product.price * product.discount_percentage)).toFixed(2) }}
+                                          </p>
                                         </div>
                                       </div>
                                     </div>
