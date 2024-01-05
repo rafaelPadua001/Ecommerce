@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :max-width="1200" v-model="dialog">
+    <v-dialog  v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
         
         <v-card :max-width="1200">
             <v-card-title>
