@@ -7,8 +7,10 @@
                     <template v-slot:append>
                         <v-btn-group>
                             <v-btn v-bind="props" icon size="small">
-                                <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0" @click="like()"></v-icon>
-                                <v-icon v-else color="red-darken-4" icon="fa-solid fa-heart fa-2xs"  @click="dislike()"></v-icon>
+                                <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
+                                    @click="like()"></v-icon>
+                                <v-icon v-else color="red-darken-4" icon="fa-solid fa-heart fa-2xs"
+                                    @click="dislike()"></v-icon>
                             </v-btn>
                             <v-btn v-bind="props" icon @click="" size="small">
                                 <v-icon icon="fas fa-share-nodes fa-2xs" @click="openBottomMenu"></v-icon>
@@ -280,14 +282,12 @@
                     </template>
 
                 </v-snackbar>
-
-                <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu"/>
-                
             </div>
         </v-card>
-       
-        <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu"/>
-        
+        <div>
+            <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu" :icons="social_icons"/>
+        </div>
+
     </v-dialog>
 </template>
 
@@ -415,7 +415,7 @@ export default {
             axios.post(`products/like/${this.selectProduct.id}`)
                 .then((response) => {
                     this.liked += 1;
-                    
+
                     return this.likes.push(response.data);
                 })
                 .catch((response) => {
@@ -427,7 +427,7 @@ export default {
         dislike() {
             if (this.customer.length == 0) {
                 this.snackbar = true;
-              return   this.message = 'you need login to exec this action.';
+                return this.message = 'you need login to exec this action.';
             }
 
             axios.delete(`products/dislike/${this.selectProduct.id}`)
@@ -444,9 +444,9 @@ export default {
 
 
         },
-        openBottomMenu(){
-           
-           return this.bottomMenu = true;
+        openBottomMenu() {
+
+            return this.bottomMenu = true;
         },
         updateShippment(selectedShippment, zip_code, delivery_name) {
             this.shippment.push(selectedShippment);
