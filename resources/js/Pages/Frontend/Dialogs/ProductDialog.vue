@@ -11,7 +11,7 @@
                                 <v-icon v-else color="red-darken-4" icon="fa-solid fa-heart fa-2xs"  @click="dislike()"></v-icon>
                             </v-btn>
                             <v-btn v-bind="props" icon @click="" size="small">
-                                <v-icon icon="fas fa-share-nodes fa-2xs"></v-icon>
+                                <v-icon icon="fas fa-share-nodes fa-2xs" @click="openBottomMenu"></v-icon>
                             </v-btn>
                             <v-btn v-bind="props" icon @click="closeBuy()" size="small">
                                 <v-icon icon="fas fa-close fa-2xs"></v-icon>
@@ -265,6 +265,7 @@
                 </v-row>
                 <v-spacer></v-spacer>
             </v-card-text>
+
             <div class="text-center">
                 <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
@@ -279,21 +280,28 @@
                     </template>
 
                 </v-snackbar>
-            </div>
 
+                <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu"/>
+                
+            </div>
         </v-card>
+       
+        <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu"/>
+        
     </v-dialog>
 </template>
 
 <script>
 import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
 import CommentsField from '../Layout/TextFields/Comments.vue';
+import MenuBottomSheet from '../Layout/BottomSheet.vue';
 
 export default {
     props: ['selectProduct', 'buyDialog', 'customer', 'likes'],
     components: {
         ZipCodeField,
         CommentsField,
+        MenuBottomSheet,
     },
     data: () => ({
         cart: [],
@@ -307,6 +315,7 @@ export default {
         snackbar: false,
         message: false,
         liked: 0,
+        bottomMenu: false,
         social_icons: [
             'fa-brands fa-facebook',
             'fa-brands fa-instagram',
@@ -434,6 +443,10 @@ export default {
                 });
 
 
+        },
+        openBottomMenu(){
+           
+           return this.bottomMenu = true;
         },
         updateShippment(selectedShippment, zip_code, delivery_name) {
             this.shippment.push(selectedShippment);

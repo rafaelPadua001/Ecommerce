@@ -38,12 +38,6 @@ class LikedProductController extends Controller
     public function destroy($product, $customer){
         try{
             $liked = LikedProduct::where('product_id', $product->id)->delete();
-            
-           // $liked = LikedProduct::create([
-           //     'product_id' => $product->id,
-           //     'user_id' => $customer->id,
-           //     'likes' => 1 ?: $liked->likes += 1,
-           // ]);
             return response()->json($liked);          
         }catch(Exception $e){
             return response()->json($e);
