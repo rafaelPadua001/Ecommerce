@@ -31,9 +31,9 @@
                 <v-row no-gutters>
                     <v-col cols="auto" md="4" sm="5">
                         <v-sheet class="ma-2 pa-2">
-                            <v-row>
+                            <v-row no-gutters>
                                 <v-col class="d-flex flex-column" v-for="(image, index) in JSON.parse(selectProduct.images)"
-                                    cols="2" md="3" sm="3">
+                                    cols="2" md="3" sm="3" >
                                     <v-hover v-slot="{ isHovering, props }" open-delay="500">
                                         <v-card width="50" class="mx-auto" v-bind="props"
                                             :color="isHovering ? 'cyan-darken-4' : undefined" elevation="0">
@@ -58,7 +58,8 @@
 
 
                                 </v-col>
-                                <v-col cols="12">
+                                
+                                <v-col cols="12" >
                                     <v-card class="mx-auto" :min-width="150" :max-width="1500" :height="400" elevation="0">
                                         <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index"
                                             class="image-container">
@@ -85,7 +86,7 @@
                         </v-sheet>
                     </v-col>
 
-                    <v-col cols="auto" md="6" sm="6">
+                    <v-col cols="auto" md="4" sm="6">
                         <p justify="start" class="text-h5 bg-grey-lighten-4">
                             {{ selectProduct.name }}
                         </p>
@@ -222,7 +223,7 @@
 
 
                         <div>
-                            <v-card :max-height="140">
+                            <v-card class="mx-auto">
                                 <v-card-title class="text-h5">Description:</v-card-title>
                                 <v-spacer></v-spacer>
                                 <v-spacer></v-spacer>
@@ -237,20 +238,10 @@
 
 
                     </v-col>
-
-                    <v-col>
-
-                    </v-col>
                 </v-row>
-                <v-row>
-                    <v-col col="6" sm="4"></v-col>
-
-                    <v-col col="2" sm="4">
-
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="auto" md="4" sm="6">
+               
+                <v-row fluid no-gutters>
+                    <v-col cols="11" md="4" sm="4">
                         <div>
                             <v-card>
                                 <v-card-title>Comments</v-card-title>
@@ -278,12 +269,19 @@
                                                     </v-card-title>
                                                     <v-card-text>
                                                         {{ comment.message }}
+                                                        
                                                     </v-card-text>
-                                                    {{ comment.created_at }}
+
+                                                   
+                                                    <v-card-text align="right">
+                                                        {{ comment.created_at.substr(0, 10) }}
+                                                    </v-card-text>
+                                                    <v-divider></v-divider>
                                                     
                                                 </v-card>
                                                 
                                             </v-list-item>
+                                            
                                         </v-list>
 
 
