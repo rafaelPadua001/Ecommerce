@@ -3,6 +3,7 @@
         <Dashboard />
     </div>
     <div>
+
         <v-row no-gutters>
             <v-col class="d-flex flex-column justify-center">
                 <v-timeline direction="horizontal" side="center" line-inset="12">
@@ -38,15 +39,29 @@
                                             </div>
                                             <div>
                                                 <p>
-                                                    <strong>Price</strong> {{ product.price }}
+                                                    <strong>Price</strong>
+                                                    {{ product.price }} - {{ product.price * product.discount_percentage }}
+                                                </p>
+                                                <p>
+                                                    <strong v-if="product.coupon_name == 'welcome'">
+                                                        Price With {{ product.coupon_name }} {{ product.discount_percentage
+                                                            * 100 }}%
+                                                    </strong>
+                                                    = R$ {{ product.price - (product.price * product.discount_percentage) }}
 
+                                                </p>
+                                                <p>
                                                 <div v-for="item in shippment" :key="item.id">
                                                     <strong>Delivery:</strong>
                                                     {{ item.price }}
 
                                                     <p>
                                                         <strong>Total: </strong>
-                                                        {{ parseFloat(item.price) + parseFloat(product.price) }}
+                                                        {{
+                                                            parseFloat(item.price) +
+                                                            parseFloat(product.price) -
+                                                            ((product.price * product.discount_percentage))
+                                                        }}
                                                     </p>
                                                     <p>
                                                         <strong>Shippment: </strong> {{ item.name }}
@@ -210,7 +225,9 @@
                                                     <strong>Total Value</strong>
                                                     {{ shippment[0].currency }}
                                                     {{ (parseFloat(shippment[0].price) +
-                                                        parseFloat(product.price)).toFixed(2)
+                                                        parseFloat(product.price) -
+                                                        ((product.price * product.discount_percentage)))
+
                                                     }}
                                                 </p>
 
@@ -257,13 +274,21 @@
                                                 <p>
                                                     <strong>Total Value</strong>
                                                     {{ shippment[0].currency }}
-                                                    {{ (parseFloat(shippment[0].price) + parseFloat(product.price)).toFixed(2) }}
+                                                    {{
+                                                        (parseFloat(shippment[0].price)
+                                                            + parseFloat(product.price) -
+                                                        ((product.price * product.discount_percentage)))
+
+                                                    }}
                                                 </p>
 
                                             </div>
 
-                                            <div>
-                                                <strong>Cupom:</strong>
+                                            <div v-if="product.coupon_id && product.is_used == 0 && product.coupon_name == 'welcome'">
+                                                <strong>Cupom: {{ product.coupon_name }} {{ product.discount_percentage * 100 }}%</strong>
+                                            </div>
+                                            <div v-else>
+                                                select cupons
                                             </div>
                                         </v-col>
                                     </v-row>

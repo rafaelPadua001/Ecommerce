@@ -27,7 +27,7 @@
                     </v-banner>
                   </v-col>
                 </v-row>
-
+                
                 <div cols="auto" md="4" sm="4">
                   <h4 align="start">Higlights</h4>
                   <v-divider></v-divider>
@@ -224,6 +224,7 @@
                       </v-infinite-scroll>
                     </v-row>
                   </v-container>
+                  
                   <ProductDialog v-if="buyDialog" v-model="buyDialog" :selectProduct="selectProduct"
                     :buyDialog="buyDialog" @update:buyDialog="updateBuyDialog" :customer="customer" />
 
@@ -398,8 +399,7 @@ export default {
       this.buyDialog = true;
     },
     updateBuyDialog(value) {
-
-      this.buyDialog = value;
+       this.buyDialog = value;
     },
     addItem() {
       if (Object.keys(this.customer).length == 0) {
