@@ -4,7 +4,7 @@
         <v-card :max-width="1200">
             <v-card-title>
                 <v-toolbar class="bg-transparent">
-                    Buy {{ customer }}
+                    Buy 
                     <template v-slot:append>
                         <v-btn-group>
                             <v-btn v-bind="props" icon size="small" @click="like">
