@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\ProductVideos\ProductVideoController;
 use App\Http\Controllers\Coupons\CouponsController;
 use App\Http\Controllers\Delivery\DeliveryController;
+use App\Http\Controllers\Comments\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 //Categories routes
-
 Route::post('/categories/store/{id}', [CategoriesController::class, 'store'])->name('store');
 Route::post('/categories/update/{id}', [CategoriesController::class, 'update'])->name('categories.update');
 Route::delete('/categories/delete/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
@@ -52,6 +52,9 @@ Route::get('/delivery', [DeliveryController::class, 'index'])->name('delivery.in
 
 //Route coupons
 Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index');
+
+Route::get('/comment', [CommentsController::class, 'index'])->name('comment.index');
+Route::post('/comment/create', [CommentsController::class, 'create'])->name('comment.create');
 
 //SEO route
 Route::post('/seo_product/update/{id}', [ProductSeoController::class, 'update'])->name('seo_product.update');
