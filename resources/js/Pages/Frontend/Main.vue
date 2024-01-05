@@ -226,7 +226,7 @@
                   </v-container>
                   
                   <ProductDialog v-if="buyDialog" v-model="buyDialog" :selectProduct="selectProduct"
-                    :buyDialog="buyDialog" @update:buyDialog="updateBuyDialog" :customer="customer" />
+                    :buyDialog="buyDialog" :customer="this.customer" :likes="likes" @update:buyDialog="updateBuyDialog" />
 
                 </div>
 

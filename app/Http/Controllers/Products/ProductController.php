@@ -169,6 +169,18 @@ class ProductController extends Controller
         $like = new LikedProductController();
         return $like->store($product, $customer);
     }
+    public function getDislikedController($product, $customer)
+    {
+        $like = new LikedProductController();
+        return $like->destroy($product, $customer);
+    }
+    public function dislike($id){
+        $product = Product::findOrFail($id);
+        $customer = Auth::guard('customer')->user();
+        $dislikedProduct = $this->getDisLikedController($product, $customer);
+        
+        return response()->json($dislikedProduct);
+    }
     public function update(Request $request, $id)
     {
         $category = Categories::where('id', $request->category_id)->first();
