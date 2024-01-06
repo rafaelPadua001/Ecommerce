@@ -346,8 +346,7 @@ export default {
     getCustomer() {
       axios.get('/customer')
         .then((response) => {
-         
-          if(Object.keys(response.data).length == 0){
+          if(response.data.original && Object.keys(response.data.original).length == 0){
             return this.openDiscountDialog();
           }
           return this.customer = response.data;
@@ -379,7 +378,6 @@ export default {
       axios.get(`/coupons/getWelcome`)
         .then((response) => {
           return this.welcomeDiscount = response.data;
-
         })
         .catch((response) => {
           return alert('Error:' + response);
