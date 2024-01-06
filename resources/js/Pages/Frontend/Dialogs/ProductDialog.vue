@@ -244,7 +244,10 @@
                                 <v-divider></v-divider>
                                 <v-card-text>
                                     <div>
-                                        <CommentsField :customer="this.customer" :product="selectProduct" />
+                                        <CommentsField 
+                                            :customer="this.customer"
+                                            :product="selectProduct"
+                                            @create-comment="newComment"/>
                                     </div>
                                     <v-divider></v-divider>
                                     <div>
@@ -503,6 +506,9 @@ export default {
                 .catch((response) => {
                     return alert('Error' + response);
                 });
+        },
+        newComment(item){
+            return this.comments.push(item);
         },
         remove(item){
             this.removeComment = Object.assign({}, item);

@@ -56,6 +56,7 @@ export default {
             };
             axios.post(`/api/comment/create`, data)
             .then((response) => {
+                this.$emit('create-comment', response.data);
                 this.comments.push(response.data);
             })
             .catch((response) => {
