@@ -36,4 +36,13 @@ class CommentsController extends Controller
         }
        
     }
+    public function remove($id){
+        try{
+            $comment = $this->commentService->destroy($id);
+            return response()->json($comment);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }
+    }
 }

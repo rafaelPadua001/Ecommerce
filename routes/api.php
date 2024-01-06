@@ -55,6 +55,7 @@ Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.in
 
 Route::get('/comment', [CommentsController::class, 'index'])->name('comment.index');
 Route::post('/comment/create', [CommentsController::class, 'create'])->name('comment.create');
+Route::delete('/comment/delete/{id}', [CommentsController::class, 'remove'])->name('comment.remove');
 
 //SEO route
 Route::post('/seo_product/update/{id}', [ProductSeoController::class, 'update'])->name('seo_product.update');

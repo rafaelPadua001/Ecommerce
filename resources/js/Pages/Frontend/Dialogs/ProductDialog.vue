@@ -33,7 +33,7 @@
                         <v-sheet class="ma-2 pa-2">
                             <v-row no-gutters>
                                 <v-col class="d-flex flex-column" v-for="(image, index) in JSON.parse(selectProduct.images)"
-                                    cols="2" md="3" sm="3" >
+                                    cols="2" md="3" sm="3">
                                     <v-hover v-slot="{ isHovering, props }" open-delay="500">
                                         <v-card width="50" class="mx-auto" v-bind="props"
                                             :color="isHovering ? 'cyan-darken-4' : undefined" elevation="0">
@@ -49,8 +49,6 @@
                                                                 indeterminate></v-progress-circular>
                                                         </div>
                                                     </template>
-
-
                                                 </v-img>
                                             </div>
                                         </v-card>
@@ -58,8 +56,8 @@
 
 
                                 </v-col>
-                                
-                                <v-col cols="12" >
+
+                                <v-col cols="12">
                                     <v-card class="mx-auto" :min-width="150" :max-width="1500" :height="400" elevation="0">
                                         <div v-for="(image, index) in JSON.parse(selectProduct.images)" :key="index"
                                             class="image-container">
@@ -235,11 +233,9 @@
                             </v-card>
 
                         </div>
-
-
                     </v-col>
                 </v-row>
-               
+
                 <v-row fluid no-gutters>
                     <v-col cols="11" md="4" sm="4">
                         <div>
@@ -249,8 +245,6 @@
                                 <v-card-text>
                                     <div>
                                         <CommentsField :customer="this.customer" :product="selectProduct" />
-
-
                                     </div>
                                     <v-divider></v-divider>
                                     <div>
@@ -261,32 +255,51 @@
                                                     <v-card-title>
                                                         <v-toolbar color="transparent">
                                                             <v-toolbar-title>
-                                                                {{ customer.first_name }}
-                                                                {{ customer.last_name }}
+                                                                <v-avatar color="surface-variant" v-if="comment.name">
+                                                                    <template v-slot="append">
+                                                                        <v-img :src="`./storage/avatars/${comment.name}`"
+                                                                            :lazy-src="`./storage/avatars/${comment.name}`"
+                                                                            cover>
+
+                                                                        </v-img>
+                                                                    </template>
+                                                                </v-avatar>
+                                                                {{ comment.first_name }} {{ comment.last_name }}
+
                                                             </v-toolbar-title>
+                                                            <v-btn
+                                                                v-if="comment.user_id === customer.id"
+                                                                class="me-2"
+                                                                icon
+                                                                size="x-small"
+                                                                variant="plain"
+                                                                @click="remove(comment)"
+                                                            >
+                                                                    <v-icon
+                                                                        icon="fas fa-trash"
+                                                                    >
+                                                                    </v-icon>
+                                                                    
+                                                            </v-btn>
+                                                            
                                                         </v-toolbar>
-                                                        
+
                                                     </v-card-title>
                                                     <v-card-text>
                                                         {{ comment.message }}
-                                                        
                                                     </v-card-text>
 
-                                                   
+
                                                     <v-card-text align="right">
                                                         {{ comment.created_at.substr(0, 10) }}
                                                     </v-card-text>
+                                                    
                                                     <v-divider></v-divider>
                                                     
                                                 </v-card>
-                                                
                                             </v-list-item>
-                                            
                                         </v-list>
-
-
                                     </div>
-                                   
                                 </v-card-text>
                             </v-card>
                         </div>
@@ -312,7 +325,16 @@
             </div>
         </v-card>
         <div>
-            <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu" :icons="this.social_icons" />
+            <RemoveDialog 
+                v-model="removeDialog"
+                v-if="removeDialog"
+                :comment="removeComment"
+                @remove-comment="deleteComment"
+                @close-dialog="removeDialog = false"
+            />
+        </div>
+        <div>
+            <MenuBottomSheet v-model="bottomMenu" v-if="bottomMenu" :icons="this.social_icons"/>
         </div>
 
     </v-dialog>
@@ -322,6 +344,7 @@
 import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
 import CommentsField from '../Layout/TextFields/Comments.vue';
 import MenuBottomSheet from '../Layout/BottomSheet.vue';
+import RemoveDialog from '../Comment/patials/Remove.vue';
 import axios from 'axios';
 
 export default {
@@ -329,6 +352,7 @@ export default {
     components: {
         ZipCodeField,
         CommentsField,
+        RemoveDialog,
         MenuBottomSheet,
     },
     data: () => ({
@@ -355,6 +379,8 @@ export default {
         shippment: [],
         zip_code: false,
         delivery_name: false,
+        removeDialog: false,
+        removeComment: {},
     }),
     watch: {
         buyDialog(val) {
@@ -459,8 +485,6 @@ export default {
                 .catch((response) => {
                     return alert('Error: ' + response);
                 });
-
-
         },
         dislike() {
             if (this.customer.length == 0) {
@@ -479,11 +503,16 @@ export default {
                 .catch((response) => {
                     return alert('Error' + response);
                 });
-
-
+        },
+        remove(item){
+            this.removeComment = Object.assign({}, item);
+            this.removeDialog = true;
+            console.log(this.removeComment);
+        },
+        deleteComment(item){
+            return this.comments.splice(item, 1);
         },
         openBottomMenu() {
-
             return this.bottomMenu = true;
         },
         updateShippment(selectedShippment, zip_code, delivery_name) {
