@@ -14,7 +14,13 @@ class CommentService{
     public function getAll(){
         $comments = $this->comment
             ->join('customers', 'comments.user_id', '=', 'customers.id')
-            ->select('comments.*', 'customers.first_name', 'customers.last_name')
+            ->leftJoin('profile_images', 'customers.id', '=', 'profile_images.customer_id')
+            ->select(
+                'comments.*', 
+                'customers.first_name',
+                'customers.last_name',
+                'profile_images.name'
+            )
             ->get();
        
         return $comments;
@@ -33,7 +39,16 @@ class CommentService{
         catch(Exception $e){
             return $e;
         }
-        dd($request);
+    }
+    public function destroy($id){
+        try{
+            $comment = $this->comment->findOrFail($id)->delete();
+            
+            return $comment;
+        }
+        catch(Exception $e){
+            return $e;
+        }
     }
     
     
