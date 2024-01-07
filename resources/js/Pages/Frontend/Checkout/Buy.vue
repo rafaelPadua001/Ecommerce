@@ -335,7 +335,7 @@
                                                 <v-card class="mx-auto" elevation="0">
                                                     <DebitForm :paymentType="paymentType" :id="this.product.id"
                                                         :name="this.product.name" :totalValue="(parseFloat(shippment[0].price)
-                                                                + parseFloat(product.price)
+                                                                + parseFloat(product.price * product.quantity)
                                                                 - parseFloat(product.price * (product.discount_percentage))).toFixed(2)
                                                             " :quantity="this.product.quantity"
                                                         :delivery="shippment" :description="this.product.description"
