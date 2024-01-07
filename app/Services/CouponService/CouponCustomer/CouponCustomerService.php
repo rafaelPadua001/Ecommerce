@@ -37,5 +37,19 @@ class CouponCustomerService {
             return $e;
         }
     }
+    public function remove($id){
+        try{
+            $customer = Auth::guard('customer')->user();
+            $coupon = $this->couponCustomer
+                ->where('user_id', '=', $customer->id)
+                ->where('coupon_id', '=', $id)
+                ->first();
+            $coupon->delete();
+            return $coupon;
+        }
+        catch(Exception $e){
+             return response()->json($e->getMessage());
+        }
+     }
     
 }
