@@ -4,8 +4,8 @@
     </div>
     <div>
         <v-row no-gutters>
-            <v-col class="d-flex flex-column justify-center" cols="auto">
-                <v-timeline direction="horizontal"  line-inset="12">
+            <v-col class="d-flex flex-column justify-center" cols="auto" md="12" sm="8">
+                <v-timeline direction="horizontal" line-inset="12">
                     <v-timeline-item v-mode="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home" fill-dot
                         size="x-small">
                         <template v-slot:opposite>
@@ -25,28 +25,36 @@
                                                 </v-row>
                                             </v-img>
                                         </v-col>
-                                        <v-col cols="auto" sm="6">
+                                        <v-col cols="auto" md="4" sm="2">
                                             <div>
                                                 <strong>{{ product.name }}</strong>
 
                                             </div>
                                             <div>
-                                                <v-card :color="product.color" v-if="product.color">
+                                                <v-card class="mx-auto" :width="100" :color="product.color"
+                                                    v-if="product.color">
                                                     color
                                                 </v-card>
                                             </div>
                                             <div>
                                                 <p>
                                                     <strong>Price</strong>
-                                                    {{ product.price }} - {{ product.price * product.discount_percentage }}
+                                                    {{ product.price * product.quantity }}
                                                 </p>
                                                 <p>
                                                     <strong v-if="product.coupon_name == 'welcome'">
-                                                        With {{ product.coupon_name }} {{ product.discount_percentage
+                                                       {{ product.coupon_name }}{{ product.discount_percentage
                                                             * 100 }}%
                                                     </strong>
-                                                   R$ {{ parseFloat(product.price - (product.price * product.discount_percentage)).toFixed(2) }}
+                                                    
 
+                                                </p>
+                                                <p>
+                                                    R$ 
+                                                        {{ 
+                                                            parseFloat((product.price * product.quantity) -
+                                                            (product.price * product.discount_percentage)).toFixed(2)
+                                                        }}
                                                 </p>
                                                 <p>
                                                 <div v-for="item in shippment" :key="item.id">
@@ -57,40 +65,45 @@
                                                         <strong>Total: </strong>
                                                         {{
                                                             parseFloat(parseFloat(item.price) +
-                                                            parseFloat(product.price) -
-                                                            (product.price * product.discount_percentage)).toFixed(2)
+                                                                parseFloat(product.price * product.quantity) -
+                                                                (product.price * product.discount_percentage)).toFixed(2)
                                                         }}
                                                     </p>
                                                     <p>
                                                         <strong>Shippment: </strong> {{ item.name }}
                                                     </p>
                                                     <p>
-                                                        <v-row fluid no-gutters>
-                                                            <v-col class="d-flex justify-center flex-column">
+                                                        <v-row no-gutters>
+                                                            <v-col class="d-flex justify-center flex-column" cols="auto" md="12"
+                                                                sm="4">
                                                                 <v-text-field v-model="postal_code" v-maska:[options]
                                                                     label="postal code" :placeholder="zip_code"
                                                                     :value="zip_code" v-if="zip_code">
                                                                 </v-text-field>
                                                                 <v-text-field v-model="postal_code" v-maska:[options]
-                                                                    label="postal code" :placeholder="zip_code"  v-else>
+                                                                    label="postal code" :placeholder="zip_code" v-else>
                                                                 </v-text-field>
-                                                                
+
                                                             </v-col>
-                                                            <v-col class="d-flex justify-start flex-column">
-                                                                <v-btn size="x-small" variant="text" color="primary"
+                                                           
+
+                                                        </v-row>
+                                                        <v-row no-gutters>
+                                                            <v-col class="d-flex justify-start flex-column" cols="6" md="2"
+                                                                sm="2">
+                                                                <!-- <v-btn size="x-small" variant="text" color="primary"
                                                                     @click="calculateDelivery">calculate</v-btn>
                                                                 <v-btn size="x-small" variant="text" color="warning"
-                                                                    @click="itemCart.cep = ''">Clear</v-btn>
+                                                                    @click="itemCart.cep = ''">Clear</v-btn> -->
                                                                 <v-btn size="x-small" variant="text" color="blue"
-                                                                    @click="searchToAddress">Buscar Cep</v-btn>
+                                                                    @click="searchToAddress">Buscar</v-btn>
 
 
                                                             </v-col>
-                                                            
                                                         </v-row>
                                                     </p>
                                                     <p>
-                                                        <v-col  cols="auto" v-if="address.length >= 1">
+                                                        <v-col cols="auto" md="8" sm="2" v-if="address.length >= 1">
                                                             <strong>Logradouro:</strong> {{ address[0].logradouro }},
                                                             <strong v-if="address[0].complemento.length >= 1">
                                                                 endereco:
@@ -138,7 +151,7 @@
                                             <div>
                                                 <v-img :src="`/storage/products/${productImages[0]}`"
                                                     :lazy-src="`/storage/products/${productImages[0]}`" aspect-ratio="16/9"
-                                                    :width="200" cover>
+                                                    :width="250" cover>
 
                                                     <template>
                                                         <div class="d-flex align-center justify-center fill-height">
@@ -275,15 +288,17 @@
                                                     {{
                                                         parseFloat(parseFloat(shippment[0].price)
                                                             + parseFloat(product.price) -
-                                                        ((product.price * product.discount_percentage))).toFixed(2)
+                                                            ((product.price * product.discount_percentage))).toFixed(2)
 
                                                     }}
                                                 </p>
 
                                             </div>
 
-                                            <div v-if="product.coupon_id && product.is_used == 0 && product.coupon_name == 'welcome'">
-                                                <strong>Cupom: {{ product.coupon_name }} {{ product.discount_percentage * 100 }}%</strong>
+                                            <div
+                                                v-if="product.coupon_id && product.is_used == 0 && product.coupon_name == 'welcome'">
+                                                <strong>Cupom: {{ product.coupon_name }} {{ product.discount_percentage *
+                                                    100 }}%</strong>
                                             </div>
                                             <div v-else>
                                                 select cupons
@@ -295,7 +310,8 @@
                                             <v-card class="mx-auto" elevation="0">
                                                 <v-card-text>
                                                     <v-row fluid no-gutters>
-                                                        <v-col class="d-flex justify-center flex-column" cols="auto" md="12" sm="12">
+                                                        <v-col class="d-flex justify-center flex-column" cols="auto" md="12"
+                                                            sm="12">
                                                             <v-radio-group v-model="paymentType" inline>
                                                                 <v-radio label="Debit" value="debit">
 
@@ -318,41 +334,34 @@
                                             <div v-if="paymentType == 'debit'">
                                                 <v-card class="mx-auto" elevation="0">
                                                     <DebitForm :paymentType="paymentType" :id="this.product.id"
-                                                        :name="this.product.name"
-                                                        :totalValue="
-                                                                        (parseFloat(shippment[0].price) 
-                                                                        + parseFloat(product.price) 
-                                                                        - parseFloat(product.price * (product.discount_percentage))).toFixed(2)
-                                                                    "
-                                                        :quantity="this.product.quantity" :delivery="shippment"
-                                                        :description="this.product.description" :image="this.product.images"
-                                                        :color="this.product.color" :address="this.address"
-                                                        @completed="completed" />
+                                                        :name="this.product.name" :totalValue="(parseFloat(shippment[0].price)
+                                                                + parseFloat(product.price)
+                                                                - parseFloat(product.price * (product.discount_percentage))).toFixed(2)
+                                                            " :quantity="this.product.quantity"
+                                                        :delivery="shippment" :description="this.product.description"
+                                                        :image="this.product.images" :color="this.product.color"
+                                                        :address="this.address" @completed="completed" />
                                                 </v-card>
                                             </div>
                                             <div v-if="paymentType == 'credit'">
                                                 <v-card class="mx-auto" elevation="0">
                                                     <CreditForm :paymentType="paymentType" :name="this.product.name"
-                                                        :totalValue="
-                                                                        (parseFloat(shippment[0].price) 
-                                                                        + parseFloat(product.price) 
-                                                                        - parseFloat(product.price * (product.discount_percentage))).toFixed(2)
-                                                                    "
-                                                        :quantity="this.product.quantity" :delivery="shippment"
-                                                        :description="this.product.description" :image="this.product.images"
-                                                        :color="this.product.color" />
+                                                        :totalValue="(parseFloat(shippment[0].price)
+                                                                + parseFloat(product.price)
+                                                                - parseFloat(product.price * (product.discount_percentage))).toFixed(2)
+                                                            " :quantity="this.product.quantity"
+                                                        :delivery="shippment" :description="this.product.description"
+                                                        :image="this.product.images" :color="this.product.color" />
                                                 </v-card>
                                             </div>
                                             <div v-if="paymentType == 'pix'">
                                                 <v-card class="mx-auto" elevation="0">
                                                     <PixForm :paymentType="paymentType" :name="this.product.name"
-                                                        :totalValue="
-                                                                        (parseFloat(shippment[0].price) 
-                                                                        + parseFloat(product.price) 
-                                                                        - parseFloat(product.price * (product.discount_percentage))).toFixed(2)
-                                                                    "
-                                                        :quantity="this.product.quantity" :delivery="shippment"
-                                                        :description="this.product.description"
+                                                        :totalValue="(parseFloat(shippment[0].price)
+                                                                + parseFloat(product.price)
+                                                                - parseFloat(product.price * (product.discount_percentage))).toFixed(2)
+                                                            " :quantity="this.product.quantity"
+                                                        :delivery="shippment" :description="this.product.description"
                                                         :image="this.product.images">
                                                     </PixForm>
                                                 </v-card>
@@ -373,7 +382,7 @@
                     <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="xs">
                         <template v-slot:opposite>
                             <v-card v-if="completedConfirm" :width="500">
-                                <v-card-title class="headline">Pedido Finalizado</v-card-title>
+
                                 <v-card-text>
                                     <v-row>
                                         <v-col>
@@ -397,6 +406,7 @@
                                         </v-img>
 
                                     </div> -->
+                                    <p class="text-h6">Pedido Finalizado</p>
 
                                     <v-spacer></v-spacer>
                                     <v-btn class="me-2 bg-green" variant="text" @click="redirect()">
@@ -561,7 +571,7 @@ export default {
             this.shippmentConfirm = false;
             return this.confirm = true;
         },
-        returnConfirmDatas(){
+        returnConfirmDatas() {
             this.finishConfirm = false;
             return this.confirm = true;
         },
@@ -598,14 +608,11 @@ export default {
             return this.address_dialog = false;
         },
         redirect() {
-
             return window.location.href = '/';
         }
     },
     created() {
         this.getProducts();
-
-
     }
 
 }

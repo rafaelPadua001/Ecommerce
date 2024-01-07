@@ -36,11 +36,9 @@ class PaymentService {
     }
     public function debitPayment(Request $request)
     {
-       
-        $customer = Auth::guard('customer')->user();
+       $customer = Auth::guard('customer')->user();
         
         try {
-            //Aqui usaremos o guzzle para fazer as requisições HTTP
             $client = new Client([
                 'base_uri' => 'https://apisandbox.cieloecommerce.cielo.com.br',
                 'headers' => [

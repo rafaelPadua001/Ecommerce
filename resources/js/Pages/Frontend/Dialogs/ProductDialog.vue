@@ -94,7 +94,7 @@
                         <v-spacer></v-spacer>
 
                         <p float="end">
-                            <strong>Price:</strong> R$ {{ selectProduct.price }}
+                            <strong>Price:</strong> R$ {{ selectProduct.price * quantity }}
                         </p>
                         <p v-for="item in shippment" :key="item.id">
                             Delivery: R$ {{ item.price }}
@@ -465,7 +465,7 @@ export default {
             this.quantity++;
         },
         quantityDecrement() {
-            if (this.quantity >= 1) {
+            if (this.quantity >= 2) {
                 this.quantity--;
             }
             else {
