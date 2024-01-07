@@ -39,7 +39,7 @@
                                             <div>
                                                 <p>
                                                     <strong>Price</strong>
-                                                    {{ product.price * product.quantity }}
+                                                    R$ {{ (product.price * product.quantity).toFixed(2) }}
                                                 </p>
                                                 <p>
                                                     <strong v-if="product.coupon_name == 'welcome'">
@@ -59,23 +59,23 @@
                                                 <p>
                                                 <div v-for="item in shippment" :key="item.id">
                                                     <strong>Delivery:</strong>
-                                                    {{ item.price }}
+                                                    R$ {{ item.price }}
 
                                                     <p>
                                                         <strong>Total: </strong>
-                                                        {{
+                                                        R$ {{
                                                             parseFloat(parseFloat(item.price) +
                                                                 parseFloat(product.price * product.quantity) -
-                                                                (product.price * product.discount_percentage)).toFixed(2)
+                                                                (product.price * product.discount_percentage).toFixed(2))
                                                         }}
                                                     </p>
                                                     <p>
-                                                        <strong>Shippment: </strong> {{ item.name }}
+                                                        <strong>Shippment: </strong>  
+                                                        <v-img :src="item.company.picture" :lazy-src="item.company.picture" :width="100"></v-img> 
                                                     </p>
                                                     <p>
                                                         <v-row no-gutters>
-                                                            <v-col class="d-flex justify-center flex-column" cols="auto" md="12"
-                                                                sm="4">
+                                                            <v-col class="d-flex justify-center flex-column" cols="auto" md="12" sm="6">
                                                                 <v-text-field v-model="postal_code" v-maska:[options]
                                                                     label="postal code" :placeholder="zip_code"
                                                                     :value="zip_code" v-if="zip_code">
@@ -236,7 +236,7 @@
                                                     <strong>Total Value</strong>
                                                     {{ shippment[0].currency }}
                                                     {{ (parseFloat(shippment[0].price) +
-                                                        parseFloat(product.price) -
+                                                        parseFloat(product.price * product.quantity) -
                                                         ((product.price * product.discount_percentage)))
 
                                                     }}
@@ -287,7 +287,7 @@
                                                     {{ shippment[0].currency }}
                                                     {{
                                                         parseFloat(parseFloat(shippment[0].price)
-                                                            + parseFloat(product.price) -
+                                                            + parseFloat(product.price * product.quantity) -
                                                             ((product.price * product.discount_percentage))).toFixed(2)
 
                                                     }}
@@ -333,14 +333,23 @@
                                         <v-col>
                                             <div v-if="paymentType == 'debit'">
                                                 <v-card class="mx-auto" elevation="0">
-                                                    <DebitForm :paymentType="paymentType" :id="this.product.id"
-                                                        :name="this.product.name" :totalValue="(parseFloat(shippment[0].price)
+                                                    
+                                                    <DebitForm 
+                                                        :paymentType="paymentType"
+                                                        :id="this.product.id"
+                                                        :name="this.product.name"
+                                                        :totalValue="(parseFloat(shippment[0].price)
                                                                 + parseFloat(product.price * product.quantity)
                                                                 - parseFloat(product.price * (product.discount_percentage))).toFixed(2)
-                                                            " :quantity="this.product.quantity"
-                                                        :delivery="shippment" :description="this.product.description"
-                                                        :image="this.product.images" :color="this.product.color"
-                                                        :address="this.address" @completed="completed" />
+                                                            "
+                                                        :quantity="this.product.quantity"
+                                                        :delivery="shippment"
+                                                        :description="this.product.description"
+                                                        :image="this.product.images"
+                                                        :color="this.product.color"
+                                                        :coupon_id="this.product.coupon_id"
+                                                        :address="this.address"
+                                                        @completed="completed" />
                                                 </v-card>
                                             </div>
                                             <div v-if="paymentType == 'credit'">

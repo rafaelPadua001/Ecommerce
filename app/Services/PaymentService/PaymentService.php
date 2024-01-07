@@ -13,15 +13,20 @@ use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 use App\Services\CartService\CartItemService;
+use App\Services\CouponService\CouponCustomer\CouponCustomerService;
 
 class PaymentService {
     protected $payment;
     protected $carItemService;
+    protected $couponCustomerService;
     public function __construct(
         Payment $payment,
-        CartItemService $cartItemService){
+        CartItemService $cartItemService,
+        CouponCustomerService $couponCustomerService
+    ){
         $this->payment = $payment;
         $this->carItemService = $cartItemService;
+        $this->couponCustomerService = $couponCustomerService;
     }
     public function paymentType(Request $request){
         $paymentType = $request->paymentType;
@@ -107,6 +112,9 @@ class PaymentService {
             $createOrder = $this->getOrder($request, $responseData);
             $itemId = $request['id'];
             $this->alterStatusItem($itemId);
+            if($request->coupon_id >= 1){
+                $this->removeCoupon($request->coupon_id);
+            }
             
             return response()->json($responseData);
         } catch (Exception $e) {
@@ -253,5 +261,9 @@ class PaymentService {
         
         $melhorEnvio = new MelhorEnvioController();
         return $melhorEnvio->createCart($request);
+    }
+    public function removeCoupon($id){
+        $coupon = $this->couponCustomerService->remove($id);
+        return $coupon;
     }
 }
