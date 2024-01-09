@@ -3,6 +3,14 @@
        
         <v-form @submit.prevent="submitForm">
             <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
+           <v-text-field
+                v-model="telefone"
+                label="Telefone"
+                outlined
+                v-maska:[phoneOptions]
+            ></v-text-field>
+      
+            
             <v-text-field v-model="cardHolder" label="Nome do titular do cartão" required></v-text-field>
             <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
             <v-text-field v-model="expiryDate" label="Data de Expiração (MM/AA)" required></v-text-field>
@@ -34,6 +42,17 @@
     </div>
 </template>
 
+<script setup>
+import { ref } from "vue";
+import { vMaska } from "maska";
+
+const options = { mask: '#####-####' };
+const myValue = ref('');
+
+const phoneOptions = { mask: '55+ (##) #####-####' };
+const phoneMask = ref('');
+</script>
+
 <script>
 import axios from 'axios';
 
@@ -56,6 +75,7 @@ export default {
         paymentType: 'debit',
         paymentSelected: 'cielo',
         cardHolder: null,
+        telefone: null,
         cardNumber: null,
         document: null,
         expiryDate: null,
@@ -86,6 +106,7 @@ export default {
             const data = {
                 paymentType: this.paymentType,
                 cardHolder: this.cardHolder,
+                telefone: this.telefone,
                 cardNumber: this.cardNumber,
                 document: this.document,
                 expiryDate: this.expiryDate,
