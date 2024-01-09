@@ -55,11 +55,6 @@
                             <template v-slot:item.actions="{ item }">
                                 <v-btn-group>
                                     <v-btn>
-                                        <v-icon size="x-small" class="me-2" color="primary" @click="MelhorEnvioCart(item)"
-                                            icon="fas fa-eye"></v-icon>
-
-                                    </v-btn>
-                                    <v-btn>
                                         <v-icon size="x-small" class="me-2" color="primary" @click="checkout(item)"
                                             icon="fas fa-basket-shopping"></v-icon>
 
@@ -223,10 +218,7 @@ export default {
                 if(status == 'open') return 'red';
                 else if(status == 'close') return 'green';
             },
-            MelhorEnvioCart(item){
-                const order_id = item.order_id
-                return window.location.href = `https://sandbox.melhorenvio.com.br/carrinho`;
-            },
+            
             checkout(item){
                 const data = {order: item};
                 axios.post('api/melhorenvio/checkout', data)
@@ -270,7 +262,6 @@ export default {
             },
             trackBack(trackCode){
                 window.location.href = 'https://app.melhorrastreio.com.br/app/melhorenvio/' + trackCode;
-               
             },
             closeTrackingDialog(){
                 this.trackingDialog = false;
