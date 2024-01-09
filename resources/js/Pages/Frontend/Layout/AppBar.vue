@@ -11,7 +11,7 @@
                     <template v-slot:prepend>
                         <v-app-bar-title>
                             <v-btn class="text" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
-                        <div v-if="Object.keys(user).length >= 1">
+                        <div v-if="user === 1 || user">
                             <v-btn :to="'/dashboard'" variant="plain">
                                 <v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon>
                             </v-btn>
@@ -57,12 +57,9 @@
                                         </v-btn>
                                     </template>
                                     <v-list :items="carts" item-props lines="three"
-                                        style="margin-top: 51px; margin-right: -55px">
+                                        style="margin-top: 10px; margin-right: -55px">
                                         <v-list-item v-for="item in carts" :key="item.id" :value="item.id">
-                                            <div v-if="!item">
-                                                <p>No item to show...</p>
-                                            </div>
-                                            <div v-else>
+                                            <div v-if="item && item.is_active == 1">
                                                 <v-row>
                                                     <v-col cols="auto" md="12" sm="4">
                                                         <v-card class="mx-auto" elevation="0">
@@ -134,6 +131,7 @@
 
                                                 <v-divider></v-divider>
                                             </div>
+
                                         </v-list-item>
 
                                         <v-btn color="cyan-darken-4" variant="tonal" block>Checkout</v-btn>
@@ -144,7 +142,6 @@
                         </v-row>
 
                     </div>
-
 
                     <!-- Cria o botao de menu do usuario -->
                     <v-menu>
@@ -157,7 +154,7 @@
                         </template>
                         <v-list>
                             <!-- login button -->
-                            <v-list-item v-if="Object.keys(user).length === 0">
+                            <v-list-item v-if="user === 0 || !user">
                                 <v-list-item-title link>
                                     <span>
                                         <v-btn icon variant="plain" to="/login">
@@ -171,7 +168,8 @@
 
 
 
-                            <v-list-item @click="logout()" v-else>
+                            <v-list-item v-else @click="logout()">
+
                                 <v-list-item-title link>
                                     <span>
                                         <v-icon icon="fas fa-right-from-bracket"></v-icon>
@@ -181,27 +179,47 @@
                                 </v-list-item-title>
                             </v-list-item>
 
+                            <v-list-item @click="openAddressDialog()">
 
+                                <v-list-item-title link>
+                                    <span>
+                                        <v-icon icon="far fa-user"></v-icon>
+                                    </span>
+
+                                    <span>Profile</span>
+                                </v-list-item-title>
+                            </v-list-item>
 
                         </v-list>
                     </v-menu>
                 </v-app-bar>
+
             </v-card>
+
+            <div>
+                <AddressForm v-model="addressDialog" v-if="addressDialog" :customer="this.customers"
+                    @close-dialog="closeAddressDialog" />
+            </div>
         </v-col>
     </v-row>
 </template>
 
 <script>
 import axios from 'axios';
-
-
-
+import AddressForm from '../Dialogs/Address.vue';
 export default {
+    components: { AddressForm },
     data: () => ({
         user: [],
         carts: [],
         categories: [],
+        addressDialog: false,
     }),
+    watch: {
+        closeAddressDialog(val) {
+            val || this.closeAddressDialog();
+        }
+    },
     methods: {
         getCategories() {
             axios.get('/categories')
@@ -214,6 +232,10 @@ export default {
         getUser() {
             axios.get('/customer')
                 .then((response) => {
+                    if (!Object.keys(response.data.original).length) {
+                        return this.user = 0;
+
+                    }
                     return this.user = response.data;
                 })
                 .catch((response) => {
@@ -239,6 +261,12 @@ export default {
                     alert('Error: ' + response);
                 });
         },
+        openAddressDialog() {
+            this.addressDialog = true;
+        },
+        closeAddressDialog() {
+            this.addressDialog = false;
+        },
         removeItem(item) {
             axios.delete(`/cartItem/delete/${item.id}`)
                 .then((response) => {
@@ -255,7 +283,6 @@ export default {
                     if (response) {
                         this.$router.push('/login');
                     }
-                    alert(response);
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);

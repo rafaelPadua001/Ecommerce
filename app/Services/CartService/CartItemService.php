@@ -59,19 +59,37 @@ class CartItemService{
     public function buy($userId){
         try{
             $item = $this->cartItem->where('cart_items.user_id', $userId)
+            ->join('customers', 'customers.id', '=', 'cart_items.user_id')
+            ->leftJoin('cupon_customers', 'cupon_customers.user_id', '=', 'customers.id')
             ->join('products', 'products.id', '=', 'cart_items.product_id')
+            ->leftJoin('addresses', 'addresses.user_id', '=', 'cart_items.user_id')
             ->select(
                 'cart_items.*',
                 'products.name',
+                'products.description',
                 'products.images',
                 'products.height',
                 'products.width',
                 'products.length',
-                'products.weight'
+                'products.weight',
+                'customers.first_name',
+                'customers.last_name',
+                'customers.email',
+                'cupon_customers.coupon_id',
+                'cupon_customers.coupon_name',
+                'cupon_customers.discount_percentage',
+                'cupon_customers.end_date',
+                'cupon_customers.is_used',
+                'addresses.endereco',
+                'addresses.complemento',
+                'addresses.bairro',
+                'addresses.cidade',
+                'addresses.estado',
+                
             )
             ->latest()
             ->first();
-           
+          
             return $item;
         }
         catch(Exception $e){
@@ -94,16 +112,23 @@ class CartItemService{
             return response()->json($e);
         };
     }
-    public function destroy($id)
-    {
+    public function updateActive($id){
+        $cartItemStatus = $this->cartItem->where('cart_items.id', $id)->update([
+            'is_active' => false
+        ]);
         
+        return true;
+    }
+    public function destroy($id)
+    {   
         try{
-            $cartItem = $this->cartItem->findOrFail($id)->delete();
-           
-            return true;
-          
+            $remove_cartItem = $this->cartItem->findOrFail($id);
+            $remove_cartItem->delete();
+        
+            return $remove_cartItem;
         }
         catch(Exception $e){
+            dd($e->getMessage()); 
             return response()->json($e);
         }
     }

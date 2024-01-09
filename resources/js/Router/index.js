@@ -13,6 +13,7 @@ import Buy from '../Pages/Frontend/Checkout/Buy.vue'
 import Cart from '../Pages/Frontend/Cart/Cart.vue'
 import Checkout from '../Pages/Frontend/Checkout/Checkout.vue'
 import Orders from '../Pages/Frontend/Orders/Orders.vue'
+import CouponCustomer from '../Pages/Frontend/Coupons/CouponCustomer.vue'
 import AdminLogin from '../Pages/Backend/Auth/Login.vue'
 import AdminDashboard from '../Pages/Backend/Auth/Dashboard.vue'
 import Categories from '../Pages/Backend/Categories/Categories.vue'
@@ -51,6 +52,11 @@ const routes = [{
         path: '/profileCustomer/:id',
         name: 'profile',
         component: Profile
+    },
+    {
+        path: '/CouponCustomer',
+        name: 'couponCustomer',
+        component:CouponCustomer
     },
     {
         path: '/admin',
@@ -94,8 +100,6 @@ const routes = [{
         name: 'item.buy',
         component: Buy,
         props: route => ({ shippment: JSON.parse(route.query.shippment || 'null'), zip_code: route.query.zip_code })
-  
-        
     },
     {
         path: '/carts/buy/:id',

@@ -6,35 +6,23 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
-
+use App\Services\AddressService\AddressService;
 class AddressesController extends Controller
 {
-    //
+    protected $addressService;
+
+    public function __construct(AddressService $addressService){
+        $this->addressService = $addressService;
+    }
     public function index(){
-        $customer = Auth::guard('customer')->user();
-        $address = Address::where('user_id', $customer->id)->first();
+        $address = $this->addressService->getAddress();
         return response()->json($address);
     }
     public function create(Request $request){
+        
         try{
-            $customer = Auth::guard('customer')->user();
-           
-            $address = Address::create([
-                    'endereco' => $request->address,
-                    'complemento' => $request->complemento,
-                    'bairro' => $request->bairro,
-                    'cidade' => $request->city,
-                    'estado' => $request->state,
-                    'cep' => $request->postal_code,
-                    'UF' => $request->uf,
-                    'pais' => $request->country,
-                    'telefone' => $request->phone,
-                    'user_id' => $customer->id
-                ]);
-                
-                return response()->json($address);             
-            
-           
+                $create = $this->addressService->store($request);
+                return response()->json($create);             
         }
         catch(Exception $e){
             return response()->json($e);
@@ -42,10 +30,20 @@ class AddressesController extends Controller
     }
     public function update(Request $request, $id){
         try{
-            $address = Address::where('id', $id)->update($request->all());
-            return response()->json($address);
+            $update = $this->addressService->update($request, $id);
+            return response()->json($update);
         }
         catch(Exception $e){
+            return response()->json($e);
+        }
+    }
+    public function destroy($id){
+        try{
+            $delete = $this->addressService->delete($id);
+            return response()->json($delete);
+        }
+        catch(Exception $e)
+        {
             return response()->json($e);
         }
     }

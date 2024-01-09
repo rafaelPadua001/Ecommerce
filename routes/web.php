@@ -23,6 +23,7 @@ use App\Http\Controllers\ProfileImage\ProfileImageController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Search\SearchToAddressesController;
 use App\Http\Controllers\Coupons\CouponsController;
+use App\Http\Controllers\Coupons\CouponCustomer\CouponCustomerController;
 use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Shippment\ShippmentController;
 use Illuminate\Support\Facades\Auth;
@@ -93,6 +94,7 @@ Route::post('/customer/update/{id}', [CustomerController::class, 'update'])->nam
 Route::post('/login',[LoginController::class, 'login'])->name('cutomer.login');
 Route::post('/registerCustomer', [CustomerController::class, 'store'])->name('store');
 Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('logout');
+Route::delete('/customer/delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
 
 //Customer Profile Image
 Route::get('/profileImage', [ProfileImageController::class, 'index'])->name('profile.image.index');
@@ -103,6 +105,7 @@ Route::delete('/profileImage/delete/{id}', [ProfileImageController::class, 'dest
 Route::get('/address', [AddressesController::class, 'index'])->name('address.index');
 Route::post('/address/save', [AddressesController::class, 'create'])->name('address.create');
 Route::post('/address/update/{id}', [AddressesController::class, 'update'])->name('address.update');
+Route::delete('/address/delete/{id}', [AddressesController::class, 'destroy'])->name('address.delete');
 
 //Categories routes
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index');
@@ -137,10 +140,13 @@ Route::get('/subcategories/all/{category_id}', [SubcategoriesController::class, 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth');
 Route::get('/products/show', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products/like/{id}', [ProductController::class , 'like'])->name('product.like');
+Route::delete('/products/dislike/{id}', [ProductController::class, 'dislike'])->name('product.dislike');
 
 //Likes Route
 
 Route::get('/likes', [LikedProductController::class, 'index'])->name('likes.index');
+Route::delete('/likes/delete/{id}', [LikedProductController::class, 'destroy'])->name('likes.destroy');
+
 //SEO routes
 Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->middleware('auth');
 
@@ -163,9 +169,15 @@ Route::get('/allOrders', [OrderController::class, 'allOrders'])->name('allOrders
 //Coupons Routes
 Route::post('/coupons/add', [CouponsController::class, 'create'])->name('coupon.add')->middleware('auth');
 Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index')->middleware('auth');
+Route::get('/coupons/getWelcome', [CouponsController::class, 'getInitDiscount'])->name('coupon.welcome');
 Route::post('/coupons/update/{id}', [CouponsController::class, 'update'])->name('coupon.update')->middleware('auth');
 Route::delete('/coupons/delete/{id}', [CouponsController::class, 'destroy'])->name('coupon.destroy')->middleware('auth');
  
+//Route Coupons to Customer
+Route::get('/couponsCustomer', [CouponCustomerController::class, 'getAll'])->name('coupon.all');
+Route::delete('/couponsCustomer/delete/{id}', [CouponCustomerController::class, 'remove'])->name('coupon.remove');
+
+
 //Products routes
 //Route::get('/products', function(){s
 //    dd('teste product routes');
