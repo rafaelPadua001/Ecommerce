@@ -336,7 +336,7 @@
                                                     
                                                     <DebitForm 
                                                         :paymentType="paymentType"
-                                                        :id="this.product.id"
+                                                        :product_id="this.product.product_id"
                                                         :name="this.product.name"
                                                         :totalValue="(parseFloat(shippment[0].price)
                                                                 + parseFloat(product.price * product.quantity)

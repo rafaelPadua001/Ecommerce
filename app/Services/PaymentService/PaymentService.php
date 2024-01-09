@@ -14,19 +14,23 @@ use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 use App\Services\CartService\CartItemService;
 use App\Services\CouponService\CouponCustomer\CouponCustomerService;
+use App\Services\StockService\StockService;
 
 class PaymentService {
     protected $payment;
     protected $carItemService;
     protected $couponCustomerService;
+    protected $stockService;
     public function __construct(
         Payment $payment,
         CartItemService $cartItemService,
-        CouponCustomerService $couponCustomerService
+        CouponCustomerService $couponCustomerService,
+        StockService $stockService
     ){
         $this->payment = $payment;
         $this->carItemService = $cartItemService;
         $this->couponCustomerService = $couponCustomerService;
+        $this->stockService = $stockService;
     }
     public function paymentType(Request $request){
         $paymentType = $request->paymentType;
@@ -96,6 +100,7 @@ class PaymentService {
     public function createDebitPayment($responseData, $request)
     {
         $payer = Auth::guard('customer')->user();
+        
 
         try {
             $payment = Payment::create([
@@ -115,7 +120,11 @@ class PaymentService {
             if($request->coupon_id >= 1){
                 $this->removeCoupon($request->coupon_id);
             }
+            if($request->quantity >= 1){
+                $this->reduceStock($request);
+            }
             
+           
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -265,5 +274,11 @@ class PaymentService {
     public function removeCoupon($id){
         $coupon = $this->couponCustomerService->remove($id);
         return $coupon;
+    }
+    public function reduceStock($request){
+        $quantity = $request->quantity;
+        $cart = $request;
+        $reduceStock = $this->stockService->reduceItemStock($quantity, $cart);
+        return response()->json($reduceStock);
     }
 }
