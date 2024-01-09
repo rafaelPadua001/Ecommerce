@@ -40,7 +40,7 @@ import axios from 'axios';
 export default {
     props: [
         'paymentType',
-        'id',
+        'product_id',
         'name',
         'quantity',
         'totalValue',
@@ -99,7 +99,7 @@ export default {
                 quantity: this.quantity,
                 image: this.image,
                 color: this.color,
-                id: this.id,
+                product_id: this.product_id,
                 address: this.address,
                 coupon_id: this.coupon_id,
             };
