@@ -63,12 +63,12 @@ class MelhorEnvioController extends Controller
     public function createCart(Request $request){
         $client = new Client();
         $customer = Auth::guard('customer')->user();
-       
+        
         try {
             $response = $client->post('https://sandbox.melhorenvio.com.br/api/v2/me/cart', [
                 'json' => [
-                    'service' => $request['delivery']['id'],
-                    'agency' => $request['delivery']['company']['id'],
+                    'service' => $request['delivery'][0]['id'],
+                    'agency' => $request['delivery'][0]['company']['id'],
                     'from' => [
                         'name' => env('APP_NAME'),
                         "phone" => 556195051731, //env('EMPLOYE_PHONE'),
@@ -81,14 +81,14 @@ class MelhorEnvioController extends Controller
                     ],
                     'to' => [
                         // Preencha os detalhes de destino aqui
-                        "name" => $customer->fist_name . $customer->last_name,
-                        "phone" => $request['address']['telefone'],
+                        "name" => $customer->first_name . $customer->last_name,
+                        "phone" => $request['telefone'],
                           "email"   => $customer->email,
                           "address" => $request['address']['endereco'],
                           "complement" => $request['address']['complemento'],
                           "city" => $request['address']['cidade'],
-                          "postal_code" => $request['address']['cep'],
-                          "state_abbr" => $request['address']['UF'],
+                          "postal_code" => $request['address']['postal_code'],
+                          "state_abbr" => $request['address']['uf'],
                           'document' => $request['document']
                     ],
                     'products' => [
@@ -101,17 +101,17 @@ class MelhorEnvioController extends Controller
                     ],
                     'volumes' => [
                         [
-                            'height' => $request['delivery']['packages'][0]['dimensions']['height'],
-                            'width' => $request['delivery']['packages'][0]['dimensions']['width'],
-                            'length' => $request['delivery']['packages'][0]['dimensions']['length'],
-                            'weight' => $request['delivery']['packages'][0]['weight']
+                            'height' => $request['delivery'][0]['packages'][0]['dimensions']['height'],
+                            'width' => $request['delivery'][0]['packages'][0]['dimensions']['width'],
+                            'length' => $request['delivery'][0]['packages'][0]['dimensions']['length'],
+                            'weight' => $request['delivery'][0]['packages'][0]['weight']
                         ]
                         // Adicione mais volumes conforme necessário
                     ],
                     'options' => [
-                        'insurance_value' => $request['delivery']['packages'][0]['insurance_value'],
-                        'receipt' => $request['delivery']['additional_services']['receipt'],
-                        'own_hand' => $request['delivery']['additional_services']['own_hand'],
+                        'insurance_value' => $request['delivery'][0]['packages'][0]['insurance_value'],
+                        'receipt' => $request['delivery'][0]['additional_services']['receipt'],
+                        'own_hand' => $request['delivery'][0]['additional_services']['own_hand'],
                         'reverse' => true,
                         'non_commercial' => true,
                        
@@ -246,7 +246,7 @@ class MelhorEnvioController extends Controller
         return $client;
     }
     public function getOrder($order, $request){
-        dd($order, $request);
+       
         $orders = new OrderController();
         return $orders->insertOrderId($request, $order);
     }

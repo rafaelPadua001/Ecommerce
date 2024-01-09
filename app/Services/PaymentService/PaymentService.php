@@ -113,7 +113,8 @@ class PaymentService {
                 "payer" => $payer->email,
                 "user_id" => $payer->id
             ]);
-            $this->getMelhorEnvio($request);
+            $melhorEnvio = $this->getMelhorEnvio($request);
+           
             $createOrder = $this->getOrder($request, $responseData);
             $itemId = $request['id'];
             $this->alterStatusItem($itemId);
@@ -267,7 +268,6 @@ class PaymentService {
         return $order->create($request, $responseData);
     }
     public function getMelhorEnvio($request){
-        
         $melhorEnvio = new MelhorEnvioController();
         return $melhorEnvio->createCart($request);
     }
