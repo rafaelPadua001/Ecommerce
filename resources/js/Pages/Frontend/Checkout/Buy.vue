@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <Dashboard />
-    </div>
-    <div>
+    
+        <Dashboard id="dashboard"/>
+    
+   
         <v-row no-gutters>
             <v-col class="d-flex flex-column justify-center" cols="auto" md="12" sm="8">
-                <v-timeline direction="horizontal" line-inset="12">
+                <v-timeline  direction="horizontal" line-inset="12">
                     <v-timeline-item v-mode="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home" fill-dot
                         size="x-small">
                         <template v-slot:opposite>
@@ -469,7 +469,7 @@
                 </v-card>
             </v-dialog>
         </div>
-    </div>
+  
 </template>
 
 <script>
@@ -626,3 +626,27 @@ export default {
 
 }
 </script>
+
+<style>
+#dashboard {
+  z-index: 2000;
+  position: fixed;
+}
+
+#timeline {
+  z-index: 1;
+}
+
+.v-card-menu--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+}
+
+
+.footer {
+  width: 100%;
+}
+</style>

@@ -478,7 +478,7 @@ export default {
 }
 
 .main {
-  z-index: 1;
+  z-index: 8;
 }
 
 .v-card-menu--reveal {
