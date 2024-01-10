@@ -129,7 +129,7 @@ class MelhorEnvioController extends Controller
             $order = json_decode($response->getBody());
           
             
-            $this->getOrder($order, $request);
+            //$this->getOrder($order, $request);
             
             
             return response()->json($response);
@@ -139,7 +139,6 @@ class MelhorEnvioController extends Controller
     }
     public function checkout(Request $request){
         try{
-           
             $client = $this->getClient();
             $customer = Auth::guard('customer')->user();
               $orderIds = [$request->get('order')['order_id']];
@@ -245,10 +244,10 @@ class MelhorEnvioController extends Controller
         $client = new Client();
         return $client;
     }
-    public function getOrder($order, $request){
-       
-        $orders = new OrderController();
-        return $orders->insertOrderId($request, $order);
-    }
+    //public function getOrder($order, $request){
+    //   
+    //    $orders = new OrderController();
+    //    return $orders->insertOrderId($request, $order);
+    //}
     
 }

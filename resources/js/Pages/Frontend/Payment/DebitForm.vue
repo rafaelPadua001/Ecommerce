@@ -60,6 +60,7 @@ export default {
     props: [
         'paymentType',
         'product_id',
+        'item_id',
         'name',
         'quantity',
         'totalValue',
@@ -69,6 +70,7 @@ export default {
         'color',
         'coupon_id',
         'address',
+        
     ],
     data: () => ({
         loading: false,
@@ -123,6 +125,7 @@ export default {
                 product_id: this.product_id,
                 address: this.address,
                 coupon_id: this.coupon_id,
+                cartItem_id: this.item_id
             };
             axios.post('/payment', data)
                 .then((response) => {

@@ -55,6 +55,12 @@
                             <template v-slot:item.actions="{ item }">
                                 <v-btn-group>
                                     <v-btn>
+                                        <v-icon size="x-small" class="me-2" color="primary"
+                                            icon="fas fa-eye" @click="openOrderDialog(item)">
+                                        </v-icon>
+
+                                    </v-btn>
+                                    <v-btn>
                                         <v-icon size="x-small" class="me-2" color="primary" @click="checkout(item)"
                                             icon="fas fa-basket-shopping"></v-icon>
 
@@ -89,6 +95,8 @@
                             </v-card-text>
                         </v-card>
                         <div>
+                            <OrderDialog v-model="orderDialog" v-if="orderDialog" :order="this.editOrder"/>
+                            
                             <v-dialog v-model="trackingDialog" transition="dialog-bottom-transition">
                             <v-card>
                                 <div>
@@ -153,11 +161,13 @@
 </template>
 
 <script>
-    import axios from 'axios';
-import Dashboard from '../Auth/Dashboard.vue'
+import axios from 'axios';
+import Dashboard from '../Auth/Dashboard.vue';
+import OrderDialog from '../Orders/partials/OrderDialog.vue';
 export default {
         components: {
             Dashboard,
+            OrderDialog,
         },
         data: () => ({
             orders: [],
@@ -165,6 +175,7 @@ export default {
             trackingOrder: null,
             trackingDialog: false,
             dialog: false,
+            orderDialog: false,
             removeOrderDialog: false,
             headers: [
             {
@@ -182,7 +193,10 @@ export default {
             { title: 'created', key: 'created_at' },
             { title: 'updated', key: 'updated_at' },
             { title: 'Actions', key: 'actions', sortable: false },
+            
         ],
+        editOrder: [],
+        editIndex: -1,
         }),
         watch: {
             dialog(val) {
@@ -234,7 +248,6 @@ export default {
                 })
             },
             generatePrint(item){
-                
                 const data = {order: item};
                 axios.post('/api/generateTicket', data)
                 .then((response) => {
@@ -244,6 +257,11 @@ export default {
                 .catch((response) => {
                     alert('Error:', response.data);
                 });
+            },
+            openOrderDialog(item){
+                this.editOrder = Object.assign({}, item);
+                this.editIndex = this.orders.indexOf(item);
+               return this.orderDialog = true;
             },
             openTrackingDialog(item){
                 this.trackingDialog = true;

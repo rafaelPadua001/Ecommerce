@@ -99,6 +99,7 @@ class PaymentService {
     }
     public function createDebitPayment($responseData, $request)
     {
+        
         $payer = Auth::guard('customer')->user();
         
 
@@ -113,9 +114,13 @@ class PaymentService {
                 "payer" => $payer->email,
                 "user_id" => $payer->id
             ]);
-            $melhorEnvio = $this->getMelhorEnvio($request);
-           
             $createOrder = $this->getOrder($request, $responseData);
+            
+            if($createOrder){
+                $melhorEnvio = $this->getMelhorEnvio($request);
+            }
+            
+           
             $itemId = $request['id'];
             $this->alterStatusItem($itemId);
             if($request->coupon_id >= 1){
@@ -125,7 +130,8 @@ class PaymentService {
                 $this->reduceStock($request);
             }
             
-           
+            $notification = $this->notification($responseData);
+           // dd($notification);
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -230,6 +236,40 @@ class PaymentService {
             }
             
         }
+    }
+    public function notification($response){
+        try{
+            $merchantKey = env('CIELO_MERCHANT_KEY');
+            $url =  $response['Payment']['Links'][0]['Href'];
+            
+            $headers = [
+                'Authorization:' . $merchantKey,
+                'Content-Type : application/json',   
+            ];
+
+            $ch = curl_init($url);
+           
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $return = curl_exec($ch);
+            if(!$return){
+                $error = curl_error($ch);
+            }
+
+            curl_close($ch);
+
+            return $return;
+            
+        }
+        catch(Exception $e){
+            return $e;
+        }
+       // dd($response['Payment']['Links'][0]['Href']);
+       $link = $response['Payment']['Links'][0]['Href'];
+       header("Location: $link");
+       exit();
+        //redirect($response['Payment']['Links'][0]['Href']);
     }
     public function alterStatusItem($id){
        
