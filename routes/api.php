@@ -74,6 +74,7 @@ Route::delete('/videos/delete/{id}', [ProductVideoController::class, 'destroy'])
 Route::post('/calculateDelivery', [DeliveryController::class, 'calculateDelivery'])->name('calculate.delivery');
 #Route::post('/calculateDelivery', [MelhorEnvioController::class, 'calculateDelivery'])->name('calculate.delivery');
 Route::post('/generateTicket', [MelhorEnvioController::class, 'generatePrint'])->name('generateTicket.delivery');
+Route::post('/getTicket', [MelhorEnvioController::class, 'getPrint'])->name('generateTicket.getPrint');
 Route::post('/melhorenvio/checkout', [MelhorEnvioController::class, 'checkout'])->name('checkout.delivery');
 Route::post('/melhorenvio/tracking', [MelhorEnvioController::class, 'tracking'])->name('checkout.tracking');
 Route::post('/melhorenvio/delete/{id}', [MelhorEnvioController::class, 'destroy'])->name('checkout.destroy');

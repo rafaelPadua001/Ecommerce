@@ -19,27 +19,31 @@
 
                                 </v-btn>
                                 <v-btn>
-                                        <v-icon size="x-small" class="me-2" color="primary" @click="checkout(item)"
-                                            icon="fas fa-basket-shopping"></v-icon>
+                                    <v-icon size="x-small" class="me-2" color="primary" @click="checkout(item)"
+                                        icon="fas fa-basket-shopping"></v-icon>
 
-                                    </v-btn>
-                                    <v-btn>
-                                        <v-icon size="x-small" class="me-2" @click="generatePrint(item)" icon="fas fa-ticket"
-                                            color="primary"></v-icon>
-                                    </v-btn>
-                                    <v-btn>
-                                        <v-icon size="x-small" class="me-2" color="primary" @click="openTrackingDialog(item)"
-                                            icon="fas fa-truck-fast"></v-icon>
+                                </v-btn>
+                                <v-btn>
+                                    <v-icon size="x-small" class="me-2" @click="generatePrint(item)" icon="fas fa-ticket"
+                                        color="primary"></v-icon>
+                                </v-btn>
+                                <v-btn>
+                                    <v-icon size="x-small" class="me-2" @click="getPrint(item)" icon="fas fa-print"
+                                        color="primary"></v-icon>
+                                </v-btn>
+                                <v-btn>
+                                    <v-icon size="x-small" class="me-2" color="primary" @click="openTrackingDialog(item)"
+                                        icon="fas fa-truck-fast"></v-icon>
 
-                                    </v-btn>
+                                </v-btn>
                                 <v-btn class="mr-2" icon @click="deleteItem(item)" size="x-small" variant="plain">
                                     <v-icon icon="fas fa-trash" size="small" color="primary"></v-icon>
                                 </v-btn>
                                 <v-btn class="mr-2" icon @click="editItem(item)" size="x-small" variant="plain">
                                     <v-icon class="me-2" icon="fas fa-pen-to-square" color="primary"></v-icon>
                                 </v-btn>
-                              
-                               
+
+
 
 
                             </v-btn-group>
@@ -113,7 +117,51 @@
 
 
             </v-dialog>
+            <v-dialog v-model="trackingDialog" transition="dialog-bottom-transition">
+                <v-card>
+                    {{ trackingOrder }}
+                    <div>
+                        <v-list>
+                            <v-list-item-group v-if="trackingOrder">
+                                <v-list-item v-for="(value, key) in trackingOrder" :key="key">
+                                    <v-list-item-content>
+                                        <v-list-item-title>{{ key }}</v-list-item-title>
+                                        <v-list-item-subtitle v-if="(typeof value === 'object')">
+                                            ID: {{ value.id }}
 
+                                        </v-list-item-subtitle>
+                                        <v-list-item-subtitle v-else>
+                                            {{ value.id }}
+                                        </v-list-item-subtitle>
+
+                                        <v-list-item>
+                                            protocol: {{ value.protocol }}
+                                        </v-list-item>
+                                        <v-list-item> status: {{ value.status }}</v-list-item>
+                                        <v-list-item>tracking: <v-btn variant="plain" color="primary" size="x-small"
+                                                @click="trackBack(value.tracking)">{{ value.tracking
+                                                }}</v-btn></v-list-item>
+                                        <v-list-item> created at: {{ value.created_at }}</v-list-item>
+                                        <v-list-item>posted at: {{ value.posted_at }}</v-list-item>
+                                        <v-list-item> delivered at: {{ value.delivered_at }}</v-list-item>
+                                        <v-list-item> canceled at: {{ value.canceled_at }}</v-list-item>
+                                        <v-list-item>expired at: {{ value.expired_at }} </v-list-item>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list-item-group>
+
+                            <v-list-item-group v-if="trackingOrder == 0">
+                                <v-list-item-title>Nenhum registro encontrado</v-list-item-title>
+                            </v-list-item-group>
+                        </v-list>
+                    </div>
+                    <v-card-actions>
+                        <v-btn color="primary" variant="plain" @click="closeTrackingDialog">Close</v-btn>
+                    </v-card-actions>
+
+                </v-card>
+
+            </v-dialog>
             <v-dialog v-model="deleteDialog" max-width="500px">
                 <v-card>
                     <v-card-title>delete item</v-card-title>
@@ -153,6 +201,8 @@ export default {
     },
     data: () => ({
         shippments: [],
+        trackingOrder: null,
+        trackingDialog: false,
         headers: [
             {
                 title: 'user',
@@ -282,22 +332,65 @@ export default {
             });
         },
         MelhorEnvioCart(item) {
-           return window.location.href = `https://sandbox.melhorenvio.com.br/carrinho`;
+            return window.location.href = `https://sandbox.melhorenvio.com.br/carrinho`;
         },
-        checkout(item){
-                const data = {order: item.delivery_id};
-                axios.post('api/melhorenvio/checkout', data)
+        checkout(item) {
+            const data = { order: item.delivery_id };
+            axios.post('api/melhorenvio/checkout', data)
                 .then((response) => {
-                   if(response.data.error){
-                    alert(response.data.error);
-                   }
+                    if (response.data.error) {
+                        alert(response.data.error);
+                    }
                     console.log(response.data);
                 })
                 .catch((response) => {
                     console.log(response.error)
-                    return alert('Error :' , response.error); 
+                    return alert('Error :', response.error);
+                });
+        },
+        generatePrint(item) {
+            const data = { order: item };
+            axios.post('/api/generateTicket', data)
+                .then((response) => {
+                    //window.location.href = response.data.url;
+                    console.log(response);
                 })
-            },
+                .catch((response) => {
+                    alert('Error:', response.data);
+                });
+        },
+        getPrint(item) {
+            const data = { order: item };
+            axios.post('/api/getTicket', data)
+                .then((response) => {
+                    window.location.href = response.data.url;
+                    console.log(response);
+                })
+                .catch((response) => {
+                    alert('Error:', response.data);
+                });
+        },
+        openTrackingDialog(item) {
+            this.trackingDialog = true;
+            return this.tracking(item);
+        },
+        tracking(item) {
+            const data = { order: item };
+            axios.post('/api/melhorenvio/tracking', data)
+                .then((response) => {
+                    // console.log(JSON.parse(response.data));
+                    return this.trackingOrder = response.data;
+                })
+                .catch((response) => {
+                    alert('Error: ', response);
+                });
+        },
+        trackBack(trackCode) {
+            window.location.href = 'https://app.melhorrastreio.com.br/app/melhorenvio/' + trackCode;
+        },
+        closeTrackingDialog() {
+            this.trackingDialog = false;
+        },
         save() {
             const token = document.querySelector('meta[name="csrf-token"]');
             const data = {
