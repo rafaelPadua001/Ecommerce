@@ -13,17 +13,32 @@
                     <v-data-table :headers="headers" :items="shippments" :sort-by="[{ key: 'first_name', order: 'asc' }]">
                         <template v-slot:item.actions="{ item }">
                             <v-btn-group>
+                                <v-btn class="mr-2" icon size="x-small" variant="plain">
+                                    <v-icon class="me-2" color="primary" @click="MelhorEnvioCart(item)"
+                                        icon="fas fa-eye"></v-icon>
+
+                                </v-btn>
+                                <v-btn>
+                                        <v-icon size="x-small" class="me-2" color="primary" @click="checkout(item)"
+                                            icon="fas fa-basket-shopping"></v-icon>
+
+                                    </v-btn>
+                                    <v-btn>
+                                        <v-icon size="x-small" class="me-2" @click="generatePrint(item)" icon="fas fa-ticket"
+                                            color="primary"></v-icon>
+                                    </v-btn>
+                                    <v-btn>
+                                        <v-icon size="x-small" class="me-2" color="primary" @click="openTrackingDialog(item)"
+                                            icon="fas fa-truck-fast"></v-icon>
+
+                                    </v-btn>
                                 <v-btn class="mr-2" icon @click="deleteItem(item)" size="x-small" variant="plain">
                                     <v-icon icon="fas fa-trash" size="small" color="primary"></v-icon>
                                 </v-btn>
                                 <v-btn class="mr-2" icon @click="editItem(item)" size="x-small" variant="plain">
                                     <v-icon class="me-2" icon="fas fa-pen-to-square" color="primary"></v-icon>
                                 </v-btn>
-                                <v-btn class="mr-2" icon size="x-small" variant="plain">
-                                    <v-icon class="me-2" color="primary" @click="MelhorEnvioCart(item)"
-                                        icon="fas fa-eye"></v-icon>
-
-                                </v-btn>
+                              
                                
 
 
