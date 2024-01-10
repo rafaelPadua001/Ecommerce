@@ -33,7 +33,8 @@ class ShippmentService {
        
     }
     public function store($delivery_item){
-        //dd($delivery_item);
+       // dd($delivery_item['id']);
+       // dd('teste');
         $data = [
             'name' =>  $delivery_item['delivery'][0]['name'],
             'company' => $delivery_item['delivery'][0]['company']['name'],
@@ -44,10 +45,10 @@ class ShippmentService {
             'user_id' => $delivery_item['address']['user_id'],
             'cart_id' => $delivery_item['cart_id'],
             'cart_item_id' => $delivery_item['cartItem_id'],
-            'delivery_id' => $delivery_item['protocol'] // Use ['id'] se for o campo correto
+            'delivery_id' => $delivery_item['id'] // Use ['id'] se for o campo correto
         ];
     
-
+  
         $store_shippment = $this->shippment->create($data);
        
         return $store_shippment;
