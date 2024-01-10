@@ -15,22 +15,26 @@ use MercadoPago\Exceptions\MPApiException;
 use App\Services\CartService\CartItemService;
 use App\Services\CouponService\CouponCustomer\CouponCustomerService;
 use App\Services\StockService\StockService;
+use App\Services\ShippmentService\ShippmentService;
 
 class PaymentService {
     protected $payment;
     protected $carItemService;
     protected $couponCustomerService;
     protected $stockService;
+    protected $shippmentService;
     public function __construct(
         Payment $payment,
         CartItemService $cartItemService,
         CouponCustomerService $couponCustomerService,
-        StockService $stockService
+        StockService $stockService,
+        ShippmentService $shippmentService
     ){
         $this->payment = $payment;
         $this->carItemService = $cartItemService;
         $this->couponCustomerService = $couponCustomerService;
         $this->stockService = $stockService;
+        $this->shippmentService = $shippmentService;
     }
     public function paymentType(Request $request){
         $paymentType = $request->paymentType;
@@ -118,9 +122,9 @@ class PaymentService {
             
             if($createOrder){
                 $melhorEnvio = $this->getMelhorEnvio($request);
+                $createShippment = $this->shippmentService->store($melhorEnvio);
             }
             
-           
             $itemId = $request['id'];
             $this->alterStatusItem($itemId);
             if($request->coupon_id >= 1){
@@ -131,6 +135,8 @@ class PaymentService {
             }
             
             $notification = $this->notification($responseData);
+            $shippment = $this->storeShippment($request);
+            dd($shippment);
            // dd($notification);
             return response()->json($responseData);
         } catch (Exception $e) {
@@ -309,6 +315,7 @@ class PaymentService {
     }
     public function getMelhorEnvio($request){
         $melhorEnvio = new MelhorEnvioController();
+        
         return $melhorEnvio->createCart($request);
     }
     public function removeCoupon($id){
@@ -320,5 +327,8 @@ class PaymentService {
         $cart = $request;
         $reduceStock = $this->stockService->reduceItemStock($quantity, $cart);
         return response()->json($reduceStock);
+    }
+    public function storeShippment($request){
+        $store = $this->shippmentService->store($request);
     }
 }

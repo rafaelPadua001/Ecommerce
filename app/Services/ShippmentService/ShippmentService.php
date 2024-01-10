@@ -33,23 +33,23 @@ class ShippmentService {
        
     }
     public function store($delivery_item){
-      
+        //dd($delivery_item);
         $data = [
-            'name' => $delivery_item['delivery_name'],
-            'company' => $delivery_item['delivery']['0']['company']['name'],
-            'price' => $delivery_item['delivery']['0']['packages']['0']['price'],
-            'deadline' => $delivery_item['delivery']['0']['delivery_time'],
+            'name' =>  $delivery_item['delivery'][0]['name'],
+            'company' => $delivery_item['delivery'][0]['company']['name'],
+            'price' => $delivery_item['delivery'][0]['price'],
+            'deadline' => $delivery_item['delivery'][0]['delivery_time'],
             'product_id' => $delivery_item['product_id'],
-            'quantity' => $delivery_item['delivery']['0']['packages']['0']['products']['0']['quantity'],
-            'user_id' => $delivery_item['user_id'],
+            'quantity' => $delivery_item['delivery'][0]['packages'][0]['products'][0]['quantity'],
+            'user_id' => $delivery_item['address']['user_id'],
             'cart_id' => $delivery_item['cart_id'],
-            'cart_item_id' => $delivery_item['cart_item_id'],
-            'delivery_id' => $delivery_item['delivery']['0']['packages']['0']['products']['0']['id']
+            'cart_item_id' => $delivery_item['cartItem_id'],
+            'delivery_id' => $delivery_item['protocol'] // Use ['id'] se for o campo correto
         ];
+    
 
-        
         $store_shippment = $this->shippment->create($data);
-        
+       
         return $store_shippment;
     }
     public function update($id, $request){
