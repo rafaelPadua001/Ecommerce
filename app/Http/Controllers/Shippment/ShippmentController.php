@@ -42,16 +42,16 @@ class ShippmentController extends Controller
          return response()->json($e);
       }
     }
-   // public static function create(Request $request){
-   //    
-   //     $customer = Auth::guard('customer')->user();
-   //     if(!$customer){
-   //         throw new Exception('Not logged user');
-   //     }
-   //    
-   //     $shippment_store = $this->shippmentService->store($request->delivery);
+    //public static function create(Request $request){
+    //   dd($request);
+    //    $customer = Auth::guard('customer')->user();
+    //    if(!$customer){
+    //        throw new Exception('Not logged user');
+    //    }
+    //   
+    //    $shippment_store = $this->shippmentService->store($request->delivery);
 //
-   //     return response()->json($shippment_store);
+    //    return response()->json($shippment_store);
 //
-   // }
+    //}
 }

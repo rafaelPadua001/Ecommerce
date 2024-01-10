@@ -15,22 +15,26 @@ use MercadoPago\Exceptions\MPApiException;
 use App\Services\CartService\CartItemService;
 use App\Services\CouponService\CouponCustomer\CouponCustomerService;
 use App\Services\StockService\StockService;
+use App\Services\ShippmentService\ShippmentService;
 
 class PaymentService {
     protected $payment;
     protected $carItemService;
     protected $couponCustomerService;
     protected $stockService;
+    protected $shippmentService;
     public function __construct(
         Payment $payment,
         CartItemService $cartItemService,
         CouponCustomerService $couponCustomerService,
-        StockService $stockService
+        StockService $stockService,
+        ShippmentService $shippmentService
     ){
         $this->payment = $payment;
         $this->carItemService = $cartItemService;
         $this->couponCustomerService = $couponCustomerService;
         $this->stockService = $stockService;
+        $this->shippmentService = $shippmentService;
     }
     public function paymentType(Request $request){
         $paymentType = $request->paymentType;
@@ -99,6 +103,7 @@ class PaymentService {
     }
     public function createDebitPayment($responseData, $request)
     {
+        
         $payer = Auth::guard('customer')->user();
         
 
@@ -113,9 +118,13 @@ class PaymentService {
                 "payer" => $payer->email,
                 "user_id" => $payer->id
             ]);
-            $melhorEnvio = $this->getMelhorEnvio($request);
-           
             $createOrder = $this->getOrder($request, $responseData);
+            
+            if($createOrder){
+                $melhorEnvio = $this->getMelhorEnvio($request);
+                $createShippment = $this->shippmentService->store($melhorEnvio);
+            }
+            
             $itemId = $request['id'];
             $this->alterStatusItem($itemId);
             if($request->coupon_id >= 1){
@@ -125,7 +134,10 @@ class PaymentService {
                 $this->reduceStock($request);
             }
             
-           
+            $notification = $this->notification($responseData);
+            $shippment = $this->storeShippment($request);
+            dd($shippment);
+           // dd($notification);
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -231,6 +243,40 @@ class PaymentService {
             
         }
     }
+    public function notification($response){
+        try{
+            $merchantKey = env('CIELO_MERCHANT_KEY');
+            $url =  $response['Payment']['Links'][0]['Href'];
+            
+            $headers = [
+                'Authorization:' . $merchantKey,
+                'Content-Type : application/json',   
+            ];
+
+            $ch = curl_init($url);
+           
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $return = curl_exec($ch);
+            if(!$return){
+                $error = curl_error($ch);
+            }
+
+            curl_close($ch);
+
+            return $return;
+            
+        }
+        catch(Exception $e){
+            return $e;
+        }
+       // dd($response['Payment']['Links'][0]['Href']);
+       $link = $response['Payment']['Links'][0]['Href'];
+       header("Location: $link");
+       exit();
+        //redirect($response['Payment']['Links'][0]['Href']);
+    }
     public function alterStatusItem($id){
        
         return $this->carItemService->updateActive($id);
@@ -269,6 +315,7 @@ class PaymentService {
     }
     public function getMelhorEnvio($request){
         $melhorEnvio = new MelhorEnvioController();
+        
         return $melhorEnvio->createCart($request);
     }
     public function removeCoupon($id){
@@ -280,5 +327,8 @@ class PaymentService {
         $cart = $request;
         $reduceStock = $this->stockService->reduceItemStock($quantity, $cart);
         return response()->json($reduceStock);
+    }
+    public function storeShippment($request){
+        $store = $this->shippmentService->store($request);
     }
 }

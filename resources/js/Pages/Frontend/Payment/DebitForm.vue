@@ -1,6 +1,6 @@
 <template>
     <v-container>
-       
+      
         <v-form @submit.prevent="submitForm">
             <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
            <v-text-field
@@ -60,6 +60,8 @@ export default {
     props: [
         'paymentType',
         'product_id',
+        'cart_id',
+        'item_id',
         'name',
         'quantity',
         'totalValue',
@@ -69,6 +71,7 @@ export default {
         'color',
         'coupon_id',
         'address',
+        
     ],
     data: () => ({
         loading: false,
@@ -123,6 +126,8 @@ export default {
                 product_id: this.product_id,
                 address: this.address,
                 coupon_id: this.coupon_id,
+                cartItem_id: this.item_id,
+                cart_id: this.cart_id,
             };
             axios.post('/payment', data)
                 .then((response) => {

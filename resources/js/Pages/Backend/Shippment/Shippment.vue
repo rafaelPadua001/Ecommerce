@@ -1,19 +1,35 @@
 <template>
     <div>
-        <v-row>
+        <v-row fluid>
             <v-col>
                 <Dashboard></Dashboard>
             </v-col>
         </v-row>
     </div>
     <v-container>
-        <v-row>
-            <v-col>
+        <v-row no-gutters>
+            <v-col class="d-flex justify-center d-flex">
                 <v-sheet>
                     <v-data-table :headers="headers" :items="shippments" :sort-by="[{ key: 'first_name', order: 'asc' }]">
                         <template v-slot:item.actions="{ item }">
-                            <v-icon icon="fas fa-pen-to-square" size="small" class="me-2" @click="editItem(item)"></v-icon>
-                            <v-icon icon="fas fa-trash" size="small" @click="deleteItem(item)"></v-icon>
+                            <v-btn-group>
+                                <v-btn class="mr-2" icon @click="deleteItem(item)" size="x-small" variant="plain">
+                                    <v-icon icon="fas fa-trash" size="small" color="primary"></v-icon>
+                                </v-btn>
+                                <v-btn class="mr-2" icon @click="editItem(item)" size="x-small" variant="plain">
+                                    <v-icon class="me-2" icon="fas fa-pen-to-square" color="primary"></v-icon>
+                                </v-btn>
+                                <v-btn class="mr-2" icon size="x-small" variant="plain">
+                                    <v-icon class="me-2" color="primary" @click="MelhorEnvioCart(item)"
+                                        icon="fas fa-eye"></v-icon>
+
+                                </v-btn>
+                               
+
+
+                            </v-btn-group>
+
+
                         </template>
 
                         <template v-slot:no-data>
@@ -177,7 +193,7 @@ export default {
         defaultItem: [],
     }),
     computed: {
-        formTitle(){
+        formTitle() {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
         },
     },
@@ -233,15 +249,15 @@ export default {
         },
         deleteItemConfirm() {
             axios.delete(`/shippments/delete/${this.editedItem.id}`)
-            .then((response) => {
-                return true;
-            })
-            .catch((error) => {
-                return alert('Error:' + error); 
-            });
+                .then((response) => {
+                    return true;
+                })
+                .catch((error) => {
+                    return alert('Error:' + error);
+                });
             this.closeDeleteDialog();
             this.shippments.splice(this.editedIndex, 1);
-           
+
         },
         closeDeleteDialog() {
             this.deleteDialog = false;
@@ -250,6 +266,23 @@ export default {
                 this.editedIndex = -1;
             });
         },
+        MelhorEnvioCart(item) {
+           return window.location.href = `https://sandbox.melhorenvio.com.br/carrinho`;
+        },
+        checkout(item){
+                const data = {order: item.delivery_id};
+                axios.post('api/melhorenvio/checkout', data)
+                .then((response) => {
+                   if(response.data.error){
+                    alert(response.data.error);
+                   }
+                    console.log(response.data);
+                })
+                .catch((response) => {
+                    console.log(response.error)
+                    return alert('Error :' , response.error); 
+                })
+            },
         save() {
             const token = document.querySelector('meta[name="csrf-token"]');
             const data = {
@@ -259,20 +292,20 @@ export default {
                 deadline: this.editedItem.deadline,
                 quantity: this.editedItem.quantity
             };
-            axios.post(`/shippments/update/${this.editedItem.id}`, data, 
-            {
-                headers: {
-                    'X-CSRF-TOKEN': token,
-                }
-            })
-            .then((response) => {
-                return true;
-                   
-            })  
-            .catch((response) => {
-              
-                return alert('Erro :' + response);
-            });
+            axios.post(`/shippments/update/${this.editedItem.id}`, data,
+                {
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                    }
+                })
+                .then((response) => {
+                    return true;
+
+                })
+                .catch((response) => {
+
+                    return alert('Erro :' + response);
+                });
             this.close();
             Object.assign(this.shippments[this.editedIndex], response.data);
         }

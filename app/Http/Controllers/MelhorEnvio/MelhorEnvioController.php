@@ -12,8 +12,7 @@ use MelhorEnvio\Shipment;
 use MelhorEnvio\Enums\Environment;
 use MelhorEnvio\Resources\Shipment\Product;
 use App\Models\Order;
-
-
+use stdClass;
 
 class MelhorEnvioController extends Controller
 {
@@ -125,21 +124,22 @@ class MelhorEnvioController extends Controller
                 ],
             ]);
            
+           // dd($request);
+            $orderShippment = json_decode($response->getBody()->getContents(), true);
+            $mergedData = array_merge($orderShippment, $request->toArray());
+
             
-            $order = json_decode($response->getBody());
-          
             
-            $this->getOrder($order, $request);
+            //$this->getOrder($order, $request);
             
             
-            return response()->json($response);
+            return $mergedData;
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
     }
     public function checkout(Request $request){
         try{
-           
             $client = $this->getClient();
             $customer = Auth::guard('customer')->user();
               $orderIds = [$request->get('order')['order_id']];
@@ -245,10 +245,10 @@ class MelhorEnvioController extends Controller
         $client = new Client();
         return $client;
     }
-    public function getOrder($order, $request){
-       
-        $orders = new OrderController();
-        return $orders->insertOrderId($request, $order);
-    }
+    //public function getOrder($order, $request){
+    //   
+    //    $orders = new OrderController();
+    //    return $orders->insertOrderId($request, $order);
+    //}
     
 }
