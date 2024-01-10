@@ -1,37 +1,76 @@
 <template>
     <v-dialog>
-        <v-row>
-            <v-col> 
+        <v-row fluid justify="center">
+            <v-col class="d-flex justify-center flex-column" md="6"> 
                 <v-sheet>
-            <v-card>
+            <v-card class="mx-auto elevation-0">
             <v-card-title>
-                <v-toolbar>
+                <v-toolbar color="transparent">
                     <v-toolbar-title>Order</v-toolbar-title>
 
                     <template v-slot:append>
-                        <v-icon icon="fas fa-close"></v-icon>
+                        <v-btn class="me-2" icon variant="plain" size="small" @click="closeDialog()">
+                            <v-icon icon="fas fa-close" ></v-icon>
+                        </v-btn>
+                        
                     </template>
                 </v-toolbar>
             </v-card-title>
 
             <v-card-text v-if="order.order_id">
-                
-                        <strong>OrderId</strong>: {{ order.id }}
-                        <strong>Client:</strong> {{ order.client }}
-                        <strong>value: </strong>{{ order.value }}
-                        <strong>status:</strong> {{ order.status }}
+                <v-row>
+                    <v-col>
+                        <p><strong>OrderId</strong>: {{ order.id }}</p>
+                    </v-col>
+                    <v-col>
+                        <p><strong>Client:</strong> {{ order.client }}</p>
+                    </v-col>
+                    <v-col>
+                        <p><strong>Value: </strong>{{ order.value }}</p>
+                    </v-col>
+                    <v-col>
+                        <p><strong>status:</strong> {{ order.status }}</p>
+                    </v-col>
+                </v-row>
+                        
+                <v-row fluid v-if="Object.keys(orderInfo).length >= 1">
+                    <v-col>
+                        ReasonCode : {{ orderInfo['ReasonCode'] }}
+                       
+                    </v-col>
+                    <v-col>
+                        
+                        ReasonMessage: {{ orderInfo['ReasonMessage'] }}
+                      
+                    </v-col>
+                    <v-col>
+                        
+                        PaymentId: {{ orderInfo['Payments'][0]['PaymentId']}}
+                       
+                    </v-col>
+                    <v-col>
+                        
+                        
+                        ReceveidData: {{ orderInfo['Payments'][0]['ReceveidDate'] }}
+                    </v-col>
+                    <v-col>
+                        <v-btn>Done</v-btn>
+                    </v-col>
                     
+                </v-row>
                 
-                  <v-btn @click="search()">search</v-btn>
-
-                  {{ orderInfo }}
+                
+                 
+                 
             </v-card-text>
 
             <v-card-text v-else>
                 Id não encontrada
             </v-card-text>
 
-            <v-card-actions></v-card-actions>
+            <v-card-actions>
+               <v-btn class="me-2" color="primary" variant="flat" @click="search()" block>search</v-btn>
+            </v-card-actions>
         </v-card>
         </v-sheet>
             </v-col>    
@@ -49,15 +88,23 @@ export default {
         orderId: false,
         orderInfo: [], 
     }),
+    watch: {
+        close(val){
+            val || this.closeDialog();
+        }
+    },
     methods: {
         search(){
             axios.get(`/orders/getOrder/${this.order.id}`)
             .then((response) => {
-                return this.orderInfo.push(response.data);
+                return this.orderInfo = response.data;
             })
             .catch((response) => {
                 console.log('error: ' + response);
             });
+        },
+        closeDialog(){
+            return this.$emit('close-dialog');
         }
     }
 }
