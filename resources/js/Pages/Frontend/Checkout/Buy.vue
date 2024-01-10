@@ -333,10 +333,11 @@
                                         <v-col>
                                             <div v-if="paymentType == 'debit'">
                                                 <v-card class="mx-auto" elevation="0">
-                                                   
+                                                  
                                                     <DebitForm 
                                                         :paymentType="paymentType"
                                                         :product_id="this.product.product_id"
+                                                        :cart_id="this.product.cart_id"
                                                         :item_id="this.product.id"
                                                         :name="this.product.name"
                                                         :totalValue="(parseFloat(shippment[0].price)

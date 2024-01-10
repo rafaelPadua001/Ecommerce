@@ -12,8 +12,7 @@ use MelhorEnvio\Shipment;
 use MelhorEnvio\Enums\Environment;
 use MelhorEnvio\Resources\Shipment\Product;
 use App\Models\Order;
-
-
+use stdClass;
 
 class MelhorEnvioController extends Controller
 {
@@ -125,14 +124,16 @@ class MelhorEnvioController extends Controller
                 ],
             ]);
            
+           // dd($request);
+            $orderShippment = json_decode($response->getBody()->getContents(), true);
+            $mergedData = array_merge($orderShippment, $request->toArray());
+
             
-            $order = json_decode($response->getBody());
-          
             
             //$this->getOrder($order, $request);
             
             
-            return response()->json($response);
+            return $mergedData;
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
