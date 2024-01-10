@@ -1,21 +1,21 @@
 <template>
     <div>
-        <Dashboard />
+        <v-row fluid>
+            <v-col>
+                <Dashboard />
+            </v-col>
+        </v-row>
+        
     </div>
-    <div>
-        <v-container>
-            <v-row>
-                <v-col>
+    <v-container>
+            <v-row no-gutters>
+                <v-col class="d-flex justify-center flex-column">
                     <v-sheet>
-                        <v-card class="mx-auto">
-                            <v-card-text>
-                              <v-data-table 
+                        <v-data-table 
                                 :headers="headers"
                                 :items="orders"
                                 :sort-by="[{ key: 'id', order: 'desc' }]"
-                                class="elevation-1"
-                            >
-
+                        >
                             <template v-slot:top>
                                 <v-toolbar flat>
                                     <v-toolbar-title>Orders</v-toolbar-title>
@@ -24,24 +24,7 @@
                                     </v-divider>
 
                                     <v-spacer></v-spacer>
-                                    <v-dialog v-model="dialog" max-width="500px">
-                                        <template v-slot:activator="{ props }">
-                                            <v-btn color="prymary" dark class="mb-2" v-bind="props" disabled>
-                                                New Item
-                                            </v-btn>
-
-                                        </template>
-
-                                        <v-card>
-                                            <v-container>
-                                                <v-row>
-                                                    <v-col cols="12" sm="6" md="4">
-                                                        <v-text-field></v-text-field>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-container>
-                                        </v-card>
-                                    </v-dialog>
+                                    
                                 </v-toolbar>
                             </template>
 
@@ -54,9 +37,8 @@
 
                             <template v-slot:item.actions="{ item }">
                                 <v-btn-group>
-                                    <v-btn>
-                                        <v-icon size="x-small" class="me-2" color="primary"
-                                            icon="fas fa-eye" @click="openOrderDialog(item)">
+                                    <v-btn  class="mr-2" icon size="x-small" variant="plain">
+                                        <v-icon  color="primary" icon="fas fa-eye" @click="openOrderDialog(item)">
                                         </v-icon>
 
                                     </v-btn>
@@ -75,8 +57,8 @@
 
                                     </v-btn> -->
                                     
-                                    <v-btn>
-                                        <v-icon size="x-small" class="me-2" @click="openRemoveOrderDialog(item)" icon="fas fa-remove"
+                                    <v-btn icon size="x-small" variant="plain">
+                                        <v-icon  @click="openRemoveOrderDialog(item)" icon="fas fa-remove"
                                             color="primary"></v-icon>
                                     </v-btn>
                                     
@@ -92,10 +74,14 @@
                             </template>
 
                         </v-data-table>
-                            </v-card-text>
-                        </v-card>
+                           
+                      
                         <div>
-                            <OrderDialog v-model="orderDialog" v-if="orderDialog" :order="this.editOrder"/>
+                            <OrderDialog 
+                                v-model="orderDialog"
+                                v-if="orderDialog"
+                                :order="this.editOrder"
+                                @close-dialog="orderDialog = false"/>
                             
                             <v-dialog v-model="trackingDialog" transition="dialog-bottom-transition">
                             <v-card>
@@ -155,7 +141,7 @@
                 </v-col>
             </v-row>
         </v-container>
-    </div>
+    
     
    
 </template>
