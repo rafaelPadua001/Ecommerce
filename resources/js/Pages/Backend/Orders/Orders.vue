@@ -60,7 +60,7 @@
                                         </v-icon>
 
                                     </v-btn>
-                                    <v-btn>
+                                   <!-- <v-btn>
                                         <v-icon size="x-small" class="me-2" color="primary" @click="checkout(item)"
                                             icon="fas fa-basket-shopping"></v-icon>
 
@@ -73,7 +73,7 @@
                                         <v-icon size="x-small" class="me-2" color="primary" @click="openTrackingDialog(item)"
                                             icon="fas fa-truck-fast"></v-icon>
 
-                                    </v-btn>
+                                    </v-btn> -->
                                     
                                     <v-btn>
                                         <v-icon size="x-small" class="me-2" @click="openRemoveOrderDialog(item)" icon="fas fa-remove"
