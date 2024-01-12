@@ -34,33 +34,35 @@
                 </v-row>
                         
                 <v-row fluid v-if="Object.keys(orderInfo).length >= 1">
+                  
                     <v-col>
-                        ReasonCode : {{ orderInfo['ReasonCode'] }}
+                        ReasonCode : {{ orderInfo.original.ReasonCode }}
                        
                     </v-col>
                     <v-col>
                         
-                        ReasonMessage: {{ orderInfo['ReasonMessage'] }}
+                        ReasonMessage: {{ orderInfo.original.ReasonMessage }}
                       
                     </v-col>
                     <v-col>
                         
-                        PaymentId: {{ orderInfo['Payments'][0]['PaymentId']}}
+                        PaymentId: {{ orderInfo.original.Payments[0].PaymentId }}
                        
                     </v-col>
                     <v-col>
                         
                         
-                        ReceveidData: {{ orderInfo['Payments'][0]['ReceveidDate'] }}
+                      <!--  ReceveidData: {{ orderInfo['Payments']['ReceveidDate'] }} -->
                     </v-col>
-                    <v-col>
-                        <v-btn>Done</v-btn>
-                    </v-col>
+                 
                     
                 </v-row>
-                
-                
-                 
+
+                <v-row v-if="Object.keys(orderInfo).length >= 1">
+                    <v-col>
+                        <v-btn class="me-2 elevation-0" variant="flat" color="primary" @click="doneOrder(orderInfo)">Done</v-btn>
+                    </v-col>
+                </v-row>
                  
             </v-card-text>
 
@@ -105,6 +107,11 @@ export default {
         },
         closeDialog(){
             return this.$emit('close-dialog');
+        },
+        doneOrder(){
+            console.log(this.order);
+            console.log(this.orderInfo);
+            alert('estamos aqui');
         }
     }
 }
