@@ -126,15 +126,8 @@
                            
                         </v-dialog>
 
-                        <v-dialog v-model="removeOrderDialog">
-                            <v-card>
-                                <v-card-text>Tem certeza que quer remover este pedido ? {{ value }}</v-card-text>
-                                <v-card-actions>
-                                    <v-btn variant="plain">Cancel</v-btn>
-                                    <v-btn variant="plain" color="red" @click="removeOrder">Refund</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
+                        <OrderRemove v-model="removeOrderDialog" />
+                         
                         </div>
                        
                     </v-sheet>
@@ -150,10 +143,13 @@
 import axios from 'axios';
 import Dashboard from '../Auth/Dashboard.vue';
 import OrderDialog from '../Orders/partials/OrderDialog.vue';
+import OrderRemove from '../Orders/partials/OrderRemove.vue';
+
 export default {
         components: {
             Dashboard,
             OrderDialog,
+            OrderRemove
         },
         data: () => ({
             orders: [],
