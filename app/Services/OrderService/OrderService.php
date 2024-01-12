@@ -15,7 +15,8 @@ class OrderService
     {
         $this->order = $order;
     }
-    public function init(){
+    public function init()
+    {
         try {
             $customer = Auth::guard('customer')->user();
             $orders = $this->order->where('user_id', $customer->id)->get();
@@ -24,13 +25,14 @@ class OrderService
             return $e;
         }
     }
-    public function store($request, $responseData){
+    public function store($request, $responseData)
+    {
         try {
             $request_data = $request->input();
 
             $response = $responseData;
             $customer = Auth::guard('customer')->user();
-           
+
             $order = $this->order->create([
                 'client' => $customer->first_name . ' ' . $customer->last_name,
                 'description' => $request_data['description'],
@@ -49,7 +51,7 @@ class OrderService
                 'pais' => $request_data['address']['pais'] ?? 'Brasil',
             ]);
             $insertId = $this->createOrderId($request, $responseData);
-           
+
             return response()->json($order);
         } catch (Exception $e) {
 
@@ -58,15 +60,16 @@ class OrderService
 
         return response()->json($order);
     }
-    public function createOrderId($request, $order){
+    public function createOrderId($request, $order)
+    {
         try {
             $customer = Auth::guard('customer')->user();
-            
+
             $latest_order = Order::where('user_id', $customer->id)
                 ->latest()
                 ->first();
             $latest_order->update(['order_id' => $order['MerchantOrderId']]);
-        
+
             return response()->json($latest_order);
         } catch (Exception $e) {
             return response()->json($e);
@@ -110,6 +113,37 @@ class OrderService
             return response()->json($data);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
+        }
+    }
+    public function transactionSearch($id)
+    {
+        //dd($id);
+        try {
+            // $transaction = $this->order->findOrFail($id);
+            // $merchantOrderId = $transaction->order_id;
+
+            $client = new Client();
+            $merchantId = env('CIELO_MERCHANT_ID');
+            $merchantKey = env('CIELO_MERCHANT_KEY');
+
+            $url = 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/bfa3917a-8c49-4849-97a9-62ce052e55c4';
+            
+            $headers = [
+                'Content-Type: application/son',
+                'MerchantId' => $merchantId,
+                'MerchantKey' => $merchantKey,
+            ];
+
+            $response = $client->request('GET', $url, [
+                'headers' => $headers,
+            ]);
+            
+            // $stausCode = $response->getStatusCode();
+            $data = json_decode($response->getBody()->getContents(), true);
+            
+            return $data;
+        } catch (Exception $e) {
+            return $e;
         }
     }
 }

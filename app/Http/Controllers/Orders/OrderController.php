@@ -36,6 +36,15 @@ class OrderController extends Controller
 
         return response()->json($order);
     }
+    public function getTransaction($id){
+        try{
+            $transaction = $this->orderService->transactionSearch($id);
+            return response()->json($transaction);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
    // public function insertOrderId(Request $request, $order)
    // {
    //     try {
