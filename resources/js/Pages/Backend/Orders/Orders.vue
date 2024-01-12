@@ -131,7 +131,7 @@
                                 <v-card-text>Tem certeza que quer remover este pedido ? {{ value }}</v-card-text>
                                 <v-card-actions>
                                     <v-btn variant="plain">Cancel</v-btn>
-                                    <v-btn variant="plain" color="red" @click="removeOrder">Remove</v-btn>
+                                    <v-btn variant="plain" color="red" @click="removeOrder">Refund</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
