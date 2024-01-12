@@ -1,5 +1,5 @@
 <template>
-    <v-dialog>
+    <v-dialog fullscreen :scrim="true" transition="dialog-bottom-transition">
         <v-row fluid justify="center">
             <v-col class="d-flex justify-center flex-column" md="6"> 
                 <v-sheet>
@@ -52,15 +52,118 @@
                     <v-col>
                         
                         
-                      <!--  ReceveidData: {{ orderInfo['Payments']['ReceveidDate'] }} -->
+                     ReceveidData: {{ orderInfo.original.Payments[0].ReceveidDate }} 
                     </v-col>
                  
                     
                 </v-row>
 
+                <v-row v-if="Object.keys(transaction).length >= 1">
+                    <v-col>
+                        <v-sheet>
+                            <v-card class="mx-auto">
+                                <v-card-text>
+                                    <v-row>
+                                        Order
+                                        <v-divider></v-divider>
+                                        <v-col>
+                                            MerchantOrderId: {{transaction[0]['MerchantOrderId']}}
+                                        </v-col>
+                                        <v-col>
+                                            Customer Name: {{ transaction[0]['Customer']['Name'] }}
+                                        </v-col>
+                                        <v-col>
+                                            Customer Email: {{ transaction[0]['Customer']['Email'] }}
+                                        </v-col>
+                                        
+                                    </v-row>
+                                    <v-row>
+                                        <v-col>
+                                            Payment
+                                            <v-divider></v-divider>
+                                            <v-row>
+                                                <v-col>
+                                                    Card Number: {{ transaction[0]['Payment']['DebitCard']['CardNumber'] }} 
+                                                </v-col>
+                                                <v-col>
+                                                    Card Holder:  {{ transaction[0]['Payment']['DebitCard']['Holder'] }}
+                                                </v-col>
+                                                <v-col v-if="transaction[0]['Payment']['Status'] <= 4">
+                                                    Status:
+                                                        <v-chip class="me-2 bg-success">
+                                                            Aproved
+                                                        </v-chip>
+                                                  
+                                                </v-col>
+                                                <v-col v-if="transaction[0]['Payment']['Status'] >= 4">
+                                                    Status:
+                                                        <v-chip class="me-2 bg-orange">
+                                                            Pendent
+                                                        </v-chip>
+                                                  
+                                                </v-col>
+                                            </v-row>
+
+                                            <v-row>
+                                                <v-col>
+                                                    Expiration Date: {{ transaction[0]['Payment']['DebitCard']['ExpirationDate'] }}
+                                                </v-col>
+                                                <v-col>
+                                                    Brand: {{ transaction[0]['Payment']['DebitCard']['Brand'] }}
+                                                </v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col>
+                                                   Type: {{ transaction[0]['Payment']['Type'] }}
+                                                </v-col>
+                                                <v-col>
+                                                   Amount: {{ parseFloat(transaction[0]['Payment']['Amount']) }}
+                                                </v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col>
+                                                    Received Date: {{ transaction[0]['Payment']['ReceivedDate'] }}
+                                                </v-col>
+                                                <v-col>
+                                                    Capture Date: {{ transaction[0]['Payment']['CapturedDate'] }}
+                                                </v-col>
+                                               
+                                            </v-row>
+                                            <v-row>
+                                                <v-col>
+                                                    Capture Date: {{ transaction[0]['Payment']['Currency'] }}
+                                                </v-col>
+                                                <v-col>
+                                                    Capture Date: {{ transaction[0]['Payment']['Country'] }}
+                                                </v-col>
+                                                <v-col>
+                                                    Provider: {{ transaction[0]['Payment']['Provider'] }}
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-sheet>
+                       
+                    </v-col>
+                </v-row>
+
                 <v-row v-if="Object.keys(orderInfo).length >= 1">
                     <v-col>
-                        <v-btn class="me-2 elevation-0" variant="flat" color="primary" @click="doneOrder(orderInfo)">Done</v-btn>
+                        <v-btn-group>
+                            <v-btn class="me-2 elevation-0" variant="flat" color="primary" @click="getTransaction(orderInfo)">
+                                <v-icon icon="fas fa-magnifying-glass"> </v-icon>
+                            </v-btn>
+                            <v-btn class="me-2 elevation-0" variant="flat" color="primary" v-if="transaction.length >= 1">
+                                <v-icon icon="fas fa-print"> </v-icon>
+                            </v-btn>
+                            <v-btn class="me-2 elevation-0" variant="flat" color="primary" v-if="transaction.length >= 1">
+                                Refund
+                            </v-btn>
+                            <v-btn class="me-2 elevation-0" variant="flat" color="primary"  @click="doneOrder(orderInfo)">Done</v-btn>
+                        </v-btn-group>
+                        
                     </v-col>
                 </v-row>
                  
@@ -88,7 +191,8 @@ export default {
     props: ['order'],
     data: () => ({
         orderId: false,
-        orderInfo: [], 
+        orderInfo: [],
+        transaction: [], 
     }),
     watch: {
         close(val){
@@ -108,11 +212,21 @@ export default {
         closeDialog(){
             return this.$emit('close-dialog');
         },
+        getTransaction(){
+            axios.get(`/orders/getTransaction/${this.orderInfo.original.Payments[0].PaymentId}`)
+            .then((response) => {
+                return this.transaction.push(response.data);
+            })
+            .catch((response) => {
+                alert('Error :' + response);
+            });
+        },
         doneOrder(){
             console.log(this.order);
             console.log(this.orderInfo);
             alert('estamos aqui');
-        }
+        },
+
     }
 }
 </script>

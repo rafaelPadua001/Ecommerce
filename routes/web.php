@@ -166,6 +166,7 @@ Route::post('/saveSearchAddress', [SearchToAddressesController::class, 'save'])-
 Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
 Route::get('/allOrders', [OrderController::class, 'allOrders'])->name('allOrders')->middleware('auth');
 Route::get('/orders/getOrder/{id}', [OrderController::class, 'getOrder'])->name('getOrder')->middleware('auth');
+Route::get('/orders/getTransaction/{id}', [OrderController::class, 'getTransaction'])->name('getTransaction')->name('auth');
 //Coupons Routes
 Route::post('/coupons/add', [CouponsController::class, 'create'])->name('coupon.add')->middleware('auth');
 Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index')->middleware('auth');
