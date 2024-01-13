@@ -91,14 +91,14 @@
                                                                     transaction[0]['Payment']['DebitCard']['Holder'] }}
                                                             </v-col>
                                                             <v-col v-if="transaction[0]['Payment']['Status'] <= 4">
-                                                                Status:
+                                                                <strong>Status:</strong>
                                                                 <v-chip class="me-2 bg-success">
                                                                     Aproved
                                                                 </v-chip>
 
                                                             </v-col>
                                                             <v-col v-if="transaction[0]['Payment']['Status'] >= 4">
-                                                                Status:
+                                                                <strong>Status:</strong>
                                                                 <v-chip class="me-2 bg-orange">
                                                                     Pendent
                                                                 </v-chip>
@@ -120,8 +120,7 @@
                                                                 Type: {{ transaction[0]['Payment']['Type'] }}
                                                             </v-col>
                                                             <v-col>
-                                                                Amount: {{ parseFloat(transaction[0]['Payment']['Amount'])
-                                                                }}
+                                                                Amount: {{ transaction[0]['Payment']['Amount'] }}
                                                             </v-col>
                                                         </v-row>
                                                         <v-row>
@@ -137,10 +136,10 @@
                                                         </v-row>
                                                         <v-row>
                                                             <v-col>
-                                                                Capture Date: {{ transaction[0]['Payment']['Currency'] }}
+                                                                Currency: {{ transaction[0]['Payment']['Currency'] }}
                                                             </v-col>
                                                             <v-col>
-                                                                Capture Date: {{ transaction[0]['Payment']['Country'] }}
+                                                                County: {{ transaction[0]['Payment']['Country'] }}
                                                             </v-col>
                                                             <v-col>
                                                                 Provider: {{ transaction[0]['Payment']['Provider'] }}
@@ -164,7 +163,7 @@
                                         </v-btn>
                                         <v-btn class="me-2 elevation-0" variant="flat" color="primary"
                                             v-if="transaction.length >= 1">
-                                            <v-icon icon="fas fa-print"> </v-icon>
+                                            <v-icon icon="fas fa-file-pdf"> </v-icon>
                                         </v-btn>
                                         <v-btn class="me-2 elevation-0" variant="flat" color="primary"
                                             v-if="transaction.length >= 1" @click="refundTransaction()">
@@ -189,7 +188,7 @@
                     </v-card>
 
                     <div>
-                        <RefundDialog v-model="refundDialogResult" :message="this.message"></RefundDialog>
+                        <RefundDialog v-model="refundDialogResult" :message="this.message" @close-dialog="refundDialogResult = false"></RefundDialog>
                     </div>
                 </v-sheet>
             </v-col>
