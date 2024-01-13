@@ -149,7 +149,7 @@ class OrderService
             $merchantKey = env('CIELO_MERCHANT_KEY');
 
             $url = 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/' . $id . '/void?amount=' . $amount;
-            dd($url);
+           
             $headers = [
                 'Content-Type: application/json',
                 'MerchantId' => $merchantId,
