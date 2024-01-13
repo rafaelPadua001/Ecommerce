@@ -1,16 +1,16 @@
 <template>
     <v-dialog>
-        <v-row>
-            <v-col>
+        <v-row no-gutters>
+            <v-col class="d-flex justify-center flex-column">
                 <v-sheet>
-                    <v-card>
+                    <v-card class="mx-auto">
                         <v-card-text>
                             Extorno realizado com sucesso.
                             {{ message }}
                         </v-card-text>
 
                         <v-card-actions>
-                            <v-btn block>Close</v-btn>
+                            <v-btn class="me-2" color="primary" variant="flat" block @click="close()">Close</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-sheet>
@@ -22,6 +22,11 @@
 
 <script>
     export default{
-        props: ['message']
+        props: ['message'],
+        methods: {
+            close(){
+                return this.$emit('close-dialog');
+            }
+        }
     }
 </script>
