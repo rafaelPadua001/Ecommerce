@@ -57,6 +57,7 @@ const phoneMask = ref('');
 import axios from 'axios';
 
 export default {
+    emits: ['completed'], 
     props: [
         'paymentType',
         'product_id',
@@ -131,10 +132,14 @@ export default {
             };
             axios.post('/payment', data)
                 .then((response) => {
-                    this.message = 'Seu pagamento foi recebido pela instituição',
+                    if(response.data.original.code == 400){
                         this.snackbar = true;
-                    this.loading = false;
-                    return this.updateCompleted();
+                        this.message = response.data.original.error;
+                        this.loading = false;
+                        return false;
+                    }
+              
+                   return this.updateCompleted();
 
                 })
                 .catch((response) => {
@@ -146,7 +151,7 @@ export default {
             this.snackbar = false;
         },
         updateCompleted() {
-            this.$emit('completed');
+          return this.$emit('completed');
         }
 
     }

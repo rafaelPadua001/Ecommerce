@@ -29,10 +29,11 @@ class OrderService
     {
         try {
             $request_data = $request->input();
-
+          
             $response = $responseData;
+           
             $customer = Auth::guard('customer')->user();
-
+            
             $order = $this->order->create([
                 'client' => $customer->first_name . ' ' . $customer->last_name,
                 'description' => $request_data['description'],
@@ -51,7 +52,7 @@ class OrderService
                 'pais' => $request_data['address']['pais'] ?? 'Brasil',
             ]);
             $insertId = $this->createOrderId($request, $responseData);
-
+          
             return response()->json($order);
         } catch (Exception $e) {
 
@@ -143,12 +144,13 @@ class OrderService
         }
     }
     public function refund($id, $amount){
+        
         try {
             $client = new Client();
             $merchantId = env('CIELO_MERCHANT_ID');
             $merchantKey = env('CIELO_MERCHANT_KEY');
 
-            $url = 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/' . $id . '/void?amount=' . $amount;
+            $url = 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/48a51b3f-7820-4908-85ad-7854c30aae19/void';
            
             $headers = [
                 'Content-Type: application/json',

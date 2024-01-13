@@ -16,6 +16,7 @@ use App\Services\CartService\CartItemService;
 use App\Services\CouponService\CouponCustomer\CouponCustomerService;
 use App\Services\StockService\StockService;
 use App\Services\ShippmentService\ShippmentService;
+use App\Services\OrderService\OrderService;
 
 class PaymentService {
     protected $payment;
@@ -23,18 +24,21 @@ class PaymentService {
     protected $couponCustomerService;
     protected $stockService;
     protected $shippmentService;
+    protected $orderService;
     public function __construct(
         Payment $payment,
         CartItemService $cartItemService,
         CouponCustomerService $couponCustomerService,
         StockService $stockService,
-        ShippmentService $shippmentService
+        ShippmentService $shippmentService,
+        OrderService $orderService
     ){
         $this->payment = $payment;
         $this->carItemService = $cartItemService;
         $this->couponCustomerService = $couponCustomerService;
         $this->stockService = $stockService;
         $this->shippmentService = $shippmentService;
+        $this->orderService = $orderService;
     }
     public function paymentType(Request $request){
         $paymentType = $request->paymentType;
@@ -89,11 +93,11 @@ class PaymentService {
                     'json' => $req
                 ]);
                 
-                //Obter o corpo da resposta
+               
                 $responseData = json_decode($response->getBody()->getContents(), true);
                
                 return $this->createDebitPayment($responseData, $request);
-                //return response()->json($responseData);
+               
             } catch (Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
@@ -103,11 +107,8 @@ class PaymentService {
     }
     public function createDebitPayment($responseData, $request)
     {
-        
-        $payer = Auth::guard('customer')->user();
-        
-
-        try {
+       try {
+            $payer = Auth::guard('customer')->user();
             $payment = Payment::create([
                 "transaction_id" => $responseData['MerchantOrderId'],
                 "status" => "pendent",
@@ -118,25 +119,42 @@ class PaymentService {
                 "payer" => $payer->email,
                 "user_id" => $payer->id
             ]);
+          
             $createOrder = $this->getOrder($request, $responseData);
             
             if($createOrder){
                 $melhorEnvio = $this->getMelhorEnvio($request);
+               
                 $createShippment = $this->shippmentService->store($melhorEnvio);
+               
             }
             
             $itemId = $request['id'];
-            $this->alterStatusItem($itemId);
+            $alterStatus = $this->alterStatusItem($itemId);
+            
             if($request->coupon_id >= 1){
-                $this->removeCoupon($request->coupon_id);
+               $removeCoupon =  $this->removeCoupon($request->coupon_id);
             }
+            
             if($request->quantity >= 1){
-                $this->reduceStock($request);
+                try {
+                    $reduceItem = $this->reduceStock($request);
+                
+                   
+                    $responseData = $reduceItem->getData(true);
+                
+                    if (isset($responseData['error'])) {
+                        return response()->json(['message' => $responseData['error']], 400);
+                    }
+                    return $responseData;
+                } catch (Exception $e) {
+                    return response()->json(['message' => $e->getMessage()], 500);
+                }
             }
             
             $notification = $this->notification($responseData);
             $shippment = $this->storeShippment($request);
-            dd($shippment);
+     
            // dd($notification);
             return response()->json($responseData);
         } catch (Exception $e) {
@@ -310,8 +328,8 @@ class PaymentService {
     }
     public function getOrder($request, $responseData){
         
-        $order = new OrderController();
-        return $order->create($request, $responseData);
+        $order = $this->orderService->store($request, $responseData); //new OrderController();
+        return $order;
     }
     public function getMelhorEnvio($request){
         $melhorEnvio = new MelhorEnvioController();

@@ -351,7 +351,7 @@
                                                         :color="this.product.color"
                                                         :coupon_id="this.product.coupon_id"
                                                         :address="this.address"
-                                                        @completed="completed" />
+                                                        @completed="updateCompleted" />
                                                 </v-card>
                                             </div>
                                             <div v-if="paymentType == 'credit'">
@@ -392,7 +392,7 @@
                     </v-timeline-item>
                     <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="xs">
                         <template v-slot:opposite>
-                            <v-card v-if="completedConfirm" :width="500">
+                            <v-card v-model="completedConfirm" v-if="completedConfirm" :width="500">
 
                                 <v-card-text>
                                     <v-row>
@@ -491,7 +491,6 @@ export default {
         CreditForm,
         PixForm,
     },
-    emits: ['completed'],
     data: () => ({
         product: [],
         confirm: true,
@@ -540,7 +539,7 @@ export default {
             this.dataConfirm = false;
             return this.finish = true;
         },
-        completed() {
+        updateCompleted() {
             this.finishConfirm = false;
             return this.completedConfirm = true;
         },
