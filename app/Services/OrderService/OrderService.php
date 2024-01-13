@@ -98,7 +98,7 @@ class OrderService
             $url = 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales?merchantOrderId=' . $merchantOrderId;
 
             $headers = [
-                'Content-Type: application/son',
+                'Content-Type: application/json',
                 'MerchantId' => $merchantId,
                 'MerchantKey' => $merchantKey,
             ];
@@ -117,19 +117,15 @@ class OrderService
     }
     public function transactionSearch($id)
     {
-        //dd($id);
         try {
-            // $transaction = $this->order->findOrFail($id);
-            // $merchantOrderId = $transaction->order_id;
-
             $client = new Client();
             $merchantId = env('CIELO_MERCHANT_ID');
             $merchantKey = env('CIELO_MERCHANT_KEY');
 
-            $url = 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/bfa3917a-8c49-4849-97a9-62ce052e55c4';
-            
+            $url = 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/' . $id;
+
             $headers = [
-                'Content-Type: application/son',
+                'Content-Type: application/json',
                 'MerchantId' => $merchantId,
                 'MerchantKey' => $merchantKey,
             ];
@@ -137,8 +133,34 @@ class OrderService
             $response = $client->request('GET', $url, [
                 'headers' => $headers,
             ]);
-            
+
             // $stausCode = $response->getStatusCode();
+            $data = json_decode($response->getBody()->getContents(), true);
+
+            return $data;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    public function refund($id, $amount){
+        try {
+            $client = new Client();
+            $merchantId = env('CIELO_MERCHANT_ID');
+            $merchantKey = env('CIELO_MERCHANT_KEY');
+
+            $url = 'https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/' . $id . '/void?amount=' . $amount;
+            dd($url);
+            $headers = [
+                'Content-Type: application/json',
+                'MerchantId' => $merchantId,
+                'MerchantKey' => $merchantKey,
+            ];
+
+            $response = $client->request('PUT', $url, [
+                'headers' => $headers,
+            ]);
+            
+           
             $data = json_decode($response->getBody()->getContents(), true);
             
             return $data;

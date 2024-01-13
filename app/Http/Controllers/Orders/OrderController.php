@@ -45,6 +45,18 @@ class OrderController extends Controller
             return response()->json($e->getMessage(), 500);
         }
     }
+    public function refundTransaction($id, Request $request){
+        try{
+            
+            $amount = $request->amount;
+            $refund = $this->orderService->refund($id, $amount);
+         
+            return response()->json($refund);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
    // public function insertOrderId(Request $request, $order)
    // {
    //     try {
