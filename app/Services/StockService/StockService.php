@@ -74,18 +74,20 @@ class StockService {
        try{
             $stock = $this->productStock->where('product_id', $cart->product_id)->first();
             $product = Product::where('id', $cart->product_id)->first();
-          
+            
             if($stock->stock_quantity > $quantity){
+                
                 $reduceQuantity = $stock->stock_quantity - $quantity;
                 $reduceProduct = $product->stock_quantity - $quantity;
                 $stock->update(['stock_quantity' => $reduceQuantity]);
                 $product->update(['stock_quantity' => $reduceProduct]);
+                return response()->json($stock);
             }
             else{
-                throw new Exception('Não é possível adquirir uma quantidade maior do que a temos em estoque.');
+                return response()->json(['error' => 'Não é possível adquirir uma quantidade maior do que a temos em estoque.'], 400);
             }
             
-            return $stock;
+            
         }
         catch(Exception $e){
             return $e;
