@@ -168,7 +168,8 @@ Route::get('/allOrders', [OrderController::class, 'allOrders'])->name('allOrders
 Route::get('/orders/getOrder/{id}', [OrderController::class, 'getOrder'])->name('getOrder')->middleware('auth');
 Route::get('/orders/getTransaction/{id}', [OrderController::class, 'getTransaction'])->name('getTransaction')->middleware('auth');
 Route::put('/orders/refundTransaction/{id}',[OrderController::class, 'refundTransaction'])->name('refund')->middleware('auth');
-
+//Route::post('/orders/generatePdf/{id}', [OrderController::class, 'generatePdf'])->name('generatePdf')->middleware('auth');
+Route::post('/orders/alterStatus/{id}', [OrderController::class, 'alterStatus'])->name('order.alterStatus')->middleware('auth');
 //Coupons Routes
 Route::post('/coupons/add', [CouponsController::class, 'create'])->name('coupon.add')->middleware('auth');
 Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index')->middleware('auth');

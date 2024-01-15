@@ -81,7 +81,10 @@
                                 v-model="orderDialog"
                                 v-if="orderDialog"
                                 :order="this.editOrder"
-                                @close-dialog="orderDialog = false"/>
+                                @update-status="updateOrder"
+                                @close-dialog="orderDialog = false"
+                                scrollable
+                            />
                             
                             <v-dialog v-model="trackingDialog" transition="dialog-bottom-transition">
                             <v-card>
@@ -179,6 +182,7 @@ export default {
         ],
         editOrder: [],
         editIndex: -1,
+       
         }),
         watch: {
             dialog(val) {
@@ -265,6 +269,10 @@ export default {
             },
             closeTrackingDialog(){
                 this.trackingDialog = false;
+            },
+            updateOrder(item){
+                this.orderDialog = false;
+                return this.editOrder = Object.assign(this.orders[this.editIndex], item.data);
             },
             openRemoveOrderDialog(item){
                 this.removeOrderDialog = true;

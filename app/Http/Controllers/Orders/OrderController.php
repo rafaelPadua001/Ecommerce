@@ -57,21 +57,14 @@ class OrderController extends Controller
             return response()->json($e);
         }
     }
-   // public function insertOrderId(Request $request, $order)
-   // {
-   //     try {
-   //         $customer = Auth::guard('customer')->user();
-   //         
-   //         $latest_order = Order::where('user_id', $customer->id)
-   //             ->latest()
-   //             ->first();
-   //         $latest_order->update(['order_id' => $order['MerchantOrderId']]);
-   //     
-   //         return response()->json($latest_order);
-   //     } catch (Exception $e) {
-   //         return response()->json($e);
-   //     }
-   // }
+    public function alterStatus($id, Request $request){
+        try{
+            $order = $this->orderService->updateStatus($id, $request);
+            return response()->json($order);
+        }catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
     public function allOrders()
     {
         try {

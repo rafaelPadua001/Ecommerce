@@ -166,13 +166,15 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
+
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
         App\Providers\Products\ProductServiceProvider::class,
         App\Providers\Cart\CartServiceProvider::class,
         App\Providers\Cart\CartItermServiceProvider::class,
         App\Providers\Delivery\DeliveryProvider::class,
-       
+
     ])->toArray(),
 
     /*
@@ -188,6 +190,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+
     ])->toArray(),
 
 ];
