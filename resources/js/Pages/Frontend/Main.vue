@@ -80,7 +80,7 @@
               </v-sheet>
             </v-col>
           </v-row>
-          <v-row no-gutters justify-center>
+          <v-row no-gutters justify="center">
             <h4 align="left">All Products</h4>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
@@ -105,7 +105,7 @@
                   </div>
                     <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
                       <v-img v-if="index === 0" :vid-id="image" class="align-end text-white"  aspect-ratio="16/9" :src="`./storage/products/${image}`"
-                        :lazy-src="`./storage/products/${image}`" height="210" :width="135" cover >
+                        :lazy-src="`./storage/products/${image}`" height="210" :width="155" cover >
 
                         <div v-if="discount_id" class="d-flex justify-end text-center">
                           <v-chip class="ma-2" label color="orange-darken-4" variant="elevated">
