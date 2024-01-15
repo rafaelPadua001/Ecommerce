@@ -210,7 +210,7 @@
 
     <div class="text-center">
       <ProductDialog v-if="buyDialog" v-model="buyDialog" :selectProduct="selectProduct" :buyDialog="buyDialog"
-            :customer="this.customer" :likes="likes" @update:buyDialog="updateBuyDialog" />
+            :customer="this.customer" :likes="likes" @close-dialog="buyDialog = false" @update:buyDialog="updateBuyDialog" />
 
       <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 

@@ -35,14 +35,16 @@ class CartService
         return $cart;
     }
     public function addItem($request, $userId)
-    {
+    {   
         $cart = $this->carts->where('user_id', '=', $userId)->latest()->first();
+      
         if (!$cart) {
             $create = $this->carts->create(['user_id' => $userId]);
-            return $create;
+            //return $create;
         }
 
         $cart_item = $this->cartItemService->addCartItem($userId, $request);
+      
         //$stock_quantity = $this->reduceItemStock($request->quantity, $cart_item);
         return $cart_item;
        

@@ -32,7 +32,7 @@ class CartController extends Controller
             } 
             $userId = $customer->id;
             $carts = $this->cartService->getCarts($userId);
-             
+           
             return response()->json($carts);
                 
         }
@@ -47,7 +47,7 @@ class CartController extends Controller
             $customer = Auth::guard('customer')->user();
             $userId = $customer->id;
             $cartItem = $this->cartService->addItem($request, $userId);
-            return $cartItem;
+            return response()->json($cartItem);
         }
         catch(Exception $e){
             return response()->json($e);

@@ -24,9 +24,8 @@ return new class extends Migration
                 $table->boolean('is_active')->default(true);
                 $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade');
                 $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
                 $table->timestamps();
-    
         });
     }
 

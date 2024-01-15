@@ -25,14 +25,14 @@ class CartItemService{
     }
     public function addCartItem($id, $product)
     {
-        
        try {
             $cart = $this->cart->where('user_id', '=', $id)->first();
-          
+            $customer = Auth::guard('customer')->user();
+           
             $cartItem = $this->cartItem->create([
                'cart_id' => $cart->id,
                'product_id' => $product->product['id'],
-               'user_id' => $id,
+               'user_id' => $customer->id,
                'quantity' => $product->quantity,
                'price' => $product->product['price'],
                'color' => $product->color,
@@ -47,10 +47,12 @@ class CartItemService{
                 'cart_item_id' => $cartItem->id,
                 
             ];
-           
+           if($delivery_item){
             $store_shippment = $this->shippmentService->store($delivery_item);
+           }
+            
       
-           return response()->json($cartItem);
+           return $cartItem;
         } catch (Exception $e) {
             return response()->json($e);
         }
