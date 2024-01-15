@@ -1,7 +1,7 @@
 <template>
     <v-row no-gutters>
-        <v-col cols="12" md="8" sm="6">
-            <v-card max-width="448" class="mx-auto" color="transparent-lighten-3">
+        <v-col class="d-flex justify-center flex-column" cols="auto">
+            <v-card max-width="448" class="mx-auto elevation-0" color="transparent-lighten-3">
                 <v-app-bar color="transparent-darken-4" image="https://picsum.photos/1920/1080?random">
 
                     <template v-slot:image>
