@@ -143,6 +143,7 @@ class OrderService
             return $e;
         }
     }
+   
     public function refund($id, $amount){
         
         try {
@@ -167,6 +168,15 @@ class OrderService
             
             return $data;
         } catch (Exception $e) {
+            return $e;
+        }
+    }
+    public function updateStatus($id, $request){
+        try{
+            $order = $this->order->findOrFail($id)->update(['status' => 'close']);
+            return $this->order->findOrFail($id);
+        }
+        catch(Exception $e){
             return $e;
         }
     }

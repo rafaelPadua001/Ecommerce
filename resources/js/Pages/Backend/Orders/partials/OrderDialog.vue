@@ -1,5 +1,5 @@
 <template>
-    <v-dialog fullscreen :scrim="true" transition="dialog-bottom-transition">
+    <v-dialog  transition="dialog-bottom-transition">
         <v-row fluid justify="center">
             <v-col class="d-flex justify-center flex-column" md="6">
                 <v-sheet>
@@ -17,7 +17,7 @@
                             </v-toolbar>
                         </v-card-title>
 
-                        <v-card-text v-if="order.order_id">
+                        <v-card-text v-if="order.order_id"  id="orderContent" >
                             <v-row>
                                 <v-col>
                                     <p><strong>OrderId</strong>: {{ order.id }}</p>
@@ -34,28 +34,26 @@
                             </v-row>
 
                             <v-row fluid v-if="Object.keys(orderInfo).length >= 1">
-
-                                <v-col>
-                                    ReasonCode : {{ orderInfo.original.ReasonCode }}
-
-                                </v-col>
-                                <v-col>
-
-                                    ReasonMessage: {{ orderInfo.original.ReasonMessage }}
+                                <v-col cols="auto">
+                                    <strong>Code :</strong> {{ orderInfo.original.ReasonCode }}
 
                                 </v-col>
-                                <v-col>
+                                <v-col cols="auto">
 
-                                    PaymentId: {{ orderInfo.original.Payments[0].PaymentId }}
+                                   <strong>Message:</strong>  {{ orderInfo.original.ReasonMessage }}
 
                                 </v-col>
-                                <v-col>
+                                <v-col cols="auto">
 
+                                    <strong>PaymentId:</strong> {{ orderInfo.original.Payments[0].PaymentId }}
 
-                                    ReceveidData: {{ orderInfo.original.Payments[0].ReceveidDate }}
                                 </v-col>
+                                <v-col cols="auto">
 
-
+                                    <strong>ReceveidData:</strong> 
+                                    {{ orderInfo.original.Payments[0].ReceveidDate.split('T')[0] }}
+                                   
+                                </v-col>
                             </v-row>
 
                             <v-row v-if="Object.keys(transaction).length >= 1">
@@ -66,14 +64,14 @@
                                                 <v-row>
                                                     Order
                                                     <v-divider></v-divider>
-                                                    <v-col>
-                                                        MerchantOrderId: {{ transaction[0]['MerchantOrderId'] }}
+                                                    <v-col cols="auto">
+                                                        <strong>MerchantOrderId:</strong> {{ transaction[0]['MerchantOrderId'] }}
                                                     </v-col>
-                                                    <v-col>
-                                                        Customer Name: {{ transaction[0]['Customer']['Name'] }}
+                                                    <v-col cols="auto">
+                                                        <strong>Customer Name:</strong> {{ transaction[0]['Customer']['Name'] }}
                                                     </v-col>
-                                                    <v-col>
-                                                        Customer Email: {{ transaction[0]['Customer']['Email'] }}
+                                                    <v-col cols="auto">
+                                                        <strong>Customer Email:</strong> {{ transaction[0]['Customer']['Email'] }}
                                                     </v-col>
 
                                                 </v-row>
@@ -81,23 +79,24 @@
                                                     <v-col>
                                                         Payment
                                                         <v-divider></v-divider>
-                                                        <v-row>
-                                                            <v-col>
-                                                                Card Number: {{
+                                                        <v-row fluid>
+                                                            <v-col cols="auto">
+                                                                <strong>Card Number:</strong> {{
                                                                     transaction[0]['Payment']['DebitCard']['CardNumber'] }}
                                                             </v-col>
-                                                            <v-col>
-                                                                Card Holder: {{
+                                                            <v-col cols="auto">
+                                                                <strong>Card Holder:</strong> {{
                                                                     transaction[0]['Payment']['DebitCard']['Holder'] }}
                                                             </v-col>
-                                                            <v-col v-if="transaction[0]['Payment']['Status'] <= 4">
+                                                            <v-col cols="auto" v-if="transaction[0]['Payment']['Status'] <= 4"
+                                                            >
                                                                 <strong>Status:</strong>
                                                                 <v-chip class="me-2 bg-success">
                                                                     Aproved
                                                                 </v-chip>
 
                                                             </v-col>
-                                                            <v-col v-if="transaction[0]['Payment']['Status'] >= 4">
+                                                            <v-col cols="auto" v-if="transaction[0]['Payment']['Status'] >= 4">
                                                                 <strong>Status:</strong>
                                                                 <v-chip class="me-2 bg-orange">
                                                                     Pendent
@@ -106,43 +105,43 @@
                                                             </v-col>
                                                         </v-row>
 
-                                                        <v-row>
-                                                            <v-col>
-                                                                Expiration Date: {{
-                                                                    transaction[0]['Payment']['DebitCard']['ExpirationDate'] }}
+                                                        <v-row fluid>
+                                                            <v-col cols="auto">
+                                                                <strong>Expiration Date:</strong> {{
+                                                                    transaction[0]['Payment']['DebitCard']['ExpirationDate'].split('T')[0] }}
                                                             </v-col>
-                                                            <v-col>
-                                                                Brand: {{ transaction[0]['Payment']['DebitCard']['Brand'] }}
-                                                            </v-col>
-                                                        </v-row>
-                                                        <v-row>
-                                                            <v-col>
-                                                                Type: {{ transaction[0]['Payment']['Type'] }}
-                                                            </v-col>
-                                                            <v-col>
-                                                                Amount: {{ transaction[0]['Payment']['Amount'] }}
+                                                            <v-col cols="auto">
+                                                                <strong>Brand:</strong> {{ transaction[0]['Payment']['DebitCard']['Brand'] }}
                                                             </v-col>
                                                         </v-row>
-                                                        <v-row>
-                                                            <v-col>
-                                                                Received Date: {{ transaction[0]['Payment']['ReceivedDate']
+                                                        <v-row fluid>
+                                                            <v-col cols="auto">
+                                                              <strong> Type:</strong> {{ transaction[0]['Payment']['Type'] }}
+                                                            </v-col>
+                                                            <v-col cols="auto">
+                                                              <strong>Amount:</strong> {{ transaction[0]['Payment']['Amount'] }}
+                                                            </v-col>
+                                                        </v-row>
+                                                        <v-row fluid>
+                                                            <v-col cols="auto">
+                                                               <strong> Received Date:</strong> {{ transaction[0]['Payment']['ReceivedDate'].split('T')[0]
                                                                 }}
                                                             </v-col>
-                                                            <v-col>
-                                                                Capture Date: {{ transaction[0]['Payment']['CapturedDate']
+                                                            <v-col cols="auto">
+                                                                <strong>Capture Date:</strong> {{ transaction[0]['Payment']['CapturedDate']
                                                                 }}
                                                             </v-col>
 
                                                         </v-row>
-                                                        <v-row>
-                                                            <v-col>
-                                                                Currency: {{ transaction[0]['Payment']['Currency'] }}
+                                                        <v-row fluid>
+                                                            <v-col cols="auto">
+                                                               <strong>Currency:</strong>  {{ transaction[0]['Payment']['Currency'] }}
                                                             </v-col>
-                                                            <v-col>
-                                                                County: {{ transaction[0]['Payment']['Country'] }}
+                                                            <v-col cols="auto">
+                                                                <strong>County:</strong> {{ transaction[0]['Payment']['Country'] }}
                                                             </v-col>
-                                                            <v-col>
-                                                                Provider: {{ transaction[0]['Payment']['Provider'] }}
+                                                            <v-col cols="auto">
+                                                                Provider: <strong>{{ transaction[0]['Payment']['Provider'] }}</strong>
                                                             </v-col>
                                                         </v-row>
                                                     </v-col>
@@ -154,8 +153,14 @@
                                 </v-col>
                             </v-row>
 
-                            <v-row v-if="Object.keys(orderInfo).length >= 1">
-                                <v-col>
+                            
+
+                        </v-card-text>
+                        <v-card-text v-else>
+                            Id não encontrada
+                        </v-card-text>
+                        <v-row fluid v-if="Object.keys(orderInfo).length >= 1" justify="center">
+                                <v-col cols="auto" class="d-flex justify-center flex-colum">
                                     <v-btn-group>
                                         <v-btn class="me-2 elevation-0" variant="flat" color="primary"
                                             @click="getTransaction(orderInfo)">
@@ -163,7 +168,7 @@
                                         </v-btn>
                                         <v-btn class="me-2 elevation-0" variant="flat" color="primary"
                                             v-if="transaction.length >= 1">
-                                            <v-icon icon="fas fa-file-pdf"> </v-icon>
+                                            <v-icon icon="fas fa-file-pdf" @click="generatePdf()"> </v-icon>
                                         </v-btn>
                                         <v-btn class="me-2 elevation-0" variant="flat" color="primary"
                                             v-if="transaction.length >= 1" @click="refundTransaction()">
@@ -175,12 +180,7 @@
 
                                 </v-col>
                             </v-row>
-
-                        </v-card-text>
-
-                        <v-card-text v-else>
-                            Id não encontrada
-                        </v-card-text>
+                        
 
                         <v-card-actions>
                             <v-btn class="me-2" color="primary" variant="flat" @click="search()" block>search</v-btn>
@@ -201,10 +201,13 @@
 
 <script>
 import axios from 'axios';
-import RefundDialog from '../partials/RefundDialog.vue'
+import html2pdf from 'html2pdf.js';
+import RefundDialog from '../partials/RefundDialog.vue';
+
 
 export default {
     props: ['order'],
+    emit: ['update-status'],
     components: {
         RefundDialog
     },
@@ -252,7 +255,6 @@ export default {
                 }
             })
             .then((response) => {
-                console.log(response);
                 this.refundDialogResult = true;
                 this.message = response;
                 return this.refund.push(response);
@@ -263,12 +265,37 @@ export default {
                 return alert('Error:' + response);
             })
         },
-        doneOrder() {
-            console.log(this.order);
-            console.log(this.orderInfo);
-            alert('estamos aqui');
-        },
+        generatePdf(){
+            const selectedOrder = this.order;
+            const selectedTransaction = this.transaction;
+            const htmlElement = document.getElementById('orderContent');
+            const pdfOptions = {
+                margin: 10,
+                filename: this.order.id + this.order.client + '.pdf',
+                image: {type: 'jpeg', quality: 0.98},
+                html2canvas: {scale: 2},
+                jsPDF: {unit: 'mm', format: 'a4', orientations: 'portrait'},
+            };
 
+            const pdf = html2pdf().from(htmlElement).set(pdfOptions).outputPdf();
+
+            pdf.save();
+            
+            return true;
+           
+        },
+        doneOrder() {
+            const orderId = this.order.id;
+            const data = {orderStatus: this.order.status};
+           
+            axios.post(`/orders/alterStatus/${orderId}`, data)
+            .then((response) => {
+                return this.$emit('update-status', response);
+            })
+            .catch((response) => {
+                return alert('Error'. response);
+            });
+        },
     }
 }
 </script>
