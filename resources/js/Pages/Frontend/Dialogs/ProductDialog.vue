@@ -442,7 +442,7 @@ export default {
                 .then((response) => {
                     this.$emit('close-dialog');
                     return this.cart.push(response.data)
-                    return true;
+                    
                 })
                 .catch((response) => {
                     this.snackbar = true;
