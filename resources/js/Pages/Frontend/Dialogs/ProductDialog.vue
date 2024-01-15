@@ -440,8 +440,6 @@ export default {
             }
             axios.post(`/carts/add`, data)
                 .then((response) => {
-                    alert('teste');
-                  //  this.add_cart = false;
                     this.$emit('close-dialog');
                     return this.cart.push(response.data)
                     return true;
