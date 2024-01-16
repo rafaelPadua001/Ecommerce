@@ -20,6 +20,15 @@ class CouponService{
             return $e;
         }
     }
+   public function getOthers(){
+       try{
+           $coupons = $this->coupon->where('code', '!=', 'welcome')->get();
+           return $coupons;
+       }
+       catch(Exception $e){
+           return $e;
+       }
+   }
     public function getWelcome(){
         try{
             $coupons = $this->coupon->where('code', '=', 'welcome')->first();

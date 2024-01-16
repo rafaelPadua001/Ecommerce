@@ -5,8 +5,8 @@
 
     <div>
         <v-row fluid>
-            <v-col class="d-flex justify-center flex-column" cols="12" sm="12">
-                <v-card class="mx-auto" width="500">
+            <v-col class="d-flex justify-center flex-column" cols="auto" md="12">
+                <v-card class="mx-auto elevation-0">
                     <v-toolbar title="Coupons" prominent>
                         <template v-slot:append>
                             <v-btn-group>

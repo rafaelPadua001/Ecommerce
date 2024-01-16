@@ -24,6 +24,15 @@ class CouponsController extends Controller
             return response()->json($e);
         }
     }
+    public function others(){
+        try{
+            $coupons = $this->couponService->getOthers();
+            return response()->json($coupons);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
     public function getInitDiscount(){
         try{
             $coupons = $this->couponService->getWelcome();

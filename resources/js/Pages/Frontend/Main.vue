@@ -5,14 +5,17 @@
         <AppBar class="app-bar" />
       </v-col>
     </v-row>
-
-
   </div>
 
   <v-container>
     <v-row fluid>
       <v-col class="d-flex justify-center flex-column" cols="auto">
-        <v-sheet>
+        <v-sheet> 
+          <v-row>
+            <v-col class="d-flex justify-center flex-column">
+                <DiscountWindow v-model="discountWindow" v-if="Object.keys(discounts).length >= 1" :discounts="discounts"/>
+            </v-col>
+          </v-row>
           <v-row fluid>
             <v-col class="d-flex justify-center flex-column" cols="auto">
               <Banner></Banner>
@@ -248,6 +251,7 @@ import axios from 'axios';
 import AppBar from './Layout/AppBar.vue';
 import Banner from '../../Components/Banner.vue';
 import ProductDialog from './Dialogs/ProductDialog.vue';
+import DiscountWindow from './Coupons/partials/Window.vue';
 import WelcomeDiscount from './Coupons/partials/Welcome.vue';
 import FooterBar from './Layout/FooterBar.vue';
 
@@ -256,6 +260,7 @@ export default {
     Banner,
     AppBar,
     ProductDialog,
+    DiscountWindow,
     WelcomeDiscount,
     FooterBar
   },
@@ -265,6 +270,7 @@ export default {
     images: [],
     categories: [],
     discounts: [],
+    dicountView: false,
     welcomeDiscount: [],
     discountDialog: false,
     address: [],
@@ -345,15 +351,16 @@ export default {
           return alert('Error:' + response);
         });
     },
-    /*getDiscounts() {
-      axios.get('/api/coupons/all')
+    getDiscounts() {
+      axios.get('/api/coupons/getOthers')
         .then((response) => {
+          this.dicountView = true;
           return this.discounts = response.data;
         })
         .catch((response) => {
           return alert('Error: ' + response);
         });
-    },*/
+    },
     buy(product) {
       this.productIndex = this.products.indexOf(product);
       this.selectProduct = Object.assign({}, product);
@@ -426,7 +433,7 @@ export default {
     this.getCategories();
     this.getProducts();
     this.getWelcomeDiscount();
-    // this.getDiscounts();
+    this.getDiscounts();
     this.getLikes();
 
   }

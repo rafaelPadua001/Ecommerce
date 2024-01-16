@@ -3,8 +3,10 @@
       fullscreen
       :scrim="false"
       transition="dialog-bottom-transition"
+      scrollable
   >
-    <v-card class="mx-auto" v-if="this.createDialog">
+  
+            <v-card class="mx-auto" v-if="this.createDialog">
       <v-toolbar title="Coupons Generator">
         <v-btn icon @click="close">
           <v-icon icon="fas fa-close fa-2xs"></v-icon>
@@ -12,26 +14,25 @@
       </v-toolbar>
       <v-card-text>
         <v-row fluid>
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="6">
             <v-text-field v-model="code" label="Código do Cupom" required :rules="codeRules"></v-text-field>
 
           </v-col>
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="6">
             <v-text-field v-model="discountPercentage" label="Desconto (%)" required :rules="valueRules"></v-text-field>
 
           </v-col>
         </v-row>
         <v-row fluid>
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="6">
             <label>Init Date:</label>
             <v-date-picker
               v-model="init_date"
               show-adjacent-months
-             
             ></v-date-picker>
             {{ init_date }}
           </v-col>
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="6">
             <v-label>End Date</v-label>
             <v-date-picker
               v-model="end_date"
@@ -43,7 +44,7 @@
           </v-col>
         </v-row>
         <v-row fluid>
-          <v-col cols="2" sm="4">
+          <v-col cols="12" sm="2">
             <v-label>Init Hour</v-label>
             <v-text-field
               v-model="init_hour"
@@ -54,7 +55,7 @@
             ></v-text-field>
             {{ init_hour }}
           </v-col>
-          <v-col cols="2" sm="4">
+          <v-col cols="12" sm="2">
             <v-label>End Hour</v-label>
             <v-text-field
               v-model="end_hour"
@@ -80,6 +81,8 @@
 
       </v-card-actions>
     </v-card>
+       
+    
   </v-dialog>
 </template>
 
