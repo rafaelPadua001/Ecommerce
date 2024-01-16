@@ -174,6 +174,7 @@ Route::post('/orders/alterStatus/{id}', [OrderController::class, 'alterStatus'])
 Route::post('/coupons/add', [CouponsController::class, 'create'])->name('coupon.add')->middleware('auth');
 Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index')->middleware('auth');
 Route::get('/coupons/getWelcome', [CouponsController::class, 'getInitDiscount'])->name('coupon.welcome');
+Route::post('/coupons/getCoupon/{id}', [CouponCustomerController::class, 'getCoupon'])->name('coupon.getCoupon');
 Route::post('/coupons/update/{id}', [CouponsController::class, 'update'])->name('coupon.update')->middleware('auth');
 Route::delete('/coupons/delete/{id}', [CouponsController::class, 'destroy'])->name('coupon.destroy')->middleware('auth');
  
