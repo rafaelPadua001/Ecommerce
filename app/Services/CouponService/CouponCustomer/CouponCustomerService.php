@@ -6,6 +6,8 @@ use App\Services\CouponService\CouponService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\isEmpty;
+
 class CouponCustomerService {
     protected $couponCustomer;
     protected $couponService;
@@ -32,6 +34,35 @@ class CouponCustomerService {
           
             return response()->json($register_coupon);
             
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
+    public function rescueCoupon($id, $request){
+    
+        try{
+            
+            $register = $this->couponCustomer
+                ->where('coupon_id', '=', $request->coupon['id'])
+                ->where('user_id', '=', $id)
+                ->get();
+           
+            if($register->isEmpty()){
+                $register = $this->couponCustomer->create([
+                    'user_id' => $id,
+                    'coupon_id' => $request->coupon['id'],
+                    'coupon_name' => $request->coupon['code'],
+                    'discount_percentage' => $request->coupon['discount_percentage'],
+                    'init_date' => $request->coupon['init_date'],
+                    'end_date' => $request->coupon['end_date'],
+                    'is_used' => $request->coupon['is_used'],
+                ]);
+
+                return 'Você recebeu ' . $register->coupon_name;
+            }
+            
+            return 'Você ja possui este cupom';
         }
         catch(Exception $e){
             return $e;

@@ -13,7 +13,12 @@
         <v-sheet> 
           <v-row>
             <v-col class="d-flex justify-center flex-column">
-                <DiscountWindow v-model="discountWindow" v-if="Object.keys(discounts).length >= 1" :discounts="discounts"/>
+                <DiscountWindow 
+                  v-model="discountWindow"
+                  v-if="Object.keys(discounts).length >= 1"
+                  :discounts="discounts"
+                  :customer="this.customer"
+                />
             </v-col>
           </v-row>
           <v-row fluid>

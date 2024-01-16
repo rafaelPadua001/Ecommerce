@@ -13,7 +13,7 @@ class CouponCustomerController extends Controller
 {
     //
     protected $couponCustomerService;
-    public function __consctuct(CouponCustomerService $couponCustomerService){
+    public function __construct(CouponCustomerService $couponCustomerService){
         $this->couponCustomerService = $couponCustomerService;
        
     }
@@ -23,6 +23,17 @@ class CouponCustomerController extends Controller
         $coupon = CuponCustomer::where('user_id', '=', $customer->id)->get();
        
         return response()->json($coupon);
+    }
+    public function getCoupon($id, Request $request){
+        try{
+            
+            $coupon = $this->couponCustomerService->rescueCoupon($id, $request);
+       
+            return response()->json($coupon);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
     }
     public function remove($id){
        try{

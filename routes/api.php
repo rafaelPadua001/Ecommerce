@@ -13,6 +13,7 @@ use App\Http\Controllers\ProductVideos\ProductVideoController;
 use App\Http\Controllers\Coupons\CouponsController;
 use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Comments\CommentsController;
+use App\Http\Controllers\Coupons\CouponCustomer\CouponCustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,7 @@ Route::delete('/categories/delete/{id}', [CategoriesController::class, 'destroy'
 //Route coupons
 Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index');
 Route::get('/coupons/getOthers', [CouponsController::class, 'others'])->name('coupon.others');
+
 
 
 //Subcategories route
