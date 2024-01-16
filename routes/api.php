@@ -35,6 +35,11 @@ Route::post('/categories/store/{id}', [CategoriesController::class, 'store'])->n
 Route::post('/categories/update/{id}', [CategoriesController::class, 'update'])->name('categories.update');
 Route::delete('/categories/delete/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 
+//Route coupons
+Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index');
+Route::get('/coupons/getOthers', [CouponsController::class, 'others'])->name('coupon.others');
+
+
 //Subcategories route
 Route::post('/subcategories/store/{id}', [SubcategoriesController::class, 'store'])->name('store');
 Route::post('/subcategories/update/{id}', [SubcategoriesController::class, 'update'])->name('update');
@@ -50,8 +55,7 @@ Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->n
 //Delivery Routes
 Route::get('/delivery', [DeliveryController::class, 'index'])->name('delivery.index');
 
-//Route coupons
-Route::get('/coupons/all', [CouponsController::class, 'index'])->name('coupon.index');
+
 
 Route::get('/comment', [CommentsController::class, 'index'])->name('comment.index');
 Route::post('/comment/create', [CommentsController::class, 'create'])->name('comment.create');
