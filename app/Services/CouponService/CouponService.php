@@ -39,25 +39,42 @@ class CouponService{
         }
     }
     public function store(Request $request){
+        
         try{
             $user = Auth::user();
+            $image = $request->file('image')[0];
+          
             $coupon = $this->coupon->create([
                 'code' => $request->code_coupon,
                 'discount_percentage' => $request->value_coupon,
+                'images' => json_encode($image->getClientOriginalName()),
                 'init_date' => $request->init_date,
                 'end_date' => $request->end_date,
                 'init_hour' => $request->init_hour,
                 'end_hour' => $request->end_hour,
-                'is_displayed' => $request->display,
+                'is_displayed' => $request->display ? 1 : 0,
                 'user_id' => $user->id,
                 
             ]);
+
             
+            $upload = $this->uploadImage($image);
+          
             return $coupon;
         }
         catch(Exception $e){
             return $e;
         }
+    }
+    public function uploadImage($image){
+        // Gere um nome único para a imagem
+        $imageName = time() . '_' . $image->getClientOriginalName();
+
+        // Armazene a imagem no sistema de arquivos
+        $image->storeAs('/Coupons', $imageName, 'public');
+      
+        // Retorne o nome da imagem para que você possa salvá-lo no banco de dados se necessário
+        return $imageName;
     }
     public function updateCoupon(Request $request, $id){
         try{

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->decimal('discount_percentage', 5, 2);
+            $table->json('images')->nullable();
             $table->date('init_date');
             $table->date('end_date');
             $table->time('init_hour');
