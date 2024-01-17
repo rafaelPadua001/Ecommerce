@@ -44,7 +44,6 @@ class CouponsController extends Controller
     }
     public function create(Request $request){
         try{
-            $user = Auth::user();
             $coupon = $this->couponService->store($request);
             
             return response()->json($coupon);
