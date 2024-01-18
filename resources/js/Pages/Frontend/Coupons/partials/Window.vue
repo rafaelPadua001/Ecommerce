@@ -1,12 +1,17 @@
 <template>
     <v-row fluid>
         <v-col class="d-flex justify-center flex-column" cols="12">
-            <v-carousel  height="200" :show-arrows="false"  hide-delimiters cycle>
+            <v-carousel height="120" :show-arrows="false"  hide-delimiters cycle>
                 <v-carousel-item v-for="discount in discounts" :key="discount.id" cover>
-                    <v-card max-height="120" v-if="discount.is_used == 0 && discount.is_displayed == 1" theme="dark"
-                        :image="`./storage/Coupons/${JSON.parse(discount.images)}`"
+                    <v-card v-if="discount.is_used == 0 && discount.is_displayed == 1" theme="dark"
+                        :image="`./storage/Coupons/${JSON.parse(discount.images)}`" elevation="0"
                     >
-                        <v-card-text class="justify-right">
+                        <template v-slot:append>
+                            <v-btn icon size="x-small" variant="plain">
+                                <v-icon icon="fas fa-close"></v-icon>
+                            </v-btn>
+                        </template>
+                        <v-card-text class="justify-start">
                             <span>clique no botão
                             <v-btn variant="text" size="small" @click="rescueDiscount(discount)">
                              {{ discount.code }}

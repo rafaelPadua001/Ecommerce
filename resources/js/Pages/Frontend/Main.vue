@@ -1,7 +1,9 @@
 <template>
+ 
   <div>
     <v-row no-gutters>
       <v-col class="d-flex justify-center flex-column" cols="auto">
+       
         <AppBar class="app-bar" />
       </v-col>
     </v-row>
@@ -21,11 +23,7 @@
                 />
             </v-col>
           </v-row>
-          <v-row fluid>
-            <v-col class="d-flex justify-center flex-column" cols="auto">
-              <Banner></Banner>
-            </v-col>
-          </v-row>
+          
           <v-row fluid>
             <h4 align="start">Higlights</h4>
             <v-divider></v-divider>
@@ -86,6 +84,11 @@
                   </v-card>
                 </v-hover>
               </v-sheet>
+            </v-col>
+          </v-row>
+          <v-row fluid>
+            <v-col class="d-flex justify-center flex-column" cols="auto">
+              <Banner></Banner>
             </v-col>
           </v-row>
           <v-row no-gutters justify="center">
