@@ -10,8 +10,8 @@
             $this->products = $products;
         }
         public function getAll() {
-            Product::all();
-            return  Product::all();
+            $product = Product::orderBy('id', 'desc')->get();
+            return  $product;
         }
         public function create($product){
             $productCreate = Product::create($product);
