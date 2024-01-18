@@ -1,29 +1,26 @@
 <template>
-    <v-row>
-        <v-col cols="12">
-            <v-window v-model="onboarding" show-arrows="hover">
-                <v-window-item v-for="discount in discounts" :key="discount.id">
-                    <v-card max-height="120" v-if="discount.is_used == 0 && discount.is_displayed == 1" color="#952175"
-                        theme="dark">
-
-                        <v-card-title class="text-h6">
-                            clique no botão <strong>{{ discount.code }}</strong>
+    <v-row fluid>
+        <v-col class="d-flex justify-center flex-column" cols="12">
+            <v-carousel  height="200" :show-arrows="false"  hide-delimiters cycle>
+                <v-carousel-item v-for="discount in discounts" :key="discount.id" cover>
+                    <v-card max-height="120" v-if="discount.is_used == 0 && discount.is_displayed == 1" theme="dark"
+                        :image="`./storage/Coupons/${JSON.parse(discount.images)}`"
+                    >
+                        <v-card-text class="justify-right">
+                            <span>clique no botão
+                            <v-btn variant="text" size="small" @click="rescueDiscount(discount)">
+                             {{ discount.code }}
+                            </v-btn>
                             e receba <strong>{{ discount.discount_percentage * 100 }}%</strong> de desconto
+                        </span>
+                        </v-card-text>
 
-                        </v-card-title>
                         <v-card-subtitle>
                             valido até {{ discount.end_date }}
-
                         </v-card-subtitle>
-                        <v-btn variant="text" @click="rescueDiscount(discount)">
-
-                            {{ discount.code }}
-                        </v-btn>
-
-
                     </v-card>
-                </v-window-item>
-            </v-window>
+                </v-carousel-item>
+            </v-carousel>
 
             <div>
                 <v-snackbar v-model="snackbar" :timeout="timeout" :color="this.variant">
@@ -45,7 +42,6 @@ export default {
     props: ['discounts', 'customer'],
     data: () => ({
         length: 3,
-        onboarding: 0,
         snackbar: false,
         message: false,
         timeout: 2000,
@@ -63,18 +59,17 @@ export default {
                 .then((response) => {
                     this.snackbar = true;
                     this.message = response.data.coupon_name ?? response.data;
-                    
+
                     return true;
-                    
+
                 })
                 .catch((response) => {
                     this.snackbar = true;
                     this.message = response.data.coupon_name ?? response.data;
-                   
-                    return false;
-                    
-                });
 
+                    return false;
+
+                });
         }
     }
 }

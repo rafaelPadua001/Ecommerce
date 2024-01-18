@@ -68,7 +68,7 @@ class CouponService{
     }
     public function uploadImage($image){
         // Gere um nome único para a imagem
-        $imageName = time() . '_' . $image->getClientOriginalName();
+        $imageName = $image->getClientOriginalName();
 
         // Armazene a imagem no sistema de arquivos
         $image->storeAs('/Coupons', $imageName, 'public');
