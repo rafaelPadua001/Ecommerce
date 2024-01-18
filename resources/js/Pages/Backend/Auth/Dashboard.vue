@@ -49,7 +49,7 @@
         <v-list-item prepend-icon="fas fa-regular fa-box fa-2xs fa-bounce" title="Shippment" value="Shippment" to="/shippment"></v-list-item>
         <v-divider></v-divider>
         
-        <v-list-item prepend-icon="fas fa-store fa-2xs fa-bounce" title="Store" value="Store"></v-list-item>
+        <v-list-item prepend-icon="fas fa-store fa-2xs fa-bounce" title="Store" value="Store" to="/store"></v-list-item>
         <v-divider></v-divider>
 
         <v-list-item prepend-icon="fas fa-address-card fa-2xs fa-bounce" title="Profile" value="Profile"></v-list-item>

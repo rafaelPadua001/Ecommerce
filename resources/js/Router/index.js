@@ -27,6 +27,7 @@ import allOrders from '../Pages/Backend/Orders/Orders.vue'
 import Coupons from '../Pages/Backend/Coupons/Coupons.vue'
 import Delivery from '../Pages/Backend/Delivery/Delivery.vue'
 import Shippment from '../Pages/Backend/Shippment/Shippment.vue'
+import Store from '../Pages/Backend/Store/Store.vue'
 
 const routes = [{
     path: '/',
@@ -155,6 +156,11 @@ const routes = [{
         path: '/delivery',
         name: 'delivery',
         component: Delivery
+    },
+    {
+        path: '/store',
+        name: 'store',
+        component: Store
     }
 ];
 
