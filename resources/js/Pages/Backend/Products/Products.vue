@@ -14,7 +14,7 @@
             <v-toolbar-title>Produtos</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
-            <v-dialog v-model="dialog" max-width="900">
+            <v-dialog v-model="dialog" fullscreen :scrim="true">
               <template v-slot:activator="{ props }">
                 <v-btn color="primary" dark class="mb-2" v-bind="props">
                   New Item
@@ -196,30 +196,15 @@
                               show-swatches
                               swatches-max-height="55px"
                               width="90%"
+                              v-bind:onChange="selectedColor()"
                             >
                               
                             </v-color-picker>
-                            <div>
-                                <v-btn size="x-small" icon @click="selectedColor()">
-                                  <v-icon icon="fas fa-save"></v-icon>
-                                </v-btn>
-                            </div>
+                           
                           
                         </v-col>
-                        <v-col v-if="editedItem.colors >= 1">
-                          <div>
-                            <v-card v-for="(color, index) in JSON.parse(editedItem.colors)" :key="index" :color="color">
-                            <template v-slot:append>
-                                  <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
-                                    <v-icon icon="fas fa-close fa-2xs"></v-icon>
-                                  </v-btn>
-                                </template>
-                          </v-card>
-                            
-                          </div>
-                          
-                        </v-col>
-                        <v-col cols="8" sm="4" md="2" v-else>
+                       
+                        <v-col cols="8" sm="4" md="2">
                           <v-card v-for="(color, index) in colors" :key="index" :color="color">
                             <template v-slot:append>
                                   <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
@@ -548,7 +533,7 @@ export default {
       images: [],
       platform: '',
       video_link: '',
-      colors: [],
+      //colors: [],
       size: [],
       price: "0.00",
       discount_id: '',
@@ -577,7 +562,7 @@ export default {
       images: [],
       platform: '',
       video_link: '',
-      colors: [],
+     // colors: [],
       size: [],
       unity: [],
       price: "0.00",
@@ -630,11 +615,12 @@ export default {
   },
   methods: {
     initialize() {
-      this.user = [],
+        this.user = [],
         this.categories = [],
         this.subcategories = [],
         this.products = [],
-        this.discounts = []
+        this.discounts = [],
+        this.colors = []
     },
     getAuth() {
       axios.get('/users')

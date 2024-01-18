@@ -45,8 +45,8 @@ class ProductController extends Controller
     }
     public function index()
     {
-        // $products = Product::orderBy('id', 'desc')->get();
-        $products = $this->productService->getAll();
+        $products = Product::orderBy('id', 'desc')->get();
+        //$products = $this->productService->getAll();
 
         return response()->json($products);
     }
