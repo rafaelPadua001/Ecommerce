@@ -26,6 +26,7 @@ use App\Http\Controllers\Coupons\CouponsController;
 use App\Http\Controllers\Coupons\CouponCustomer\CouponCustomerController;
 use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Shippment\ShippmentController;
+use App\Http\Controllers\Store\StoreController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -182,7 +183,8 @@ Route::delete('/coupons/delete/{id}', [CouponsController::class, 'destroy'])->na
 Route::get('/couponsCustomer', [CouponCustomerController::class, 'getAll'])->name('coupon.all');
 Route::delete('/couponsCustomer/delete/{id}', [CouponCustomerController::class, 'remove'])->name('coupon.remove');
 
-
+//Route Store
+Route::post('/store/create', [StoreController::class, 'create'])->name('store.create')->middleware('auth');
 //Products routes
 //Route::get('/products', function(){s
 //    dd('teste product routes');
