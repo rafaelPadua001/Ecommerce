@@ -186,6 +186,10 @@ Route::delete('/couponsCustomer/delete/{id}', [CouponCustomerController::class, 
 //Route Store
 Route::get('/store', [StoreController::class, 'index'])->name('store.index');
 Route::post('/store/create', [StoreController::class, 'create'])->name('store.create')->middleware('auth');
+Route::post('/store/update/{id}', [StoreController::class, 'update'])->name('store.update')->middleware('auth');
+Route::delete('/store/delete/{id}', [StoreController::class, 'delete'])->name('store.delete')->middleware('auth');
+
+
 //Products routes
 //Route::get('/products', function(){s
 //    dd('teste product routes');

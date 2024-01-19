@@ -51,4 +51,24 @@ class StoreService {
            return $fileName;
         }
     }
+    public function updateStore($id, $request){
+        try{
+           
+            $updateStore = $this->store->findOrFail($id)->update($request->all());
+            //dd($request->all());
+            return $request->all();
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
+    public function destroy($id){
+        try{
+            $destroy = $this->store->findOrFail($id)->delete();
+            return $destroy;
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
 }
