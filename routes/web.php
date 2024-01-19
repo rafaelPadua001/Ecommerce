@@ -184,6 +184,7 @@ Route::get('/couponsCustomer', [CouponCustomerController::class, 'getAll'])->nam
 Route::delete('/couponsCustomer/delete/{id}', [CouponCustomerController::class, 'remove'])->name('coupon.remove');
 
 //Route Store
+Route::get('/store', [StoreController::class, 'index'])->name('store.index');
 Route::post('/store/create', [StoreController::class, 'create'])->name('store.create')->middleware('auth');
 //Products routes
 //Route::get('/products', function(){s

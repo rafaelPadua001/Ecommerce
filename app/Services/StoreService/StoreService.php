@@ -13,6 +13,10 @@ class StoreService {
     public function __construct(Store $store){
         $this->store = $store;
     }
+    public function getStore(){
+        $store = $this->store->first();
+        return $store;
+    }
     public function store(Request $request){
         try{
             $file = $request->file('app_logo');
