@@ -5,6 +5,7 @@ namespace App\Services\StoreService;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class StoreService {
@@ -19,16 +20,18 @@ class StoreService {
     }
     public function store(Request $request){
         try{
+            
             $file = $request->file('app_logo');
             $upload_image = $this->uploadImg($file);
+            $user = Auth::user();
            
-          
             $store = $this->store->create([
                 'app_name' => $request->app_name,
                 'app_mail' => $request->app_mail,
                 'app_logo' => json_encode($upload_image),
                 'app_phone' => $request->app_phone,
-                'app_address' => $request->app_address
+                'app_address' => $request->app_address,
+                'user_id' => $user->id
             ]);
           
             return $store;
