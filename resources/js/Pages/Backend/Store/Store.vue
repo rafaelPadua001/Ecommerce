@@ -134,7 +134,12 @@
                                                 v-model="deleteDialog"
                                                 :store="this.editItem"
                                                 @remove-store="removeStore"
-                                                @close-dialog="closeDelete"/>
+                                                @close-dialog="closeDelete"
+                                            />
+
+                                            <v-snackbar v-model="snackbar">
+                                                {{ message }}
+                                            </v-snackbar>
                                         </div>
                                     </v-col>
                                 </v-row>
@@ -173,6 +178,8 @@ export default {
         editIndex: -1,
         editItem: {},
         tab: null,
+        snackbar: false,
+        message: '',
         nameApp: null,
         nameAppRules: [
             value => !!value || 'required.',
@@ -236,7 +243,9 @@ export default {
             return this.deleteDialog = false;
         },
         removeStore(item){
-            return this.store.splice(item.id, 1);
+            this.snackbar = true;
+            this.message = 'Removed store';
+            return this.snackbar = true;
         },
         save() {
             if (this.editIndex == 1) {
@@ -255,7 +264,8 @@ export default {
                     }
                 })
                     .then((response) => {
-                        
+                        this.snackbar = true;
+                        this.message = 'Updated store';
                         return this.store = response.data;;
                     })
                     .catch((response) => {
@@ -281,6 +291,8 @@ export default {
             })
                 .then((response) => {
                     this.editItem = response.data
+                    this.message = 'Saved Store';
+                    this.snackbar = true;
                     return this.store = this.editItem;
                 })
                 .catch((response) => {
