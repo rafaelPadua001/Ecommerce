@@ -18,7 +18,7 @@
                                 <v-row>
                                     <v-col>
                                         <v-card class="mx-auto" v-if="this.editIndex == -1">
-                                           
+
                                             <v-card-text>
                                                 <v-row fluid>
                                                     <v-col>
@@ -73,60 +73,69 @@
                                         </v-card>
 
                                         <v-card v-else>
-                                                <v-card-text>
-                                                    <v-row fluid>
-                                                        <v-col>
-                                                            <v-text-field v-model="editItem.app_name" label="App Name"
-                                                                hide-details="auto" :rules="nameAppRules"></v-text-field>
+                                          
+                                            <v-card-text>
+                                                <v-row fluid>
+                                                    <v-col>
+                                                        <v-text-field v-model="editItem.app_name" label="App Name"
+                                                            hide-details="auto" :rules="nameAppRules"></v-text-field>
 
-                                                        </v-col>
-                                                        <v-col>
-                                                            <v-text-field v-model="editItem.app_mail" label="Email App"
-                                                                :rules="mailRules">
+                                                    </v-col>
+                                                    <v-col>
+                                                        <v-text-field v-model="editItem.app_mail" label="Email App"
+                                                            :rules="mailRules">
 
-                                                            </v-text-field>
-
-
-                                                        </v-col>
-                                                    </v-row>
-                                                    <v-row>
-                                                        <v-col>
-                                                            <v-file-input v-model="appIcon" label="Logo image"
-                                                                accept="image/*"
-                                                                v-bind:change="handleFile()"></v-file-input>
+                                                        </v-text-field>
 
 
-                                                        </v-col>
-                                                        <v-col>
-                                                            <v-text-field v-model="editItem.app_phone" label="Phone App"
-                                                                v-maska:[phoneOptions] :rules="phoneRules">
-
-                                                            </v-text-field>
-
-                                                        </v-col>
-                                                    </v-row>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col>
+                                                        <v-file-input v-model="appIcon" label="Logo image" accept="image/*"
+                                                            v-bind:change="handleFile()"></v-file-input>
 
 
+                                                    </v-col>
+                                                    <v-col>
+                                                        <v-text-field v-model="editItem.app_phone" label="Phone App"
+                                                            v-maska:[phoneOptions] :rules="phoneRules">
 
-                                                    <v-row>
-                                                        <v-col>
-                                                            <v-text-field v-model="editItem.app_address" label="Address App">
+                                                        </v-text-field>
 
-                                                            </v-text-field>
+                                                    </v-col>
+                                                </v-row>
 
 
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-card-text>
-                                                <v-card-actions>
-                                                    <v-btn-group>
-                                                        <v-btn class="me-2" @click="save" variant="plain">update</v-btn>
-                                                        <v-btn class="me-2" @click="cancel" variant="plain">Cancel</v-btn>
-                                                    </v-btn-group>
-                                                </v-card-actions>
 
-                                           
+                                                <v-row>
+                                                    <v-col>
+                                                        <v-text-field v-model="editItem.app_address" label="Address App">
+
+                                                        </v-text-field>
+
+
+                                                    </v-col>
+                                                </v-row>
+                                            </v-card-text>
+                                            <v-card-actions>
+                                                <v-btn-group>
+                                                    <v-btn class="me-2" @click="save" variant="plain">update</v-btn>
+                                                    <v-btn class="me-2" @click="removeDialog(editItem)" variant="plain" color="red">remove</v-btn>
+                                                    <v-btn class="me-2" @click="cancel" variant="plain">Cancel</v-btn>
+                                                </v-btn-group>
+                                            </v-card-actions>
+
+
                                         </v-card>
+
+                                        <div>
+                                            <DeleteDialog 
+                                                v-model="deleteDialog"
+                                                :store="this.editItem"
+                                                @remove-store="removeStore"
+                                                @close-dialog="closeDelete"/>
+                                        </div>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -152,10 +161,12 @@ const phoneMask = ref('');
 
 <script>
 import Dashboard from '../Auth/Dashboard.vue';
+import DeleteDialog from './partials/delete.vue';
 import axios from "axios";
 export default {
     components: {
-        Dashboard
+        Dashboard,
+        DeleteDialog
     },
     data: () => ({
         store: [],
@@ -191,17 +202,22 @@ export default {
             }
         ],
         addressApp: null,
+        deleteDialog: false,
     }),
+    watch: {
+        closeDelete(val){
+            val || this.closeDelete();
+        }
+    },
     methods: {
         getStore() {
             axios.get('/store')
                 .then((response) => {
-                   if(Object.keys(response.data).length >= 1){
+                    if (Object.keys(response.data).length >= 1) {
                         this.editItem = Object.assign({}, response.data);
                         this.editIndex = 1;
-                        console.log(this.editItem);
                         return this.editItem;
-                    }   
+                    }
                     console.log(this.editIndex);
                     return this.store = response.data;
                 })
@@ -213,9 +229,41 @@ export default {
             const image = this.appIcon;
             console.log(image);
         },
+        removeDialog(item){
+            this.deleteDialog = true;
+        },
+        closeDelete(){
+            return this.deleteDialog = false;
+        },
+        removeStore(item){
+            return this.store.splice(item.id, 1);
+        },
         save() {
-            if(this.editIndex >= 1){
-                return alert('Maconha');
+            if (this.editIndex == 1) {
+                const token = document.head.querySelector('meta[name="csrf-token"]').content;
+                const data = {
+                    app_name: this.editItem.app_name,
+                    app_mail: this.editItem.app_mail,
+                    app_logo: this.appIcon,
+                    app_phone: this.editItem.app_phone,
+                    app_address: this.editItem.app_address,
+                }
+                axios.post(`/store/update/${this.editItem.id}`, data, {
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then((response) => {
+                        
+                        return this.store = response.data;;
+                    })
+                    .catch((response) => {
+                        return alert('Error:' + response);
+                    });
+                  
+                    return true;
+                   
             }
             const token = document.head.querySelector('meta[name="csrf-token"]').content;
             const data = {
@@ -232,8 +280,8 @@ export default {
                 }
             })
                 .then((response) => {
-                    console.log(response);
-                    return this.store.push(response.data);
+                    this.editItem = response.data
+                    return this.store = this.editItem;
                 })
                 .catch((response) => {
                     return alert('Error:' + response);

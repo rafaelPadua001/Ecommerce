@@ -33,6 +33,25 @@ class StoreController extends Controller
             return response()->json($e);
         }
     }
+    public function update($id, Request $request){
+        try{
+            $update = $this->storeService->updateStore($id, $request);
+           
+            return response()->json($update);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+    public function delete($id){
+        try{
+            $delete = $this->storeService->destroy($id);
+            return response()->json($delete);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
 
    
 }
