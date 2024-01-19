@@ -10,7 +10,7 @@
 
                     <template v-slot:prepend>
                         <v-app-bar-title>
-                            <v-btn class="text" color="white" href="/">EcomerceClone</v-btn></v-app-bar-title>
+                            <v-btn class="text" color="white" href="/">{{ store.app_name ?? 'EcomerceClone'}}</v-btn></v-app-bar-title>
                         <div v-if="user === 1 || user">
                             <v-btn :to="'/dashboard'" variant="plain">
                                 <v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon>
@@ -213,6 +213,7 @@ export default {
         user: [],
         carts: [],
         categories: [],
+        store: [],
         addressDialog: false,
     }),
     watch: {
@@ -221,6 +222,15 @@ export default {
         }
     },
     methods: {
+        getStore(){
+            axios.get('/store')
+            .then((response) => {
+                this.store = response.data
+            })
+            .catch((response) => {
+                return alert('Error: ' + response);
+            })
+        },
         getCategories() {
             axios.get('/categories')
                 .then((response) => {
@@ -291,6 +301,7 @@ export default {
     },
 
     mounted() {
+        this.getStore();
         this.getUser();
         this.getCategories();
         this.getCarts();

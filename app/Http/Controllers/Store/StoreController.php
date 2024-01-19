@@ -14,6 +14,15 @@ class StoreController extends Controller
     public function __construct(StoreService $storeService){
         $this->storeService = $storeService;
     }
+    public function index(){
+        try{
+            $index = $this->storeService->getStore();
+            return response()->json($index);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
     public function create(Request $request){
         
         try{
