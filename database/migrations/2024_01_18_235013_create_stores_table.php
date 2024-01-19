@@ -18,6 +18,8 @@ return new class extends Migration
             $table->json('app_logo');
             $table->string('app_phone');
             $table->text('app_address');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

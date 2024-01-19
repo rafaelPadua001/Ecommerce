@@ -24,7 +24,6 @@ class StoreController extends Controller
         }
     }
     public function create(Request $request){
-        
         try{
             $create = $this->storeService->store($request);
             
