@@ -9,8 +9,16 @@
                     </template>
 
                     <template v-slot:prepend>
+                        
                         <v-app-bar-title>
-                            <v-btn class="text" color="white" href="/">{{ store.app_name ?? 'EcomerceClone'}}</v-btn></v-app-bar-title>
+                            <v-img v-if="store.app_logo" 
+                                :src="`./storage/app_icon/${JSON.parse(store.app_logo)}`"
+                                :width="50"
+                                :height="75"
+                                cover
+                            >
+                            </v-img>
+                            <v-btn v-else class="text" color="white" href="/">{{ store.app_name ?? 'EcomerceClone'}}</v-btn></v-app-bar-title>
                         <div v-if="user === 1 || user">
                             <v-btn :to="'/dashboard'" variant="plain">
                                 <v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon>
@@ -225,6 +233,7 @@ export default {
         getStore(){
             axios.get('/store')
             .then((response) => {
+                this.store.app_logo = JSON.parse(response.data.app_logo);
                 this.store = response.data
             })
             .catch((response) => {
