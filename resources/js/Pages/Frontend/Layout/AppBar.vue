@@ -1,12 +1,12 @@
 <template>
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="auto">
-            <v-card max-width="448" class="mx-auto elevation-0" color="transparent-lighten-3">
-                <v-app-bar color="transparent-darken-4" image="https://picsum.photos/1920/1080?random">
+            <v-card max-width="448" class="mx-auto elevation-0 text-black">
+                <v-app-bar color="trasparent">
 
-                    <template v-slot:image>
+                    <!-- <template v-slot:image>
                         <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
-                    </template>
+                    </template> -->
 
                     <template v-slot:prepend>
                         
@@ -18,16 +18,16 @@
                                 cover
                             >
                             </v-img>
-                            <v-btn v-else class="text" color="white" href="/">{{ store.app_name ?? 'EcomerceClone'}}</v-btn></v-app-bar-title>
+                            <v-btn v-else class="text" href="/">{{ store.app_name ?? 'EcomerceClone'}}</v-btn></v-app-bar-title>
                         <div v-if="user === 1 || user">
                             <v-btn :to="'/dashboard'" variant="plain">
-                                <v-icon icon="fa-solid fa-house fa-2xs" color="white"></v-icon>
+                                <v-icon icon="fa-solid fa-house fa-2xs"></v-icon>
                             </v-btn>
                         </div>
 
                         <div>
                             <v-btn id="menu-categories" variant="plain">
-                                <v-icon icon="fa-solid fa-grip-vertical fa-2xs" color="white">
+                                <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
                                 </v-icon>
                             </v-btn>
 
