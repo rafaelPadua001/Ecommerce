@@ -44,7 +44,7 @@ class StoreService {
     public function uploadImg($file){
       
         foreach($file as $img){
-            $fileName = 'app_icon.'.$img->Extension();
+            $fileName = 'Logos/app_icon.'.$img->Extension();
             
             $path = Storage::putFileAs('/public/app_icon/', $img, $fileName);
 
