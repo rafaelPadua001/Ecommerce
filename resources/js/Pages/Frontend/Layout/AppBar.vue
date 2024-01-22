@@ -1,7 +1,7 @@
 <template>
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="auto">
-            <v-card max-width="448" class="mx-auto elevation-0 text-black">
+            <v-card  class="mx-auto elevation-0 text-black">
                 <v-app-bar color="trasparent">
 
                     <!-- <template v-slot:image>
@@ -14,30 +14,32 @@
                             <v-img v-if="store.app_logo" 
                                 :src="`./storage/app_icon/${JSON.parse(store.app_logo)}`"
                                 :width="50"
-                                :height="75"
-                                cover
+                                :height="50"
+                                aspect-ratio="16/9"
                             >
                             </v-img>
-                            <v-btn v-else class="text" href="/">{{ store.app_name ?? 'EcomerceClone'}}</v-btn></v-app-bar-title>
-                        <div v-if="user === 1 || user">
+                            <v-btn v-else class="text" href="/">{{ store.app_name ?? 'ProjectName'}}</v-btn>
+                        </v-app-bar-title>
+                        
+                        <div v-if="Object.keys(user).length === 1 || user">
                             <v-btn :to="'/dashboard'" variant="plain">
                                 <v-icon icon="fa-solid fa-house fa-2xs"></v-icon>
                             </v-btn>
                         </div>
 
                         <div>
-                            <v-btn id="menu-categories" variant="plain">
+                            <v-btn id="menu-categories" variant="flat">
                                 <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
                                 </v-icon>
                             </v-btn>
 
                             <v-menu activator="#menu-categories">
-                                <v-list>
+                                <v-list elevation="1">
                                     <v-list-item v-if="!categories">
                                         no categories registered
                                     </v-list-item>
                                     <v-list-item v-else v-for="category in categories" :key="category.id">
-                                        <v-btn icon variant="text" size="xs" :to="`/subcategories/all/${category.id}`">
+                                        <v-btn variant="flat" size="small" :to="`/subcategories/all/${category.id}`">
                                             <v-icon :icon="category.icon"></v-icon>
                                             <span>{{ category.name }}</span>
                                         </v-btn>
@@ -45,15 +47,13 @@
                                 </v-list>
                             </v-menu>
                         </div>
-
-                        <!-- adicionar Logo aqui -->
-
                     </template>
                     <v-spacer></v-spacer>
 
-                    <v-btn icon variant="plain">
+                    <v-btn icon variant="flat" size="xs">
                         <v-icon icon="fas fa-magnifying-glass"></v-icon>
                     </v-btn>
+
                     <!-- Cart Button-->
                     <div class="d-flex justify-space-around" v-if="Object.keys(carts).length >= 1">
                         <v-row fluid>
@@ -154,23 +154,20 @@
                     <!-- Cria o botao de menu do usuario -->
                     <v-menu>
                         <template v-slot:activator="{ props }">
-
                             <v-btn icon v-bind="props">
-                                <v-icon icon="fa-solid fa-user"></v-icon>
+                                <v-icon icon="fa-solid fa-user fa-2xs"></v-icon>
                             </v-btn>
 
                         </template>
                         <v-list>
                             <!-- login button -->
-                            <v-list-item v-if="user === 0 || !user">
+                            <v-list-item v-if="Object.keys(user).length === 0 || !user">
                                 <v-list-item-title link>
-                                    <span>
-                                        <v-btn icon variant="plain" to="/login">
-                                            <v-icon icon="fa-solid fa-right-to-bracket fa-xs"></v-icon>
+                                    
+                                        <v-btn to="/login" class="me-2" size="x-small" variant="flat">
+                                            <v-icon icon="fa-solid fa-right-to-bracket"></v-icon>
+                                            Login
                                         </v-btn>
-
-                                    </span>
-                                    <span>Login</span>
                                 </v-list-item-title>
                             </v-list-item>
 
@@ -179,22 +176,20 @@
                             <v-list-item v-else @click="logout()">
 
                                 <v-list-item-title link>
-                                    <span>
-                                        <v-icon icon="fas fa-right-from-bracket"></v-icon>
-                                    </span>
-
-                                    <span>Logout</span>
+                                        <v-btn class="me-2" size="x-small" variant="flat">
+                                            <v-icon icon="fas fa-right-from-bracket"></v-icon>
+                                            Logout
+                                        </v-btn>
                                 </v-list-item-title>
                             </v-list-item>
 
                             <v-list-item @click="openAddressDialog()">
 
                                 <v-list-item-title link>
-                                    <span>
+                                    <v-btn class="me-2" size="x-small" variant="flat">
                                         <v-icon icon="far fa-user"></v-icon>
-                                    </span>
-
-                                    <span>Profile</span>
+                                        Profile
+                                    </v-btn>
                                 </v-list-item-title>
                             </v-list-item>
 

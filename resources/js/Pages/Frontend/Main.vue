@@ -1,40 +1,29 @@
 <template>
- 
-  <div>
-    <v-row no-gutters>
-      <v-col class="d-flex justify-center flex-column" cols="auto">
-       
-        <AppBar class="app-bar" />
-      </v-col>
-    </v-row>
-  </div>
-
   <v-container>
     <v-row fluid>
       <v-col class="d-flex justify-center flex-column" cols="auto">
-        <v-sheet> 
-          <v-row>
-            <v-col class="d-flex justify-center flex-column">
-                <DiscountWindow 
-                  v-model="discountWindow"
-                  v-if="Object.keys(discounts).length >= 1"
-                  :discounts="discounts"
-                  :customer="this.customer"
-                />
-            </v-col>
-          </v-row>
-          
-          <v-row fluid>
-            <h4 align="start">Higlights</h4>
+        <AppBar class="app-bar" />
+      </v-col>
+    </v-row>
+    <v-row no-gutters>
+      <v-col class="d-flex justify-center flex-column" cols="auto">
+        <v-sheet>
+          <DiscountWindow 
+            v-model="discountWindow"
+            v-if="Object.keys(discounts).length >= 1"
+            :discounts="discounts"
+            :customer="this.customer" />
+
+
+          <v-row no-gutters>
+            <h4>Highlights</h4>
             <v-divider></v-divider>
             <v-spacer></v-spacer>
-
             <v-col class="d-flex justify-center flex-column" cols="auto" v-for="(product, index) in products"
               :key="index">
-              <v-sheet v-if="index < 6 && product.highlight">
-
+              <v-sheet v-if="index < 12 && product.highlight">
                 <v-hover v-slot="{ isHovering, props }">
-                  <v-card class="mx-auto" :max-height="300" elevation="0" v-bind="props">
+                  <v-card class="mx-auto" :max-height="200" elevation="0" v-bind="props">
                     <div class="float-right">
                       <v-btn-group>
                         <v-btn icon size="x-small">
@@ -50,19 +39,15 @@
 
                     <v-carousel :cycle="timeToCarousel" :show-arrows="false" hide-delimiters inline>
                       <v-carousel-item v-for="image in JSON.parse(product.images)" :key="image.id"
-                        :src="`./storage/products/${image}`" class="align-end"  inline 
-                        height="210" :width="122" aspect-ratio="16/9" cover>
-                        <v-chip class="bg-green-darken-4 float-right ga-2 pa-2" variant="tonal">
+                        :src="`./storage/products/${image}`" class="align-end" inline height="100" :width="120"
+                        aspect-ratio="1/1" cover>
+                        <v-chip class="bg-pink-darken-1 float-right ga-2 pa-2" variant="tonal">
                           <p>
                             R$: {{ (product.price - (product.price * product.discount_percentage)).toFixed(2) }}
                           </p>
                         </v-chip>
-
-                        <!-- <p class="text-white">{{ product.description }}</p>-->
                       </v-carousel-item>
-
                     </v-carousel>
-
                     <v-expand-transition>
                       <div v-if="isHovering"
                         class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
@@ -91,9 +76,8 @@
               <Banner></Banner>
             </v-col>
           </v-row>
-          <v-row no-gutters justify="center">
-            <h4 align="left">All Products</h4>
-            <v-spacer></v-spacer>
+          <v-row justify="center">
+            <h4>All Products</h4>
             <v-spacer></v-spacer>
             <v-divider></v-divider>
             <v-col class="d-flex justify-center flex-column" cols="6" md="3" sm="2" v-for="product in products"
@@ -101,22 +85,28 @@
               <v-sheet class="py-2 px-2">
                 <v-hover v-slot="{ isHovering, props }">
                   <v-card class="mx-auto elevation-0" v-bind="props">
-                    <div class="float-right">
-                    <v-btn-group class="float-right">
-                      <v-btn icon size="x-small">
-                        <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
-                          class="bg-transparent" @click="like()"></v-icon>
-                        <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else @click="like()"></v-icon>
-                      </v-btn>
-                      <v-btn icon size="x-small">
-                        <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
+                    <v-card-title>
+                      <v-toolbar class="bg-transparent">
+                        <template v-slot:append>
+                          <v-btn-group class="float-right">
+                        <v-btn icon size="x-small">
+                          <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
+                            class="bg-transparent" @click="like()"></v-icon>
+                          <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else @click="like()"></v-icon>
+                        </v-btn>
+                        <v-btn icon size="x-small">
+                          <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
 
-                      </v-btn>
-                    </v-btn-group>
-                  </div>
+                        </v-btn>
+                      </v-btn-group>
+                        </template> 
+                      </v-toolbar>
+                    </v-card-title>
+                  
                     <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
-                      <v-img v-if="index === 0" :vid-id="image" class="align-end text-white"  aspect-ratio="16/9" :src="`./storage/products/${image}`"
-                        :lazy-src="`./storage/products/${image}`" height="210" :width="155" cover >
+                      <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" aspect-ratio="1/1"
+                        :src="`./storage/products/${image}`" :lazy-src="`./storage/products/${image}`" :height="300"
+                        :width="300" cover>
 
                         <div v-if="discount_id" class="d-flex justify-end text-center">
                           <v-chip class="ma-2" label color="orange-darken-4" variant="elevated">
@@ -137,16 +127,20 @@
 
 
                     <v-card-text>
-                      <v-row>
+                      <v-row fluid>
                         <v-col cols="auto">
                           <p class="text-h5">{{ product.name }}</p>
+                          
+                        </v-col>
+                     </v-row>
+                     <v-row fluid>
+                        <v-col cols="auto">
                           <p>{{ product.description }}</p>
                         </v-col>
-
-                      </v-row>
-                      <v-row>
+                     </v-row>
+                      <v-row no-gutters>
                         <v-btn-group>
-                          <v-btn class="ms-2" size="x-small" variant="outlined" color="orange" v-if="product.slug">
+                          <v-btn class="me-2" size="x-small" variant="outlined" color="orange" v-if="product.slug">
                             {{ product.slug }}
                           </v-btn>
                           <v-btn v-if="product.discount_id" class="ms-2" size="x-small" variant="outlined" color="green">
@@ -155,8 +149,8 @@
                         </v-btn-group>
                       </v-row>
 
-                      <v-row>
-                        <v-col align="start" cols="auto" md="4" sm="4">
+                      <v-row no-gutters>
+                        <v-col cols="auto" md="6" sm="4">
                           <div v-if="!product.discount_id">
                             <p>
                               <strong>R$:</strong>
@@ -174,7 +168,7 @@
                             </div>
                           </div>
                         </v-col>
-                        <v-col col="auto" sm="3">
+                        <v-col col="auto" md="6" sm="6">
                           <p color="red" v-if="product.stock_quantity >= 1">
                             <strong>Qtd:</strong> {{ product.stock_quantity }}
                           </p>
@@ -182,9 +176,9 @@
                             <strong> Fora de Estoque </strong>
                           </p>
                         </v-col>
-                        <v-col col="auto" sm="4" align="end">
+                      <!--  <v-col col="auto" md="5" sm="4">
                           <strong>Solds:</strong> 100
-                        </v-col>
+                        </v-col> -->
                       </v-row>
 
                     </v-card-text>
@@ -199,8 +193,8 @@
                                     </v-btn>
                                     -->
                           <v-btn @click="buy(product)" block>
-                            <v-icon icon="fas fa-money-bill-transfer"></v-icon>
-                            <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
+                            <v-icon icon="fas fa-eye"></v-icon>
+                            <v-tooltip activator="parent" location="end">preview</v-tooltip>
                           </v-btn>
                         </v-card-actions>
                       </div>
@@ -209,19 +203,20 @@
                 </v-hover>
               </v-sheet>
             </v-col>
-            <v-infinite-scroll ref="infinite" :height="720" :width="1800" @load="load" hide-scroll>
+            
+            <v-infinite-scroll ref="infinite" :height="200" :width="1800" @load="load" hide-scroll>
               <template v-slot:empty>
-                <v-alert type="error">No more items to load</v-alert>
+                <v-alert class="bg-transparent">No more items to load</v-alert>
               </template>
             </v-infinite-scroll>
           </v-row>
-       </v-sheet>
+        </v-sheet>
       </v-col>
     </v-row>
 
     <div class="text-center">
       <ProductDialog v-if="buyDialog" v-model="buyDialog" :selectProduct="selectProduct" :buyDialog="buyDialog"
-            :customer="this.customer" :likes="likes" @close-dialog="buyDialog = false" @update:buyDialog="updateBuyDialog" />
+        :customer="this.customer" :likes="likes" @close-dialog="buyDialog = false" @update:buyDialog="updateBuyDialog" />
 
       <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
@@ -240,16 +235,17 @@
     <div class="justify-center" align-center>
       <WelcomeDiscount v-model="discountDialog"
         v-if="discountDialog && this.welcomeDiscount.is_displayed && !this.welcomeDiscount.is_used"
-        :coupon="this.welcomeDiscount" @close-welcome-dialog="this.discountDialog = false" />
+        :coupon="this.welcomeDiscount" @close-welcome-dialog="this.discountDialog = false" 
+      />
     </div>
     <div>
-      <v-row fluid>
-        <v-col class="d-flex justify-center flex-column" cols="auto">
+      <v-row no-gutters>
+        <v-col class="d-flex justify-center flex-column" cols="12">
           <FooterBar />
         </v-col>
       </v-row>
     </div>
-    
+
   </v-container>
 </template>
 
@@ -283,7 +279,7 @@ export default {
     discountDialog: false,
     address: [],
     addressDialog: false,
-    timeToCarousel: 3000,
+    timeToCarousel: 5000,
     productIndex: -1,
     selectProduct: {},
     buyDialog: false,
@@ -455,7 +451,7 @@ export default {
 }
 
 .main {
-  z-index: 8;
+  z-index: 1;
 }
 
 .v-card-menu--reveal {
