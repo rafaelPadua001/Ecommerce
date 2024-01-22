@@ -12,7 +12,8 @@
             v-model="discountWindow"
             v-if="Object.keys(discounts).length >= 1"
             :discounts="discounts"
-            :customer="this.customer" />
+            :customer="this.customer"
+          />
 
 
           <v-row no-gutters>
@@ -85,10 +86,10 @@
               <v-sheet class="py-2 px-2">
                 <v-hover v-slot="{ isHovering, props }">
                   <v-card class="mx-auto elevation-0" v-bind="props">
-                    <v-card-title>
+                    
                       <v-toolbar class="bg-transparent">
                         <template v-slot:append>
-                          <v-btn-group class="float-right">
+                          <v-btn-group class="float-end">
                         <v-btn icon size="x-small">
                           <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
                             class="bg-transparent" @click="like()"></v-icon>
@@ -101,14 +102,14 @@
                       </v-btn-group>
                         </template> 
                       </v-toolbar>
-                    </v-card-title>
+             
                   
                     <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
-                      <v-img v-if="index === 0" :vid-id="image" class="align-end text-white" aspect-ratio="1/1"
+                      <v-img v-if="index === 0" :vid-id="image" aspect-ratio="1/1"
                         :src="`./storage/products/${image}`" :lazy-src="`./storage/products/${image}`" :height="300"
                         :width="300" cover>
 
-                        <div v-if="discount_id" class="d-flex justify-end text-center">
+                        <div v-if="product.discount_id" class="d-flex justify-end text-center">
                           <v-chip class="ma-2" label color="orange-darken-4" variant="elevated">
                             - {{ product.discount_percentage * 100 }}%
                           </v-chip>
@@ -143,7 +144,7 @@
                           <v-btn class="me-2" size="x-small" variant="outlined" color="orange" v-if="product.slug">
                             {{ product.slug }}
                           </v-btn>
-                          <v-btn v-if="product.discount_id" class="ms-2" size="x-small" variant="outlined" color="green">
+                          <v-btn v-if="product.discount_id" class="me-2" size="x-small" variant="outlined" color="green">
                             {{ product.discount_percentage * 100 }}% off
                           </v-btn>
                         </v-btn-group>
@@ -186,12 +187,6 @@
                       <div v-if="isHovering"
                         class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
                         <v-card-actions>
-                          <!--<v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
-                                      size="small" elevation="8" @click="addItem(selectProduct)">
-                                      <v-icon icon="fas fa-cart-plus"></v-icon>
-                                      <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
-                                    </v-btn>
-                                    -->
                           <v-btn @click="buy(product)" block>
                             <v-icon icon="fas fa-eye"></v-icon>
                             <v-tooltip activator="parent" location="end">preview</v-tooltip>
