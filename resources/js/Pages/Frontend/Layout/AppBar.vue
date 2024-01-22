@@ -200,7 +200,7 @@
             </v-card>
 
             <div>
-                <AddressForm v-model="addressDialog" v-if="addressDialog" :customer="this.customers"
+                <AddressForm v-model="addressDialog" v-if="addressDialog" :customer="this.customers" 
                     @close-dialog="closeAddressDialog" />
             </div>
         </v-col>
