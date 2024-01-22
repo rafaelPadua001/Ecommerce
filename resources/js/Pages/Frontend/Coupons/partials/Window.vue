@@ -3,7 +3,7 @@
         <v-col class="d-flex justify-center flex-column">
             <v-layout style="height: 100px;">
                 <v-system-bar color="transparent">
-                    <v-carousel height="120" :show-arrows="false" hide-delimiters cycle>
+                    <v-carousel :height="135" :show-arrows="false" hide-delimiters cycle>
                         <v-carousel-item v-for="discount in discounts" :key="discount.id" cover>
                             <v-card v-if="discount.is_used == 0 && discount.is_displayed == 1" theme="dark"
                                 :image="`./storage/Coupons/${JSON.parse(discount.images)}`" elevation="0">
