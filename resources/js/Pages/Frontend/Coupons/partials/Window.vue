@@ -1,9 +1,9 @@
 <template>
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column">
-            <v-layout style="height: 100px;">
-                <v-system-bar color="transparent">
-                    <v-carousel :height="135" :show-arrows="false" hide-delimiters cycle>
+            <v-layout style="height: 150px; top: 0;">
+                <v-system-bar color="transparent" :height="180">
+                    <v-carousel :height="200" :show-arrows="false" hide-delimiters cycle>
                         <v-carousel-item v-for="discount in discounts" :key="discount.id" cover>
                             <v-card v-if="discount.is_used == 0 && discount.is_displayed == 1" theme="dark"
                                 :image="`./storage/Coupons/${JSON.parse(discount.images)}`" elevation="0">
