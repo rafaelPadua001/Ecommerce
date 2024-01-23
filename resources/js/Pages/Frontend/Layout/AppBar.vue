@@ -13,9 +13,8 @@
                         <v-app-bar-title>
                             <v-img v-if="store.app_logo" 
                                 :src="`./storage/app_icon/${JSON.parse(store.app_logo)}`"
-                                :width="50"
-                                :height="50"
-                                aspect-ratio="16/9"
+                                :width="70"
+                                :height="70"
                             >
                             </v-img>
                             <v-btn v-else class="text" href="/">{{ store.app_name ?? 'ProjectName'}}</v-btn>

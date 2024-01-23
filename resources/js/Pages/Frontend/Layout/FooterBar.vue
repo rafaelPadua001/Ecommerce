@@ -5,40 +5,35 @@
                 {{ link }}
             </v-btn>
         </div>
-        <div class="pt-0">
-            <v-img
-                :src="`./storage/app_icon/${JSON.parse(store.app_logo)}`"
-                :lazy-src="`./storage/app_icon/${JSON.parse(store.app_logo)}`"
-                width="70"
-                height="70"
-                
-            ></v-img>
-            
+        <div>
+            <v-btn v-for="icon in icons" :key="icon" class="mx-4" :icon="icon" variant="text"></v-btn>
         </div>
         <div>
-            Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet.
-            Mauris cursus commodo interdum. Praesent ut risus eget metus luctus accumsan id ultrices nunc.
-            Sed at orci sed massa consectetur dignissim a sit amet dui. Duis commodo vitae velit et faucibus.
-            Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus iaculis dui sollicitudin.
-            Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+            <v-row no-gutters>
+                <v-col>
+                    Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet.
+                    Mauris cursus commodo interdum. Praesent ut risus eget metus luctus accumsan id ultrices nunc.
+                    Sed at orci sed massa consectetur dignissim a sit amet dui. Duis commodo vitae velit et faucibus.
+                    Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus iaculis dui
+                    sollicitudin.
+                    Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci varius natoque penatibus et magnis dis
+                    parturient montes, nascetur ridiculus mus.
+                </v-col>
+            </v-row>
         </div>
-        
-        
-
+       
+        <v-divider></v-divider>
         <div>
-            {{ new Date().getFullYear() }} - {{store.app_name}}
-            
+            {{ new Date().getFullYear() }} - <strong>{{ store.app_name }}</strong>
         </div>
-
-      
- 
-    </v-footer>
+  </v-footer>
 </template>
 
 <script>
 export default {
     data: () => ({
-       store: [],
+        store: [],
+
         links: [
             'Home',
             'About us',
@@ -48,20 +43,26 @@ export default {
             'Contact Us',
 
         ],
+        icons: [
+            'fa-brands fa-facebook-f',
+            'fa-brands fa-twitter',
+            //'mdi-linkedin',
+            'fa-brands fa-instagram',
+        ],
     }),
     methods: {
-        getStore(){
+        getStore() {
             axios.get('/store')
-            .then((response) => {
-                this.store.app_logo = JSON.parse(response.data.app_logo);
-                this.store = response.data
-            })
-            .catch((response) => {
-                return alert('Error: ' + response);
-            })
+                .then((response) => {
+                    this.store.app_logo = JSON.parse(response.data.app_logo);
+                    this.store = response.data
+                })
+                .catch((response) => {
+                    return alert('Error: ' + response);
+                })
         },
     },
-    created(){
+    created() {
         this.getStore();
     }
 }
