@@ -94,13 +94,10 @@
                                                     <v-col>
                                                         <v-file-input v-model="appIcon" label="Logo image" accept="image/*"
                                                             v-bind:change="handleFile()"></v-file-input>
-
-
                                                     </v-col>
                                                     <v-col>
                                                         <v-text-field v-model="editItem.app_phone" label="Phone App"
                                                             v-maska:[phoneOptions] :rules="phoneRules">
-
                                                         </v-text-field>
 
                                                     </v-col>
@@ -145,6 +142,9 @@
                                 </v-row>
                             </v-container>
                         </v-window-item>
+                        <v-window-item value="tab-2">
+                           <FormStyle :store="this.store" />
+                        </v-window-item>
                     </v-window>
                 </v-sheet>
             </v-col>
@@ -166,11 +166,13 @@ const phoneMask = ref('');
 
 <script>
 import Dashboard from '../Auth/Dashboard.vue';
+import FormStyle from './partials/formStyle.vue';
 import DeleteDialog from './partials/delete.vue';
 import axios from "axios";
 export default {
     components: {
         Dashboard,
+        FormStyle,
         DeleteDialog
     },
     data: () => ({
