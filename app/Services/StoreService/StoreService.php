@@ -9,20 +9,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Services\AppBarService\AppBarService;
 use App\Services\CardService\CardService;
+use App\Services\BannerService\BannerService;
 class StoreService
 {
     protected $store;
     protected $appBarService;
     protected $cardService;
+    protected $bannerService;
     public function __construct(
         Store $store,
         AppBarService $appBarService,
-        CardService $cardService
+        CardService $cardService,
+        BannerService $bannerService,
     )
     {
         $this->store = $store;
         $this->appBarService = $appBarService;    
         $this->cardService = $cardService;
+        $this->bannerService = $bannerService;
     }
     public function getStore()
     {
@@ -79,13 +83,12 @@ class StoreService
             $getStore = $this->getStore();
             $appBar = $this->createAppBar($request->appBarColor, $getStore->id);
             $card = $this->createCard($request->chipColor, $getStore->id);
-            dd($card);
             $banner1 = $request->banner1[1];
-            
-           
-            
             $uploadBannerImage = $this->uploadImgBanner($banner1);
+            $banner = $this->createBanner($uploadBannerImage, $getStore->id);
+            
 
+            /*continuar daqui do carrousel */
             $carrousel = [
                 'banner2' => $request->banner2[1],
                 'banner3' => $request->banner3[1],
@@ -110,6 +113,11 @@ class StoreService
     }
     public function createCard($color, $id){
         $create = $this->cardService->store($color, $id);
+        return response()->json($create);
+    }
+    public function createBanner($image, $id){
+        $create = $this->bannerService->store($image, $id);
+        dd($create);
         return response()->json($create);
     }
     public function uploadImgBanner($file)
