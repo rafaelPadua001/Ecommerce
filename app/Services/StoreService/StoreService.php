@@ -8,17 +8,21 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Services\AppBarService\AppBarService;
+use App\Services\CardService\CardService;
 class StoreService
 {
     protected $store;
     protected $appBarService;
+    protected $cardService;
     public function __construct(
         Store $store,
-        AppBarService $appBarService
+        AppBarService $appBarService,
+        CardService $cardService
     )
     {
         $this->store = $store;
         $this->appBarService = $appBarService;    
+        $this->cardService = $cardService;
     }
     public function getStore()
     {
@@ -74,8 +78,8 @@ class StoreService
        try {
             $getStore = $this->getStore();
             $appBar = $this->createAppBar($request->appBarColor, $getStore->id);
-            
-            dd($appBar);
+            $card = $this->createCard($request->chipColor, $getStore->id);
+            dd($card);
             $banner1 = $request->banner1[1];
             
            
@@ -103,6 +107,10 @@ class StoreService
         catch(Exception $e){
             return response()->json($e);
         }
+    }
+    public function createCard($color, $id){
+        $create = $this->cardService->store($color, $id);
+        return response()->json($create);
     }
     public function uploadImgBanner($file)
     {
