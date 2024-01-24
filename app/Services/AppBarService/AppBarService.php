@@ -13,7 +13,7 @@ class AppBarService{
     public function store($request, $id){
         try{
             $user = Auth::user();
-            $store = $this->appBar->create([
+            $store = $this->appBar->updateOrCreate([
                 'user_id' => $user->id,
                 'store_id' => $id,
                 'colors' => json_encode($request),
