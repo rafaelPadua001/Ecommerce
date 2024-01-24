@@ -89,84 +89,13 @@
 
                                         </v-img>
                                     </div>
-
-
-                                    <!-- <v-card-text>
-            <v-row fluid>
-                <v-col cols="auto">
-                    <p class="text-h5">{{ product.name }}</p>
-
-                </v-col>
-            </v-row>
-            <v-row fluid>
-                <v-col cols="auto">
-                    <p>{{ product.description }}</p>
-                </v-col>
-            </v-row>
-            <v-row no-gutters>
-                <v-btn-group>
-                    <v-btn class="me-2" size="x-small" variant="outlined" color="orange"
-                        v-if="product.slug">
-                        {{ product.slug }}
-                    </v-btn>
-                    <v-btn v-if="product.discount_id" class="me-2" size="x-small"
-                        variant="outlined" color="green">
-                        {{ product.discount_percentage * 100 }}% off
-                    </v-btn>
-                </v-btn-group>
-            </v-row>
-
-            <v-row no-gutters>
-                <v-col cols="auto" md="6" sm="4">
-                    <div v-if="!product.discount_id">
-                        <p>
-                            <strong>R$:</strong>
-                            {{ product.price }}
-                        </p>
-                    </div>
-                    <div v-else>
-                        <div>
-                            <div>
-                                <p>
-                                    <strong>R$:</strong>
-                                    {{ (product.price - (product.price *
-                                        product.discount_percentage)).toFixed(2) }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </v-col>
-                <v-col col="auto" md="6" sm="6">
-                    <p color="red" v-if="product.stock_quantity >= 1">
-                        <strong>Qtd:</strong> {{ product.stock_quantity }}
-                    </p>
-                    <p color="red" v-if="product.stock_quantity === 0">
-                        <strong> Fora de Estoque </strong>
-                    </p>
-                </v-col>
-               <v-col col="auto" md="5" sm="4">
-<strong>Solds:</strong> 100
-</v-col>
-            </v-row>
-
-        </v-card-text>
-        <v-expand-transition>
-            <div v-if="isHovering"
-                class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
-                <v-card-actions>
-                    <v-btn @click="buy(product)" block>
-                        <v-icon icon="fas fa-eye"></v-icon>
-                        <v-tooltip activator="parent" location="end">preview</v-tooltip>
-                    </v-btn>
-                </v-card-actions>
-            </div>
-        </v-expand-transition>-->
                                 </v-card>
                             </v-col>
                         </v-row>
-
                     </v-card-text>
+
                     <v-divider></v-divider>
+
                     <v-card-text>
                         <v-row>
                             <v-col cols="auto">
@@ -177,32 +106,76 @@
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-file-input v-model="banner1" label="Main Banner"
-                                    @change="previewBanner1"
-                                >
+                                <v-file-input v-model="banner1" label="Main Banner" @change="previewBanner1">
                                 </v-file-input>
                             </v-col>
-                            <v-col>
-                                {{ banner1 }}
+                            <v-col v-for="banner in banner1" :key="banner.id" cols="2">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+
+                                </v-img>
+                            </v-col>
+                        </v-row>
+
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="auto">
+                                <h4>Carrousel:</h4>
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-file-input v-model="banner2" label="Banner 1"></v-file-input>
+                                <v-file-input v-model="banner2" label="Banner 2" @change="previewBanner2"></v-file-input>
                             </v-col>
-                            <v-col>
-                                {{ banner2 }}
+                            <v-col v-for="banner in banner2" :key="banner.id" cols="2">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+
+                                </v-img>
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-file-input v-model="banner3" label="Banner 2"></v-file-input>
+                                <v-file-input v-model="banner3" label="Banner 2" @change="previewBanner3"></v-file-input>
                             </v-col>
-                            <v-col>
-                                {{ banner3 }}
+                            <v-col v-for="banner in banner3" :key="banner.id" cols="2">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+
+                                </v-img>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-file-input v-model="banner4" label="Banner 2" @change="previewBanner4"></v-file-input>
+                            </v-col>
+                            <v-col v-for="banner in banner4" :key="banner.id" cols="2">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+
+                                </v-img>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-file-input v-model="banner5" label="Banner 2" @change="previewBanner5"></v-file-input>
+                            </v-col>
+                            <v-col v-for="banner in banner5" :key="banner.id" cols="2">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+
+                                </v-img>
                             </v-col>
                         </v-row>
                     </v-card-text>
+
+                    <v-card-actions>
+                        <v-btn-group>
+                            <v-btn class="me-2" variant="text" size="lg" color="primary" @click="save">
+                                Save
+                            </v-btn>
+                            <v-btn class="me-2" variant="text" size="lg" color="error">
+                                Cancel
+                            </v-btn>
+                        </v-btn-group>
+                    </v-card-actions>
                 </v-card>
             </v-sheet>
         </v-col>
@@ -220,17 +193,32 @@ export default {
         banner1: [],
         banner2: [],
         banner3: [],
+        banner4: [],
+        banner5: [],
+        style: [],
     }),
     watch: {
         previewBanner1(newUrl, oldUrl) {
-            console.log(`Banner1 foi alterado: ${oldUrl} para ${newUrl}`);
+
+            return true;
+        },
+        previewBanner2(newUrl, oldUrl) {
+            return true;
+        },
+        previewBanner3(newUrl, oldUrl) {
+            return true;
+        },
+        previewBanner4(newUrl, oldUrl) {
+            return true;
+        },
+        previewBanner5(newUrl, oldUrl) {
             return true;
         }
     },
     methods: {
         selectColor(item) {
             this.selectedColor = item;
-            return selectedColor;
+            return this.selectedColor;
         },
         chipColor(item) {
             this.selectedChipColor = item;
@@ -241,24 +229,114 @@ export default {
         },
         previewBanner1(event) {
             const files = event.target.files;
-           console.log(files);
             if (files) {
                 for (let i = 0; i < files.length; i++) {
-          const reader = new FileReader();
-          const file = files[i];
+                    const reader = new FileReader();
+                    const file = files[i];
 
-          reader.onload = (e) => {
-            this.banner1.push({
-              src: e.target.result,
-              name: file.name,
-            });
-          };
-         reader.readAsDataURL(file);
-        }
-               
+                    reader.onload = (e) => {
+                        this.banner1.push({
+                            src: e.target.result,
+                            name: file.name,
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+
             }
+        },
+        previewBanner2(event) {
+            const files = event.target.files;
+            if (files) {
+                for (let i = 0; i < files.length; i++) {
+                    const reader = new FileReader();
+                    const file = files[i];
 
+                    reader.onload = (e) => {
+                        this.banner2.push({
+                            src: e.target.result,
+                            name: file.name,
+                        });
+                    };
 
+                    reader.readAsDataURL(file);
+                }
+            }
+        },
+        previewBanner3(event) {
+            const files = event.target.files;
+            if (files) {
+                for (let i = 0; i < files.length; i++) {
+                    const reader = new FileReader();
+                    const file = files[i];
+
+                    reader.onload = (e) => {
+                        this.banner3.push({
+                            src: e.target.result,
+                            name: file.name,
+                        });
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        },
+        previewBanner4(event) {
+            const files = event.target.files;
+            if (files) {
+                for (let i = 0; i < files.length; i++) {
+                    const reader = new FileReader();
+                    const file = files[i];
+
+                    reader.onload = (e) => {
+                        this.banner4.push({
+                            src: e.target.result,
+                            name: file.name,
+                        });
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        },
+        previewBanner5(event) {
+            const files = event.target.files;
+            if (files) {
+                for (let i = 0; i < files.length; i++) {
+                    const reader = new FileReader();
+                    const file = files[i];
+
+                    reader.onload = (e) => {
+                        this.banner5.push({
+                            src: e.target.result,
+                            name: file.name,
+                        });
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        },
+        save() {
+            const data = {
+                appBarColor: this.selectedColor,
+                chipColor: this.selectedChipColor,
+                banner1: this.banner1,
+                banner2: this.banner2,
+                banner3: this.banner3,
+                banner4: this.banner4,
+                banner5: this.banner5,
+            };
+            axios.post(`/store/style/create`, data)
+                .then((response) => {
+                    this.style.push(response.data);
+                    console.log(response.data);
+                    return console.log(this.style);
+                })
+                .catch((response) => {
+                    return alert('Error: ' + response);
+                });
+            console.log(data);
         }
     }
 }

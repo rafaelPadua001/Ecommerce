@@ -187,6 +187,7 @@ Route::delete('/couponsCustomer/delete/{id}', [CouponCustomerController::class, 
 Route::get('/store', [StoreController::class, 'index'])->name('store.index');
 Route::post('/store/create', [StoreController::class, 'create'])->name('store.create')->middleware('auth');
 Route::post('/store/update/{id}', [StoreController::class, 'update'])->name('store.update')->middleware('auth');
+Route::post('/store/style/create', [StoreController::class, 'styleCreate'])->name('store.style.create')->middleware('auth');
 Route::delete('/store/delete/{id}', [StoreController::class, 'delete'])->name('store.delete')->middleware('auth');
 
 
