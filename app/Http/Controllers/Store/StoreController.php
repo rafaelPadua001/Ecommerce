@@ -45,8 +45,8 @@ class StoreController extends Controller
     }
     public function styleCreate(Request $request){
         try{
+            
             $style = $this->storeService->styleStore($request);
-           
             return response()->json($style);
         }
         catch(Exception $e){
