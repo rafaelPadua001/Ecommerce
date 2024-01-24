@@ -7,14 +7,18 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use App\Services\AppBarService\AppBarService;
 class StoreService
 {
     protected $store;
-
-    public function __construct(Store $store)
+    protected $appBarService;
+    public function __construct(
+        Store $store,
+        AppBarService $appBarService
+    )
     {
         $this->store = $store;
+        $this->appBarService = $appBarService;    
     }
     public function getStore()
     {
@@ -24,7 +28,6 @@ class StoreService
     public function store(Request $request)
     {
         try {
-
             $file = $request->file('app_logo');
             $upload_image = $this->uploadImg($file);
             $user = Auth::user();
@@ -43,6 +46,7 @@ class StoreService
             return $e;
         }
     }
+   
     public function uploadImg($file)
     {
 
@@ -67,10 +71,15 @@ class StoreService
     }
     public function styleStore($request)
     {
-
-        try {
+       try {
+            $getStore = $this->getStore();
+            $appBar = $this->createAppBar($request->appBarColor, $getStore->id);
+            
+            dd($appBar);
             $banner1 = $request->banner1[1];
-
+            
+           
+            
             $uploadBannerImage = $this->uploadImgBanner($banner1);
 
             $carrousel = [
@@ -84,6 +93,15 @@ class StoreService
             return response()->json($upload_carrousel);
         } catch (Exception $e) {
             return $e;
+        }
+    } 
+    public function createAppBar($color, $id){
+        try{
+            $create = $this->appBarService->store($color, $id);
+            return response()->json($create);
+        }
+        catch(Exception $e){
+            return response()->json($e);
         }
     }
     public function uploadImgBanner($file)

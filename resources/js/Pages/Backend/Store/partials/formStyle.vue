@@ -330,7 +330,6 @@ export default {
             axios.post(`/store/style/create`, data)
                 .then((response) => {
                     this.style.push(response.data);
-                    console.log(response.data);
                     return console.log(this.style);
                 })
                 .catch((response) => {
