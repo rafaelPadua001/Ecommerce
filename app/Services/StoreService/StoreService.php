@@ -10,23 +10,28 @@ use Illuminate\Support\Facades\Storage;
 use App\Services\AppBarService\AppBarService;
 use App\Services\CardService\CardService;
 use App\Services\BannerService\BannerService;
+use App\Services\CarrouselService\CarrouselService;
+
 class StoreService
 {
     protected $store;
     protected $appBarService;
     protected $cardService;
     protected $bannerService;
+    protected $carrouselService;
     public function __construct(
         Store $store,
         AppBarService $appBarService,
         CardService $cardService,
         BannerService $bannerService,
+        CarrouselService $carrouselService,
     )
     {
         $this->store = $store;
         $this->appBarService = $appBarService;    
         $this->cardService = $cardService;
         $this->bannerService = $bannerService;
+        $this->carrouselService = $carrouselService;
     }
     public function getStore()
     {
@@ -71,7 +76,6 @@ class StoreService
         try {
 
             $updateStore = $this->store->findOrFail($id)->update($request->all());
-            //dd($request->all());
             return $request->all();
         } catch (Exception $e) {
             return $e;
@@ -86,8 +90,7 @@ class StoreService
             $banner1 = $request->banner1[1];
             $uploadBannerImage = $this->uploadImgBanner($banner1);
             $banner = $this->createBanner($uploadBannerImage, $getStore->id);
-            
-
+                                    
             /*continuar daqui do carrousel */
             $carrousel = [
                 'banner2' => $request->banner2[1],
@@ -96,8 +99,10 @@ class StoreService
                 'banner5' => $request->banner5[1]
             ];
             $upload_carrousel = $this->uploadImgCarrousel($carrousel);
-            dd($upload_carrousel);
-            return response()->json($upload_carrousel);
+            
+            $createdCarrousel = $this->createCarrousel($carrousel, $getStore->id);
+            
+            return response()->json($request);
         } catch (Exception $e) {
             return $e;
         }
@@ -117,7 +122,10 @@ class StoreService
     }
     public function createBanner($image, $id){
         $create = $this->bannerService->store($image, $id);
-        dd($create);
+        return response()->json($create);
+    }
+    public function createCarrousel($images, $id){
+        $create = $this->carrouselService->store($images, $id);
         return response()->json($create);
     }
     public function uploadImgBanner($file)
@@ -128,17 +136,18 @@ class StoreService
             $path = Storage::putFileAs('/public/Banners/', $img, $fileName);
             return $fileName;
         }
+            
     }
     public function uploadImgCarrousel($carrousel)
     {
-
+        $fileName = [];
         foreach ($carrousel as $img) {
-
+            
             $fileName  = $img['name'];
-
-            $path = Storage::putFileAs('/public/Carrousel/', $img['src'], $fileName);
+            
+           $path = Storage::putFileAs('/public/Carrousel/', $img['src'], $fileName);
         }
-
+        
         return $fileName;
     }
     public function destroy($id)
