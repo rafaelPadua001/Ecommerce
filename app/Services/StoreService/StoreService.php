@@ -102,7 +102,7 @@ class StoreService
             
             $createdCarrousel = $this->createCarrousel($carrousel, $getStore->id);
             
-            return response()->json($request);
+            return $request->toArray();
         } catch (Exception $e) {
             return $e;
         }
