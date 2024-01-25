@@ -5,28 +5,41 @@
                 <v-card class="mx-auto" elevation="2">
                     <v-card-text :elevation="10">
                         <v-row>
-                            <v-col cols="auto">
+                            <v-col cols="6">
                                 <h4>App bar color:</h4>
-
-                            </v-col>
-
+                             </v-col>
+                             <v-col cols="6" v-if="Object.keys(style).length == 0">
+                                <v-sheet >
+                                    <v-card :color="this.selectedColor">
+                                        <template v-slot:prepend>
+                                        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+                                    </template>
+                                        <v-card-text></v-card-text>
+                                    </v-card>
+                                </v-sheet>
+                            
+                             </v-col>
+                             <v-col v-else cols="6" v-for="st in style">
+                                <v-sheet v-if="Object.keys(st).length >= 1">
+                                    {{st.appBarColor}}
+                                    <v-card :color="st.appBarColor">
+                                        <template v-slot:prepend>
+                                        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+                                        App Name
+                                    </template>
+                                        <v-card-text></v-card-text>
+                                    </v-card>
+                                </v-sheet>
+                            
+                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="auto">
-
                                 <v-color-picker v-model="color" class="ma-2" show-swatches swatches-max-height="50px"
                                     @click="selectColor(color)"></v-color-picker>
 
                             </v-col>
-                            <v-col cols="auto">
-                                <v-app-bar :color="this.selectedColor" :elevation="2">
-                                    <template v-slot:prepend>
-                                        <v-app-bar-nav-icon></v-app-bar-nav-icon>
-                                    </template>
-
-                                    <v-app-bar-title>{{ store.app_name }}</v-app-bar-title>
-                                </v-app-bar>
-                            </v-col>
+                            
                         </v-row>
                     </v-card-text>
                     <v-card-text>
@@ -72,14 +85,19 @@
                                             lazy-src="https://cdn.vuetifyjs.com/images/cards/cooking.png" :height="300"
                                             :width="400" cover>
 
-                                            <div class="d-flex justify-end text-center elevation-0">
+                                            <div class="d-flex justify-end text-center elevation-0" v-if="Object.keys(style).length == 0">
                                                 <v-chip class="ma-2" label :color="this.selectedChipColor"
                                                     variant="elevated">
                                                     - 10%
                                                 </v-chip>
+                                               
 
                                             </div>
-
+                                            <div class="d-flex justify-end text-center elevation-0" v-else>
+                                                <v-chip v-for="st in style" :key="st.id" class="ma-2" label :color="st.chipColor" variant="elevated">
+                                                    - 10%
+                                                </v-chip>
+                                            </div>
                                             <template>
                                                 <div class="d-flex align-center justify-center fill-height">
                                                     <v-progress-circular color="grey-lighten-4">
@@ -199,7 +217,6 @@ export default {
     }),
     watch: {
         previewBanner1(newUrl, oldUrl) {
-
             return true;
         },
         previewBanner2(newUrl, oldUrl) {
@@ -330,12 +347,12 @@ export default {
             axios.post(`/store/style/create`, data)
                 .then((response) => {
                     this.style.push(response.data);
-                    return console.log(this.style);
+                    return console.log('Response' + response);
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);
                 });
-            console.log(data);
+            
         }
     }
 }
