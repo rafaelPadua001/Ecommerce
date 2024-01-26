@@ -110,7 +110,19 @@ class StoreService
         } catch (Exception $e) {
             return $e;
         }
-    } 
+    }
+    public function updateStyleStore($request, $storeId){
+        try{
+            $updateAppBar = $this->appBarService->update($request, $storeId);
+            $updateCard = $this->cardService->update($request, $storeId);
+            dd($updateCard);
+            return response()->json($updateAppBar);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+        dd($request);
+    }
     public function createAppBar($color, $id){
         try{
             $create = $this->appBarService->store($color, $id);

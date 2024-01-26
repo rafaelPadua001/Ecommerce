@@ -28,13 +28,27 @@ class AppBarService{
     public function store($request, $id){
         try{
             $user = Auth::user();
-            $store = $this->appBar->updateOrCreate([
+            $store = $this->appBar->where('store_id', '=', $id)->updateOrCreate([
                 'user_id' => $user->id,
                 'store_id' => $id,
                 'colors' => json_encode($request),
                 
             ]);
             return $store;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
+    public function update($request, $storeId){
+        try{
+            $user = Auth::user();
+            $storeUpdate = $this->appBar->where('store_id', '=', $storeId)->update([
+                'colors' => json_encode($request->colors),
+                'user_id' => $user->id,
+                'store_id' => $storeId
+            ]);
+            return $storeUpdate;
         }
         catch(Exception $e){
             return $e;

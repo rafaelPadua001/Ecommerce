@@ -189,6 +189,7 @@ Route::post('/store/create', [StoreController::class, 'create'])->name('store.cr
 Route::post('/store/update/{id}', [StoreController::class, 'update'])->name('store.update')->middleware('auth');
 Route::get('/store/style/getStyle/{id}', [StoreController::class, 'getStyle'])->name('store.get.style')->middleware('auth');
 Route::post('/store/style/create', [StoreController::class, 'styleCreate'])->name('store.style.create')->middleware('auth');
+Route::post('/store/style/update/{storeId}', [StoreController::class, 'styleUpdate'])->name('store.style.update')->middleware('auth');
 Route::delete('/store/delete/{id}', [StoreController::class, 'delete'])->name('store.delete')->middleware('auth');
 
 
