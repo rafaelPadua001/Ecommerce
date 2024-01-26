@@ -118,8 +118,20 @@ class StoreService
             $bannerImage = $request->banner1[1]['name'];
             $updateBanner = $this->bannerService->update($request, $storeId);
             $uploadBannerImage = $this->uploadImgBanner($request->banner1[1]);
+                                       
+            /*continuar daqui do carrousel */
+            $carrousel = [
+                'banner2' => $request->banner2[1],
+                'banner3' => $request->banner3[1],
+                'banner4' => $request->banner4[1],
+                'banner5' => $request->banner5[1]
+            ];
+          
+            $updateCarrousel = $this->carrouselService->update($carrousel, $storeId);
             
-            return response()->json($updateAppBar);
+            $uploadImageCarrousel = $this->uploadImgCarrousel($carrousel);
+           
+            return response()->json($request);
         }
         catch(Exception $e){
             return response()->json($e->getMessage(), 500);
