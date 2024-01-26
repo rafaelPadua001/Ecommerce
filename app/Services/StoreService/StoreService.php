@@ -19,6 +19,7 @@ class StoreService
     protected $cardService;
     protected $bannerService;
     protected $carrouselService;
+
     public function __construct(
         Store $store,
         AppBarService $appBarService,
@@ -74,12 +75,15 @@ class StoreService
     public function updateStore($id, $request)
     {
         try {
-
             $updateStore = $this->store->findOrFail($id)->update($request->all());
             return $request->all();
         } catch (Exception $e) {
             return $e;
         }
+    }
+    public function getStyle($id){
+        $style = $this->appBarService->getAppBar($id) ;
+        return $style->toArray();;
     }
     public function styleStore($request)
     {

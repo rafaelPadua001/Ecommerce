@@ -143,7 +143,7 @@
                             </v-container>
                         </v-window-item>
                         <v-window-item value="tab-2">
-                           <FormStyle :store="this.store" />
+                           <FormStyle :store="this.editItem" />
                         </v-window-item>
                     </v-window>
                 </v-sheet>
@@ -231,7 +231,8 @@ export default {
                     return this.store = response.data;
                 })
                 .catch((response) => {
-                    return alert('Error: ' + response);
+                    return false; 
+                    alert('Error: ' + response);
                 });
         },
         handleFile() {

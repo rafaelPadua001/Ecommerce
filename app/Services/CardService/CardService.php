@@ -10,6 +10,15 @@ class CardService{
     public function __construct(Card $card){
         $this->card = $card;
     }
+    public function getCard($id){
+        try{
+            $card = $this->card->where('store_id', '=', $id)->get();
+            return $card;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
     public function store($request, $id){
         try{
             $user = Auth::user();

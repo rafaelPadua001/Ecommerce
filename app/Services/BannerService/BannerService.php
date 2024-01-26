@@ -10,6 +10,15 @@ class BannerService{
     public function __construct(Banner $banner){
         $this->banner = $banner;
     }
+    public function getBanner($id){
+        try{
+            $banner = $this->banner->where('store_id', '=', $id)->get();
+            return $banner;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
     public function store($request, $id){
         try{
             $user = Auth::user();

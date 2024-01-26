@@ -10,6 +10,15 @@ class CarrouselService {
     public function  __construct(Carrousel $carrousel){
         $this->carrousel = $carrousel;
     }
+    public function getCarrousel($id){
+        try{
+            $carrousel = $this->carrousel->where('store_id', '=', $id)->get();
+            return $carrousel;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
     public function store($request, $id){
       
         try{
