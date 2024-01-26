@@ -229,7 +229,7 @@
                             <v-btn class="me-2" variant="text" size="lg" color="primary" @click="save" v-if="Object.keys(style).length == 0">
                                 Save
                             </v-btn>
-                            <v-btn class="me-2" variant="text" size="lg" color="primary"  v-else>
+                            <v-btn class="me-2" variant="text" size="lg" color="primary" @click="update(style)" v-else>
                                 Update
                             </v-btn>
                             <v-btn class="me-2" variant="text" size="lg" color="error">
@@ -244,6 +244,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     props: ['store'],
     data: () => ({
@@ -257,6 +259,8 @@ export default {
         banner4: [],
         banner5: [],
         style: [],
+        editedItem: [],
+        editedIndex: -1,
     }),
     watch: {
         previewBanner1(newUrl, oldUrl) {
@@ -386,25 +390,46 @@ export default {
                 }
             }
         },
+        update(item){
+            this.editedIndex = this.style.indexOf(item[1]);
+            this.editedItem = Object.assign({}, item);
+            this.save();
+        },
         save() {
-            const data = {
-                appBarColor: this.selectedColor,
-                chipColor: this.selectedChipColor,
-                banner1: this.banner1,
-                banner2: this.banner2,
-                banner3: this.banner3,
-                banner4: this.banner4,
-                banner5: this.banner5,
-            };
-            axios.post(`/store/style/create`, data)
+            if(this.editedIndex >= 1){
+                const itemId = this.editedItem[0].store_id;
+                const data = {
+                    colors: this.selectedColor,
+                    chip_color: this.selectedChipColor,
+                    banner1: this.banner1,
+                };
+                axios.post(`/store/style/update/${itemId}`, data)
                 .then((response) => {
-                    this.style.push(response.data);
-                    return console.log('Response' + response);
+                    return Object.assign(this.style[this.editedIndex], response.data);
                 })
                 .catch((response) => {
-                    return alert('Error: ' + response);
-                });
-            
+                    return alert('Error' + response);
+                })
+            }
+            else{
+                const data = {
+                    appBarColor: this.selectedColor,
+                    chipColor: this.selectedChipColor,
+                    banner1: this.banner1,
+                    banner2: this.banner2,
+                    banner3: this.banner3,
+                    banner4: this.banner4,
+                    banner5: this.banner5,
+                };
+                axios.post(`/store/style/create`, data)
+                    .then((response) => {
+                        this.style.push(response.data);
+                        return console.log('Response' + response);
+                    })
+                    .catch((response) => {
+                        return alert('Error: ' + response);
+                    });
+            }
         }
     },
     mounted(){
