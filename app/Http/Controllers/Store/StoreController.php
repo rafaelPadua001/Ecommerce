@@ -43,6 +43,15 @@ class StoreController extends Controller
             return response()->json($e->getMessage(), 500);
         }
     }
+    public function getStyle($id){
+        try{
+            $getStyle = $this->storeService->getStyle($id);
+            return response()->json($getStyle);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage(), 500);
+        }
+    }
     public function styleCreate(Request $request){
         try{
             

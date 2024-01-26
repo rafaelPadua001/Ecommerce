@@ -5,10 +5,18 @@
                 <v-card class="mx-auto" elevation="2">
                     <v-card-text :elevation="10">
                         <v-row>
-                            <v-col cols="6">
+                            <v-col cols="auto">
                                 <h4>App bar color:</h4>
                              </v-col>
-                             <v-col cols="6" v-if="Object.keys(style).length == 0">
+                             
+                        </v-row>
+                        <v-row>
+                            <v-col cols="auto">
+                                <v-color-picker v-model="color" class="ma-2" show-swatches swatches-max-height="50px"
+                                    @click="selectColor(color)"></v-color-picker>
+
+                            </v-col>
+                            <v-col cols="6" v-if="Object.keys(style).length == 0">
                                 <v-sheet >
                                     <v-card :color="this.selectedColor">
                                         <template v-slot:prepend>
@@ -19,26 +27,18 @@
                                 </v-sheet>
                             
                              </v-col>
-                             <v-col v-else cols="6" v-for="st in style">
-                                <v-sheet v-if="Object.keys(st).length >= 1">
-                                    {{st.appBarColor}}
-                                    <v-card :color="st.appBarColor">
+                             <v-col v-else cols="4" v-for="(st, index) in style" :key="index">
+                              <v-sheet v-if="Object.keys(st).length >= 1 && index === 1">
+                                    <v-card :color="JSON.parse(st.colors)">
                                         <template v-slot:prepend>
                                         <v-app-bar-nav-icon></v-app-bar-nav-icon>
-                                        App Name
+                                       {{this.store.name}}
                                     </template>
                                         <v-card-text></v-card-text>
                                     </v-card>
                                 </v-sheet>
                             
                              </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="auto">
-                                <v-color-picker v-model="color" class="ma-2" show-swatches swatches-max-height="50px"
-                                    @click="selectColor(color)"></v-color-picker>
-
-                            </v-col>
                             
                         </v-row>
                     </v-card-text>
@@ -93,8 +93,8 @@
                                                
 
                                             </div>
-                                            <div class="d-flex justify-end text-center elevation-0" v-else>
-                                                <v-chip v-for="st in style" :key="st.id" class="ma-2" label :color="st.chipColor" variant="elevated">
+                                            <div class="d-flex justify-end text-center elevation-0" v-else v-for="(st, index) in style" :key="index">
+                                                <v-chip  v-if="index === 1" class="ma-2" label :color="JSON.parse(st.chip_color)" variant="elevated">
                                                     - 10%
                                                 </v-chip>
                                             </div>
@@ -127,6 +127,17 @@
                                 <v-file-input v-model="banner1" label="Main Banner" @change="previewBanner1">
                                 </v-file-input>
                             </v-col>
+                            <v-col v-if="Object.keys(style).length == 0" v-for="banner in banner1" :key="banner.id" cols="2">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+
+                                </v-img>
+                            </v-col>
+                            <v-col v-else v-for="(st,index) in style" :key="index" cols="2">
+                           
+                                <v-img v-if="index === 0" :src="`./storage/Banners/${JSON.parse(st.banner_image)}`" :lazy-src="`./storage/Banners/${JSON.parse(st.banner_image)}`" cover :width="200">
+
+                                </v-img>
+                            </v-col>
                             <v-col v-for="banner in banner1" :key="banner.id" cols="2">
                                 <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
 
@@ -144,53 +155,85 @@
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-file-input v-model="banner2" label="Banner 2" @change="previewBanner2"></v-file-input>
+                                <v-file-input v-model="banner2" label="Image 1" @change="previewBanner2"></v-file-input>
                             </v-col>
-                            <v-col v-for="banner in banner2" :key="banner.id" cols="2">
+                            <v-col v-if="Object.keys(style).length == 0" v-for="banner in banner2" :key="banner.id" cols="2">
                                 <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
 
                                 </v-img>
+                            </v-col>
+                            <v-col v-else v-for="(st, index) in style" :key="index" >
+                                
+                                <v-img v-if="index == 0" :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
+
+                                </v-img>
+                    
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-file-input v-model="banner3" label="Banner 2" @change="previewBanner3"></v-file-input>
+                                <v-file-input v-model="banner3" label="Image 2" @change="previewBanner3"></v-file-input>
                             </v-col>
-                            <v-col v-for="banner in banner3" :key="banner.id" cols="2">
+                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner3" :key="banner.id" cols="2">
                                 <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
 
                                 </v-img>
+                            </v-col>
+
+                            <v-col v-else v-for="(st, index) in style" :key="index" >
+                                
+                                <v-img v-if="index === 1" :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
+
+                                </v-img>
+                    
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-file-input v-model="banner4" label="Banner 2" @change="previewBanner4"></v-file-input>
+                                <v-file-input v-model="banner4" label="Image 3" @change="previewBanner4"></v-file-input>
                             </v-col>
-                            <v-col v-for="banner in banner4" :key="banner.id" cols="2">
+                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner4" :key="banner.id" cols="2">
                                 <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
 
                                 </v-img>
+                            </v-col>
+                            <v-col v-else v-for="(st, index) in style" :key="index" >
+                                
+                                <v-img v-if="index === 2" :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
+
+                                </v-img>
+                    
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-file-input v-model="banner5" label="Banner 2" @change="previewBanner5"></v-file-input>
+                                <v-file-input v-model="banner5" label="Image 4" @change="previewBanner5"></v-file-input>
                             </v-col>
-                            <v-col v-for="banner in banner5" :key="banner.id" cols="2">
+                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner5" :key="banner.id" cols="2">
                                 <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
 
                                 </v-img>
+                            </v-col>
+                            <v-col v-else v-for="(st,index) in style" :key="index">
+                                
+                                <v-img v-if="index === 3" :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
+
+                                </v-img>
+                    
                             </v-col>
                         </v-row>
                     </v-card-text>
 
                     <v-card-actions>
                         <v-btn-group>
-                            <v-btn class="me-2" variant="text" size="lg" color="primary" @click="save">
+                            <v-btn class="me-2" variant="text" size="lg" color="primary" @click="save" v-if="Object.keys(style).length == 0">
                                 Save
                             </v-btn>
+                            <v-btn class="me-2" variant="text" size="lg" color="primary"  v-else>
+                                Update
+                            </v-btn>
                             <v-btn class="me-2" variant="text" size="lg" color="error">
-                                Cancel
+                                Clear
                             </v-btn>
                         </v-btn-group>
                     </v-card-actions>
@@ -233,6 +276,15 @@ export default {
         }
     },
     methods: {
+        getStyle(){
+            axios.get(`/store/style/getStyle/${this.store.id}`)
+            .then((response) => {
+                return this.style = response.data;
+            })
+            .catch((response) => {
+                return alert('Error: ' + response);
+            })
+        },  
         selectColor(item) {
             this.selectedColor = item;
             return this.selectedColor;
@@ -354,6 +406,9 @@ export default {
                 });
             
         }
+    },
+    mounted(){
+        this.getStyle();
     }
 }
 </script>

@@ -10,6 +10,21 @@ class AppBarService{
     public function __construct(AppBar $appBar){
         $this->appBar = $appBar;
     }
+    public function getAppBar($id){
+        try{
+            $appBar = $this->appBar->where('app_bars.store_id', '=', $id)
+            ->join('banners', 'banners.store_id', '=', 'app_bars.store_id')
+            ->join('cards', 'cards.store_id', '=', 'banners.store_id')
+            ->join('carrousels', 'carrousels.store_id', '=', 'cards.store_id')
+            ->select('app_bars.*', 'banners.image as banner_image', 'cards.chip_color', 'carrousels.images')
+            ->get();
+
+            return $appBar;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
     public function store($request, $id){
         try{
             $user = Auth::user();
