@@ -4,6 +4,7 @@ namespace App\Services\CarrouselService;
 use App\Models\Carrousel;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class CarrouselService {
     protected $carrousel;
@@ -39,5 +40,39 @@ class CarrouselService {
             
             return $e->getMessage();
         }
+    }
+    public function update($request, $storeId){
+        
+        try{
+            $user = Auth::user();
+            $images = $this->carrousel->where('store_id', '=', $storeId)->get();
+            $removeImages = $this->remove($images);
+            
+            foreach ($images as $i => $image) {
+                // Certifique-se de que existe um banner correspondente
+                $nameImage = 'banner' . ($i + 2);
+                if (isset($request[$nameImage]['name'])) {
+                    // Atualize a imagem com o nome do banner correspondente
+                    $update = $this->carrousel->where('id', '=', $image['id'])->update([
+                        'user_id' => $user->id,
+                        'store_id' => $storeId,
+                        'images' => json_encode($request[$nameImage]['name']),
+                    ]);
+                }
+            }
+                
+            return $update;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+
+    }
+    public function remove($images){
+        foreach($images as $img){
+            $removeImages = Storage::delete('/public/Carrousel/'.$img->images);
+            return $removeImages;
+        }
+        
     }
 }

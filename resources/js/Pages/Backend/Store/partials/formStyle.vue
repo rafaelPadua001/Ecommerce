@@ -402,6 +402,10 @@ export default {
                     colors: this.selectedColor,
                     chip_color: this.selectedChipColor,
                     banner1: this.banner1,
+                    banner2: this.banner2,
+                    banner3: this.banner3,
+                    banner4: this.banner4,
+                    banner5: this.banner5,
                 };
                 axios.post(`/store/style/update/${itemId}`, data)
                 .then((response) => {
