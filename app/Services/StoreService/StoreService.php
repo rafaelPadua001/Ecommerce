@@ -63,7 +63,7 @@ class StoreService
    
     public function uploadImg($file)
     {
-
+        
         foreach ($file as $img) {
             $fileName = 'Logos/app_icon.' . $img->Extension();
 
@@ -115,13 +115,16 @@ class StoreService
         try{
             $updateAppBar = $this->appBarService->update($request, $storeId);
             $updateCard = $this->cardService->update($request, $storeId);
-            dd($updateCard);
+            $bannerImage = $request->banner1[1]['name'];
+            $updateBanner = $this->bannerService->update($request, $storeId);
+            $uploadBannerImage = $this->uploadImgBanner($request->banner1[1]);
+            
             return response()->json($updateAppBar);
         }
         catch(Exception $e){
             return response()->json($e->getMessage(), 500);
         }
-        dd($request);
+        
     }
     public function createAppBar($color, $id){
         try{
