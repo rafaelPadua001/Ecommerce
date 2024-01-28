@@ -91,6 +91,7 @@ class StoreService
             $getStore = $this->getStore();
             $appBar = $this->createAppBar($request->appBarColor, $getStore->id);
             $card = $this->createCard($request->chipColor, $getStore->id);
+           
             $banner1 = $request->banner1[1];
             $uploadBannerImage = $this->uploadImgBanner($banner1);
             $banner = $this->createBanner($uploadBannerImage, $getStore->id);

@@ -48,7 +48,7 @@ class BannerService{
            $update = $this->banner->where('store_id', '=', $request->storeId['store_id'])->update([
                'user_id' => $user->id,
                'store_id' => $request->storeId['store_id'],
-               'image' => $request->storeId['banner_image'],
+               'image' => json_decode($request->storeId['banner_image']),
            ]);
       
            return $update;
