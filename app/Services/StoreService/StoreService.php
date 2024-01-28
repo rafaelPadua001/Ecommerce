@@ -83,7 +83,7 @@ class StoreService
     }
     public function getStyle($id){
         $style = $this->appBarService->getAppBar($id) ;
-        return $style->toArray();;
+        return $style;
     }
     public function styleStore($request)
     {
@@ -118,7 +118,7 @@ class StoreService
             $bannerImage = $request->banner1[1]['name'];
             $updateBanner = $this->bannerService->update($request, $storeId);
             $uploadBannerImage = $this->uploadImgBanner($request->banner1[1]);
-                                       
+             
             /*continuar daqui do carrousel */
             $carrousel = [
                 'banner2' => $request->banner2[1],
@@ -126,12 +126,13 @@ class StoreService
                 'banner4' => $request->banner4[1],
                 'banner5' => $request->banner5[1]
             ];
+        
+            $updateCarrousel = $this->carrouselService->update($carrousel, $request->storeId);
           
-            $updateCarrousel = $this->carrouselService->update($carrousel, $storeId);
-            
             $uploadImageCarrousel = $this->uploadImgCarrousel($carrousel);
+       
            
-            return response()->json($request);
+            return response()->json($request->toArray());
         }
         catch(Exception $e){
             return response()->json($e->getMessage(), 500);

@@ -15,11 +15,11 @@ class AppBarService{
             $appBar = $this->appBar->where('app_bars.store_id', '=', $id)
             ->join('banners', 'banners.store_id', '=', 'app_bars.store_id')
             ->join('cards', 'cards.store_id', '=', 'banners.store_id')
-            ->join('carrousels', 'carrousels.store_id', '=', 'cards.store_id')
+            ->leftJoin('carrousels', 'carrousels.store_id', '=', 'cards.store_id')
             ->select('app_bars.*', 'banners.image as banner_image', 'cards.chip_color', 'carrousels.images')
             ->get();
-
-            return $appBar;
+           
+            return json_decode($appBar);
         }
         catch(Exception $e){
             return $e;
@@ -28,7 +28,7 @@ class AppBarService{
     public function store($request, $id){
         try{
             $user = Auth::user();
-            $store = $this->appBar->where('store_id', '=', $id)->updateOrCreate([
+            $store = $this->appBar->where('store_id', '=', $id)->create([
                 'user_id' => $user->id,
                 'store_id' => $id,
                 'colors' => json_encode($request),
@@ -40,13 +40,13 @@ class AppBarService{
             return $e;
         }
     }
-    public function update($request, $storeId){
+    public function update($request, $id){
         try{
             $user = Auth::user();
-            $storeUpdate = $this->appBar->where('store_id', '=', $storeId)->update([
+            $storeUpdate = $this->appBar->where('id', '=', $id)->update([
                 'colors' => json_encode($request->colors),
                 'user_id' => $user->id,
-                'store_id' => $storeId
+                'store_id' => $request->storeId['store_id']
             ]);
             return $storeUpdate;
         }

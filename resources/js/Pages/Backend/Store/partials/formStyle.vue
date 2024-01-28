@@ -4,6 +4,7 @@
             <v-sheet class="py-2 px-2">
                 <v-card class="mx-auto" elevation="2">
                     <v-card-text :elevation="10">
+                     
                         <v-row>
                             <v-col cols="auto">
                                 <h4>App bar color:</h4>
@@ -28,8 +29,8 @@
                             
                              </v-col>
                              <v-col v-else cols="4" v-for="(st, index) in style" :key="index">
-                              <v-sheet v-if="Object.keys(st).length >= 1 && index === 1">
-                                    <v-card :color="JSON.parse(st.colors)">
+                              <v-sheet v-if="Object.keys(st).length >= 1 && index == 0">
+                                    <v-card :color="st.colors">
                                         <template v-slot:prepend>
                                         <v-app-bar-nav-icon></v-app-bar-nav-icon>
                                        {{this.store.name}}
@@ -94,7 +95,7 @@
 
                                             </div>
                                             <div class="d-flex justify-end text-center elevation-0" v-else v-for="(st, index) in style" :key="index">
-                                                <v-chip  v-if="index === 1" class="ma-2" label :color="JSON.parse(st.chip_color)" variant="elevated">
+                                                <v-chip  v-if="index === 0" class="ma-2" label :color="st.chip_color ?? JSON.parse(st.chip_color) " variant="elevated">
                                                     - 10%
                                                 </v-chip>
                                             </div>
@@ -133,8 +134,8 @@
                                 </v-img>
                             </v-col>
                             <v-col v-else v-for="(st,index) in style" :key="index" cols="2">
-                           
-                                <v-img v-if="index === 0" :src="`./storage/Banners/${JSON.parse(st.banner_image)}`" :lazy-src="`./storage/Banners/${JSON.parse(st.banner_image)}`" cover :width="200">
+                                
+                                <v-img v-if="index === 0" :src="`./storage/Banners/${JSON.parse(st.banner_image)}`" :lazy-src="`./storage/Banners/${st.banner_image}`" cover :width="200">
 
                                 </v-img>
                             </v-col>
@@ -164,7 +165,7 @@
                             </v-col>
                             <v-col v-else v-for="(st, index) in style" :key="index" >
                                 
-                                <v-img v-if="index == 0" :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
+                                <v-img v-if='index == 0' :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
 
                                 </v-img>
                     
@@ -223,7 +224,7 @@
                             </v-col>
                         </v-row>
                     </v-card-text>
-
+                   
                     <v-card-actions>
                         <v-btn-group>
                             <v-btn class="me-2" variant="text" size="lg" color="primary" @click="save" v-if="Object.keys(style).length == 0">
@@ -391,13 +392,14 @@ export default {
             }
         },
         update(item){
-            this.editedIndex = this.style.indexOf(item[1]);
+            
+            this.editedIndex = item[0].id;
             this.editedItem = Object.assign({}, item);
             this.save();
         },
         save() {
-            if(this.editedIndex >= 1){
-                const itemId = this.editedItem[0].store_id;
+            if(this.editedIndex != -1){
+                const itemId = this.editedItem[0].id;
                 const data = {
                     colors: this.selectedColor,
                     chip_color: this.selectedChipColor,
@@ -406,14 +408,19 @@ export default {
                     banner3: this.banner3,
                     banner4: this.banner4,
                     banner5: this.banner5,
+                    storeId: this.editedItem[0]
                 };
                 axios.post(`/store/style/update/${itemId}`, data)
                 .then((response) => {
-                    return Object.assign(this.style[this.editedIndex], response.data);
+                    console.log(Object.assign(this.style[3], response.data.original));
+                    return this.style[0] = response.data.original;//console.log(Object.assign(this.style[0], response.data.original));
+                    //  return Object.assign(this.style[this.editedIndex], response.data.original);
                 })
                 .catch((response) => {
                     return alert('Error' + response);
-                })
+                });
+
+                
             }
             else{
                 const data = {
@@ -427,8 +434,9 @@ export default {
                 };
                 axios.post(`/store/style/create`, data)
                     .then((response) => {
-                        this.style.push(response.data);
-                        return console.log('Response' + response);
+                        console.log(response);
+                        return this.style.push(response.data);
+                         
                     })
                     .catch((response) => {
                         return alert('Error: ' + response);

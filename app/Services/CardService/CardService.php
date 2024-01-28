@@ -35,13 +35,13 @@ class CardService{
         }
        
     }
-    public function update($request, $storeId){
+    public function update($request, $id){
         try{
             $user = Auth::user();
-            $update = $this->card->where('store_id', "=", $storeId)->update([
+            $update = $this->card->where('store_id', "=",$request->storeId['store_id'])->update([
                 'chip_color' => json_encode($request->chip_color),
                 'user_id' => $user->id,
-                'store_id' => $storeId
+                'store_id' => $request->storeId['store_id']
             ]);
 
             return $update;
