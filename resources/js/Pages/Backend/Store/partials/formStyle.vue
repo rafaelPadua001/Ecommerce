@@ -30,7 +30,7 @@
                              </v-col>
                              <v-col v-else cols="4" v-for="(st, index) in style" :key="index">
                               <v-sheet v-if="Object.keys(st).length >= 1 && index == 0">
-                                    <v-card :color="st.colors">
+                                    <v-card :color="JSON.parse(st.colors)">
                                         <template v-slot:prepend>
                                         <v-app-bar-nav-icon></v-app-bar-nav-icon>
                                        {{this.store.name}}
@@ -95,7 +95,7 @@
 
                                             </div>
                                             <div class="d-flex justify-end text-center elevation-0" v-else v-for="(st, index) in style" :key="index">
-                                                <v-chip  v-if="index === 0" class="ma-2" label :color="st.chip_color ?? JSON.parse(st.chip_color) " variant="elevated">
+                                                <v-chip  v-if="index === 0" class="ma-2" label :color="JSON.parse(st.chip_color)" variant="elevated">
                                                     - 10%
                                                 </v-chip>
                                             </div>
@@ -401,8 +401,8 @@ export default {
             if(this.editedIndex != -1){
                 const itemId = this.editedItem[0].id;
                 const data = {
-                    colors: this.selectedColor,
-                    chip_color: this.selectedChipColor,
+                    colors: JSON.stringify(this.selectedColor),
+                    chip_color: JSON.stringify(this.selectedChipColor),
                     banner1: this.banner1,
                     banner2: this.banner2,
                     banner3: this.banner3,
@@ -412,7 +412,8 @@ export default {
                 };
                 axios.post(`/store/style/update/${itemId}`, data)
                 .then((response) => {
-                    console.log(Object.assign(this.style[3], response.data.original));
+                    
+                   
                     return this.style[0] = response.data.original;//console.log(Object.assign(this.style[0], response.data.original));
                     //  return Object.assign(this.style[this.editedIndex], response.data.original);
                 })
@@ -424,8 +425,8 @@ export default {
             }
             else{
                 const data = {
-                    appBarColor: this.selectedColor,
-                    chipColor: this.selectedChipColor,
+                    appBarColor: JSON.stringfy(this.selectedColor),
+                    chipColor: JSON.stringfy(this.selectedChipColor),
                     banner1: this.banner1,
                     banner2: this.banner2,
                     banner3: this.banner3,

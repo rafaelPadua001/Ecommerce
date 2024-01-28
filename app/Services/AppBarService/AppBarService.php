@@ -19,7 +19,7 @@ class AppBarService{
             ->select('app_bars.*', 'banners.image as banner_image', 'cards.chip_color', 'carrousels.images')
             ->get();
            
-            return json_decode($appBar);
+            return $appBar;
         }
         catch(Exception $e){
             return $e;
@@ -31,7 +31,7 @@ class AppBarService{
             $store = $this->appBar->where('store_id', '=', $id)->create([
                 'user_id' => $user->id,
                 'store_id' => $id,
-                'colors' => json_encode($request),
+                'colors' => $request,
                 
             ]);
             return $store;
@@ -44,7 +44,7 @@ class AppBarService{
         try{
             $user = Auth::user();
             $storeUpdate = $this->appBar->where('id', '=', $id)->update([
-                'colors' => json_encode($request->colors),
+                'colors' => $request->colors,
                 'user_id' => $user->id,
                 'store_id' => $request->storeId['store_id']
             ]);
