@@ -31,8 +31,7 @@ class AppBarService{
             $store = $this->appBar->where('store_id', '=', $id)->create([
                 'user_id' => $user->id,
                 'store_id' => $id,
-                'colors' => $request,
-                
+                'colors' => json_encode($request),
             ]);
             return $store;
         }

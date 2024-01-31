@@ -143,7 +143,7 @@
                             </v-container>
                         </v-window-item>
                         <v-window-item value="tab-2">
-                           <FormStyle :store="this.editItem" />
+                           <FormStyle :store="this.editItem" @update="updateStyle"/>
                         </v-window-item>
                     </v-window>
                 </v-sheet>

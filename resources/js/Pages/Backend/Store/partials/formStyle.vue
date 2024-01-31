@@ -4,7 +4,7 @@
             <v-sheet class="py-2 px-2">
                 <v-card class="mx-auto" elevation="2">
                     <v-card-text :elevation="10">
-                     
+                     {{ style }}
                         <v-row>
                             <v-col cols="auto">
                                 <h4>App bar color:</h4>
@@ -133,10 +133,13 @@
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else v-for="(st,index) in style" :key="index" cols="2">
-                                
-                                <v-img v-if="index === 0" :src="`./storage/Banners/${JSON.parse(st.banner_image)}`" :lazy-src="`./storage/Banners/${st.banner_image}`" cover :width="200">
-
+                            <v-col v-else cols="2">
+                                {{ st }}
+                                <v-img v-if="style[0]['banner_image']" :src="`./storage/Banners/${JSON.parse(style[0]['banner_image'])}`" :lazy-src="`./storage/Banners/${JSON.parse(style[0]['banner_image'])}`" cover :width="200">
+                                    {{ st }}
+                                </v-img>
+                                <v-img v-else-if="style[0]['banner1'][1]['name']" :src="`./storage/Banners/${JSON.parse(style[0]['banner1'][1]['name'])}`" :lazy-src="`./storage/Banners/${JSON.parse(style[0]['banner1'][1]['name'])}`" cover :width="200">
+                                    {{ st }}
                                 </v-img>
                             </v-col>
                             <v-col v-for="banner in banner1" :key="banner.id" cols="2">
@@ -163,10 +166,10 @@
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else v-for="(st, index) in style" :key="index" >
-                                
-                                <v-img v-if='index == 0' :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
-
+                            <v-col v-else v-for="(image, index) in JSON.parse(style[0]['images'])">
+                                {{image}}
+                                <v-img v-if="style[0]['images'] && index == 0" :src="`./storage/Carrousel/${image}`" :lazy-src="`./storage/Carrousel/${image}`" :alt="image" cover :width="100">
+                                 
                                 </v-img>
                     
                             </v-col>
@@ -181,10 +184,10 @@
                                 </v-img>
                             </v-col>
 
-                            <v-col v-else v-for="(st, index) in style" :key="index" >
+                            <v-col v-else v-for="(st, index) in JSON.parse(style[0]['images'])" :key="index" >
                                 
-                                <v-img v-if="index === 1" :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
-
+                                <v-img v-if="index === 1" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
+                                  
                                 </v-img>
                     
                             </v-col>
@@ -198,9 +201,9 @@
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else v-for="(st, index) in style" :key="index" >
+                            <v-col v-else v-for="(st, index) in JSON.parse(style[0]['images'])" :key="index" >
                                 
-                                <v-img v-if="index === 2" :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
+                                <v-img v-if="index === 2" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
 
                                 </v-img>
                     
@@ -215,9 +218,9 @@
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else v-for="(st,index) in style" :key="index">
+                            <v-col v-else v-for="(st,index) in JSON.parse(style[0]['images'])" :key="index">
                                 
-                                <v-img v-if="index === 3" :src="`./storage/Carrousel/${JSON.parse(st.images)}`" :lazy-src="`./storage/Carrousel/${JSON.parse(st.images)}`" :alt="JSON.parse(st.images)" cover :width="100">
+                                <v-img v-if="index === 3" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
 
                                 </v-img>
                     
@@ -284,6 +287,7 @@ export default {
         getStyle(){
             axios.get(`/store/style/getStyle/${this.store.id}`)
             .then((response) => {
+                
                 return this.style = response.data;
             })
             .catch((response) => {
@@ -412,10 +416,7 @@ export default {
                 };
                 axios.post(`/store/style/update/${itemId}`, data)
                 .then((response) => {
-                    
-                   
-                    return this.style[0] = response.data.original;//console.log(Object.assign(this.style[0], response.data.original));
-                    //  return Object.assign(this.style[this.editedIndex], response.data.original);
+                    return this.style[0] = response.data.original;
                 })
                 .catch((response) => {
                     return alert('Error' + response);
@@ -425,8 +426,8 @@ export default {
             }
             else{
                 const data = {
-                    appBarColor: JSON.stringfy(this.selectedColor),
-                    chipColor: JSON.stringfy(this.selectedChipColor),
+                    appBarColor: this.selectedColor,
+                    chipColor: this.selectedChipColor,
                     banner1: this.banner1,
                     banner2: this.banner2,
                     banner3: this.banner3,
@@ -437,7 +438,6 @@ export default {
                     .then((response) => {
                         console.log(response);
                         return this.style.push(response.data);
-                         
                     })
                     .catch((response) => {
                         return alert('Error: ' + response);
