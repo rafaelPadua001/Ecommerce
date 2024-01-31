@@ -21,19 +21,15 @@ class CarrouselService {
         }
     }
     public function store($request, $id){
-      
+        
         try{
             $user = Auth::user();
-            
-            foreach($request as $images){
-               // dd($images['name']);
-                $create = $this->carrousel->updateOrCreate([
+            // dd($images['name']);
+                $create = $this->carrousel->create([
                     'user_id' => $user->id,
                     'store_id' => $id,
-                    'images' => json_encode($images['name']),
+                    'images' => json_encode($request),
                 ]);
-            }
-                
                 return $create;
         }
         catch(Exception $e){
@@ -58,7 +54,7 @@ class CarrouselService {
                     $update = $this->carrousel->where('id', '=', $image['id'])->update([
                         'user_id' => $user->id,
                         'store_id' => $storeId['store_id'],
-                        'images' => json_encode($request[$nameImage]['name']),
+                        'images' => $request[$nameImage]['name'],
                     ]);
                 
                 }

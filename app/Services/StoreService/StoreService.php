@@ -4,6 +4,7 @@ namespace App\Services\StoreService;
 
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +20,7 @@ class StoreService
     protected $cardService;
     protected $bannerService;
     protected $carrouselService;
-
+    
     public function __construct(
         Store $store,
         AppBarService $appBarService,
@@ -90,12 +91,12 @@ class StoreService
        try {
             $getStore = $this->getStore();
             $appBar = $this->createAppBar($request->appBarColor, $getStore->id);
+            
             $card = $this->createCard($request->chipColor, $getStore->id);
-           
-            $banner1 = $request->banner1[1];
-            $uploadBannerImage = $this->uploadImgBanner($banner1);
+            
+            $uploadBannerImage = $this->uploadImgBanner($request->banner1[1]);
             $banner = $this->createBanner($uploadBannerImage, $getStore->id);
-                                    
+                     
             /*continuar daqui do carrousel */
             $carrousel = [
                 'banner2' => $request->banner2[1],
@@ -104,8 +105,8 @@ class StoreService
                 'banner5' => $request->banner5[1]
             ];
             $upload_carrousel = $this->uploadImgCarrousel($carrousel);
-            
-            $createdCarrousel = $this->createCarrousel($carrousel, $getStore->id);
+           
+            $createdCarrousel = $this->createCarrousel($upload_carrousel, $getStore->id);
             
             return $request->toArray();
         } catch (Exception $e) {
@@ -116,8 +117,11 @@ class StoreService
         try{
             $updateAppBar = $this->appBarService->update($request, $storeId);
             $updateCard = $this->cardService->update($request, $storeId);
+            
             $bannerImage = $request->banner1[1]['name'];
+            
             $updateBanner = $this->bannerService->update($request, $storeId);
+            
             $uploadBannerImage = $this->uploadImgBanner($request->banner1[1]);
              
             /*continuar daqui do carrousel */
@@ -173,15 +177,18 @@ class StoreService
     }
     public function uploadImgCarrousel($carrousel)
     {
-        $fileName = [];
+        $randomNames = [];
+       
         foreach ($carrousel as $img) {
+            $randomName = Str::random(10).'.webp';
             
-            $fileName  = $img['name'];
-            
-           $path = Storage::putFileAs('/public/Carrousel/', $img['src'], $fileName);
+            $fileName  = $img['src'];
+           
+           $path = Storage::putFileAs('/public/Carrousel', $fileName, $randomName);
+            $randomNames[] = $randomName;
         }
         
-        return $fileName;
+        return $randomNames;
     }
     public function destroy($id)
     {

@@ -23,7 +23,7 @@ class CardService{
         try{
             $user = Auth::user();
             $create = $this->card->updateOrCreate([
-                'chip_color' => $request,
+                'chip_color' => json_encode($request),
                 'user_id' => $user->id,
                 'store_id' => $id
             ]);
