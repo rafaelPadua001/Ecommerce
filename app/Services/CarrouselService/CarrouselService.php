@@ -39,28 +39,28 @@ class CarrouselService {
     }
     public function update($request, $storeId){
         try{
-          
             $user = Auth::user();
           
             $images = $this->carrousel->where('store_id', '=', $storeId['store_id'])->get();
            
-            $removeImages = $this->remove($images);
+            
             foreach ($images as $i => $image) {
                 // Certifique-se de que existe um banner correspondente
-                $nameImage = 'banner' . ($i + 2);
-               
-                if (isset($request[$nameImage]['name'])) {
+              //  $nameImage = 'banner' . ($i + 2);
+            
+                if (isset($request)) {
                     // Atualize a imagem com o nome do banner correspondente
                     $update = $this->carrousel->where('id', '=', $image['id'])->update([
                         'user_id' => $user->id,
                         'store_id' => $storeId['store_id'],
-                        'images' => $request[$nameImage]['name'],
+                        'images' => json_encode($request),
                     ]);
-                
+                   
+                    return $update;
                 }
             }
-                
-            return $update;
+            $removeImages = $this->remove($images);
+            return true;
         }
         catch(Exception $e){
             return $e;
