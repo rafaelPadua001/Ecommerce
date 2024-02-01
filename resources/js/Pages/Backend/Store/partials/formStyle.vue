@@ -4,7 +4,8 @@
             <v-sheet class="py-2 px-2">
                 <v-card class="mx-auto" elevation="2">
                     <v-card-text :elevation="10">
-                     {{ style }}
+                       
+                    
                         <v-row>
                             <v-col cols="auto">
                                 <h4>App bar color:</h4>
@@ -133,17 +134,17 @@
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else cols="2">
-                                {{ st }}
-                                <v-img v-if="style[0]['banner_image']" :src="`./storage/Banners/${JSON.parse(style[0]['banner_image'])}`" :lazy-src="`./storage/Banners/${JSON.parse(style[0]['banner_image'])}`" cover :width="200">
-                                    {{ st }}
+                            <v-col v-else cols="auto">
+                           
+                                <v-img v-if="style[0]['banner_image']" :src="`./storage/Banners/${JSON.parse(style[0]['banner_image'])}`" :lazy-src="`./storage/Banners/${JSON.parse(style[0]['banner_image'])}`" cover :width="100">
+                                 
                                 </v-img>
-                                <v-img v-else-if="style[0]['banner1'][1]['name']" :src="`./storage/Banners/${JSON.parse(style[0]['banner1'][1]['name'])}`" :lazy-src="`./storage/Banners/${JSON.parse(style[0]['banner1'][1]['name'])}`" cover :width="200">
-                                    {{ st }}
+                                <v-img v-else-if="style[0]['banner1'][1]['name']" :src="`./storage/Banners/${style[0]['banner1'][1]['name']}`" :lazy-src="`./storage/Banners/${style[0]['banner1'][1]['name']}`" cover :width="100">
+                                 
                                 </v-img>
                             </v-col>
-                            <v-col v-for="banner in banner1" :key="banner.id" cols="2">
-                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+                            <v-col v-for="banner in banner1" :key="banner.id" cols="auto">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="100">
 
                                 </v-img>
                             </v-col>
@@ -161,43 +162,54 @@
                             <v-col cols="6">
                                 <v-file-input v-model="banner2" label="Image 1" @change="previewBanner2"></v-file-input>
                             </v-col>
-                            <v-col v-if="Object.keys(style).length == 0" v-for="banner in banner2" :key="banner.id" cols="2">
-                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+                            <v-col v-if="Object.keys(style).length == 0" v-for="banner in banner2" :key="banner.id" cols="auto">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="100">
 
                                 </v-img>
+                                
                             </v-col>
-                            <v-col v-else v-for="(image, index) in JSON.parse(style[0]['images'])">
-                                {{image}}
-                                <v-img v-if="style[0]['images'] && index == 0" :src="`./storage/Carrousel/${image}`" :lazy-src="`./storage/Carrousel/${image}`" :alt="image" cover :width="100">
-                                 
+                            <v-col v-else-if="style[0]['images']">
+                               <div v-for="(img, index) in JSON.parse(style[0]['images'])" cols="auto">
+                                  <v-img v-if="index === 0" :src="`./storage/Carrousel/${img}`" :lazy-src="`./storage/Carrousel/${JSON.parse(style[0]['images'])}`" :alt="JSON.parse(style[0]['images'])" cover :width="100">
+                                    </v-img>
+                                </div>
+                            </v-col>
+                            
+                            <v-col v-for="banner in banner2" :key="banner.id" cols="auto">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="100">
+
                                 </v-img>
-                    
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="6">
                                 <v-file-input v-model="banner3" label="Image 2" @change="previewBanner3"></v-file-input>
                             </v-col>
-                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner3" :key="banner.id" cols="2">
-                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner3" :key="banner.id" cols="auto">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="100">
 
                                 </v-img>
                             </v-col>
 
-                            <v-col v-else v-for="(st, index) in JSON.parse(style[0]['images'])" :key="index" >
+                            <v-col v-else v-for="(st, index) in JSON.parse(style[0]['images'])" :key="index" cols="auto">
                                 
                                 <v-img v-if="index === 1" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
                                   
                                 </v-img>
                     
                             </v-col>
+                            <v-col v-for="banner in banner3" :key="banner.id" cols="auto">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="100">
+
+                                </v-img>
+                            </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="6">
                                 <v-file-input v-model="banner4" label="Image 3" @change="previewBanner4"></v-file-input>
                             </v-col>
-                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner4" :key="banner.id" cols="2">
-                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
+                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner4" :key="banner.id" cols="auto">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="100">
 
                                 </v-img>
                             </v-col>
@@ -208,22 +220,32 @@
                                 </v-img>
                     
                             </v-col>
+                            <v-col v-for="banner in banner4" :key="banner.id" cols="auto">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="100">
+
+                                </v-img>
+                            </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="6">
                                 <v-file-input v-model="banner5" label="Image 4" @change="previewBanner5"></v-file-input>
                             </v-col>
-                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner5" :key="banner.id" cols="2">
+                            <v-col v-if="Object.keys(style).length === 0" v-for="banner in banner5" :key="banner.id" cols="auto">
                                 <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else v-for="(st,index) in JSON.parse(style[0]['images'])" :key="index">
+                            <v-col v-else v-for="(st,index) in JSON.parse(style[0]['images'])" :key="index" cols="auto">
                                 
                                 <v-img v-if="index === 3" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
 
                                 </v-img>
                     
+                            </v-col>
+                            <v-col v-for="banner in banner5" :key="banner.id" cols="auto">
+                                <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="100">
+
+                                </v-img>
                             </v-col>
                         </v-row>
                     </v-card-text>

@@ -131,11 +131,8 @@ class StoreService
                 'banner4' => $request->banner4[1],
                 'banner5' => $request->banner5[1]
             ];
-        
-            $updateCarrousel = $this->carrouselService->update($carrousel, $request->storeId);
-          
             $uploadImageCarrousel = $this->uploadImgCarrousel($carrousel);
-       
+            $updateCarrousel = $this->carrouselService->update($uploadImageCarrousel, $request->storeId);
            
             return response()->json($request->toArray());
         }
