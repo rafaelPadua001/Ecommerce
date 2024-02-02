@@ -141,6 +141,16 @@ class StoreService
         }
         
     }
+    public function remove($storeId){
+        try{
+            $deleteAppBar = $this->appBarService->delete($storeId);
+            
+            return response()->json($deleteAppBar);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }
+    }
     public function createAppBar($color, $id){
         try{
             $create = $this->appBarService->store($color, $id);

@@ -53,4 +53,13 @@ class AppBarService{
             return $e;
         }
     }
+    public function delete($storeId){
+        try{
+            $delete = $this->appBar->where('store_id', '=', $storeId)->delete();
+            return true;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
 }
