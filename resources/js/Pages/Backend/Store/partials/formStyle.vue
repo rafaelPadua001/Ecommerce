@@ -213,7 +213,7 @@
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else v-for="(st, index) in JSON.parse(style[0]['images'])" :key="index" >
+                            <v-col v-else v-for="(st, index) in JSON.parse(style[0]['images'])" :key="index" cols="auto">
                                 
                                 <v-img v-if="index === 2" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
 
@@ -258,12 +258,19 @@
                             <v-btn class="me-2" variant="text" size="lg" color="primary" @click="update(style)" v-else>
                                 Update
                             </v-btn>
+                            <v-btn class="me-2" variant="text" size="lg" color="error" @click="openDeleteDialog(style)" v-if="Object.keys(style).length >= 1">
+                                Remove
+                            </v-btn>
                             <v-btn class="me-2" variant="text" size="lg" color="error">
                                 Clear
                             </v-btn>
                         </v-btn-group>
                     </v-card-actions>
                 </v-card>
+
+                <div>
+                    <DeleteStyleDialog v-model="deleteDialog" :style="this.style" @remove-style="deleteItemConfirm"/>
+                </div>
             </v-sheet>
         </v-col>
     </v-row>
@@ -271,9 +278,13 @@
 
 <script>
 import axios from 'axios';
+import DeleteStyleDialog from './deleteStyleDialog.vue';
 
 export default {
     props: ['store'],
+    components: {
+        DeleteStyleDialog
+    },
     data: () => ({
         color: '',
         selectedColor: false,
@@ -287,6 +298,7 @@ export default {
         style: [],
         editedItem: [],
         editedIndex: -1,
+        deleteDialog: false,
     }),
     watch: {
         previewBanner1(newUrl, oldUrl) {
@@ -422,6 +434,14 @@ export default {
             this.editedIndex = item[0].id;
             this.editedItem = Object.assign({}, item);
             this.save();
+        },
+        openDeleteDialog(item){
+            this.editedItem = Object.assign({}, item);
+            this.editedIndex = this.style.indexOf(item);
+            this.deleteDialog = true;
+        },
+        deleteItemConfirm(item){
+            return this.style.splice(this.editedIndex, 1);
         },
         save() {
             if(this.editedIndex != -1){

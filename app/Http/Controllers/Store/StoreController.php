@@ -72,9 +72,9 @@ class StoreController extends Controller
             return response()->json($e);
         }
     }
-    public function delete($id){
+    public function remove($storeId){
         try{
-            $delete = $this->storeService->destroy($id);
+            $delete = $this->storeService->remove($storeId);
             return response()->json($delete);
         }
         catch(Exception $e){
