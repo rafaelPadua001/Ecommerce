@@ -72,6 +72,16 @@ class CarrouselService {
             $removeImages = Storage::delete('/public/Carrousel/'.$img->images);
             return $removeImages;
         }
-        
+    }
+    public function delete($storeId){
+        try{
+            $images = $this->carrousel->where('store_id', '=', $storeId);
+            $carrousel = $this->remove($images);
+            $images->delete();
+            return true;
+        }
+        catch(Exception $e){
+            return $e;
+        }
     }
 }

@@ -430,18 +430,19 @@ export default {
             }
         },
         update(item){
-            
             this.editedIndex = item[0].id;
             this.editedItem = Object.assign({}, item);
             this.save();
         },
         openDeleteDialog(item){
+            console.log(item[0]);
             this.editedItem = Object.assign({}, item);
-            this.editedIndex = this.style.indexOf(item);
+            this.editedIndex = item.id;
             this.deleteDialog = true;
         },
         deleteItemConfirm(item){
-            return this.style.splice(this.editedIndex, 1);
+            console.log(this.editedIndex);
+           return this.style = "";
         },
         save() {
             if(this.editedIndex != -1){
