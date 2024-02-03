@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 
-class BannerService{
+class BannerService {
     protected $banner;
     public function __construct(Banner $banner){
         $this->banner = $banner;
@@ -68,4 +68,14 @@ class BannerService{
         }
       
     }
+    public function delete($storeId){
+        try{
+            $this->banner->remove();
+            $banner = $this->banner->where('store_id', '=', $storeId)->delete();
+            return true;    
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }   
 }

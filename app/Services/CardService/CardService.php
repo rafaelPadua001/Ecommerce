@@ -51,4 +51,13 @@ class CardService{
             return $e;
         }
     }
+    public function delete($storeId){
+        try{
+            $card = $this->card->where('store_id', '=', $storeId)->delete();
+            return true;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
 }

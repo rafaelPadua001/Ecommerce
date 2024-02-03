@@ -144,8 +144,10 @@ class StoreService
     public function remove($storeId){
         try{
             $deleteAppBar = $this->appBarService->delete($storeId);
-            
-            return response()->json($deleteAppBar);
+            $deleteCard = $this->cardService->delete($storeId);
+            $banner = $this->bannerService->delete($storeId);
+            $carrousel = $this->carrouselService->delete($storeId);
+            return true;
         }
         catch(Exception $e){
             return response()->json($e->getMessage());
