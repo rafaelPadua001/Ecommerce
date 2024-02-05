@@ -83,7 +83,7 @@ class StoreService
         }
     }
     public function getStyle($id){
-        $style = $this->appBarService->getAppBar($id) ;
+        $style = $this->appBarService->getAppBar($id);
         return $style;
     }
     public function styleStore($request)
@@ -108,7 +108,16 @@ class StoreService
            
             $createdCarrousel = $this->createCarrousel($upload_carrousel, $getStore->id);
             
-            return $request->toArray();
+            $response = [
+                'colors' => $appBar['colors'],
+                'chip_color' => $card['chip_color'],
+                'banner_image' => json_encode($uploadBannerImage),
+                'images' => json_encode($upload_carrousel),
+               
+            ];
+
+           
+            return response()->json($response);
         } catch (Exception $e) {
             return $e;
         }
@@ -116,12 +125,13 @@ class StoreService
     public function updateStyleStore($request, $storeId){
         try{
             $updateAppBar = $this->appBarService->update($request, $storeId);
+           
             $updateCard = $this->cardService->update($request, $storeId);
-            
+           
             $bannerImage = $request->banner1[1]['name'];
             
             $updateBanner = $this->bannerService->update($request, $storeId);
-            
+           
             $uploadBannerImage = $this->uploadImgBanner($request->banner1[1]);
              
             /*continuar daqui do carrousel */
@@ -134,7 +144,16 @@ class StoreService
             $uploadImageCarrousel = $this->uploadImgCarrousel($carrousel);
             $updateCarrousel = $this->carrouselService->update($uploadImageCarrousel, $request->storeId);
            
-            return response()->json($request->toArray());
+            $response = [
+                'colors' => $updateAppBar,
+                'chip_color' => $updateCard,
+                'banner_image' => json_encode($uploadBannerImage),
+                'images' => json_encode($uploadImageCarrousel),
+               
+            ];
+
+           
+            return response()->json($response);
         }
         catch(Exception $e){
             return response()->json($e->getMessage(), 500);
@@ -156,7 +175,7 @@ class StoreService
     public function createAppBar($color, $id){
         try{
             $create = $this->appBarService->store($color, $id);
-            return response()->json($create);
+            return $create->toArray();
         }
         catch(Exception $e){
             return response()->json($e);
@@ -164,7 +183,7 @@ class StoreService
     }
     public function createCard($color, $id){
         $create = $this->cardService->store($color, $id);
-        return response()->json($create);
+        return $create->toArray();
     }
     public function createBanner($image, $id){
         $create = $this->bannerService->store($image, $id);

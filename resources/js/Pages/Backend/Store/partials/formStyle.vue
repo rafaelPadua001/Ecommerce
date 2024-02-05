@@ -4,8 +4,6 @@
             <v-sheet class="py-2 px-2">
                 <v-card class="mx-auto" elevation="2">
                     <v-card-text :elevation="10">
-                       
-                    
                         <v-row>
                             <v-col cols="auto">
                                 <h4>App bar color:</h4>
@@ -29,12 +27,12 @@
                                 </v-sheet>
                             
                              </v-col>
-                             <v-col v-else cols="4" v-for="(st, index) in style" :key="index">
-                              <v-sheet v-if="Object.keys(st).length >= 1 && index == 0">
-                                    <v-card :color="JSON.parse(st.colors)">
+                             <v-col v-else cols="4">
+                              <v-sheet>
+                                    <v-card :color="JSON.parse(style.colors)">
                                         <template v-slot:prepend>
                                         <v-app-bar-nav-icon></v-app-bar-nav-icon>
-                                       {{this.store.name}}
+                                       {{store.name}}
                                     </template>
                                         <v-card-text></v-card-text>
                                     </v-card>
@@ -95,8 +93,10 @@
                                                
 
                                             </div>
-                                            <div class="d-flex justify-end text-center elevation-0" v-else v-for="(st, index) in style" :key="index">
-                                                <v-chip  v-if="index === 0" class="ma-2" label :color="JSON.parse(st.chip_color)" variant="elevated">
+                                            
+                                            <div class="d-flex justify-end text-center elevation-0" v-else>
+                                                
+                                                <v-chip  class="ma-2" label :color="JSON.parse(style.chip_color)" variant="elevated">
                                                     - 10%
                                                 </v-chip>
                                             </div>
@@ -136,7 +136,7 @@
                             </v-col>
                             <v-col v-else cols="auto">
                            
-                                <v-img v-if="style[0]['banner_image']" :src="`./storage/Banners/${JSON.parse(style[0]['banner_image'])}`" :lazy-src="`./storage/Banners/${JSON.parse(style[0]['banner_image'])}`" cover :width="100">
+                                <v-img v-if="style.banner_image" :src="`./storage/Banners/${JSON.parse(style.banner_image)}`" :lazy-src="`./storage/Banners/${JSON.parse(style.banner_image)}`" cover :width="100">
                                  
                                 </v-img>
                                 <v-img v-else-if="style[0]['banner1'][1]['name']" :src="`./storage/Banners/${style[0]['banner1'][1]['name']}`" :lazy-src="`./storage/Banners/${style[0]['banner1'][1]['name']}`" cover :width="100">
@@ -168,9 +168,10 @@
                                 </v-img>
                                 
                             </v-col>
-                            <v-col v-else-if="style[0]['images']">
-                               <div v-for="(img, index) in JSON.parse(style[0]['images'])" cols="auto">
-                                  <v-img v-if="index === 0" :src="`./storage/Carrousel/${img}`" :lazy-src="`./storage/Carrousel/${JSON.parse(style[0]['images'])}`" :alt="JSON.parse(style[0]['images'])" cover :width="100">
+                            <v-col v-else-if="style.images">
+                               <div v-for="(img, index) in JSON.parse(style.images)" :key="index" cols="auto">
+                                
+                                  <v-img v-if="index === 0" :src="`./storage/Carrousel/${img}`" :lazy-src="`./storage/Carrousel/${img}`" :alt="`${img}`" cover :width="100">
                                     </v-img>
                                 </div>
                             </v-col>
@@ -191,7 +192,7 @@
                                 </v-img>
                             </v-col>
 
-                            <v-col v-else v-for="(st, index) in JSON.parse(style[0]['images'])" :key="index" cols="auto">
+                            <v-col v-else v-for="(st, index) in JSON.parse(style.images)" :key="index" cols="auto">
                                 
                                 <v-img v-if="index === 1" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
                                   
@@ -213,7 +214,7 @@
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else v-for="(st, index) in JSON.parse(style[0]['images'])" :key="index" cols="auto">
+                            <v-col v-else v-for="(st, index) in JSON.parse(style.images)" :key="index" cols="auto">
                                 
                                 <v-img v-if="index === 2" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
 
@@ -235,7 +236,7 @@
 
                                 </v-img>
                             </v-col>
-                            <v-col v-else v-for="(st,index) in JSON.parse(style[0]['images'])" :key="index" cols="auto">
+                            <v-col v-else v-for="(st,index) in JSON.parse(style.images)" :key="index" cols="auto">
                                 
                                 <v-img v-if="index === 3" :src="`./storage/Carrousel/${st}`" :lazy-src="`./storage/Carrousel/${st}`" :alt="st" cover :width="100">
 
@@ -321,8 +322,7 @@ export default {
         getStyle(){
             axios.get(`/store/style/getStyle/${this.store.id}`)
             .then((response) => {
-                
-                return this.style = response.data;
+                return this.style = response.data.original;
             })
             .catch((response) => {
                 return alert('Error: ' + response);
@@ -430,7 +430,7 @@ export default {
             }
         },
         update(item){
-            this.editedIndex = item[0].id;
+            this.editedIndex = item.id;
             this.editedItem = Object.assign({}, item);
             this.save();
         },
@@ -441,12 +441,12 @@ export default {
             this.deleteDialog = true;
         },
         deleteItemConfirm(item){
-            console.log(this.editedIndex);
            return this.style = "";
         },
         save() {
             if(this.editedIndex != -1){
-                const itemId = this.editedItem[0].id;
+                const itemId = this.editedItem.id;
+                console.log(this.editedIndex); 
                 const data = {
                     colors: JSON.stringify(this.selectedColor),
                     chip_color: JSON.stringify(this.selectedChipColor),
@@ -455,11 +455,11 @@ export default {
                     banner3: this.banner3,
                     banner4: this.banner4,
                     banner5: this.banner5,
-                    storeId: this.editedItem[0]
+                    storeId: this.editedItem.store_id
                 };
                 axios.post(`/store/style/update/${itemId}`, data)
                 .then((response) => {
-                    return this.style[0] = response.data.original;
+                    return this.style = Object.assign({}, response.data.original);
                 })
                 .catch((response) => {
                     return alert('Error' + response);
@@ -479,8 +479,7 @@ export default {
                 };
                 axios.post(`/store/style/create`, data)
                     .then((response) => {
-                        console.log(response);
-                        return this.style.push(response.data);
+                        return this.style = response.data.original;
                     })
                     .catch((response) => {
                         return alert('Error: ' + response);

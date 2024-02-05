@@ -39,13 +39,13 @@ class CardService{
       
         try{
             $user = Auth::user();
-            $update = $this->card->where('store_id', "=",$request->storeId['store_id'])->update([
+            $update = $this->card->where('store_id', "=",$request->storeId)->update([
                 'chip_color' => $request->chip_color,
                 'user_id' => $user->id,
-                'store_id' => $request->storeId['store_id']
+                'store_id' => $request->storeId
             ]);
            
-            return $update;
+            return $request->chip_color;
         }
         catch(Exception $e){
             return $e;

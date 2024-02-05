@@ -41,7 +41,7 @@ class CarrouselService {
         try{
             $user = Auth::user();
           
-            $images = $this->carrousel->where('store_id', '=', $storeId['store_id'])->get();
+            $images = $this->carrousel->where('store_id', '=', $storeId)->get();
            
             
             foreach ($images as $i => $image) {
@@ -52,7 +52,7 @@ class CarrouselService {
                     // Atualize a imagem com o nome do banner correspondente
                     $update = $this->carrousel->where('id', '=', $image['id'])->update([
                         'user_id' => $user->id,
-                        'store_id' => $storeId['store_id'],
+                        'store_id' => $storeId,
                         'images' => json_encode($request),
                     ]);
                    
