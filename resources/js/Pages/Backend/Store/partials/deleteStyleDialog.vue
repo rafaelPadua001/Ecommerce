@@ -7,7 +7,7 @@
                         <v-toolbar class="bg-transparent" title="Remove Item">
                             <template v-slot:append>
                                 <v-btn icon>
-                                    <v-icon icon="fas fa-close"></v-icon>
+                                    <v-icon icon="fas fa-close" @click="close"></v-icon>
                                 </v-btn>
                             </template>
                         </v-toolbar>
@@ -20,7 +20,7 @@
                                 <v-btn class="me-2" color="error" variant="plain" @click="deleteItem(style)">
                                     Remove
                                 </v-btn>
-                                <v-btn>
+                                <v-btn @click="close">
                                     Close
                                 </v-btn>
                             </v-btn-group>
@@ -43,12 +43,15 @@ import axios from 'axios';
             deleteItem(item){
                 axios.delete(`/store/style/remove/${item.store_id}`)
                 .then((response) => {
-                    this.$emit('remove-style', response);
+                    this.close();
                 })
                 .catch((response) => {
                     alert("Error: " + response);
                 })
                
+            },
+            close(){
+                return this.$emit('close-dialog');
             }
         }
     }

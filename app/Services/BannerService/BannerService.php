@@ -35,20 +35,16 @@ class BannerService {
             return $e;
         }
     }
-    public function update($request, $id){
+    public function update($request, $storeId){
+      
         try{
             $user = Auth::user();
-            $bannerUpdate = $this->banner->where('store_id', '=', $request->storeId)->first();
-            $removeImage = $this->remove($bannerUpdate->image);
-            
-            if(!$removeImage){
-                return throw new Exception('Message Erro ao remover arquivo');
-            }
-          
-           $update = $this->banner->where('store_id', '=', $request->storeId)->update([
+            $bannerUpdate = $this->banner->where('store_id', '=', $storeId)->first();
+           
+            $update = $this->banner->where('store_id', '=', $storeId)->update([
                'user_id' => $user->id,
                'store_id' => $request->storeId,
-               'image' => json_encode($request->banner1[1]['name']),
+               'image' => json_encode($request),
            ]);
            
            return $update;

@@ -135,7 +135,7 @@
                                 </v-img>
                             </v-col>
                             <v-col v-else cols="auto">
-                           
+                                
                                 <v-img v-if="style.banner_image" :src="`./storage/Banners/${JSON.parse(style.banner_image)}`" :lazy-src="`./storage/Banners/${JSON.parse(style.banner_image)}`" cover :width="100">
                                  
                                 </v-img>
@@ -270,7 +270,7 @@
                 </v-card>
 
                 <div>
-                    <DeleteStyleDialog v-model="deleteDialog" :style="this.style" @remove-style="deleteItemConfirm"/>
+                    <DeleteStyleDialog v-model="deleteDialog" :style="this.style" @remove-style="deleteItemConfirm" @close-dialog="deleteDialog = false"/>
                 </div>
             </v-sheet>
         </v-col>
@@ -445,7 +445,7 @@ export default {
         },
         save() {
             if(this.editedIndex != -1){
-                const itemId = this.editedItem.id;
+                const itemId = this.editedItem.store_id;
                 console.log(this.editedIndex); 
                 const data = {
                     colors: JSON.stringify(this.selectedColor),

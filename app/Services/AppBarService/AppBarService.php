@@ -18,7 +18,7 @@ class AppBarService{
             ->join('carrousels', 'carrousels.store_id', '=', 'cards.store_id')
             ->select('app_bars.*', 'banners.image as banner_image', 'cards.chip_color', 'carrousels.images')
             ->first();
-           
+          
             
             return response()->json($appBar);
         }
