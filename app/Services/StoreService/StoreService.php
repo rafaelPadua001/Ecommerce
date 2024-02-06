@@ -130,10 +130,9 @@ class StoreService
            
             $bannerImage = $request->banner1[1]['name'];
             
-            $updateBanner = $this->bannerService->update($request, $storeId);
-           
             $uploadBannerImage = $this->uploadImgBanner($request->banner1[1]);
-             
+            
+            $updateBanner = $this->bannerService->update($uploadBannerImage, $storeId);
             /*continuar daqui do carrousel */
             $carrousel = [
                 'banner2' => $request->banner2[1],
@@ -201,7 +200,7 @@ class StoreService
             $path = Storage::putFileAs('/public/Banners/', $img, $fileName);
             return $fileName;
         }
-            
+        return $fileName;
     }
     public function uploadImgCarrousel($carrousel)
     {
