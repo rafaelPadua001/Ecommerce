@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppBar\AppBarController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Categories\CategoriesController;
@@ -30,6 +31,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//Route AppBar
+Route::get('/appBar', [AppBarController::class, 'index'])->name('appBar.index');
 
 //Categories routes
 Route::post('/categories/store/{id}', [CategoriesController::class, 'store'])->name('store');

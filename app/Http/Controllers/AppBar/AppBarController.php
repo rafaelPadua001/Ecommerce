@@ -14,6 +14,15 @@ class AppBarController extends Controller
     public function __construct(AppBarService $appBarService){
         $this->appBarService = $appBarService;
     }
+    public function index(){
+        try{
+            $appBar = $this->appBarService->getAppBarAttributes();
+            return response()->json($appBar);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
     public function create(Request $request, $id){
         try{
             $create = $this->appBarService->store($request, $id);

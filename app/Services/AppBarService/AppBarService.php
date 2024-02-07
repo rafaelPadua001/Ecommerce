@@ -26,6 +26,10 @@ class AppBarService{
             return $e;
         }
     }
+    public function getAppBarAttributes(){
+        $appBar = $this->appBar->first();
+        return $appBar;
+    }
     public function store($request, $id){
         try{
             $user = Auth::user();
