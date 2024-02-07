@@ -2,8 +2,8 @@
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="auto">
             <v-card  class="mx-auto elevation-0 text-black">
-                <v-app-bar color="trasparent">
-
+                <v-app-bar :color="this.appBarColor ?? 'trasparent'">
+                    
                     <!-- <template v-slot:image>
                         <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
                     </template> -->
@@ -17,17 +17,18 @@
                                 :height="70"
                             >
                             </v-img>
-                            <v-btn v-else class="text" href="/">{{ store.app_name ?? 'ProjectName'}}</v-btn>
+                            
+                            <v-btn v-else class="text" variant="text" href="/">{{ store.app_name ?? 'ProjectName'}}</v-btn>
                         </v-app-bar-title>
                         
-                        <div v-if="Object.keys(user).length === 1 || user">
+                        <div v-if="Object.keys(user).length === 1 || user" >
                             <v-btn :to="'/dashboard'" variant="plain">
-                                <v-icon icon="fa-solid fa-house fa-2xs"></v-icon>
+                                <v-icon icon="fa-solid fa-house fa-2xs" ></v-icon>
                             </v-btn>
                         </div>
 
                         <div>
-                            <v-btn id="menu-categories" variant="flat">
+                            <v-btn id="menu-categories" variant="flat" :color="this.appBarColor ?? 'trasparent'">
                                 <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
                                 </v-icon>
                             </v-btn>
@@ -49,7 +50,7 @@
                     </template>
                     <v-spacer></v-spacer>
 
-                    <v-btn icon variant="flat" size="xs">
+                    <v-btn icon variant="flat" size="xs" :color="this.appBarColor ?? 'trasparent'">
                         <v-icon icon="fas fa-magnifying-glass"></v-icon>
                     </v-btn>
 
@@ -141,7 +142,7 @@
 
                                         </v-list-item>
 
-                                        <v-btn color="cyan-darken-4" variant="tonal" block>Checkout</v-btn>
+                                        <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block>Checkout</v-btn>
 
                                     </v-list>
                                 </v-menu>
@@ -151,7 +152,7 @@
                     </div>
 
                     <!-- Cria o botao de menu do usuario -->
-                    <v-menu>
+                    <v-menu :color="this.appBarColor ?? 'trasparent'">
                         <template v-slot:activator="{ props }">
                             <v-btn icon v-bind="props">
                                 <v-icon icon="fa-solid fa-user fa-2xs"></v-icon>
@@ -216,6 +217,8 @@ export default {
         carts: [],
         categories: [],
         store: [],
+        appBar: [],
+        appBarColor: false,
         addressDialog: false,
     }),
     watch: {
@@ -232,6 +235,17 @@ export default {
             })
             .catch((response) => {
                 return alert('Error: ' + response);
+            })
+        },
+        getAppBar(){
+            axios.get(`/api/appBar`)
+            .then((response) => {
+                this.appBarColor = JSON.parse(response.data.colors);
+                console.log(this.appBarColor);
+                return this.appBar = response.data;
+            })
+            .catch((response) => {
+                return alert('Error :', response);
             })
         },
         getCategories() {
@@ -305,6 +319,7 @@ export default {
 
     mounted() {
         this.getStore();
+        this.getAppBar();
         this.getUser();
         this.getCategories();
         this.getCarts();
