@@ -19,6 +19,15 @@ class CardService{
             return $e;
         }
     }
+    public function getCardAttributes(){
+        try{
+            $card = $this->card->first();
+            return $card;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
     public function store($request, $id){
         try{
             $user = Auth::user();

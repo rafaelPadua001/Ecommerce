@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AppBar\AppBarController;
+use App\Http\Controllers\Banner\BannerController;
+use App\Http\Controllers\Card\CardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Categories\CategoriesController;
@@ -33,6 +35,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //Route AppBar
 Route::get('/appBar', [AppBarController::class, 'index'])->name('appBar.index');
+
+//Route Banner
+Route::get('/banner', [BannerController::class, 'index'])->name('banner.index');
+
+//Route Cards Products
+Route::get('/card', [CardController::class, 'index'])->name('card.index');
 
 //Categories routes
 Route::post('/categories/store/{id}', [CategoriesController::class, 'store'])->name('store');
