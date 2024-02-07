@@ -13,5 +13,9 @@ class CardController extends Controller
     public function __construct(CardService $cardService){
         $this->cardService = $cardService;
     }
+    public function index(){
+        $card = $this->cardService->getCardAttributes();
+        return response()->json($card);
+    }
     
 }

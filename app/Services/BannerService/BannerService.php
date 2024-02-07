@@ -20,6 +20,17 @@ class BannerService {
             return $e;
         }
     }
+    public function getBannerImage(){
+        try{
+            $banner = $this->banner->first();
+         
+            return $banner;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+        
+    }
     public function store($request, $id){
         try{
             $user = Auth::user();

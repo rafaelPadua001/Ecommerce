@@ -72,11 +72,13 @@
               </v-sheet>
             </v-col>
           </v-row>
+
           <v-row fluid>
             <v-col class="d-flex justify-center flex-column" cols="auto">
               <Banner></Banner>
             </v-col>
           </v-row>
+
           <v-row justify="center">
             <h4>All Products</h4>
             <v-spacer></v-spacer>
@@ -103,14 +105,13 @@
                         </template> 
                       </v-toolbar>
              
-                  
                     <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
                       <v-img v-if="index === 0" :vid-id="image" aspect-ratio="1/1"
                         :src="`./storage/products/${image}`" :lazy-src="`./storage/products/${image}`" :height="300"
                         :width="300" cover>
 
                         <div v-if="product.discount_id" class="d-flex justify-end text-center">
-                          <v-chip class="ma-2" label color="orange-darken-4" variant="elevated">
+                          <v-chip class="ma-2" label :color="cardDiscountColor ?? 'orange-darken-4'" variant="elevated">
                             - {{ product.discount_percentage * 100 }}%
                           </v-chip>
 
@@ -285,6 +286,7 @@ export default {
     loading: false,
     liked: 0,
     likes: false,
+    bannerImage: false,
 
   }),
   watch: {
@@ -322,6 +324,15 @@ export default {
 
           return alert('Error:' + response);
         })
+    },
+    getCard(){
+      axios.get('/api/card')
+      .then((response) => {
+        return this.cardDiscountColor = JSON.parse(response.data.chip_color);
+      })
+      .catch((response) => {
+        return alert('Errror: ' + response);
+      })
     },
     getProducts() {
       axios.get('/products/show')
@@ -432,6 +443,7 @@ export default {
     this.getCategories();
     this.getProducts();
     this.getWelcomeDiscount();
+    this.getCard();
     this.getDiscounts();
     this.getLikes();
 
