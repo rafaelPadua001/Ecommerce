@@ -20,6 +20,15 @@ class CarrouselService {
             return $e;
         }
     }
+    public function getAttributes(){
+        try{
+            $carousel = $this->carrousel->all();
+            return response()->json($carousel);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
     public function store($request, $id){
         
         try{
