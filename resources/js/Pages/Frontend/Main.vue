@@ -206,6 +206,18 @@
               </template>
             </v-infinite-scroll>
           </v-row>
+
+          <v-row>
+           <!-- <h4>Carrousel</h4> -->
+            <v-divider></v-divider>
+            <v-spacer></v-spacer>
+
+            <v-col class="d-flex justify-center mb-6 flex-column" v-if="carousel">
+              
+              <Carousel :carousel="carousel"/>
+             
+            </v-col>
+          </v-row>
         </v-sheet>
       </v-col>
     </v-row>
@@ -253,6 +265,7 @@ import Banner from '../../Components/Banner.vue';
 import ProductDialog from './Dialogs/ProductDialog.vue';
 import DiscountWindow from './Coupons/partials/Window.vue';
 import WelcomeDiscount from './Coupons/partials/Welcome.vue';
+import Carousel from './Carrousel/Carrousel.vue';
 import FooterBar from './Layout/FooterBar.vue';
 
 export default {
@@ -262,6 +275,7 @@ export default {
     ProductDialog,
     DiscountWindow,
     WelcomeDiscount,
+    Carousel,
     FooterBar
   },
   data: () => ({
@@ -287,7 +301,7 @@ export default {
     liked: 0,
     likes: false,
     bannerImage: false,
-
+    carouselImages: [],
   }),
   watch: {
     loading(val) {
@@ -371,6 +385,15 @@ export default {
           return alert('Error: ' + response);
         });
     },
+    getCarousel(){
+      axios.get(`/api/carrousel`)
+      .then((response) => {
+         return this.carousel = response.data;
+      })
+      .catch((response) => {
+        return alert('Error:' + response);
+      })
+    },
     buy(product) {
       this.productIndex = this.products.indexOf(product);
       this.selectProduct = Object.assign({}, product);
@@ -444,6 +467,7 @@ export default {
     this.getProducts();
     this.getWelcomeDiscount();
     this.getCard();
+    this.getCarousel();
     this.getDiscounts();
     this.getLikes();
 
