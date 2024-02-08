@@ -3,7 +3,6 @@
         <v-col class="d-flex justify-center mb-6 flex-column">
             <v-container>
                 <v-sheet>
-                   
                     <v-carousel 
                         v-for="(car_image, index) in carousel"
                         :key="index"
@@ -18,10 +17,8 @@
                             :lazy-src="`./storage/Carrousel/${image}`"
                             :alt="`${image}`"
                             cover
-                            
-                            >
-                            
-                        </v-carousel-item>
+                        >
+                     </v-carousel-item>
                        
                     </v-carousel>
                  
