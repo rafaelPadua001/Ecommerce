@@ -1,7 +1,9 @@
 <template>
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="auto">
+           
             <v-card  class="mx-auto elevation-0 text-black">
+                
                 <v-app-bar :color="this.appBarColor ?? 'trasparent'">
                     
                     <!-- <template v-slot:image>
@@ -50,9 +52,7 @@
                     </template>
                     <v-spacer></v-spacer>
 
-                    <v-btn icon variant="flat" size="xs" :color="this.appBarColor ?? 'trasparent'">
-                        <v-icon icon="fas fa-magnifying-glass"></v-icon>
-                    </v-btn>
+                    
 
                     <!-- Cart Button-->
                     <div class="d-flex justify-space-around" v-if="Object.keys(carts).length >= 1">
@@ -210,8 +210,9 @@
 <script>
 import axios from 'axios';
 import AddressForm from '../Dialogs/Address.vue';
+import DiscountWindow from '../Coupons/partials/Window.vue';
 export default {
-    components: { AddressForm },
+    components: { AddressForm , DiscountWindow},
     data: () => ({
         user: [],
         carts: [],

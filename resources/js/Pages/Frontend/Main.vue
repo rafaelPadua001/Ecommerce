@@ -14,8 +14,26 @@
             :discounts="discounts"
             :customer="this.customer"
           />
-
-
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="productSearch"
+                label="search"
+                :loading="loading"
+                density="compact"
+                variant="solo"
+                append-inner-icon="fas fa-magnifying-glass"
+                single-line
+                hide-details
+                @click:append-inner="onClick">
+              
+              </v-text-field>
+            </v-col>
+          </v-row>
+        
+          <v-divider></v-divider>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
           <v-row no-gutters>
             <h4>Highlights</h4>
             <v-divider></v-divider>
@@ -279,6 +297,9 @@ export default {
     FooterBar
   },
   data: () => ({
+    loaded: false,
+    loading: false,
+    productSearch: '',
     products: [],
     customer: [],
     images: [],
@@ -393,6 +414,16 @@ export default {
       .catch((response) => {
         return alert('Error:' + response);
       })
+    },
+    onClick(){
+      this.loading = true;
+
+      setTimeout(() => {
+        this.loading = false,
+        this.loaded = true,
+    
+        alert('Search: ' + this.productSearch);
+      }, 2000);
     },
     buy(product) {
       this.productIndex = this.products.indexOf(product);
