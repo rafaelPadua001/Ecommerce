@@ -17,7 +17,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                v-model="productSearch"
+                v-model="search"
                 label="search"
                 :loading="loading"
                 density="compact"
@@ -25,6 +25,7 @@
                 append-inner-icon="fas fa-magnifying-glass"
                 single-line
                 hide-details
+                clearable
                 @click:append-inner="onClick">
               
               </v-text-field>
@@ -299,7 +300,7 @@ export default {
   data: () => ({
     loaded: false,
     loading: false,
-    productSearch: '',
+    search: '',
     products: [],
     customer: [],
     images: [],
@@ -421,9 +422,20 @@ export default {
       setTimeout(() => {
         this.loading = false,
         this.loaded = true,
-    
-        alert('Search: ' + this.productSearch);
+        this.productSearch();
+        alert('Search: ' + this.search);
       }, 2000);
+    },
+    productSearch(){
+      const data = {search: this.search};
+      axios.post(`/api/products/search/`, data)
+      .then((response) => {
+        alert(response.data);
+        return this.products.push(response.data);
+      })
+      .catch((response) => {
+        alert('Error:' + response);
+      });
     },
     buy(product) {
       this.productIndex = this.products.indexOf(product);

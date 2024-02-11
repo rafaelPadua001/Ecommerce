@@ -226,7 +226,6 @@ class ProductController extends Controller
 
         return response()->json($updateProduct);
       
-        
         try {
             $product = Product::where('id', $id)->update($request->all());
 
@@ -243,6 +242,9 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return response()->json($e);
         }
+    }
+    public function search(Request $request){
+        dd($request);
     }
     public function destroy($id)
     {
