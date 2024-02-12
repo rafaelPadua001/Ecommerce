@@ -45,9 +45,13 @@ class ProductController extends Controller
     }
     public function index()
     {
-        // $products = Product::orderBy('id', 'desc')->get();
         $products = $this->productService->getAll();
 
+        foreach($products as &$product) { // Usando & para referência ao objeto original
+            $product['images'] = json_decode($product['images']);
+            $product['colors'] = json_decode($product['colors']);
+        }
+        
         return response()->json($products);
     }
     public function store(Request $request)
@@ -150,7 +154,8 @@ class ProductController extends Controller
                 'coupons.discount_percentage as discount_percentage'
             )
             ->get();
-        
+            
+      
         return response()->json($products);
     }
     public function like($id)
