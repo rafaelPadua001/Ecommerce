@@ -14,7 +14,7 @@
             <v-col class="d-flex justify-center flex-column">
               <v-autocomplete v-model="search" :items="searchable" item-title="name" item-value="id"
                 append-inner-icon="fas fa-microphone" auto-select-first class="flex-full-width" 
-                item-props menu-icon="" aria-placeholder="Search google or type a URL" chips closable-chips
+                item-props menu-icon="" placeholder="Search product name" chips closable-chips
                 preppend-inner-icon="fas fa-magnifying-glass" rounded theme="light" variant="solo" clearable
                 @click:append-inner="onClick">
                 <template v-slot:item="{ item }">
