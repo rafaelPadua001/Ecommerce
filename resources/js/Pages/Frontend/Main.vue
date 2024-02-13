@@ -8,15 +8,44 @@
     <v-row no-gutters>
       <v-col class="d-flex justify-center flex-column" cols="auto">
         <v-sheet>
-          <DiscountWindow 
-            v-model="discountWindow"
-            v-if="Object.keys(discounts).length >= 1"
-            :discounts="discounts"
-            :customer="this.customer"
-          />
-          <v-row>
-            <v-col>
-              <v-text-field
+          <DiscountWindow v-model="discountWindow" v-if="Object.keys(discounts).length >= 1" :discounts="discounts"
+            :customer="this.customer" />
+          <v-row fluid>
+            <v-col class="d-flex justify-center flex-column">
+              <v-autocomplete v-model="search" :items="searchable" item-title="name" item-value="id"
+                append-inner-icon="fas fa-microphone" auto-select-first class="flex-full-width" 
+                item-props menu-icon="" aria-placeholder="Search google or type a URL" chips closable-chips
+                preppend-inner-icon="fas fa-magnifying-glass" rounded theme="light" variant="solo" clearable
+                @click:append-inner="onClick">
+                <template v-slot:item="{ item }">
+                  <v-list density="compact">
+                    <v-list-item>
+                      <template v-slot:prepend>
+                        <v-list-item-avatar v-for="(image, index) in JSON.parse(item.props.images)" :key="index"
+                          :size="80">
+                          <v-img v-if="index === 0" :src="`./storage/products/${image}`" width="40">
+                          </v-img>
+                        </v-list-item-avatar>
+                      </template>
+                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+
+                    </v-list-item>
+                  </v-list>
+
+                </template>
+
+
+                <template v-slot:no-data>
+                  <v-list-item>
+                    <v-list-item-title>
+                      No results matching "<strong>{{ search }}</strong>". Press <kbd>enter</kbd> to create a new one
+                    </v-list-item-title>
+                  </v-list-item>
+                </template>
+              </v-autocomplete>
+
+
+              <!--  <v-text-field
                 v-model="search"
                 label="search"
                 :loading="loading"
@@ -28,10 +57,10 @@
                 clearable
                 @click:append-inner="onClick">
               
-              </v-text-field>
+              </v-text-field>-->
             </v-col>
           </v-row>
-        
+
           <v-divider></v-divider>
           <v-spacer></v-spacer>
           <v-spacer></v-spacer>
@@ -107,27 +136,26 @@
               <v-sheet class="py-2 px-2">
                 <v-hover v-slot="{ isHovering, props }">
                   <v-card class="mx-auto elevation-0" v-bind="props">
-                    
-                      <v-toolbar class="bg-transparent">
-                        <template v-slot:append>
-                          <v-btn-group class="float-end">
-                        <v-btn icon size="x-small">
-                          <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
-                            class="bg-transparent" @click="like()"></v-icon>
-                          <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else @click="like()"></v-icon>
-                        </v-btn>
-                        <v-btn icon size="x-small">
-                          <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
 
-                        </v-btn>
-                      </v-btn-group>
-                        </template> 
-                      </v-toolbar>
-             
+                    <v-toolbar class="bg-transparent">
+                      <template v-slot:append>
+                        <v-btn-group class="float-end">
+                          <v-btn icon size="x-small">
+                            <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
+                              class="bg-transparent" @click="like()"></v-icon>
+                            <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else @click="like()"></v-icon>
+                          </v-btn>
+                          <v-btn icon size="x-small">
+                            <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
+
+                          </v-btn>
+                        </v-btn-group>
+                      </template>
+                    </v-toolbar>
+
                     <div v-for="(image, index) in JSON.parse(product.images)" :key="image.id">
-                      <v-img v-if="index === 0" :vid-id="image" aspect-ratio="1/1"
-                        :src="`./storage/products/${image}`" :lazy-src="`./storage/products/${image}`" :height="300"
-                        :width="300" cover>
+                      <v-img v-if="index === 0" :vid-id="image" aspect-ratio="1/1" :src="`./storage/products/${image}`"
+                        :lazy-src="`./storage/products/${image}`" :height="300" :width="300" cover>
 
                         <div v-if="product.discount_id" class="d-flex justify-end text-center">
                           <v-chip class="ma-2" label :color="cardDiscountColor ?? 'orange-darken-4'" variant="elevated">
@@ -151,14 +179,14 @@
                       <v-row fluid>
                         <v-col cols="auto">
                           <p class="text-h5">{{ product.name }}</p>
-                          
+
                         </v-col>
-                     </v-row>
-                     <v-row fluid>
+                      </v-row>
+                      <v-row fluid>
                         <v-col cols="auto">
                           <p>{{ product.description }}</p>
                         </v-col>
-                     </v-row>
+                      </v-row>
                       <v-row no-gutters>
                         <v-btn-group>
                           <v-btn class="me-2" size="x-small" variant="outlined" color="orange" v-if="product.slug">
@@ -197,7 +225,7 @@
                             <strong> Fora de Estoque </strong>
                           </p>
                         </v-col>
-                      <!--  <v-col col="auto" md="5" sm="4">
+                        <!--  <v-col col="auto" md="5" sm="4">
                           <strong>Solds:</strong> 100
                         </v-col> -->
                       </v-row>
@@ -218,7 +246,7 @@
                 </v-hover>
               </v-sheet>
             </v-col>
-            
+
             <v-infinite-scroll ref="infinite" :height="200" :width="1800" @load="load" hide-scroll>
               <template v-slot:empty>
                 <v-alert class="bg-transparent">No more items to load</v-alert>
@@ -227,14 +255,14 @@
           </v-row>
 
           <v-row>
-           <!-- <h4>Carrousel</h4> -->
+            <!-- <h4>Carrousel</h4> -->
             <v-divider></v-divider>
             <v-spacer></v-spacer>
 
             <v-col class="d-flex justify-center mb-6 flex-column" v-if="carousel">
-              
-              <Carousel :carousel="carousel"/>
-             
+
+              <Carousel :carousel="carousel" />
+
             </v-col>
           </v-row>
         </v-sheet>
@@ -262,8 +290,7 @@
     <div class="justify-center" align-center>
       <WelcomeDiscount v-model="discountDialog"
         v-if="discountDialog && this.welcomeDiscount.is_displayed && !this.welcomeDiscount.is_used"
-        :coupon="this.welcomeDiscount" @close-welcome-dialog="this.discountDialog = false" 
-      />
+        :coupon="this.welcomeDiscount" @close-welcome-dialog="this.discountDialog = false" />
     </div>
     <div>
       <v-row no-gutters>
@@ -300,7 +327,8 @@ export default {
   data: () => ({
     loaded: false,
     loading: false,
-    search: '',
+    searchable: [],
+    search: [],
     products: [],
     customer: [],
     images: [],
@@ -361,18 +389,25 @@ export default {
           return alert('Error:' + response);
         })
     },
-    getCard(){
+    getCard() {
       axios.get('/api/card')
-      .then((response) => {
-        return this.cardDiscountColor = JSON.parse(response.data.chip_color);
-      })
-      .catch((response) => {
-        return alert('Errror: ' + response);
-      })
+        .then((response) => {
+          return this.cardDiscountColor = JSON.parse(response.data.chip_color);
+        })
+        .catch((response) => {
+          return alert('Errror: ' + response);
+        })
     },
     getProducts() {
       axios.get('/products/show')
         .then((response) => {
+
+          this.searchable = response.data.map(item => ({
+            id: item.id,
+            name: item.name,
+            images: item.images
+          }));
+          console.log(this.searchable);
           return this.products = response.data;
         })
         .catch((response) => {
@@ -407,35 +442,35 @@ export default {
           return alert('Error: ' + response);
         });
     },
-    getCarousel(){
+    getCarousel() {
       axios.get(`/api/carrousel`)
-      .then((response) => {
-         return this.carousel = response.data;
-      })
-      .catch((response) => {
-        return alert('Error:' + response);
-      })
+        .then((response) => {
+          return this.carousel = response.data;
+        })
+        .catch((response) => {
+          return alert('Error:' + response);
+        })
     },
-    onClick(){
+    onClick() {
       this.loading = true;
 
       setTimeout(() => {
         this.loading = false,
-        this.loaded = true,
-        this.productSearch();
-        alert('Search: ' + this.search);
+          this.loaded = true,
+          this.productSearch();
       }, 2000);
     },
-    productSearch(){
-      const data = {search: this.search};
+    productSearch() {
+      const data = { search: this.search };
+      alert(data);
       axios.post(`/api/products/search/`, data)
-      .then((response) => {
-        alert(response.data);
-        return this.products.push(response.data);
-      })
-      .catch((response) => {
-        alert('Error:' + response);
-      });
+        .then((response) => {
+          alert(response.data);
+          return this.products.push(response.data);
+        })
+        .catch((response) => {
+          alert('Error:' + response);
+        });
     },
     buy(product) {
       this.productIndex = this.products.indexOf(product);
