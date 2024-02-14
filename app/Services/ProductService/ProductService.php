@@ -13,6 +13,10 @@
             $product = Product::orderBy('id', 'desc')->get();
             return  $product;
         }
+        public function getProduct($id){
+            $product = Product::findOrFail($id);
+            return $product;
+        }
         public function create($product){
             $productCreate = Product::create($product);
             $response = $productCreate->toArray();
