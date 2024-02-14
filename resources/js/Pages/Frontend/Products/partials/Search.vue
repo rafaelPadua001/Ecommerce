@@ -359,6 +359,8 @@ export default {
     components: { AppBar, FooterBar },
     data: () => ({
         product: [],
+        selectImageIndex: 0,
+        quantity: 1,
     }),
     methods: {
         getProduct() {
@@ -371,7 +373,25 @@ export default {
                     return alert('Error: ' + response);
                 })
 
-        }
+        },
+        alterImage(index) {
+            return this.selectImageIndex = index;
+        },
+        getColors(color) {
+            this.colors = color;
+        },
+        quantityIncrement() {
+            this.quantity++;
+        },
+        quantityDecrement() {
+            if (this.quantity >= 2) {
+                this.quantity--;
+            }
+            else {
+                alert('apenas numeros inteiros são aceitos');
+            }
+
+        },
     },
     mounted() {
         this.getProduct();
