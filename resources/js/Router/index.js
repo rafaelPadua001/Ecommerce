@@ -14,6 +14,7 @@ import Cart from '../Pages/Frontend/Cart/Cart.vue'
 import Checkout from '../Pages/Frontend/Checkout/Checkout.vue'
 import Orders from '../Pages/Frontend/Orders/Orders.vue'
 import CouponCustomer from '../Pages/Frontend/Coupons/CouponCustomer.vue'
+import SearchProduct from '../Pages/Frontend/Products/partials/Search.vue'
 import AdminLogin from '../Pages/Backend/Auth/Login.vue'
 import AdminDashboard from '../Pages/Backend/Auth/Dashboard.vue'
 import Categories from '../Pages/Backend/Categories/Categories.vue'
@@ -58,6 +59,11 @@ const routes = [{
         path: '/CouponCustomer',
         name: 'couponCustomer',
         component:CouponCustomer
+    },
+    {
+        path: '/product/search/:id',
+        name: 'search',
+        component: SearchProduct
     },
     {
         path: '/admin',

@@ -19,7 +19,7 @@
                 @click:append-inner="onClick">
                 <template v-slot:item="{ item }">
                   <v-list density="compact">
-                    <v-list-item>
+                    <v-list-item :to="`/product/search/${item.props.id}`">
                       <template v-slot:prepend>
                         <v-list-item-avatar v-for="(image, index) in JSON.parse(item.props.images)" :key="index"
                           :size="80">
@@ -27,7 +27,7 @@
                           </v-img>
                         </v-list-item-avatar>
                       </template>
-                      <v-list-item-title>{{ item.title }}</v-list-item-title>
+                      <v-list-item-title>{{ item.title }} {{ item.props.id }}</v-list-item-title>
 
                     </v-list-item>
                   </v-list>
@@ -61,9 +61,6 @@
             </v-col>
           </v-row>
 
-          <v-divider></v-divider>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
           <v-row no-gutters>
             <h4>Highlights</h4>
             <v-divider></v-divider>
@@ -292,6 +289,7 @@
         v-if="discountDialog && this.welcomeDiscount.is_displayed && !this.welcomeDiscount.is_used"
         :coupon="this.welcomeDiscount" @close-welcome-dialog="this.discountDialog = false" />
     </div>
+    
     <div>
       <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="12">

@@ -54,6 +54,15 @@ class ProductController extends Controller
         
         return response()->json($products);
     }
+    public function getProduct($id){
+        try{
+            $product = $this->productService->getProduct($id);
+            return response()->json($product);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }
+    }
     public function store(Request $request)
     {
         $category = Categories::where('id', $request->category_id)->first();
