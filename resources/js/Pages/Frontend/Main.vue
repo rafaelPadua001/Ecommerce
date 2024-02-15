@@ -12,14 +12,15 @@
             :customer="this.customer" />
           <v-row fluid>
             <v-col class="d-flex justify-center flex-column">
+             
               <v-autocomplete v-model="search" :items="searchable" item-title="name" item-value="id"
                 append-inner-icon="fas fa-microphone" auto-select-first class="flex-full-width" 
                 item-props menu-icon="" placeholder="Search product name" chips closable-chips
                 preppend-inner-icon="fas fa-magnifying-glass" rounded theme="light" variant="solo" clearable
                 @click:append-inner="onClick">
-                <template v-slot:item="{ item }">
+                <template v-if="showList"  v-slot:item="{ item }" >
                   <v-list density="compact">
-                    <v-list-item :to="`/product/search/${item.props.id}`">
+                    <v-list-item @click="productSearch(item)">
                       <template v-slot:prepend>
                         <v-list-item-avatar v-for="(image, index) in JSON.parse(item.props.images)" :key="index"
                           :size="80">
@@ -33,7 +34,7 @@
                   </v-list>
 
                 </template>
-
+               
 
                 <template v-slot:no-data>
                   <v-list-item>
@@ -44,23 +45,15 @@
                 </template>
               </v-autocomplete>
 
-
-              <!--  <v-text-field
-                v-model="search"
-                label="search"
-                :loading="loading"
-                density="compact"
-                variant="solo"
-                append-inner-icon="fas fa-magnifying-glass"
-                single-line
-                hide-details
-                clearable
-                @click:append-inner="onClick">
+             
               
-              </v-text-field>-->
             </v-col>
           </v-row>
-
+          <v-row v-if="search">
+            <v-col class="d-flex justify-center flex-column" cols="auto">
+              {{ search }}
+            </v-col>
+          </v-row>
           <v-row no-gutters>
             <h4>Highlights</h4>
             <v-divider></v-divider>
@@ -312,6 +305,7 @@ import WelcomeDiscount from './Coupons/partials/Welcome.vue';
 import Carousel from './Carrousel/Carrousel.vue';
 import FooterBar from './Layout/FooterBar.vue';
 
+
 export default {
   components: {
     Banner,
@@ -350,6 +344,7 @@ export default {
     likes: false,
     bannerImage: false,
     carouselImages: [],
+    showList: true,
   }),
   watch: {
     loading(val) {
@@ -365,6 +360,9 @@ export default {
         this.add_cart = false
         this.buyDialog = false;
       }, 2000);
+    },
+    closeShowList(val){
+      val || this.closeShowList();
     }
   },
   methods: {
@@ -458,17 +456,21 @@ export default {
           this.productSearch();
       }, 2000);
     },
-    productSearch() {
-      const data = { search: this.search };
-      alert(data);
-      axios.post(`/api/products/search/`, data)
+    productSearch(item) {
+      const data = { search: item.props };
+      axios.post(`/api/products/search/${item.props.id}`, data)
         .then((response) => {
-          alert(response.data);
-          return this.products.push(response.data);
+          console.log(response.data);
+         // const openBuy = this.buy(item);
+          this.closeShowList();
+          return this.search = response.data;
         })
         .catch((response) => {
           alert('Error:' + response);
         });
+    },
+    closeShowList(){
+      this.showList = false;
     },
     buy(product) {
       this.productIndex = this.products.indexOf(product);

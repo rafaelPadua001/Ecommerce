@@ -56,6 +56,7 @@ class ProductController extends Controller
     }
     public function getProduct($id){
         try{
+            
             $product = $this->productService->getProduct($id);
             return response()->json($product);
         }
