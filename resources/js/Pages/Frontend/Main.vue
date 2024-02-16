@@ -55,11 +55,7 @@
               
             </v-col>
           </v-row>
-          <v-row v-if="search">
-            <v-col class="d-flex justify-center flex-column" cols="auto">
-              {{ search }}
-            </v-col>
-          </v-row>
+          
           <v-row no-gutters>
             <h4>Highlights</h4>
             <v-divider></v-divider>
