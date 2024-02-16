@@ -11,15 +11,15 @@
           <DiscountWindow v-model="discountWindow" v-if="Object.keys(discounts).length >= 1" :discounts="discounts"
             :customer="this.customer" />
           <v-row fluid>
-            <v-col class="d-flex justify-center flex-column">
+            <v-col class="d-flex justify-center flex-column" >
              
-              <v-autocomplete v-model="search" :items="searchable" item-title="name" item-value="id"
+              <v-autocomplete v-model="search" :items="searchable" item-title="name" item-value="id" lines="three"
                 append-inner-icon="fas fa-microphone" auto-select-first class="flex-full-width" 
                 item-props menu-icon="" placeholder="Search product name" chips closable-chips
                 preppend-inner-icon="fas fa-magnifying-glass" rounded theme="light" variant="solo" clearable
-                @click:append-inner="onClick">
-                <template v-if="showList"  v-slot:item="{ item }" >
-                  <v-list density="compact">
+                @click:append-inner="onClick" @change="closeShowList()">
+                <template v-slot:item="{ item , props}" >
+                  <v-list density="compact" v-bind="props">
                     <v-list-item @click="productSearch(item)">
                       <template v-slot:prepend>
                         <v-list-item-avatar v-for="(image, index) in JSON.parse(item.props.images)" :key="index"
@@ -28,8 +28,14 @@
                           </v-img>
                         </v-list-item-avatar>
                       </template>
-                      <v-list-item-title>{{ item.title }} {{ item.props.id }}</v-list-item-title>
-
+                      <v-list-item-title>{{ item.title }} </v-list-item-title>
+                      <v-list-item-subtitle>
+                        R$ {{ item.props.price }}
+                        
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        {{ item.props.description }}
+                      </v-list-item-subtitle>
                     </v-list-item>
                   </v-list>
 
@@ -401,9 +407,11 @@ export default {
           this.searchable = response.data.map(item => ({
             id: item.id,
             name: item.name,
-            images: item.images
+            images: item.images,
+            description: item.description,
+            price: item.price
           }));
-          console.log(this.searchable);
+        
           return this.products = response.data;
         })
         .catch((response) => {
@@ -457,12 +465,16 @@ export default {
       }, 2000);
     },
     productSearch(item) {
+      
       const data = { search: item.props };
+      
       axios.post(`/api/products/search/${item.props.id}`, data)
         .then((response) => {
-          console.log(response.data);
-         // const openBuy = this.buy(item);
-          this.closeShowList();
+         // console.log(response.data);
+          const openBuy = this.buy(response.data);
+         // this.closeShowList();
+          
+         
           return this.search = response.data;
         })
         .catch((response) => {
