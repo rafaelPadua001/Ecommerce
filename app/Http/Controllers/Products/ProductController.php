@@ -92,9 +92,11 @@ class ProductController extends Controller
             'availability' => $request->availability,
             'slug'   => $request->slug,
             'status'  => $request->status,
+            'featured' => $request->featured,
             'highlight' => $request->highlights ? true : false,
             'user_id' => (int) $request->user_id,
             'discount_id' => $request->has('discount') ? (int)$request->discount : null,
+            
         ];
 
         $newProduct = $this->productService->create($product);

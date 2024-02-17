@@ -195,6 +195,7 @@ Route::delete('/store/delete/{id}', [StoreController::class, 'delete'])->name('s
 
 
 //Products routes
+Route::post('/products/store', [ProductController::class, 'store'])->name('products.store')->middleware('auth');
 //Route::get('/products', function(){s
 //    dd('teste product routes');
 //});

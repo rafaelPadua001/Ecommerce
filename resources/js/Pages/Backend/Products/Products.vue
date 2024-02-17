@@ -1,12 +1,18 @@
 <template>
-  <div>
-    <Dashboard />
-  </div>
-  <v-card width="1500">
+  <v-row>
+    <v-col class="d-flex justify-center mb-6 flex-column" cols="auto">
+      <Dashboard />
+    </v-col>
+  </v-row>
+ 
+    <v-container>
+      <v-row justify="center">
+    <v-col class="d-flex justify-center mb-6 flex-column" cols="auto">
+     <v-sheet>
+        <v-card class="mx-auto">
     <v-divider></v-divider>
 
     <v-card-text>
-
       <v-data-table :headers="headers" :items="products" :sort-by="[{ key: 'calories', order: 'asc' }]"
         class="elevation-1">
         <template v-slot:top>
@@ -203,14 +209,15 @@
                            
                           
                         </v-col>
-                       
-                        <v-col cols="8" sm="4" md="2">
+                        
+                        <v-col cols="8" sm="4" md="2" v-if="colors">
                           <v-card v-for="(color, index) in colors" :key="index" :color="color">
-                            <template v-slot:append>
+                            
+                            <template v-slot:append v-if="index >= 1">
                                   <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
                                     <v-icon icon="fas fa-close fa-2xs"></v-icon>
                                   </v-btn>
-                                </template>
+                            </template>
                           </v-card>
                         </v-col>
                         <v-col>
@@ -362,6 +369,15 @@
                           @click="st_turn"
                           ></v-switch>
                       </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-switch 
+                          v-model="editedItem.featured"
+                          label="Featured product"
+                          color="success"
+                          @click="ft_turn"
+                        
+                          ></v-switch>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -405,15 +421,16 @@
            
           </v-icon>
         </template>
-
-        <template v-slot:item.images="{ item }">
+       
+       <template v-slot:item.images="{ item }">
+        
           <v-row>
-            <v-col v-for="(imageName, index) in JSON.parse(item.images)" :key="index">
+            <v-col v-for="(imageName, index) in item.images" :key="index">
               <v-img v-if="index === 0" :src="`./storage/products/${imageName}`" lass="align-end text-white" :width="250"
                           max-width="90" height="90" aspect-ratio="16/9"></v-img>
             </v-col>
           </v-row>
-        </template>
+        </template> 
 
         <template v-slot:item.colors="{ item }">
           <v-row v-if="item.colors !== '0'">
@@ -455,6 +472,12 @@
       </v-data-table>
     </v-card-text>
   </v-card>
+      </v-sheet>
+    </v-col>
+  </v-row>
+    </v-container>
+ 
+ 
 </template>
 
 <script>
@@ -500,6 +523,7 @@ export default {
     highlights: false,
     Availability: false,
     status: false,
+    featured: false,
     headers: [
       { title: 'images', key: 'images' },
       {
@@ -515,13 +539,7 @@ export default {
       { title: 'quantity', key: 'stock_quantity' },
       { title: 'Actions', key: 'actions', sortable: false },
     ],
-    swatches: [
-        ['#FF0000', '#AA0000', '#550000'],
-        ['#FFFF00', '#AAAA00', '#555500'],
-        ['#00FF00', '#00AA00', '#005500'],
-        ['#00FFFF', '#00AAAA', '#005555'],
-        ['#0000FF', '#0000AA', '#000055'],
-    ],
+    swatches: [],
     desserts: [],
     editedIndex: -1,
     editedItem: {
@@ -551,6 +569,7 @@ export default {
       highlights: false,
       availability: false,
       status: true,
+      featured: false,
       discount_id: null,
     },
     defaultItem: {
@@ -579,6 +598,7 @@ export default {
       slug: '',
       highlights: false,
       availability: false,
+      featured: false,
       status: true,
     },
   }),
@@ -748,6 +768,16 @@ export default {
         this.editedItem.status = this.status;
       }
     },
+    ft_turn(){
+      if(this.editedItem.featured){
+        this.featured = 0;
+        this.editedItem.featured = this.featured;
+      }
+      else{
+        this.featured = 1;
+        this.editedItem.featured = this.featured;
+      }
+    },
     editItem(item) {
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -888,9 +918,10 @@ export default {
           slug: this.editedItem.slug,
           highlights: this.highlights,
           availability: this.availability,
-          status: this.status 
+          status: this.status,
+          featured: this.featured
         };
-        axios.post(`/api/products/store`, data,
+        axios.post(`/products/store`, data,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
