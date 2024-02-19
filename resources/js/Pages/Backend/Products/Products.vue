@@ -816,6 +816,14 @@ export default {
         this.colors = this.editedItem.colors;
         this.editedItem.colors = '';
       }
+      if(this.editedItem.featured){
+        this.featured = true;
+        this.editedItem.featured = this.featured;
+      }
+      else{
+        this.featured = false;
+        this.editedItem.featured = this.featured;
+      }
       this.dialog = true;
     },
     deleteItem(item) {
