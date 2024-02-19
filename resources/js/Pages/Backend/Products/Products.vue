@@ -5,11 +5,17 @@
     </v-col>
   </v-row>
  
+  <v-row>
+    <v-col>
+      
+    </v-col>
+  </v-row>
     <v-container>
-      <v-row justify="center">
-    <v-col class="d-flex justify-center mb-6 flex-column" cols="auto">
+      <v-sheet>
+        <v-row fluid>
+    <v-col class="d-flex justify-center flex-column" >
      <v-sheet>
-        <v-card class="mx-auto">
+        <v-card class="mx-auto" :width="1200">
     <v-divider></v-divider>
 
     <v-card-text>
@@ -476,6 +482,8 @@
       </v-sheet>
     </v-col>
   </v-row>
+      </v-sheet>
+      
     </v-container>
  
  
