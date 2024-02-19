@@ -50,6 +50,7 @@
                         <v-text-field v-model="editedItem.name" label="Product name"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
+                        {{ editedItem.category_name }}
                         <v-select v-model="editedItem.category_name" label="Category" :items="categories"
                           item-title="name" item-value="id"></v-select>
                       </v-col>
@@ -210,10 +211,10 @@
                           
                         </v-col>
                         
-                        <v-col cols="8" sm="4" md="2" v-if="colors">
+                        <v-col cols="8" sm="4" md="2">
                           <v-card v-for="(color, index) in colors" :key="index" :color="color">
                             
-                            <template v-slot:append v-if="index >= 1">
+                            <template v-slot:append>
                                   <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
                                     <v-icon icon="fas fa-close fa-2xs"></v-icon>
                                   </v-btn>
@@ -260,7 +261,7 @@
                       
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.quantity" label="Quantity"></v-text-field>
+                        <v-text-field v-model="editedItem.stock_quantity" label="Quantity"></v-text-field>
                       </v-col>
                     </v-row>
                     <v-row>
@@ -731,7 +732,7 @@ export default {
     },
     selectedColor(){
       let selected_colors = this.editedItem.colors;
-      return this.colors.push(selected_colors);
+      this.colors.push(selected_colors);
     },
     removeSelectedColor(index){
       return this.colors.splice(index, 1);
@@ -781,7 +782,7 @@ export default {
     editItem(item) {
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      
+     
       if (typeof this.editedItem.images === 'string') {
         this.editedItem.images = JSON.parse(this.editedItem.images);
       }
@@ -810,6 +811,10 @@ export default {
       else{
         this.status = false;
         this.editedItem.status = this.status;
+      }
+      if(this.editedItem.colors){
+        this.colors = this.editedItem.colors;
+        this.editedItem.colors = '';
       }
       this.dialog = true;
     },
@@ -876,6 +881,7 @@ export default {
           availability: this.editedItem.availability,
           status: this.editedItem.status,
           discount_id: this.editedItem.discount_id,
+          featured: this.featured,
         };
         axios.post(`/api/products/update/${this.editedItem.id}`, data, {
             headers: {

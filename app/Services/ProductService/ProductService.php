@@ -10,7 +10,11 @@
             $this->products = $products;
         }
         public function getAll() {
-            $product = Product::orderBy('id', 'desc')->get();
+            $product = Product::orderBy('id', 'desc')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->join('subcategories', 'categories.id', '=', 'subcategories.id')
+            ->select('products.*', 'categories.name as category_name', 'subcategories.name as subcategory_name')
+            ->get();
             return  $product;
         }
         public function getProduct($id){
