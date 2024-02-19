@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Products;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProductImages\ProductImagesController;
@@ -14,7 +13,6 @@ use App\Http\Controllers\ProductStock\ProductStockController;
 use App\Http\Controllers\Likes\LikedProductController;
 use App\Models\Product;
 use App\Models\Categories;
-use App\Models\ProductImages;
 use App\Models\Subcategory;
 use App\Services\ProductService\ProductService;
 use Exception;
@@ -226,6 +224,7 @@ class ProductController extends Controller
             'availability' => $request->availability,
             'slug'   => $request->slug,
             'status'  => $request->status,
+            'featured' => $request->featured,
             'highlight' => $request->highlights ? true : false,
             'user_id' => (int) $request->user_id,
             'discount_id' => $request->has('discount') ? (int)$request->discount : null,
