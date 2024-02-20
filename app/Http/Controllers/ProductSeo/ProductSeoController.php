@@ -50,7 +50,7 @@ class ProductSeoController extends Controller
             $product= ProductSeo::where('product_id', $id)->update([
                 'name' => $request->name,
                 'meta_name' => $request->meta_name,
-                'meta_keyword' => $request->meta_key,
+                'meta_keyword' => $request->meta_keyword,
                 'meta_description' => $request->meta_description,
                 'slug' => $request->slug,
                 'product_id' => $id,

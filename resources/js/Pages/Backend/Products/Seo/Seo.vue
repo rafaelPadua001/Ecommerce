@@ -1,14 +1,10 @@
 <template>
-  <div>
-    <Dashboard />
-  </div>
-
-  <div>
-    <v-row fluid>
-      <v-col cols="12" md="12" sm="12">
-        <v-card class="mx-auto" max-width="1500">
-          <v-card-text>
-            <v-data-table :headers="headers" :items="seo" :sort-by="[{ key: 'id', order: 'asc' }]" class="elevation-1">
+  <v-row>
+    <v-col class="d-flex justify-center flex-column" cols="auto">
+      <Dashboard />
+    </v-col>
+  </v-row>
+    <v-data-table :headers="headers" :items="seo" :sort-by="[{ key: 'id', order: 'asc' }]" >
               <template v-slot:top>
                 <v-toolbar flat>
                   <v-toolbar-title>Product SEO</v-toolbar-title>
@@ -88,6 +84,12 @@
                   </v-dialog>
                 </v-toolbar>
               </template>
+              <template v-slot:item.created_at="{item}">
+                {{ item.created_at.split('T')[0] }}
+              </template>
+              <template v-slot:item.updated_at="{item}">
+                {{ item.updated_at.split('T')[0] }}
+              </template>
               <template v-slot:item.actions="{ item }">
                 <v-btn-group>
                   <v-btn icon variant="plain"  @click="editItem(item)" size="small">
@@ -110,11 +112,7 @@
                 </v-btn>
               </template>
             </v-data-table>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </div>
+
 </template>
 
 <script>
@@ -133,18 +131,18 @@ export default {
     dialogDelete: false,
     headers: [
       {
-        title: 'Name',
+        title: 'Product',
         align: 'start',
         sortable: false,
         key: 'name',
       },
-      { title: 'meta_name', key: 'meta_name' },
+      { title: 'name', key: 'meta_name' },
 
-      { title: 'meta_keyword', key: 'meta_keyword' },
-      { title: 'meta_description', key: 'meta_description' },
+      { title: 'keyword', key: 'meta_keyword' },
+      { title: 'description', key: 'meta_description' },
       { title: 'slug', key: 'slug' },
-      { title: 'product_id', key: 'product_id' },
-      { title: 'user_id', key: 'user_id' },
+    //  { title: 'product_id', key: 'product_id' },
+ //     { title: 'user_id', key: 'user_id' },
       { title: 'created', key: 'created_at' },
       { title: 'updated', key: 'updated_at' },
       { title: 'Actions', key: 'actions', sortable: false },
@@ -253,7 +251,7 @@ export default {
         const data = {
           name: this.editedItem.name,
           meta_name: this.editedItem.meta_name,
-          meta_keyword: this.editedItem.meta_key,
+          meta_keyword: this.editedItem.meta_keyword,
           meta_description: this.editedItem.meta_description,
           slug: this.editedItem.slug,
           user_id: this.users.id
