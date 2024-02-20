@@ -1,13 +1,17 @@
 <template>
-    <div>
-        <Dashboard></Dashboard>
-    </div>
+    <v-row>
+        <v-col class="d-flex justify-center flex-column">
+            <Dashboard></Dashboard>
+        </v-col>
+    </v-row>
+    
 
-    <div>
+
         <v-row fluid>
-            <v-col class="d-flex justify-center flex-column" cols="auto" md="12">
-                <v-card class="mx-auto elevation-0">
-                    <v-toolbar title="Coupons" prominent>
+            <v-col class="d-flex justify-center flex-column" cols="auto">
+                <v-card class="mx-auto Welevation-0">
+                    <v-card-title>
+                        <v-toolbar title="Coupons" prominent>
                         <template v-slot:append>
                             <v-btn-group>
                                 <v-btn @click="openCreateDialog" variant="plain" color="primary">Create New</v-btn>
@@ -15,10 +19,11 @@
                         </template>
                        
                     </v-toolbar>
+                    </v-card-title>
+                   
                    
                     <v-card-text>
-
-                        <v-list density="compact">
+                    <v-list >
                             <v-list-item v-for="(coupon, index) in coupons" :key="index" color="primary" variant="plain">
                                 <template v-slot:append>
                                     <v-menu>
@@ -55,7 +60,7 @@
             </v-col>
         </v-row>
 
-    </div>
+
 
 
     <div>
