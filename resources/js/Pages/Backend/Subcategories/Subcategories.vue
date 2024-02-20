@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <Dashboard></Dashboard>
-  </div>
-    <v-card
-        width="900"
-    >
-        <v-divider></v-divider>
-        <v-card-text>
-            <v-data-table
+  <v-row>
+    <v-col class="d-flex justify-center flex-column" cols="auto">
+      <Dashboard />
+    </v-col>
+  </v-row>
+  <v-row fluid>
+    <v-col class="d-flex justify-center flex-column" cols="auto">
+       <v-data-table
                   :headers="headers"
                   :items="subcategories"
                   :sort-by="[{ key: 'name', order: 'desc' }]"
@@ -135,6 +134,12 @@
                       </v-dialog>
                     </v-toolbar>
                   </template>
+                  <template v-slot:item.created_at="{item}">
+                    {{ item.created_at.split('T')[0] }}
+                  </template>
+                  <template v-slot:item.updated_at="{item}">
+                    {{ item.updated_at.split('T')[0] }}
+                  </template>
                   <template v-slot:item.actions="{ item }">
                     <v-btn-group>
                       <v-btn icon variant="plain"  @click="editItem(item)">
@@ -170,8 +175,10 @@
                    
                   </template>
                 </v-data-table>
-        </v-card-text>
-    </v-card>
+      
+    </v-col>
+  </v-row>
+    
 </template> 
 
 <script>
