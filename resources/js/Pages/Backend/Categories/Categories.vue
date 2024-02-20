@@ -1,21 +1,17 @@
 <template>
-  <div>
-    <Dashboard />
-  </div>
-  <div>
-   <!--  <div align="left">
-      <v-breadcrumbs :items="items">
-        <template v-slot:title="{ item }">
-          {{ item.title.toUpperCase() }}
-        </template>
-      </v-breadcrumbs>
-    </div>
-    -->
-    <v-card width="1000">
-    <v-divider></v-divider>
-      <v-card-text>
-      <v-data-table :headers="headers" :items="categories" :sort-by="[{ key: 'id', order: 'desc' }]"
-          class="elevation-1">
+  <v-row fluid>
+    <v-col class="d-flex justify-center flex-column" cols="auto">
+      <Dashboard />
+    </v-col>
+  </v-row>
+  <v-row fluid>
+    <v-col class="d-flex justify-center flex-column" cols="auto">
+      <v-data-table 
+          :headers="headers" 
+          :items="categories"
+          :sort-by="[{ key: 'id', order: 'desc' }]"
+          class="elevation-1"
+          >
           <template v-slot:top>
             <v-toolbar flat>
               <v-toolbar-title>Categories</v-toolbar-title>
@@ -106,6 +102,15 @@
               </v-dialog>
             </v-toolbar>
           </template>
+          <template v-slot:item.icon="{ item }">
+            <v-icon :icon="item.icon"></v-icon>
+          </template>
+          <template v-slot:item.created_at="{item}">
+            {{ item.created_at.split('T')[0] }}
+          </template>
+          <template v-slot:item.updated_at="{item}">
+            {{ item.updated_at.split('T')[0] }}
+          </template>
           <template v-slot:item.actions="{ item }">
             <v-btn icon variant="plain" @click="editItem(item.raw)">
               <v-icon size="small" class="me-2"  icon="fas fa-fa-regular fa-pen-to-square fa-2xs">
@@ -127,10 +132,9 @@
           </template>
         </v-data-table>
 
-      </v-card-text>
-    </v-card>
-
-  </div>
+    </v-col>
+  </v-row>
+ 
 </template>
 
 <script>
