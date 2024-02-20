@@ -17,9 +17,7 @@
                        
                     </v-toolbar>
                     </v-card-title>
-                   
-                   
-                    <v-card-text>
+                   <v-card-text>
                     <v-list lines="three" item-props>
                             <v-list-item v-for="(coupon, index) in coupons" :key="index" color="primary" variant="plain">
                                 <template v-slot:append>

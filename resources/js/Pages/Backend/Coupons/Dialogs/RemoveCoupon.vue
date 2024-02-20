@@ -1,6 +1,6 @@
 <template>
     <v-card class="mx-auto" width="500">
-        <v-toolbar title="Coupons Generator">
+        <v-toolbar title="Remove Coupons">
             <v-btn icon @click="close">
                 <v-icon icon="fas fa-close fa-2xs"></v-icon>
             </v-btn>
