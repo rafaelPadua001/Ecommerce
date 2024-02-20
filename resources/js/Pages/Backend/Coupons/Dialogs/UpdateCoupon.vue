@@ -6,12 +6,15 @@
         transition="dialog-bottom-transition"
     >
         <v-card class="mx-auto">
-            <template v-slot:append>
-
-                <v-btn variant="plain" icon @click="close">
-                    <v-icon icon="fas fa-close"></v-icon>
-                </v-btn>
-            </template>
+           
+                <v-toolbar title="Coupons Generator" color="transparent">
+        <v-btn icon @click="close">
+          <v-icon icon="fas fa-close fa-2xs"></v-icon>
+        </v-btn>
+        
+      </v-toolbar>
+               
+          
             <v-row fluid>
                 <v-col cols="12" sm="2">
                     <v-text-field v-model="editCoupon.code" label="Código do Cupom" required
