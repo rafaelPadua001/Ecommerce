@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <Dashboard />
-  </div>
-  <v-card width="1500">
-    <v-card-text>
-      <v-data-table :headers="headers" :items="stocks" :sort-by="[{ key: 'id', order: 'asc' }]" class="elevation-1">
+  <v-row fluid>
+    <v-col class="d-flex justify-center flex-column">
+      <Dashboard />
+    </v-col>
+  </v-row>
+ 
+      <v-data-table :headers="headers" :items="stocks" :sort-by="[{ key: 'id', order: 'asc' }]">
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>Product Stock</v-toolbar-title>
@@ -42,40 +43,20 @@
 
                       <v-col cols="12" sm="6" md="4">
                             <h5>Select Colors:</h5>
-                            
                             <v-color-picker
-                              v-model="editedItem.colors"
+                              v-model="editedItem.product_colors"
                               class="ma-2"
                               show-swatches
                               swatches-max-height="55px"
-                              :on:change="selectedColor()"
                               width="90%"
+                              v-bind:onChange="selectedColor()"
                             >
                               
                             </v-color-picker>
-                           <!-- <div>
-                                <v-btn size="x-small" icon @click="selectedColor()">
-                                  <v-icon icon="fas fa-save"></v-icon>
-                                </v-btn>
-                            </div>
-                            -->
+                     
                         </v-col>
                        
-                        <v-col v-if="editedItem.product_colors >= 1">
-                          <div>
-                            Current Colors
-                            <v-card v-for="(color, index) in JSON.parse(editedItem.product_colors)" :key="index" :color="color">
-                                <template v-slot:append>
-                                  <v-btn icon density="compact" size="small">
-                                    <v-icon icon="fas fa-close fa-2xs"></v-icon>
-                                  </v-btn>
-                                </template>
-                          </v-card>
-                            
-                          </div>
-                          
-                        </v-col>
-                        <v-col cols="8" sm="4" md="2"  v-else>
+                        <v-col cols="8" sm="4" md="2" v-if="Object.keys(editedItem.product_colors)">
                           Selected Colors
                           <v-card v-for="(color, index) in colors" :key="index" :color="color">
                             <template v-slot:append>
@@ -121,6 +102,12 @@
             </v-dialog>
            
           </v-toolbar>
+        </template>
+        <template v-slot:item.created_at="{item}">
+          {{ item.created_at.split('T')[0] }}
+        </template>
+        <template v-slot:item.updated_at="{item}">
+          {{ item.updated_at.split('T')[0] }}
         </template>
         <template v-slot:item.actions="{ item }">
           <v-btn-group>
@@ -173,8 +160,7 @@
           </v-btn>
         </template>
       </v-data-table>
-    </v-card-text>
-  </v-card>
+
 </template>
    
 <script>
@@ -200,8 +186,8 @@ export default {
       { title: 'product_colors', key: 'product_colors' },
       { title: 'product_size', key: 'product_size' },
       { title: 'quantity', key: 'stock_quantity' },
-      { title: 'product_id', key: 'product_id' },
-      { title: 'user_id', key: 'user_id' },
+     // { title: 'product_id', key: 'product_id' },
+     // { title: 'user_id', key: 'user_id' },
       { title: 'created', key: 'created_at' },
       { title: 'updated', key: 'updated_at' },
       { title: 'Actions', key: 'actions', sortable: false },
@@ -263,22 +249,23 @@ export default {
           alert('Error: ' + response);
         })
     },
-    selectedColor(){
-      let selected_colors = this.editedItem.colors;
-      console.log(selected_colors);
-      return this.colors.push(selected_colors);
-    },
     removeSelectedColor(index){
-      
-      return this.colors.splice(index, 1);
+     return this.colors.splice(index, 1);
     },
     editItem(item) {
     this.editedIndex = this.stocks.indexOf(item)
     this.editedItem = Object.assign({}, item)
+    if(this.editedItem.product_colors.length > 1){
+      this.colors = JSON.parse(this.editedItem.product_colors);
+      this.editedItem.product_colors = '';
+    }
+    
     this.dialog = true
   },
-
-
+  selectedColor(){
+      let selected_colors = this.editedItem.product_colors;
+      this.colors.push(selected_colors);
+  },
   close() {
     this.dialog = false
     this.$nextTick(() => {
@@ -289,7 +276,6 @@ export default {
   update() {
     const indexStock = this.editedIndex;
     if (this.editedIndex > -1) {
-      console.log(this.users);
       const data = {
         name: this.editedItem.name,
         stock_quantity: this.editedItem.stock_quantity,
