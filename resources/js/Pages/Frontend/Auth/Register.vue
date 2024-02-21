@@ -4,13 +4,12 @@
             <v-row no-gutters>
                 <v-col class="d-flex justify-center mb-6 flex-column" cols="12" md="12" sm="2">
                     <v-sheet>
-                        <v-card class="bg-transparent-accent-4 mx-auto elevation-0" :width="900" >
+                        <v-card class="bg-transparent-accent-4 mx-auto elevation-0" :width="900">
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="auto" md="6" sm="2">
 
-                                        <v-img width="560" height="650" cover
-                                            src="https://picsum.photos/1920/1080?random">
+                                        <v-img width="560" height="650" cover src="https://picsum.photos/1920/1080?random">
                                         </v-img>
 
                                     </v-col>
@@ -28,13 +27,11 @@
                                             <v-col>
                                                 <v-img class="mx-auto my-6" max-width="80"
                                                     :src="`./storage/app_icon/${app_icon}`"
-                                                    :lazy-src="`./storage/app_icon/${app_icon}`"
-                                                    :alt="`${app_icon}`"
-                                                >
+                                                    :lazy-src="`./storage/app_icon/${app_icon}`" :alt="`${app_icon}`">
                                                 </v-img>
                                                 <v-spacer></v-spacer>
                                                 <v-divider></v-divider>
-                                                
+
                                             </v-col>
                                         </v-row>
                                         <v-row>
@@ -199,14 +196,14 @@ export default {
    
            return true
          }, */
-        getStoreLogo(){
+        getStoreLogo() {
             axios.get('/api/store/getAppIcon')
-            .then((response) => {
-               return this.app_icon = JSON.parse(response.data.app_logo);
-            })
-            .catch((response) => {
-               return alert('Error: ' + response);
-            })
+                .then((response) => {
+                    return this.app_icon = JSON.parse(response.data.app_logo);
+                })
+                .catch((response) => {
+                    return alert('Error: ' + response);
+                })
         },
         resetForm() {
             this.errorMessages = []
