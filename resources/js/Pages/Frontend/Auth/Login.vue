@@ -11,6 +11,7 @@
                             <v-card-text>
                                 
                                 <v-row fluid>
+                                    
                                     <v-col cols="auto" md="6" sm="2">
                                         <div id="formImg">
                                             <v-img width="560" height="650"  cover
@@ -19,7 +20,15 @@
                                         </div>
                                     </v-col>
                                     <v-col cols="auto" md="6" sm="2">
-                                        <v-row no-gutters>
+                                        <v-row v-if="!app_icon">
+                                            <v-col>
+                                                <v-img class="mx-auto my-6" max-width="150"
+                                                    src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg">
+                                                </v-img>
+                                                <v-divider></v-divider>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row no-gutters v-else>
                                             <v-col>
                                                 <v-img class="mx-auto my-6" max-width="80"
                                                     :src="`./storage/app_icon/${app_icon}`"
