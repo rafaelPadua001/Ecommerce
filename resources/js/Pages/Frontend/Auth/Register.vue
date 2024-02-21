@@ -2,33 +2,44 @@
     <div>
         <v-container>
             <v-row no-gutters>
-                <v-col class="d-flex justify-center mb-6 flex-column" cols="auto" md="12" sm="6">
+                <v-col class="d-flex justify-center mb-6 flex-column" cols="12" md="12" sm="2">
                     <v-sheet>
-                        <v-card class="bg-transparent-accent-4 mx-auto" :width="800" elevation="0">
+                        <v-card class="bg-transparent-accent-4 mx-auto elevation-0" :width="900" >
                             <v-card-text>
                                 <v-row>
-                                    <v-col cols="6" md="6">
+                                    <v-col cols="auto" md="6" sm="2">
 
-                                        <v-img width="410" height="500" aspect-ratio="4/3" cover
-                                            src="https://picsum.photos/1920/1080?random" class="text-white">
+                                        <v-img width="560" height="650" cover
+                                            src="https://picsum.photos/1920/1080?random">
                                         </v-img>
 
                                     </v-col>
 
-                                    <v-col cols="auto" md="5">
-                                        <v-row>
+                                    <v-col cols="auto" md="6" sm="2">
+                                        <v-row v-if="!app_icon">
                                             <v-col>
-                                                <v-img class="mx-auto my-2" max-width="150"
+                                                <v-img class="mx-auto my-6" max-width="150"
                                                     src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg">
                                                 </v-img>
+                                                <v-divider></v-divider>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row no-gutters v-else>
+                                            <v-col>
+                                                <v-img class="mx-auto my-6" max-width="80"
+                                                    :src="`./storage/app_icon/${app_icon}`"
+                                                    :lazy-src="`./storage/app_icon/${app_icon}`"
+                                                    :alt="`${app_icon}`"
+                                                >
+                                                </v-img>
+                                                <v-spacer></v-spacer>
+                                                <v-divider></v-divider>
+                                                
                                             </v-col>
                                         </v-row>
                                         <v-row>
-                                            <v-col>
+                                            <v-col cols="auto" md="12">
                                                 <v-form>
-
-
-                                                    <v-divider></v-divider>
                                                     <v-card-text>
                                                         <v-row no-gutters>
                                                             <v-col class="d-flex justify-center flex-column" cols="auto">
@@ -138,6 +149,7 @@
 export default {
     data: () => ({
         countries: ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Anguilla', 'Antigua &amp; Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia &amp; Herzegovina', 'Botswana', 'Brazil', 'British Virgin Islands', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Cape Verde', 'Cayman Islands', 'Chad', 'Chile', 'China', 'Colombia', 'Congo', 'Cook Islands', 'Costa Rica', 'Cote D Ivoire', 'Croatia', 'Cruise Ship', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Estonia', 'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'French Polynesia', 'French West Indies', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea Bissau', 'Guyana', 'Haiti', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jersey', 'Jordan', 'Kazakhstan', 'Kenya', 'Kuwait', 'Kyrgyz Republic', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Mauritania', 'Mauritius', 'Mexico', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique', 'Namibia', 'Nepal', 'Netherlands', 'Netherlands Antilles', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Norway', 'Oman', 'Pakistan', 'Palestine', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania', 'Russia', 'Rwanda', 'Saint Pierre &amp; Miquelon', 'Samoa', 'San Marino', 'Satellite', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sri Lanka', 'St Kitts &amp; Nevis', 'St Lucia', 'St Vincent', 'St. Lucia', 'Sudan', 'Suriname', 'Swaziland', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', `Timor L'Este`, 'Togo', 'Tonga', 'Trinidad &amp; Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks &amp; Caicos', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam', 'Virgin Islands (US)', 'Yemen', 'Zambia', 'Zimbabwe'],
+        app_icon: [],
         errorMessages: '',
         first_name: null,
         last_name: null,
@@ -187,6 +199,15 @@ export default {
    
            return true
          }, */
+        getStoreLogo(){
+            axios.get('/api/store/getAppIcon')
+            .then((response) => {
+               return this.app_icon = JSON.parse(response.data.app_logo);
+            })
+            .catch((response) => {
+               return alert('Error: ' + response);
+            })
+        },
         resetForm() {
             this.errorMessages = []
             this.formHasErrors = false
@@ -233,5 +254,8 @@ export default {
                 })
         },
     },
+    mounted() {
+        this.getStoreLogo();
+    }
 }
 </script>
