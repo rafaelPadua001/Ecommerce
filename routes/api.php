@@ -17,6 +17,7 @@ use App\Http\Controllers\Coupons\CouponsController;
 use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Comments\CommentsController;
 use App\Http\Controllers\Coupons\CouponCustomer\CouponCustomerController;
+use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Store\StoreController;
 use App\Services\CarrouselService\CarrouselService;
 
@@ -46,6 +47,9 @@ Route::get('/card', [CardController::class, 'index'])->name('card.index');
 
 //Carrousel Routes
 Route::get('/carrousel', [CarrouselService::class, 'getAttributes'])->name('carrousel.index');
+
+//Customer Routes
+Route::get('/getCustomer', [CustomerController::class, 'index'])->name('customer.getCustomer');
 
 //Categories routes
 Route::post('/categories/store/{id}', [CategoriesController::class, 'store'])->name('store');
