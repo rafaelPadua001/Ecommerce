@@ -17,6 +17,7 @@ use App\Http\Controllers\Coupons\CouponsController;
 use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Comments\CommentsController;
 use App\Http\Controllers\Coupons\CouponCustomer\CouponCustomerController;
+use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Store\StoreController;
 use App\Services\CarrouselService\CarrouselService;
 

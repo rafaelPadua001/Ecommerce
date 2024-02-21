@@ -11,7 +11,6 @@
 
                                         <v-img width="560" height="650" cover src="https://picsum.photos/1920/1080?random">
                                         </v-img>
-
                                     </v-col>
 
                                     <v-col cols="auto" md="6" sm="2">

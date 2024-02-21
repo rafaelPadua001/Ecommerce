@@ -27,7 +27,6 @@ class CustomerService
     {
         try {
             $customer = Auth::guard('customer')->user();
-            
             $customerProfile = ProfileImage::where('customer_id', $customer->id)
                 ->join('customers', 'customers.id', '=', 'profile_images.customer_id')
                 ->select(
