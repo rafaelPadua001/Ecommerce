@@ -48,9 +48,6 @@ Route::get('/card', [CardController::class, 'index'])->name('card.index');
 //Carrousel Routes
 Route::get('/carrousel', [CarrouselService::class, 'getAttributes'])->name('carrousel.index');
 
-//Customer Routes
-Route::get('/getCustomer', [CustomerController::class, 'index'])->name('customer.getCustomer');
-
 //Categories routes
 Route::post('/categories/store/{id}', [CategoriesController::class, 'store'])->name('store');
 Route::post('/categories/update/{id}', [CategoriesController::class, 'update'])->name('categories.update');
