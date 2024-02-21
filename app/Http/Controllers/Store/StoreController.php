@@ -23,6 +23,15 @@ class StoreController extends Controller
             return response()->json($e);
         }
     }
+    public function getAppIcon(){
+        try{
+            $app_icon = $this->storeService->getAppIcon();
+            return response()->json($app_icon);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }
+    }
     public function create(Request $request){
         try{
             $create = $this->storeService->store($request);

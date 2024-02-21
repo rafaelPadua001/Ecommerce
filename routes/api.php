@@ -17,6 +17,7 @@ use App\Http\Controllers\Coupons\CouponsController;
 use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Comments\CommentsController;
 use App\Http\Controllers\Coupons\CouponCustomer\CouponCustomerController;
+use App\Http\Controllers\Store\StoreController;
 use App\Services\CarrouselService\CarrouselService;
 
 /*
@@ -70,10 +71,11 @@ Route::post('/products/search/{id}', [ProductController::class, 'getProduct'])->
 //Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
+//Store Routes
+Route::get('/store/getAppIcon', [StoreController::class, 'getAppIcon'])->name('store.getStore');
+
 //Delivery Routes
 Route::get('/delivery', [DeliveryController::class, 'index'])->name('delivery.index');
-
-
 
 Route::get('/comment', [CommentsController::class, 'index'])->name('comment.index');
 Route::post('/comment/create', [CommentsController::class, 'create'])->name('comment.create');
