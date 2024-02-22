@@ -5,9 +5,11 @@ namespace App\Services\CustomerService;
 use App\Models\Customer;
 use App\Models\ProfileImage;
 use App\Services\CouponService\CouponCustomer\CouponCustomerService;
+use App\Mail\MailRegister;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 
 class CustomerService
@@ -51,8 +53,11 @@ class CustomerService
     public function create(Request $request)
     {
         try {
+            
             $insert = Customer::create($request->all());
             $coupon = $this->couponCustomerService->rescueWelcome($insert);
+            $sendMail = Mail::to($request->email)->send(new MailRegister());
+           
             return response()->json($insert);
         } catch (Exception $e) {
             return throw new Exception($e);
