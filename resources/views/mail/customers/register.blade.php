@@ -1,6 +1,3 @@
-@component('mail::header')
-<img src="{{ asset('app_icon/app_icon.png') }}" alt="{{ config('app.name') }}" style="width: 150px;">
-@endcomponent
 
 
 @component('mail::message')
