@@ -8,17 +8,21 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Customer;
 
 class MailRegister extends Mailable
 {
     use Queueable, SerializesModels;
-
+    protected $first_name, $last_name;
+    
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($first_name, $last_name)
     {
         //
+        $this->first_name = $first_name;
+        $this->last_name = $last_name;
     }
 
     /**
@@ -27,7 +31,7 @@ class MailRegister extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mail Register',
+            subject: 'Thanks To Register',
         );
     }
 
@@ -38,6 +42,10 @@ class MailRegister extends Mailable
     {
         return new Content(
             markdown: 'mail.customers.register',
+            with: [
+                'url' => env('APP_URL'),
+                'customer_name' => $this->first_name. ' ' . $this->last_name,
+            ]
         );
     }
 
