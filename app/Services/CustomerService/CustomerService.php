@@ -56,8 +56,8 @@ class CustomerService
             
             $insert = Customer::create($request->all());
             $coupon = $this->couponCustomerService->rescueWelcome($insert);
-            $sendMail = Mail::to($request->email)->send(new MailRegister());
-           
+            $sendMail = Mail::to($request->email)->send(new MailRegister($request->first_name, $request->last_name));
+            
             return response()->json($insert);
         } catch (Exception $e) {
             return throw new Exception($e);
