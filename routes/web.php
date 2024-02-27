@@ -152,6 +152,7 @@ Route::delete('/likes/delete/{id}', [LikedProductController::class, 'destroy'])-
 Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->middleware('auth');
 
 
+
 //Stocks routes
 Route::get('/stocks', [ProductStockController::class, 'index'])->name('stock.index')->middleware('auth');
 

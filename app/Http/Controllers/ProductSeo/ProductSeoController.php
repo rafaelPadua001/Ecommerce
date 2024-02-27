@@ -12,6 +12,11 @@ class ProductSeoController extends Controller
 {
     
     private $product_seo;
+    public function getSeoProducts($id){
+        $product_seo = ProductSeo::where('product_id', '=', $id)->first();
+       
+        return response()->json($product_seo);
+    }
     public function __create(ProductSeo $product_seo){
         $this->product_seo = $product_seo;
     }
