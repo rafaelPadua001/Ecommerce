@@ -1,4 +1,5 @@
 <template>
+  
   <v-container>
     <v-row fluid>
       <v-col class="d-flex justify-center flex-column" cols="auto">
@@ -263,7 +264,7 @@
 
     <div class="text-center">
       <ProductDialog v-if="buyDialog" v-model="buyDialog" :selectProduct="selectProduct" :buyDialog="buyDialog"
-        :customer="this.customer" :likes="likes" @close-dialog="buyDialog = false" @update:buyDialog="updateBuyDialog" />
+       :showProductSeo="this.showProductSeo" :customer="this.customer" :likes="likes" @close-dialog="buyDialog = false" @update:buyDialog="updateBuyDialog" />
 
       <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
 
@@ -347,6 +348,7 @@ export default {
     bannerImage: false,
     carouselImages: [],
     showList: true,
+    showProductSeo: false,
   }),
   watch: {
     loading(val) {
@@ -483,10 +485,12 @@ export default {
     buy(product) {
       this.productIndex = this.products.indexOf(product);
       this.selectProduct = Object.assign({}, product);
+      this.showProductSeo = true;
       this.buyDialog = true;
     },
     updateBuyDialog(value) {
       this.buyDialog = value;
+      
     },
     addItem() {
       if (Object.keys(this.customer).length == 0) {

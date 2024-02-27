@@ -16,6 +16,9 @@ import * as labsComponents from 'vuetify/labs/components'
 //import Router
 import router from './Router'
 
+//import product seo tags
+import productSeo from './Pages/Frontend/ProductSeo/productSeo.vue'
+
 const vuetify = createVuetify({
   components: {
     ...components,
@@ -34,5 +37,6 @@ const vuetify = createVuetify({
 createApp(App)
   .use(vuetify)
   .use(router)
+  .component('productSeo', productSeo)
  // .use(money)
   .mount('#app');

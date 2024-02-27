@@ -83,8 +83,11 @@ Route::post('/comment/create', [CommentsController::class, 'create'])->name('com
 Route::delete('/comment/delete/{id}', [CommentsController::class, 'remove'])->name('comment.remove');
 
 //SEO route
+Route::get('/seo_product/{id}', [ProductSeoController::class, 'getSeoProducts'])->name('seo.getProducts');
 Route::post('/seo_product/update/{id}', [ProductSeoController::class, 'update'])->name('seo_product.update');
 Route::delete('/seo_product/delete/{id}', [ProductSeoController::class, 'destroy'])->name('seo_product.delete');
+
+
 //Stocks route
 Route::post('/stocks/update/{id}', [ProductStockController::class, 'update'])->name('seo_product.update');
 

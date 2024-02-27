@@ -1,5 +1,6 @@
 <template>
     <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
+        <productSeo v-if="showProductSeo" :selectProduct="this.selectProduct" />
         <v-card>
             <v-card-title>
                 <v-toolbar class="bg-transparent">
@@ -351,7 +352,7 @@ import RemoveDialog from '../Comment/patials/Remove.vue';
 import axios from 'axios';
 
 export default {
-    props: ['selectProduct', 'buyDialog', 'customer', 'likes'],
+    props: ['selectProduct', 'buyDialog', 'customer', 'likes', 'showProductSeo'],
     components: {
         ZipCodeField,
         CommentsField,
@@ -384,6 +385,7 @@ export default {
         delivery_name: false,
         removeDialog: false,
         removeComment: {},
+        
     }),
     watch: {
         buyDialog(val) {
