@@ -1,17 +1,21 @@
 <template>
-    <section>
-        <Dashboard />
-    </section>
-    <v-container>
+    <v-row>
+        <v-col class="d-flex justify-center flex-column">
+            <Dashboard />
+        </v-col>
+    </v-row>
+   
+   
         <v-row no-gutters>
-            <v-col cols="8" sm="6" v-for="(name, index) in uniqueNameProduct" :key="index">
+            <v-col class="d-flex justify-center flex-column" cols="auto" sm="4" v-for="(name, index) in uniqueNameProduct" :key="index">
                 <v-sheet class="ma-2 pa-2">
                     <div class="d-flex justify-center mb-2" v-if="images.length >= 1">
                         <v-list>
                             <v-list-item-group v-for="(productName, idx) in name.split(' ')" :key="idx">
                                 <v-list-item :key="index">
-                                      <v-card>
-                                            <v-toolbar class="bg-transparent">
+                                      <v-card class="mx-auto">
+                                            <v-card-title>
+                                                <v-toolbar class="bg-transparent">
                                                 <v-toolbar-title>{{ productName }}</v-toolbar-title>
 
                                                 <v-spacer></v-spacer>
@@ -55,11 +59,12 @@
 
                                                 </v-dialog>
                                             </v-toolbar>
-
+                                            </v-card-title>
+                                            
+                                            <v-divider></v-divider>
                                             <v-card-text>
-                                                <v-container>
-                                                    <v-row no-gutters>
-                                                        <v-col cols="6" md="6" sm="6" v-for="(image, index) in images"
+                                                <v-row no-gutters>
+                                                        <v-col cols="auto" sm="6" v-for="(image, index) in images"
                                                             :key="index">
                                                             <v-hover v-slot="{ isHovering, props }">
                                                                 <v-card class="d-flex align-center mb-2 mx-auto flex-column"
@@ -69,7 +74,7 @@
                                                                         :lazy-src="'./storage/products/' + image.name + '.' + image.extension"
                                                                         class="align-end"
                                                                         gradient="to bottom, rgba(0, 0, 0, .1), rgba(0,0,0,.5)"
-                                                                        :width="250" :height="250" aspect-ratio="16/9"
+                                                                        :width="80" :height="80" aspect-ratio="1/1"
                                                                         cover>
                                                                         <v-expand-transition>
                                                                             <div v-if="isHovering"
@@ -154,7 +159,7 @@
                                                             </v-dialog>
                                                         </v-col>
                                                     </v-row>
-                                                </v-container>
+                                                
                                             </v-card-text>
                                         </v-card>
                                    
@@ -175,7 +180,7 @@
                 </v-sheet>
             </v-col>
         </v-row>
-    </v-container>
+  
 </template>
 
 <script>

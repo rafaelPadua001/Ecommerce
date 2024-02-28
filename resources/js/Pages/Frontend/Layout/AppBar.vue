@@ -23,11 +23,7 @@
                             <v-btn v-else class="text" variant="text" href="/">{{ store.app_name ?? 'ProjectName'}}</v-btn>
                         </v-app-bar-title>
                         
-                        <div v-if="Object.keys(user).length === 1 || user" >
-                            <v-btn :to="'/dashboard'" variant="plain">
-                                <v-icon icon="fa-solid fa-house fa-2xs" ></v-icon>
-                            </v-btn>
-                        </div>
+                      
 
                         <div>
                             <v-btn id="menu-categories" variant="flat" :color="this.appBarColor ?? 'trasparent'">
@@ -49,6 +45,16 @@
                                 </v-list>
                             </v-menu>
                         </div>
+
+                        <div v-if="Object.keys(user).length === 1 || user" >
+                            <v-btn :to="'/dashboard'" variant="plain">
+                                <v-icon icon="fa-solid fa-house fa-2xs" ></v-icon>
+                            </v-btn>
+                        </div>
+
+                        <v-btn class="mr-2" variant="plain" to="/">
+                            <v-icon icon="fas fa-globe fa-2xs"></v-icon>
+                        </v-btn>
                     </template>
                     <v-spacer></v-spacer>
 
@@ -151,6 +157,9 @@
 
                     </div>
 
+                    
+                    
+                   
                     <!-- Cria o botao de menu do usuario -->
                     <v-menu :color="this.appBarColor ?? 'trasparent'">
                         <template v-slot:activator="{ props }">
@@ -161,9 +170,10 @@
                         </template>
                         <v-list>
                             <!-- login button -->
-                            <v-list-item v-if="Object.keys(user).length === 0 || !user">
+                            
+                            <v-list-item v-if="!user.original == 0">
                                 <v-list-item-title link>
-                                    
+                              
                                         <v-btn to="/login" class="me-2" size="x-small" variant="flat">
                                             <v-icon icon="fa-solid fa-right-to-bracket"></v-icon>
                                             Login
@@ -183,6 +193,7 @@
                                 </v-list-item-title>
                             </v-list-item>
 
+                            
                             <v-list-item @click="openAddressDialog()">
 
                                 <v-list-item-title link>
@@ -242,7 +253,6 @@ export default {
             axios.get(`/api/appBar`)
             .then((response) => {
                 this.appBarColor = JSON.parse(response.data.colors);
-                console.log(this.appBarColor);
                 return this.appBar = response.data;
             })
             .catch((response) => {
@@ -260,11 +270,7 @@ export default {
         getUser() {
             axios.get('/customer')
                 .then((response) => {
-                    if (!Object.keys(response.data.original).length) {
-                        return this.user = 0;
-
-                    }
-                    return this.user = response.data;
+                     return this.user = response.data;
                 })
                 .catch((response) => {
 

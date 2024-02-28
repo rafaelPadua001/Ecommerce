@@ -40,6 +40,10 @@ class StoreService
         $store = $this->store->first();
         return $store;
     }
+    public function getAppIcon(){
+        $app_icon = $this->store->select('app_logo')->first();
+        return $app_icon;
+    }
     public function store(Request $request)
     {
         try {

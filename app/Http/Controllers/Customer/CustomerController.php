@@ -33,7 +33,7 @@ class CustomerController extends Controller
             return response()->json($insert);
         }
         catch(Exception $e){
-            return throw new Exception($e);
+            return response()->json($e->getMessage());
         }
     }
     public function update(Request $request, $id){

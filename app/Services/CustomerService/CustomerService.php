@@ -5,9 +5,11 @@ namespace App\Services\CustomerService;
 use App\Models\Customer;
 use App\Models\ProfileImage;
 use App\Services\CouponService\CouponCustomer\CouponCustomerService;
+use App\Mail\MailRegister;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 
 class CustomerService
@@ -27,7 +29,6 @@ class CustomerService
     {
         try {
             $customer = Auth::guard('customer')->user();
-            
             $customerProfile = ProfileImage::where('customer_id', $customer->id)
                 ->join('customers', 'customers.id', '=', 'profile_images.customer_id')
                 ->select(
@@ -52,8 +53,11 @@ class CustomerService
     public function create(Request $request)
     {
         try {
+            
             $insert = Customer::create($request->all());
             $coupon = $this->couponCustomerService->rescueWelcome($insert);
+            $sendMail = Mail::to($request->email)->send(new MailRegister($request->first_name, $request->last_name));
+            
             return response()->json($insert);
         } catch (Exception $e) {
             return throw new Exception($e);

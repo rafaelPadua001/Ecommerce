@@ -1,13 +1,14 @@
 <template>
-    <div>
-        <Dashboard></Dashboard>
-    </div>
-
-    <div>
-        <v-row fluid>
-            <v-col class="d-flex justify-center flex-column" cols="auto" md="12">
-                <v-card class="mx-auto elevation-0">
-                    <v-toolbar title="Coupons" prominent>
+    <v-row>
+        <v-col class="d-flex justify-center flex-column">
+            <Dashboard></Dashboard>
+        </v-col>
+    </v-row>
+     <v-row no-gutters>
+            <v-col class="d-flex justify-center flex-column" cols="auto">
+                <v-card class="mx-auto Welevation-0">
+                    <v-card-title>
+                        <v-toolbar title="Coupons" prominent>
                         <template v-slot:append>
                             <v-btn-group>
                                 <v-btn @click="openCreateDialog" variant="plain" color="primary">Create New</v-btn>
@@ -15,10 +16,9 @@
                         </template>
                        
                     </v-toolbar>
-                   
-                    <v-card-text>
-
-                        <v-list density="compact">
+                    </v-card-title>
+                   <v-card-text>
+                    <v-list lines="three" item-props>
                             <v-list-item v-for="(coupon, index) in coupons" :key="index" color="primary" variant="plain">
                                 <template v-slot:append>
                                     <v-menu>
@@ -42,23 +42,27 @@
                                         </v-list>
                                     </v-menu>
                                 </template>
-
-                                <v-list-item-title>{{ coupon.code }}</v-list-item-title>
-
-
+                                <template v-slot:prepend>
+                                    <v-img :src="`./storage/Coupons/${coupon.images.slice(1, -1)}`"
+                                         :lazy-src="`./storage/Coupons/${coupon.images.slice(1, -1)}`"
+                                         :width="75"></v-img>
+                                </template>
+                              
+                                <template v-slot:title>{{ coupon.code }}</template>
+                              
+                                <template v-slot:subtitle v-if="coupon.is_displayed == 1">
+                                  Displayed: true
+                                </template>
+                                <template v-slot:subtitle v-if="coupon.is_displayed == 0">
+                                  Displayed: false
+                                </template>
                             </v-list-item>
                         </v-list>
                     </v-card-text>
-
-
-                </v-card>
+                 </v-card>
             </v-col>
         </v-row>
-
-    </div>
-
-
-    <div>
+     <div>
         <CreateCoupon v-model="createDialog" :createDialog="createDialog" @create="create"  @close-dialog="closeDialog" />
    
             <UpdateCoupon v-model="editDialog" v-if="editDialog" :editCoupon="editCoupon" @update-coupon="updateCoupon" @close-dialog="closeUpdateDialog" />

@@ -2,7 +2,7 @@
   <v-dialog fullscreen :scrim="false" transition="dialog-bottom-transition" scrollable>
 
     <v-card class="mx-auto" v-if="this.createDialog">
-      <v-toolbar title="Coupons Generator">
+      <v-toolbar title="Coupons Generator" color="transparent">
         <v-btn icon @click="close">
           <v-icon icon="fas fa-close fa-2xs"></v-icon>
         </v-btn>
