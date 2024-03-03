@@ -2,7 +2,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "vue-tsc && vite build && vite build --ssr"
     },
     "devDependencies": {
@@ -27,6 +27,7 @@
         "@mercadopago/sdk-js": "^0.0.3",
         "html2pdf.js": "^0.10.1",
         "maska": "^2.1.10",
+        "npm": "^10.5.0",
         "v-mask": "^2.3.0",
         "v-money3": "^3.24.0",
         "vite-plugin-vuetify": "^1.0.2",
