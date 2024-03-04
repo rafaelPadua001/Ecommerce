@@ -23,18 +23,24 @@
                             <v-btn v-else class="text" variant="text" href="/">{{ store.app_name ?? 'ProjectName'}}</v-btn>
                         </v-app-bar-title>
                         
+                        <v-divider vertical :thickness="1"></v-divider>
                       
-
                         <div>
                             <v-btn id="menu-categories" variant="flat" :color="this.appBarColor ?? 'trasparent'">
-                                <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
-                                </v-icon>
+                                <!-- <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
+                                </v-icon> -->
+                                categories
+                                <template v-slot:append>
+                                    <v-icon icon="fa-solid fa-chevron-down fa-2xs"></v-icon>
+                                </template>
+                                
+                               
                             </v-btn>
 
                             <v-menu activator="#menu-categories">
                                 <v-list elevation="1">
-                                    <v-list-item v-if="!categories">
-                                        no categories registered
+                                    <v-list-item v-if="!categories || categories.length === 0">
+                                        no categories found
                                     </v-list-item>
                                     <v-list-item v-else v-for="category in categories" :key="category.id">
                                         <v-btn variant="flat" size="small" :to="`/subcategories/all/${category.id}`">
@@ -45,10 +51,10 @@
                                 </v-list>
                             </v-menu>
                         </div>
-
-                        <div v-if="Object.keys(user).length === 1 || user" >
+                      
+                        <div v-if="user.length >= 1">
                             <v-btn :to="'/dashboard'" variant="plain">
-                                <v-icon icon="fa-solid fa-house fa-2xs" ></v-icon>
+                                <v-icon icon="fa-solid fa-house fa-2xs"></v-icon>
                             </v-btn>
                         </div>
 
@@ -158,12 +164,12 @@
                     </div>
 
                     
-                    
+                    <v-divider vertical :thickness="1"></v-divider>
                    
                     <!-- Cria o botao de menu do usuario -->
                     <v-menu :color="this.appBarColor ?? 'trasparent'">
                         <template v-slot:activator="{ props }">
-                            <v-btn icon v-bind="props">
+                            <v-btn class="mr-2" variant="plain" size="small" icon v-bind="props">
                                 <v-icon icon="fa-solid fa-user fa-2xs"></v-icon>
                             </v-btn>
 
