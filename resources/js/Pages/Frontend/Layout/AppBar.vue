@@ -246,7 +246,7 @@ export default {
                 this.store = response.data
             })
             .catch((response) => {
-                return alert('Error: ' + response);
+                //return alert('Error: ' + response);
             })
         },
         getAppBar(){
@@ -256,7 +256,7 @@ export default {
                 return this.appBar = response.data;
             })
             .catch((response) => {
-                return alert('Error :', response);
+                return false; 
             })
         },
         getCategories() {
@@ -264,7 +264,7 @@ export default {
                 .then((response) => {
                     return this.categories = response.data;
                 }).catch((response) => {
-                    return alert('Error: ' + response);
+                    return false;
                 });
         },
         getUser() {
@@ -283,7 +283,7 @@ export default {
                     return this.carts = response.data;
                 })
                 .catch((response) => {
-                    return alert('Error :' + response);
+                 return false; ;
                 });
         },
         getLikes() {
@@ -292,7 +292,7 @@ export default {
                     return this.likes = response.data;
                 })
                 .catch((response) => {
-                    alert('Error: ' + response);
+                 return false;
                 });
         },
         openAddressDialog() {
@@ -319,7 +319,7 @@ export default {
                     }
                 })
                 .catch((response) => {
-                    return alert('Error: ' + response);
+                     return alert('Error: ' + response);
                 });
         },
     },
