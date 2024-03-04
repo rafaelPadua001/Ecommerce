@@ -113,9 +113,9 @@
                 </v-hover>
               </v-sheet>
             </v-col>
-            <v-col v-else v-for="n in 8" class="d-flex justify-center flex-column" cols="auto" md="3" sm="3">
-              <v-sheet>
-                <v-skeleton-loader type="card" :width="150"></v-skeleton-loader>
+            <v-col v-else v-for="n in 8" class="d-flex justify-center flex-column" cols="auto" md="3" sm="2">
+              <v-sheet class="py-2 px-2">
+                <v-skeleton-loader type="card" :width="160"></v-skeleton-loader>
               </v-sheet>
             </v-col>
             <v-divider></v-divider>
