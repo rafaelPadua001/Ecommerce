@@ -20,13 +20,24 @@
                             >
                             </v-img>
                             
-                            <v-btn v-else class="text" variant="text" href="/">{{ store.app_name ?? 'ProjectName'}}</v-btn>
+                            <v-btn v-else class="text" variant="text" href="/" size="small">{{ store.app_name ?? 'ProjectName'}}</v-btn>
                         </v-app-bar-title>
                         
                         <v-divider vertical :thickness="1"></v-divider>
-                      
+                        
                         <div>
-                            <v-btn id="menu-categories" variant="flat" :color="this.appBarColor ?? 'trasparent'">
+                            <v-btn :to="'/dashboard'" variant="plain" size="small">
+                               <v-icon icon="fas fa-home"></v-icon>
+                            </v-btn>
+                        </div>
+                        <v-btn variant="plain" size="small">
+                                Blog
+                            </v-btn>
+
+                        <div>
+                            <v-btn id="menu-categories" variant="plain" 
+                                :color="this.appBarColor ?? 'trasparent'"
+                                size="small">
                                 <!-- <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
                                 </v-icon> -->
                                 categories
@@ -50,13 +61,11 @@
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
+
+                            
                         </div>
                       
-                        <div v-if="user.length >= 1">
-                            <v-btn :to="'/dashboard'" variant="plain">
-                                <v-icon icon="fa-solid fa-house fa-2xs"></v-icon>
-                            </v-btn>
-                        </div>
+                        
 
                         <!-- <v-btn class="mr-2" variant="plain" to="/">
                             <v-icon icon="fas fa-globe fa-2xs"></v-icon>
