@@ -58,9 +58,9 @@
                             </v-btn>
                         </div>
 
-                        <v-btn class="mr-2" variant="plain" to="/">
+                        <!-- <v-btn class="mr-2" variant="plain" to="/">
                             <v-icon icon="fas fa-globe fa-2xs"></v-icon>
-                        </v-btn>
+                        </v-btn> -->
                     </template>
                     <v-spacer></v-spacer>
 
