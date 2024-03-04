@@ -61,9 +61,10 @@
             <h4>Highlights</h4>
             <v-divider></v-divider>
             <v-spacer></v-spacer>
-            <v-col class="d-flex justify-center flex-column" cols="auto" v-for="(product, index) in products"
+             <v-col v-if="Object.keys(products).length >= 1" class="d-flex justify-center flex-column" cols="auto" v-for="(product, index) in products"
               :key="index">
-              <v-sheet v-if="index < 12 && product.highlight">
+               <v-sheet v-if="index < 12 && product.highlight">
+                
                 <v-hover v-slot="{ isHovering, props }">
                   <v-card class="mx-auto" :max-height="200" elevation="0" v-bind="props">
                     <div class="float-right">
@@ -112,19 +113,25 @@
                 </v-hover>
               </v-sheet>
             </v-col>
+            <v-col v-else v-for="n in 8" class="d-flex justify-center flex-column" cols="auto" md="3" sm="3">
+              <v-sheet>
+                <v-skeleton-loader type="card" :width="150"></v-skeleton-loader>
+              </v-sheet>
+            </v-col>
+            <v-divider></v-divider>
           </v-row>
-
-          <v-row fluid>
+          
+          <v-row no-gutters>
             <v-col class="d-flex justify-center flex-column" cols="auto">
               <Banner></Banner>
             </v-col>
           </v-row>
-
+        
           <v-row justify="center">
             <h4>All Products</h4>
             <v-spacer></v-spacer>
             <v-divider></v-divider>
-            <v-col class="d-flex justify-center flex-column" cols="6" md="3" sm="2" v-for="product in products"
+            <v-col v-if="Object.keys(products).length >= 1" class="d-flex justify-center flex-column" cols="6" md="3" sm="2" v-for="product in products"
               :key="item">
               <v-sheet class="py-2 px-2">
                 <v-hover v-slot="{ isHovering, props }">
@@ -239,7 +246,11 @@
                 </v-hover>
               </v-sheet>
             </v-col>
-
+            <v-col v-else v-for="n in 24" class="d-flex justify-center flex-column" cols="auto" md="3" sm="3">
+              <v-sheet class="py-2 px-2">
+                <v-skeleton-loader type="card" :width="150"></v-skeleton-loader>
+              </v-sheet>
+            </v-col>
             <v-infinite-scroll ref="infinite" :height="200" :width="1800" @load="load" hide-scroll>
               <template v-slot:empty>
                 <v-alert class="bg-transparent">No more items to load</v-alert>
@@ -385,8 +396,8 @@ export default {
           return this.customer = response.data;
         })
         .catch((response) => {
-
-          return alert('Error:' + response);
+          return false;
+          //return alert('Error:' + response);
         })
     },
     getCard() {
@@ -395,7 +406,7 @@ export default {
           return this.cardDiscountColor = JSON.parse(response.data.chip_color);
         })
         .catch((response) => {
-          return alert('Errror: ' + response);
+          return false; // alert('Errror: ' + response);
         })
     },
     getProducts() {
@@ -413,7 +424,7 @@ export default {
           return this.products = response.data;
         })
         .catch((response) => {
-          return alert('Error :' + response);
+          return false; //alert('Error :' + response);
         });
     },
     getCategories() {
@@ -422,7 +433,7 @@ export default {
           return this.categories = response.data;
         })
         .catch((response) => {
-          return alert('Erro :' + response);
+          return false; //alert('Erro :' + response);
         });
     },
     getWelcomeDiscount() {
@@ -431,7 +442,7 @@ export default {
           return this.welcomeDiscount = response.data;
         })
         .catch((response) => {
-          return alert('Error:' + response);
+          return false; //alert('Error:' + response);
         });
     },
     getDiscounts() {
@@ -441,7 +452,7 @@ export default {
           return this.discounts = response.data;
         })
         .catch((response) => {
-          return alert('Error: ' + response);
+          return false; //alert('Error: ' + response);
         });
     },
     getCarousel() {
@@ -450,7 +461,7 @@ export default {
           return this.carousel = response.data;
         })
         .catch((response) => {
-          return alert('Error:' + response);
+          return false; // alert('Error:' + response);
         })
     },
     onClick() {
@@ -468,15 +479,11 @@ export default {
       
       axios.post(`/api/products/search/${item.props.id}`, data)
         .then((response) => {
-         // console.log(response.data);
-          const openBuy = this.buy(response.data);
-         // this.closeShowList();
-          
-         
-          return this.search = response.data;
+         const openBuy = this.buy(response.data);
+         return this.search = response.data;
         })
         .catch((response) => {
-          alert('Error:' + response);
+          return false; //alert('Error:' + response);
         });
     },
     closeShowList(){
@@ -508,7 +515,7 @@ export default {
           return this.cart = response.data;
         })
         .catch((response) => {
-          alert('Error :' + response);
+          return false; //alert('Error :' + response);
         });
     },
     like() {
@@ -543,7 +550,7 @@ export default {
           return this.likes = response.data;
         })
         .catch((response) => {
-          alert('Error: ' + response);
+          return false; //alert('Error: ' + response);
         });
     },
     openDiscountDialog() {

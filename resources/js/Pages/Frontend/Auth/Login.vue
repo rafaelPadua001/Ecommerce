@@ -152,7 +152,7 @@ export default {
                return this.app_icon = JSON.parse(response.data.app_logo);
             })
             .catch((response) => {
-               return alert('Error: ' + response);
+               return false; 
             })
         }
 
