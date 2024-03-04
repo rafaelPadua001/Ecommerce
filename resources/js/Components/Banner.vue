@@ -15,12 +15,12 @@
          </v-card>
         </v-sheet>
 
-        <v-sheet v-else>
+        <v-sheet v-else class="py-2 px-2">
           <v-card class="mx-auto elevation-0">
             <v-skeleton-loader 
-              type="card"
+              type="image"
               :width="1800"
-              :height="720"
+              
             >
           
           </v-skeleton-loader>
