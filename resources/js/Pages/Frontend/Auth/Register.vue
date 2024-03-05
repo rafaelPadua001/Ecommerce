@@ -1,6 +1,5 @@
 <template>
-    
-        <v-container>
+    <v-container>
             <v-row no-gutters >
                 <v-col class="d-flex justify-center flex-column" cols="auto" md="12" sm="2">
                     <v-sheet class="px-2 py-2">
