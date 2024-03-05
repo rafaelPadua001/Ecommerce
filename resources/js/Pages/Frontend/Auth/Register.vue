@@ -1,15 +1,15 @@
 <template>
-    <div>
+    
         <v-container>
-            <v-row no-gutters>
-                <v-col class="d-flex justify-center mb-6 flex-column" cols="12" md="12" sm="2">
-                    <v-sheet>
-                        <v-card class="bg-transparent-accent-4 mx-auto elevation-0" :width="900">
+            <v-row no-gutters >
+                <v-col class="d-flex justify-center flex-column" cols="auto" md="12" sm="2">
+                    <v-sheet class="px-2 py-2">
+                        <v-card class="mx-auto elevation-0" :width="800">
                             <v-card-text>
-                                <v-row>
+                                <v-row no-gutters>
                                     <v-col cols="auto" md="6" sm="2">
 
-                                        <v-img width="560" height="650" cover src="https://picsum.photos/1920/1080?random">
+                                        <v-img width="405" height="650" cover src="https://picsum.photos/1920/1080?random">
                                         </v-img>
                                     </v-col>
 
@@ -138,7 +138,7 @@
                 </v-col>
             </v-row>
         </v-container>
-    </div>
+        
 </template>
 
 <script>
@@ -201,7 +201,7 @@ export default {
                     return this.app_icon = JSON.parse(response.data.app_logo);
                 })
                 .catch((response) => {
-                    return alert('Error: ' + response);
+                    return false; //alert('Error: ' + response);
                 })
         },
         resetForm() {
