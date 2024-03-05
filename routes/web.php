@@ -76,6 +76,7 @@ Route::get('/admin', function () {
 });
 
 Route::post('/loginAdmin', [LoginController::class, 'login'])->name('login');
+Route::post('/registerAdmin', [LoginController::class, 'register'])->name('admin.register');
 Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 Route::get('/users', function(){
     $user = Auth::user();

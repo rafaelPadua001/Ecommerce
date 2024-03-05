@@ -66,7 +66,7 @@
                                             <v-row>
                                                 <v-col>
                                                     <v-btn-group>
-                                                        <v-btn variant="plan" href="/register">joinUs</v-btn>
+                                                        <v-btn variant="plan" to="/registerAdmin">joinUs</v-btn>
                                                         <v-btn variant="plan" @click="login()">Login</v-btn>
 
                                                     </v-btn-group>

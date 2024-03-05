@@ -16,6 +16,7 @@ import Orders from '../Pages/Frontend/Orders/Orders.vue'
 import CouponCustomer from '../Pages/Frontend/Coupons/CouponCustomer.vue'
 //import SearchProduct from '../Pages/Frontend/Products/partials/Search.vue'
 import AdminLogin from '../Pages/Backend/Auth/Login.vue'
+import AdminRegister from '../Pages/Backend/Auth/Register.vue'
 import AdminDashboard from '../Pages/Backend/Auth/Dashboard.vue'
 import Categories from '../Pages/Backend/Categories/Categories.vue'
 import Subcategories from '../Pages/Backend/Subcategories/Subcategories.vue'
@@ -70,7 +71,11 @@ const routes = [{
         name: 'admin',
         component: AdminLogin
     },
-    
+    {
+        path: '/registerAdmin',
+        name: 'registerAdmin',
+        component: AdminRegister
+    },
     {
         path: '/adminDashboard',
         name: 'adminDashboard',
