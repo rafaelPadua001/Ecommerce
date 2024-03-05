@@ -1,6 +1,7 @@
 <template>
-    <v-row no-gutters justify="center">
-        <v-col class="d-flex justify-center flex-column" cols="8">
+    <v-container>
+        <v-row no-gutters justify="center">
+        <v-col class="d-flex justify-center flex-column" cols="auto">
             <v-sheet class="px-2 py-2">
                 <v-card class="mx-auto" :width="800">
                     <v-card-title>
@@ -83,6 +84,8 @@
             </v-sheet>
         </v-col>
     </v-row>
+    </v-container>
+    
 
 
 </template>
