@@ -89,6 +89,9 @@ class LoginController extends Controller
     {
         try {
             $store = $this->userService->store($request);
+            if($store){
+                return redirect('/admin');
+            }
             return response()->json($store);
         } catch (Exception $e) {
             return response()->json($e);
