@@ -229,8 +229,8 @@ export default {
                     this.message = 'Usuario cadastrado com sucesso, você será redirecionado em breve.';
                     this.alert = true;
                     setTimeout(() => {
-                        window.location.href = "/login";
-                    }, 10000);
+                        window.location.href = "/admin";
+                    }, 1000);
 
                     return true;
                 })
