@@ -112,7 +112,7 @@ Route::delete('/address/delete/{id}', [AddressesController::class, 'destroy'])->
 //Categories routes
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index');
 Route::get('/categories/show', [CategoriesController::class, 'show'])->name('categories.show');
-
+Route::post('/categories/store/{id}', [CategoriesController::class, 'create'])->name('create');
 //Cart Routes
 Route::get('/carts',[CartController::class, 'index'])->name('carts.get');
 Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
