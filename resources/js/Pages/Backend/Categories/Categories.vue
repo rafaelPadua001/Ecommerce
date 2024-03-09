@@ -1,11 +1,14 @@
 <template>
-  <v-row fluid>
+  <v-container>
+    <v-sheet class="px-2 py-2">
+    <v-row fluid no-gutters>
     <v-col class="d-flex justify-center flex-column" cols="auto">
       <Dashboard />
     </v-col>
   </v-row>
-  <v-row fluid>
-    <v-col class="d-flex justify-center flex-column" cols="auto">
+  
+  <v-row justify="center" no-gutters>
+    <v-col class="d-flex justify-center flex-column" cols="12" md="8" sm="6">
       <v-data-table 
           :headers="headers" 
           :items="categories"
@@ -13,7 +16,7 @@
           class="elevation-1"
           >
           <template v-slot:top>
-            <v-toolbar flat>
+            <v-toolbar flat class="bg-transparent">
               <v-toolbar-title>Categories</v-toolbar-title>
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
@@ -75,6 +78,21 @@
                         Icon selected: <v-icon :icon="this.icons.icon"></v-icon>
                         </v-col>
                       </v-row>
+
+                      <v-row>
+                        <v-col>
+                          <v-file-input 
+                            v-model="thumbnail"
+                            label="thumbnail category"
+                            clearable
+                            
+                          >
+                             
+                          </v-file-input>
+
+                          preview thumbnail: 
+                        </v-col>
+                      </v-row>
                     </v-container>
                   </v-card-text>
 
@@ -134,6 +152,12 @@
 
     </v-col>
   </v-row>
+
+    </v-sheet>
+  </v-container>
+  
+
+  
  
 </template>
 
@@ -147,6 +171,7 @@ export default {
   data: () => ({
     user: '',
     categories: [],
+    thumbnail: [],
     dialog: false,
     dialogDelete: false,
     headers: [
@@ -336,13 +361,15 @@ export default {
         Object.assign(this.categories[this.editedIndex], this.editedItem);
 
       } else {
-        const token = document.head.querySelector('meta[name="csrf-token"]');
+        const token = document.head.querySelector('meta[name="csrf-token"]').content;
         const userId = this.user.id
 
-        const data = { name: this.editedItem.name,  icon: this.icons.icon };
+        const data = { name: this.editedItem.name,  icon: this.icons.icon, thumbnail: this.thumbnail };
+       
         axios.post(`/api/categories/store/${this.user.id}`, data, {
           headers: {
-            'X-CSRF-TOKEN': token
+            'X-CSRF-TOKEN': token,
+            'Content-Type': 'multipart/form-data'
           }
         })
           .then((response) => {

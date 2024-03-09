@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Categories;
+use App\Services\CategoryService\CategoryService;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 
@@ -14,6 +15,11 @@ use App\Http\Controllers\Controller;
 class CategoriesController extends Controller
 {
     //
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService){
+        $this->categoryService = $categoryService;
+    }
     public function index(){
       
         $categories = Categories::join('users', 'categories.user_id', '=', 'users.id')
@@ -27,21 +33,29 @@ class CategoriesController extends Controller
         $categories = Categories::all();
         return response()->json($categories);
     }
-    public function store(Request $request, $id){
-        $data = $request;
-        $user = User::findOrFail($id);
-      
+    public function create(Request $request, $id){
         try{
-            $category = Categories::create([
-                'user_id' => $user->id,
-                'name' => $request->name,
-                'icon' => $request->icon,
-            ]);
-            return response()->json($category);
+            $userId = $id;
+            $create = $this->categoryService->store($request, $userId);
+            return response()->json($create);
         }
         catch(Exception $e){
-            return $e;
+            return response()->json($e->getMessage());
         }
+        // $data = $request;
+        // $user = User::findOrFail($id);
+      
+        // try{
+        //     $category = Categories::create([
+        //         'user_id' => $user->id,
+        //         'name' => $request->name,
+        //         'icon' => $request->icon,
+        //     ]);
+        //     return response()->json($category);
+        // }
+        // catch(Exception $e){
+        //     return $e;
+        // }
        
     }
     public function update(Request $request, $id){
