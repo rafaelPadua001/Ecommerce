@@ -14,11 +14,22 @@ class CategoryService {
     public function __construct(Categories $categories){
         $this->categories = $categories;
     }
+    public function index(){
+        try{
+            $categories = Categories::join('users', 'categories.user_id', '=', 'users.id')
+                ->select('categories.*', 'users.name as user_name')
+                ->get();
+            return $categories;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+        return response()->json($categories);
+    }
     public function store(Request $request, $userId){
         $user = User::findOrFail($userId);
        
         $uploadThumbnail = $this->uploadThumbnail($request->file('thumbnail'));
-
         try{
             $category = Categories::create([
                 'user_id' => $user->id,
@@ -41,7 +52,6 @@ class CategoryService {
               
               
                 $upload = Storage::putFileAs('/public/Categories/Thumbnails', $thumbnail[0], $randomName);
-               
                 return $randomName;
                
             }
@@ -50,6 +60,5 @@ class CategoryService {
            
             return $e->getMessage();
         }
-      
     }
 }
