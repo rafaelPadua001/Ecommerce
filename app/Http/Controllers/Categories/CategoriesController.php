@@ -21,13 +21,13 @@ class CategoriesController extends Controller
         $this->categoryService = $categoryService;
     }
     public function index(){
-      
-        $categories = Categories::join('users', 'categories.user_id', '=', 'users.id')
-        ->select('categories.*', 'users.name as user_name')
-        ->get();
-        
-        
+      try{
+        $categories = $this->categoryService->index();
         return response()->json($categories);
+      }
+      catch(Exception $e){
+        return response()->json($e->getMessage());
+      }
     }
     public function show(){
         $categories = Categories::all();
@@ -42,21 +42,6 @@ class CategoriesController extends Controller
         catch(Exception $e){
             return response()->json($e->getMessage());
         }
-        // $data = $request;
-        // $user = User::findOrFail($id);
-      
-        // try{
-        //     $category = Categories::create([
-        //         'user_id' => $user->id,
-        //         'name' => $request->name,
-        //         'icon' => $request->icon,
-        //     ]);
-        //     return response()->json($category);
-        // }
-        // catch(Exception $e){
-        //     return $e;
-        // }
-       
     }
     public function update(Request $request, $id){
        

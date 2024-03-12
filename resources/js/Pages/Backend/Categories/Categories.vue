@@ -120,6 +120,17 @@
               </v-dialog>
             </v-toolbar>
           </template>
+          <template v-slot:item.thumbnail="{item}">
+            <v-row>
+              <v-col>
+                <v-img :src="`./storage/Categories/Thumbnails/${item.thumbnail}`" :alt="`${item.thumbnail}`" class="align-end text-white" :width="250"
+                max-width="90" height="90" aspect-ratio="16/9">
+                </v-img>
+           
+               
+              </v-col>
+            </v-row>
+          </template>
           <template v-slot:item.icon="{ item }">
             <v-icon :icon="item.icon"></v-icon>
           </template>
@@ -176,8 +187,13 @@ export default {
     dialogDelete: false,
     headers: [
       {
-        title: 'Name',
+        title: 'Thumbnail',
         align: 'start',
+        sortable: false,
+        key: 'thumbnail'
+      },
+      {
+        title: 'Name',
         sortable: false,
         key: 'name',
       },
@@ -360,7 +376,8 @@ export default {
           })
         Object.assign(this.categories[this.editedIndex], this.editedItem);
 
-      } else {
+      } 
+      else {
         const token = document.head.querySelector('meta[name="csrf-token"]').content;
         const userId = this.user.id
 
@@ -373,7 +390,7 @@ export default {
           }
         })
           .then((response) => {
-            this.categories.push(response.data);
+            this.categories.push(response.data.original);
           })
           .catch((response) => {
             alert('Error' + response);
