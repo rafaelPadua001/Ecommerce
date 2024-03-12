@@ -233,7 +233,6 @@ export default {
       },
       {
         title: 'Name',
-        sortable: false,
         key: 'name',
       },
       // { title: 'Creator', key: 'user_id' },
