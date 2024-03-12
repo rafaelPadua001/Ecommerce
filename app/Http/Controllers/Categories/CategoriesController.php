@@ -30,7 +30,7 @@ class CategoriesController extends Controller
       }
     }
     public function show(){
-        $categories = Categories::all();
+        $categories = $this->categoryService->show();
         return response()->json($categories);
     }
     public function create(Request $request, $id){

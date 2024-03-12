@@ -61,4 +61,9 @@ class CategoryService {
             return $e->getMessage();
         }
     }
+    public function show(){
+        $categories = Categories::all();
+        return response()->json($categories);
+    }
+    
 }
