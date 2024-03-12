@@ -16,7 +16,7 @@
                 <v-toolbar-title>Categories</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
-                <v-dialog v-model="dialog" max-width="500px">
+                <v-dialog v-model="dialog" max-width="600">
                   <template v-slot:activator="{ props }">
                     <v-btn color="primary" dark class="mb-2" v-bind="props">
                       New Item
@@ -24,7 +24,18 @@
                   </template>
                   <v-card>
                     <v-card-title>
-                      <span class="text-h5">{{ formTitle }}</span>
+                     
+                      <v-toolbar class="bg-transparent">
+                        <v-toolbar-title>
+                          <span class="text-h5">{{ formTitle }}</span>
+                        </v-toolbar-title>
+                        <template v-slot:append>
+                        <v-btn @click="dialog = false">
+                          <v-icon icon="fas fa-close"></v-icon>
+                        </v-btn>
+                      </template>
+                      </v-toolbar>
+                      
                     </v-card-title>
 
                     <v-card-text>
@@ -53,23 +64,69 @@
                                     </v-avatar>
                                   </template>
                                   {{ data.item.title }}
-
-
                                 </v-chip>
                               </template>
                             </v-combobox>
 
-                            Icon selected: <v-icon :icon="this.icons.icon"></v-icon>
+                            Icon selected: <v-icon :icon="this.editedItem.icon"></v-icon>
                           </v-col>
                         </v-row>
 
                         <v-row>
                           <v-col>
-                            <v-file-input v-model="thumbnail" label="thumbnail category" clearable>
+                            
+                            <v-file-input v-model="thumbnail" label="thumbnail category" clearable @change="previewThumbnail">
 
                             </v-file-input>
-
                             preview thumbnail:
+                            <div v-if="previewThumbnail && !editedItem.thumbnail">
+                              <v-row v-if="thumbnail">
+                               <v-col >
+                                  <v-card v-for="(img, index) in thumbnail" :key="index">
+                                    <v-img
+                                      :src="img.src"
+                                      :lazy-src="img.name"
+                                      :alt="img.src"
+                                      cover
+                                    >
+
+                                    </v-img>
+                                  </v-card>
+                                </v-col>  
+                              </v-row>
+                            </div>
+                            <div v-else>
+                            <v-row>
+                               <v-col cols="12" md="6">
+                                <v-card>
+                                 {{ image }}
+                                  <v-img 
+                                      v-model="editedItem.thumbnail" 
+                                      :src="'./storage/Categories/Thumbnails/' + editedItem.thumbnail"
+                                      :lazy-src="image"
+                                      :alt="'Image ' + index"
+                                      cover
+                                      
+                                    >
+                                   <div float="right" justify="center">
+                                      <v-btn icon="fas fa-close" size="12px" density="compact" @click="removeImagePreviewEdit(index)">
+                                        <v-icon icon="fas fa-close" size="10px"></v-icon>
+
+                                      </v-btn>
+                                    </div>
+                                  
+                                    </v-img>
+                                    
+                                </v-card>
+
+                                
+                              </v-col>
+                              <v-divider></v-divider>
+                              <v-spacer></v-spacer>
+                              <v-spacer></v-spacer>
+                            </v-row>
+                           
+                        </div>
                           </v-col>
                         </v-row>
                       </v-container>
@@ -121,7 +178,7 @@
             </template>
             <template v-slot:item.actions="{ item }">
               <v-btn-group>
-                <v-btn icon variant="plain" @click="editItem(item.raw)" color="primary">
+                <v-btn icon variant="plain" @click="editItem(item)" color="primary">
                   <v-icon size="x-small" class="me-2" icon="fas fa-fa-regular fa-pen-to-square fa-2xs">
 
                   </v-icon>
@@ -250,7 +307,6 @@ export default {
       protein: 0,
     },
   }),
-
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
@@ -264,6 +320,11 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete()
     },
+    previewThumbnail(newUrl, oldUrl) {
+        // Executar lógica quando a imagem é alterada
+        console.log(`A imagem foi alterada de ${oldUrl} para ${newUrl}`);
+        return true;
+      },
   },
 
   created() {
@@ -334,6 +395,26 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+    },
+    previewThumbnail(event){
+    
+      const files = event.target.files;
+    
+      if(files){
+       
+        for(let i = 0; i < files.length; i ++){
+          const reader = new FileReader();
+          const file = files[i];
+         
+          reader.onload = (e) => {
+            this.thumbnail.push({
+              src: e.target.result,
+              name: file.name
+            });
+          };
+          reader.readAsDataURL(file);
+        }
+      }
     },
     save() {
       if (this.editedIndex > -1) {
