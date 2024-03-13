@@ -26,6 +26,40 @@ class CategoryService {
         }
         return response()->json($categories);
     }
+    public function show(){
+        $categories = Categories::all();
+        return response()->json($categories);
+    }
+    
+    public function uploadThumbnail($thumbnail){
+        try {
+            
+            if ($thumbnail) {
+               
+                $randomName = Str::random(10) . '.webp';
+              
+             
+                $upload = Storage::putFileAs('/public/Categories/Thumbnails', $thumbnail[0] ?? $thumbnail[1], $randomName);
+
+                return $randomName;
+               
+            }
+            
+        } catch (Exception $e) {
+           
+            return $e->getMessage();
+        }
+    }
+    public function removeThumbnail($thumbnail)
+    {
+        try{
+            $removeThumbnail = Storage::delete('/public/Categories/Thumbnails/'.$thumbnail);
+            return true;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
     public function store(Request $request, $userId){
         $user = User::findOrFail($userId);
        
@@ -43,27 +77,53 @@ class CategoryService {
             return $e;
         }
     }
-    public function uploadThumbnail($thumbnail){
-        try {
-            
-            if ($thumbnail) {
-                
-                $randomName = Str::random(10) . '.webp';
-              
-              
-                $upload = Storage::putFileAs('/public/Categories/Thumbnails', $thumbnail[0], $randomName);
-                return $randomName;
-               
-            }
-            
-        } catch (Exception $e) {
+    public function update(Request $request, $id){
+       
+        try{
+            $category = Categories::where('id', $id)->first();
+            $removeThumbnail = $this->removeThumbnail($category->thumbnail);
            
+            if($removeThumbnail){
+                
+                $thumbnail = $request->file('thumbnail');
+              
+                $uploadThumbnail = $this->uploadThumbnail($thumbnail);
+                
+                $category->update([
+                    'user_id' => $request->user_id,
+                     'name' => $request->name,
+                     'icon' => $request->icon,
+                     'thumbnail' => $uploadThumbnail
+                 ]);
+            }
+
+           
+            return $category;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        };
+    }
+    public function remove($id){
+        try{
+            $category = Categories::findOrFail($id);
+            
+            if(!empty($category)){
+                $removeThumbnail = $this->removeThumbnail($category->thumbnail);
+                if($removeThumbnail){
+                    $category->delete();
+                }
+               
+                return response()->json($category);
+            }
+            else
+            {
+                return back()->with(['message' => 'Categoria não encontrada em nossos registros']);
+            }
+        }
+        catch(Exception $e){
             return $e->getMessage();
         }
     }
-    public function show(){
-        $categories = Categories::all();
-        return response()->json($categories);
-    }
-    
+   
 }

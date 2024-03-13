@@ -291,13 +291,7 @@ export default {
 
     ],
     editedIndex: -1,
-    editedItem: {
-      name: '',
-      created: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
+    editedItem: [],
     defaultItem: {
       name: '',
       created: 0,
@@ -416,28 +410,34 @@ export default {
       }
     },
     save() {
+      console.log(this.editedIndex);
       if (this.editedIndex > -1) {
-        const token = document.head.querySelector('meta[name="csrf-token"]');
+        const token = document.head.querySelector('meta[name="csrf-token"]').content;
 
         const data = {
           name: this.editedItem.name,
           user_id: this.user.id,
-          icon: this.icons.icon
+          icon: this.icons.icon,
+          thumbnail: this.thumbnail
         };
         axios.post(`/api/categories/update/${this.editedItem.id}`, data,
           {
             headers: {
-              'X-CSRF-TOKEN': token
+              'X-CSRF-TOKEN': token,
+              'Content-Type': 'multipart/form-data'
             }
           })
           .then((response) => {
-            return true;
+           
+            console.log(this.editedIndex);
+            Object.assign(this.categories[this.editedIndex], response.data);
+            return this.close();
           })
           .catch((response) => {
-            alert('Error:'.response.error);
+            return alert('Error:' + response);
           })
-        Object.assign(this.categories[this.editedIndex], this.editedItem);
-
+         // this.close();
+         // Object.assign(this.categories[this.editedIndex], editedItem);
       }
       else {
         const token = document.head.querySelector('meta[name="csrf-token"]').content;
@@ -453,14 +453,15 @@ export default {
         })
           .then((response) => {
             this.categories.push(response.data.original);
+            return this.close();
           })
           .catch((response) => {
             alert('Error' + response);
           })
         //  this.desserts.push(this.editedItem);
-
+          
       }
-      this.close()
+      //this.close()
     },
   },
   created() {
