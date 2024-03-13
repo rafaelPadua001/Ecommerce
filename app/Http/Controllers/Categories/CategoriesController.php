@@ -46,28 +46,20 @@ class CategoriesController extends Controller
     public function update(Request $request, $id){
        
         try{
-            $category = Categories::where('id', $id)->first();
-           
-            $category->update($request->all());
-            return response()->json($category);
+            $category = $this->categoryService->update($request, $id);
+           return response()->json($category);
         }
         catch(Exception $e){
-            return $e;
+            return response()->json($e);
         };
     }
     public function destroy($id){
         try{
-            $category = Categories::findOrFail($id);
-            
-            if(!empty($category)){
-                $category->delete();
-                return response()->json($category);
-            }
-            else
-            {
-                return back()->with(['message' => 'Categoria não encontrada em nossos registros']);
-            }
+            $removeCategory = $this->categoryService->remove($id);
+            return response()->json($removeCategory);
         }
-        catch(Exception $e){}
+        catch(Exception $e){
+            return response()->json($e);
+        }
     }
 }
