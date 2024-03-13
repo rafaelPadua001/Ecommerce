@@ -35,7 +35,7 @@
                             </v-btn>
 
                         <div>
-                            <v-btn id="menu-categories" variant="plain" 
+                            <v-btn  ref="menuBtn"  variant="plain" 
                                 :color="this.appBarColor ?? 'trasparent'"
                                 size="small">
                                 <!-- <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
@@ -48,8 +48,8 @@
                                
                             </v-btn>
 
-                            <v-menu activator="#menu-categories">
-                                <v-list elevation="1">
+                            <v-menu :activator="$refs.menuBtn" open-on-hover>
+                                <v-list elevation="0">
                                     <v-list-item v-if="!categories || categories.length === 0">
                                         no categories found
                                     </v-list-item>
