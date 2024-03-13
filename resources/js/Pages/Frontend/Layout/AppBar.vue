@@ -55,7 +55,20 @@
                                     </v-list-item>
                                     <v-list-item v-else v-for="category in categories" :key="category.id">
                                         <v-btn variant="flat" size="small" :to="`/subcategories/all/${category.id}`">
-                                            <v-icon :icon="category.icon"></v-icon>
+                                            <span>
+                                                <v-avatar
+                                                   color="surface-variant"
+                                                    size="28px"
+                                                >
+                                                    <v-img
+                                                        v-if="category.thumbnail"
+                                                        :src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
+                                                        :lazy-src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
+                                                        :alt="`${category.name}`"
+                                                    ></v-img>
+                                                </v-avatar>
+                                            </span>
+                                            <!-- <v-icon v-else :icon="category.icon"></v-icon> -->
                                             <span>{{ category.name }}</span>
                                         </v-btn>
                                     </v-list-item>
