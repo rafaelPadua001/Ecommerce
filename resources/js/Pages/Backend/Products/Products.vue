@@ -378,10 +378,10 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-switch 
-                          v-model="editedItem.featured"
-                          label="Featured product"
+                          v-model="editedItem.launch"
+                          label="Launch product"
                           color="success"
-                          @click="ft_turn"
+                          @click="lc_turn"
                         
                           ></v-switch>
                       </v-col>
@@ -532,7 +532,7 @@ export default {
     highlights: false,
     Availability: false,
     status: false,
-    featured: false,
+    launch: false,
     headers: [
       { title: 'images', key: 'images' },
       {
@@ -578,7 +578,7 @@ export default {
       highlights: false,
       availability: false,
       status: true,
-      featured: false,
+      lauch: false,
       discount_id: null,
     },
     defaultItem: {
@@ -607,7 +607,7 @@ export default {
       slug: '',
       highlights: false,
       availability: false,
-      featured: false,
+      launch: false,
       status: true,
     },
   }),
@@ -777,14 +777,14 @@ export default {
         this.editedItem.status = this.status;
       }
     },
-    ft_turn(){
-      if(this.editedItem.featured){
-        this.featured = 0;
-        this.editedItem.featured = this.featured;
+    lc_turn(){
+      if(this.editedItem.lauch){
+        this.lauch = 0;
+        this.editedItem.lauch = this.lauch;
       }
       else{
-        this.featured = 1;
-        this.editedItem.featured = this.featured;
+        this.lauch = 1;
+        this.editedItem.lauch = this.lauch;
       }
     },
     editItem(item) {
@@ -824,13 +824,13 @@ export default {
         this.colors = this.editedItem.colors;
         this.editedItem.colors = '';
       }
-      if(this.editedItem.featured){
-        this.featured = true;
-        this.editedItem.featured = this.featured;
+      if(this.editedItem.launch){
+        this.launch = true;
+        this.editedItem.launch = this.launch;
       }
       else{
-        this.featured = false;
-        this.editedItem.featured = this.featured;
+        this.lauch = false;
+        this.editedItem.lauch = this.lauch;
       }
       this.dialog = true;
     },
@@ -897,7 +897,7 @@ export default {
           availability: this.editedItem.availability,
           status: this.editedItem.status,
           discount_id: this.editedItem.discount_id,
-          featured: this.featured,
+          launch: this.launch,
         };
         axios.post(`/api/products/update/${this.editedItem.id}`, data, {
             headers: {
@@ -941,7 +941,7 @@ export default {
           highlights: this.highlights,
           availability: this.availability,
           status: this.status,
-          featured: this.featured
+          lauch: this.lauch
         };
         axios.post(`/products/store`, data,
         {
