@@ -231,7 +231,7 @@
                           </v-card>
                           <v-col v-if="index >= 1">
                             <v-text-field
-                              v-model="color.qtdy"
+                            
                             label="Quantity"
                             ></v-text-field>
                         
