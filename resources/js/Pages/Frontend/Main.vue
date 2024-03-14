@@ -70,6 +70,77 @@
             </v-col>
           </v-row>
 
+          <v-row>
+            
+              <h4>Launch</h4>
+              <v-divider></v-divider>
+              <v-spacer></v-spacer>
+
+              <v-col v-if="Object.keys(products).length >= 1" class="d-flex justify-center flex-column" cols="auto"
+                v-for="(product,index) in products" :key="index"  
+              >
+                <v-sheet v-if="index < 12 && product.featured" class="py-2 px-2">
+                  <v-hover v-slot="{isHovering, props}">
+                    <v-card class="mx-auto" :max-height="200" elevation="0" v-bind="props">
+                      <div class="float-right">
+                        <v-btn-group>
+                          <v-btn icon size="x-small">
+                          <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
+                            class="bg-transparent" @click="like()"></v-icon>
+                          <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else @click="like()"></v-icon>
+                        </v-btn>
+                        <v-btn icon size="x-small">
+                          <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
+                        </v-btn>
+                        </v-btn-group>
+                      </div>
+                      <v-carousel :cycle="timeToCarousel" :show-arrows="false" hide-delimiters inline>
+                      <v-carousel-item v-for="image in JSON.parse(product.images)" :key="image.id"
+                        :src="`./storage/products/${image}`" class="align-end" inline height="100" :width="120"
+                        aspect-ratio="1/1" cover>
+                        <v-chip class="bg-pink-darken-1 float-right ga-2 pa-2" variant="tonal">
+                          <p>
+                            R$: {{ (product.price - (product.price * product.discount_percentage)).toFixed(2) }}
+                          </p>
+                        </v-chip>
+                      </v-carousel-item>
+                    </v-carousel>
+                    <v-expand-transition>
+                      <div v-if="isHovering"
+                        class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
+                        <v-card-actions>
+                          <!--<v-btn class="ms-4 bg-yellow-darken-4" variant="outlined" color="yellow-darken-1"
+                                      size="small" elevation="8" @click="addItem(selectProduct)">
+                                      <v-icon icon="fas fa-cart-plus"></v-icon>
+                                      <v-tooltip activator="parent" location="start">Adicionar ao carrinho</v-tooltip>
+                                    </v-btn>
+                                    -->
+                          <v-btn class="mr-2" block @click="buy(product)">
+                            <v-icon icon="fas fa-money-bill-transfer"></v-icon>
+                            <v-tooltip activator="parent" location="end">Comprar</v-tooltip>
+                          </v-btn>
+                        </v-card-actions>
+                      </div>
+                    </v-expand-transition>
+                    </v-card>
+                  </v-hover>
+                </v-sheet>
+              </v-col>
+              <v-col v-else v-for="n in 8" class="d-flex justify-center flex-column" cols="auto" md="3" sm="2">
+              <v-sheet class="py-2 px-2">
+                <v-skeleton-loader type="card" :width="160"></v-skeleton-loader>
+              </v-sheet>
+            </v-col>
+           
+            
+          </v-row>
+
+          <v-row no-gutters>
+            <v-col class="d-flex justify-center flex-column" cols="auto">
+              <Banner></Banner>
+            </v-col>
+          </v-row>
+
           <v-row no-gutters>
             <h4>Highlights</h4>
             <v-divider></v-divider>
@@ -77,7 +148,6 @@
             <v-col v-if="Object.keys(products).length >= 1" class="d-flex justify-center flex-column" cols="auto"
               v-for="(product, index) in products" :key="index">
               <v-sheet v-if="index < 12 && product.highlight">
-
                 <v-hover v-slot="{ isHovering, props }">
                   <v-card class="mx-auto" :max-height="200" elevation="0" v-bind="props">
                     <div class="float-right">
@@ -130,13 +200,6 @@
               <v-sheet class="py-2 px-2">
                 <v-skeleton-loader type="card" :width="160"></v-skeleton-loader>
               </v-sheet>
-            </v-col>
-            <v-divider></v-divider>
-          </v-row>
-
-          <v-row no-gutters>
-            <v-col class="d-flex justify-center flex-column" cols="auto">
-              <Banner></Banner>
             </v-col>
           </v-row>
 
