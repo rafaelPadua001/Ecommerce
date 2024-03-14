@@ -216,18 +216,39 @@
                            
                           
                         </v-col>
-                        
-                        <v-col cols="8" sm="4" md="2">
-                          <v-card v-for="(color, index) in colors" :key="index" :color="color">
+                        <v-row v-if="colors !== 0 || colors !== 'null'">
+                          <v-col cols="8" sm="4" md="2" v-for="(color, index) in colors" :key="index">
+                            
+                          <v-card :color="color" v-if="index >= 1">
                             
                             <template v-slot:append>
                                   <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
                                     <v-icon icon="fas fa-close fa-2xs"></v-icon>
                                   </v-btn>
                             </template>
+                            
+                            
                           </v-card>
+                          <v-col v-if="index >= 1">
+                            <v-text-field
+                            
+                            label="Quantity"
+                            ></v-text-field>
+                        
+                       </v-col>
                         </v-col>
-                        <v-col>
+                       
+                        </v-row>
+                       
+                        
+                     </v-row>
+                     
+                     <v-spacer></v-spacer>
+                     <v-divider></v-divider>
+
+                     <v-row>
+                      <v-col>
+                        <label>Sizes: </label>
                           <v-select
                             v-model="editedItem.size"
                             chips
@@ -238,9 +259,6 @@
                           ></v-select>
                         </v-col>
                      </v-row>
-                     
-                     <v-spacer></v-spacer>
-                     <v-divider></v-divider>
                      <v-row>
                       <v-col>
                         <h5>Scales</h5>
@@ -560,7 +578,7 @@ export default {
       images: [],
       platform: '',
       video_link: '',
-      //colors: [],
+      colors: [],
       size: [],
       price: "0.00",
       discount_id: '',
