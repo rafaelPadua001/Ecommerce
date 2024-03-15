@@ -52,6 +52,26 @@ class ProductController extends Controller
         
         return response()->json($products);
     }
+    public function show()
+    {
+        $products = Product::orderBy('id', 'desc')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->leftJoin('subcategories', 'categories.id', '=', 'subcategories.category_id')
+            ->leftJoin('coupons', 'products.discount_id', '=', 'coupons.id')
+            ->select('products.*',
+                'categories.id as category_id',
+                'subcategories.name as subcategoriy_id',
+                'coupons.id as discount_id',
+                'coupons.discount_percentage as discount_percentage'
+            )
+            ->get();
+            
+      
+        return response()->json($products);
+    }
+    public function search(Request $request){
+        dd($request);
+    }
     public function getProduct($id){
         try{
             
@@ -61,6 +81,59 @@ class ProductController extends Controller
         catch(Exception $e){
             return response()->json($e->getMessage());
         }
+    }
+    public function like($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $customer = Auth::guard('customer')->user();
+            $likedProduct = $this->getLikedController($product, $customer);
+            return response()->json($likedProduct);
+        } catch (Exception $e) {
+            return response()->json($e);
+        }
+    }
+    public function getLikedController($product, $customer)
+    {
+        $like = new LikedProductController();
+        return $like->store($product, $customer);
+    }
+    public function getDislikedController($product, $customer)
+    {
+        $like = new LikedProductController();
+        return $like->destroy($product, $customer);
+    }
+    public function dislike($id){
+        $product = Product::findOrFail($id);
+        $customer = Auth::guard('customer')->user();
+        $dislikedProduct = $this->getDisLikedController($product, $customer);
+        
+        return response()->json($dislikedProduct);
+    }
+    public function uploadImg($request)
+    {
+        $randomNames = [];
+    
+        
+        foreach ($request->images as $file) {
+         
+            if ($file) {
+                $randomName = Str::random(10) . '.webp';
+
+                $fileName = $file['src'];
+
+                $path = Storage::putFileAs('/public/products', $fileName, $randomName);
+
+                // Adiciona o novo nome de arquivo ao array $randomNames
+                $randomNames[] = $randomName;
+                // dd($randomName);
+                $product = Product::where('name', $request->name)->update([
+                    'images' => json_encode($randomNames, true)
+                ]);
+            }
+        }
+        
+        return $randomNames;
     }
     public function store(Request $request)
     {
@@ -77,7 +150,9 @@ class ProductController extends Controller
             'platform' => $request->platform,
             'video_links' => json_encode($request->video_link),
             'colors' => json_encode($request->colors),
+            'colors_qty' => json_encode($request->color_qty),
             'size' => json_encode($request->size),
+            'size_qty' => json_encode($request->size_qty),
             'unity' => $request->unity,
             'manufacturer' => false,
             'price' => $request->price,
@@ -118,83 +193,15 @@ class ProductController extends Controller
             $request->name,
             $request->quantity,
             $request->size,
+            $request->size_qty,
             $request->colors,
+            $request->color_qty,
             $newProduct->original['id'],
             $request->user_id
         );
       
   
         return response()->json($newProduct);
-    }
-    public function uploadImg($request)
-    {
-        $randomNames = [];
-    
-        
-        foreach ($request->images as $file) {
-         
-            if ($file) {
-                $randomName = Str::random(10) . '.webp';
-
-                $fileName = $file['src'];
-
-                $path = Storage::putFileAs('/public/products', $fileName, $randomName);
-
-                // Adiciona o novo nome de arquivo ao array $randomNames
-                $randomNames[] = $randomName;
-                // dd($randomName);
-                $product = Product::where('name', $request->name)->update([
-                    'images' => json_encode($randomNames, true)
-                ]);
-            }
-        }
-        
-        return $randomNames;
-    }
-    public function show()
-    {
-        $products = Product::orderBy('id', 'desc')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->leftJoin('subcategories', 'categories.id', '=', 'subcategories.category_id')
-            ->leftJoin('coupons', 'products.discount_id', '=', 'coupons.id')
-            ->select('products.*',
-                'categories.id as category_id',
-                'subcategories.name as subcategoriy_id',
-                'coupons.id as discount_id',
-                'coupons.discount_percentage as discount_percentage'
-            )
-            ->get();
-            
-      
-        return response()->json($products);
-    }
-    public function like($id)
-    {
-        try {
-            $product = Product::findOrFail($id);
-            $customer = Auth::guard('customer')->user();
-            $likedProduct = $this->getLikedController($product, $customer);
-            return response()->json($likedProduct);
-        } catch (Exception $e) {
-            return response()->json($e);
-        }
-    }
-    public function getLikedController($product, $customer)
-    {
-        $like = new LikedProductController();
-        return $like->store($product, $customer);
-    }
-    public function getDislikedController($product, $customer)
-    {
-        $like = new LikedProductController();
-        return $like->destroy($product, $customer);
-    }
-    public function dislike($id){
-        $product = Product::findOrFail($id);
-        $customer = Auth::guard('customer')->user();
-        $dislikedProduct = $this->getDisLikedController($product, $customer);
-        
-        return response()->json($dislikedProduct);
     }
     public function update(Request $request, $id)
     {
@@ -258,9 +265,6 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return response()->json($e);
         }
-    }
-    public function search(Request $request){
-        dd($request);
     }
     public function destroy($id)
     {
