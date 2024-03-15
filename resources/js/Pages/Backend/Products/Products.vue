@@ -200,14 +200,14 @@
                       </v-col>
                     </v-row>
                      <v-row>
-                        <v-col cols="12" sm="6" md="4">
+                        <v-col cols="auto" md="4" sm="2">
                             <h5>Select Colors:</h5>
 
                             <v-color-picker
                               v-model="editedItem.colors"
                               class="ma-2"
                               show-swatches
-                              swatches-max-height="55px"
+                              swatches-max-height="75px"
                               width="90%"
                               v-bind:onChange="selectedColor()"
                             >
@@ -216,38 +216,33 @@
                            
                           
                         </v-col>
-                        <v-row v-if="colors !== 0 || colors !== 'null'">
-                          <v-col cols="8" sm="4" md="2" v-for="(color, index) in colors" :key="index">
+                        <v-row v-if="colors !== 0 && colors !== 'null'" fluid>
+                          <v-col>
+                            <v-row v-for="(color, index) in colors" :key="index" cols="auto" align="center">
+                              <v-col cols="auto" sm="2">
+                                <v-card :color="color">
+                                  <template v-slot:append>
+                                    <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
+                                      <v-icon icon="fas fa-close fa-2xs"></v-icon>
+                                    </v-btn>
+                                  </template>
+                                </v-card>
+                              </v-col>
+                              <v-col cols="4" sm="4">
+                                <v-text-field v-model="color_qty[index]" label="Quantity" type="number" :prefix="color" :color="color"></v-text-field>
+                              </v-col>
                             
-                          <v-card :color="color" v-if="index >= 1">
-                            
-                            <template v-slot:append>
-                                  <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
-                                    <v-icon icon="fas fa-close fa-2xs"></v-icon>
-                                  </v-btn>
-                            </template>
-                            
-                            
-                          </v-card>
-                          <v-col v-if="index >= 1">
-                            <v-text-field
-                            
-                            label="Quantity"
-                            ></v-text-field>
-                        
-                       </v-col>
-                        </v-col>
-                       
-                        </v-row>
-                       
-                        
+                            </v-row>
+                          </v-col>
+                      </v-row>
+                      
                      </v-row>
                      
                      <v-spacer></v-spacer>
                      <v-divider></v-divider>
 
                      <v-row>
-                      <v-col>
+                      <v-col cols="auto" md="4" sm="2">
                         <label>Sizes: </label>
                           <v-select
                             v-model="editedItem.size"
@@ -258,6 +253,20 @@
                             variant="underlined"
                           ></v-select>
                         </v-col>
+                        <v-col cols="auto" md="4">
+                          <v-row v-for="(size, index) in editedItem.size" :key="index">
+                            <v-col cols="auto" sm="4">
+                              <v-chip color="success" variant="elevated">{{size}}</v-chip>
+                              
+                            </v-col>
+                            <v-col cols="auto">
+                              <v-text-field v-model="size_qty[index]" label="Quantity" type="number" :prefix="color" :color="color"></v-text-field>
+                            </v-col>
+                       
+                          </v-row>
+                          
+                        </v-col>
+                       
                      </v-row>
                      <v-row>
                       <v-col>
@@ -273,7 +282,7 @@
                             :items="['cm', 'mm', 'und', 'pcs']"
                             variant="underlined"
                           ></v-select>
-                        </v-col>
+                      </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.price"
@@ -531,10 +540,12 @@ export default {
     productImg: [],
     unity: '',
     size: [],
+    size_qty: [],
     platform: '',
     video_link: [],
     previewLink: '',
     colors: [],
+    color_qty: [],
     price: "0.00",
     quantity: false,
     weight: false,
