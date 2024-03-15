@@ -28,7 +28,7 @@ class ProductStockController extends Controller
         try {
 
             $stock = $this->stockService->create($name, $quantity, $size, $size_qty, $colors, $color_qty, $product_id, $user_id);
-
+           
             return response()->json($stock);
         } catch (Exception $e) {
             return response()->json($e);

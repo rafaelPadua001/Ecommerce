@@ -21,14 +21,16 @@ class StockService {
             return $e;
         }
     }
-    public function create($name, $quantity, $size, $colors, $product_id, $user_id){
+    public function create($name, $quantity, $size, $size_qty, $colors, $color_qty,  $product_id, $user_id){
         try{
         
             $stock = ProductStock::create([
                 'name' => $name,
                 'stock_quantity' => $quantity,
                 'product_size' => json_encode($size),
+                'size_qty' => json_encode($size_qty),
                 'product_colors' => json_encode($colors),
+                'color_qty' => json_encode($color_qty),
                 'product_id' => $product_id,
                 'user_id' => $user_id,
             ]);
