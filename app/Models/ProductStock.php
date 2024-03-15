@@ -12,7 +12,9 @@ class ProductStock extends Model
      'name',
      'stock_quantity',
      'product_size',
+     'size_qty',
      'product_colors',
+     'color_qty',
      'product_id',
      'user_id',
     ];
