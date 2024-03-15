@@ -32,7 +32,7 @@ return new class extends Migration
             $table->boolean('availability')->default(true);
             $table->string('slug')->unique()->nullable(); 
             $table->string('status')->default('active');
-            $table->boolean('featured')->default(false);
+            $table->boolean('launch')->default(false);
             $table->boolean('highlight')->default(false); // Define o valor padrão conforme necessário
             $table->foreignId('user_id')->constrained(
                 table: 'users', indexName: 'product_user_id'

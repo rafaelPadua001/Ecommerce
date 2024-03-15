@@ -33,7 +33,7 @@ class Product extends Model
         'availabity',
         'slug',
         'status',
-        'featured',
+        'launch',
         'highlight',
         'user_id'
         
