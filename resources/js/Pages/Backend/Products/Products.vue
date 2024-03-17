@@ -190,19 +190,27 @@
                               <v-col>
                                 <v-row v-for="(color, index) in colors" :key="index" cols="auto" align="center">
                                   <v-col cols="auto" sm="2">
-                                    <v-card :color="color">
+                                    <v-chip :color="color" variant="elevated">
+                                    
+                                    </v-chip>
+                                    
+                                    <!-- <v-card :color="color">
                                       <template v-slot:append>
                                         <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
                                           <v-icon icon="fas fa-close fa-2xs"></v-icon>
                                         </v-btn>
                                       </template>
-                                    </v-card>
+                                    </v-card> -->
                                   </v-col>
                                   <v-col cols="4" sm="4">
                                     <v-text-field v-model="color_qty[index]" label="Quantity" type="number"
                                       :prefix="color" :color="color"></v-text-field>
                                   </v-col>
-
+                                  <v-col cols="auto" sm="2">
+                                    <v-btn :color="color" icon density="compact" size="x-small" @click="removeSelectedColor(index)">
+                                            <v-icon icon="fas fa-close fa-2xs"></v-icon>
+                                          </v-btn>
+                                  </v-col>
                                 </v-row>
                               </v-col>
                             </v-row>
@@ -340,7 +348,7 @@
                                 @click="st_turn"></v-switch>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              {{ this.launch }}
+                              
                               <v-switch v-model="editedItem.launch" label="Launch product" color="success"
                                 @click="lc_turn" :value="this.launch"></v-switch>
                             </v-col>
@@ -404,9 +412,9 @@
                   <v-col v-if="typeof item.colors === 'string'">
                     <v-row>
                       <v-col cols="12" md="2" sm="6" v-for="(color, index) in JSON.parse(item.colors)" :key="index">
-                        <v-card class="mx-auto" :color="color">
-                          {{ color }}
-                        </v-card>
+                        <v-chip-goup>
+                          <v-chip :color="color" size="x-small" variant="elevated"></v-chip>
+                        </v-chip-goup>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -437,7 +445,7 @@
                 <v-row>
                   <v-col cols="auto">
                     <v-chip-group>
-                      <v-chip v-for="size in JSON.parse(item.size)" :key="size" class="bg-green" size="x-small">
+                      <v-chip v-for="(size,index) in JSON.parse(item.size)" :key="index" class="bg-green" size="x-small">
                         {{ size }}
                       </v-chip>
                     </v-chip-group>
