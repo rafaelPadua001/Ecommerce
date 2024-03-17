@@ -1,14 +1,15 @@
 <template>
-  <v-row>
+  <v-container>
+    <v-sheet class="px-2 py-2">
+      <v-row fluid>
     <v-col class="d-flex justify-center mb-6 flex-column" cols="auto">
       <Dashboard />
     </v-col>
   </v-row>
 
   <v-row justify="center" no-gutters>
-    <v-col class="d-flex justify-center flex-column" cols="auto">
-      <v-sheet>
-        <v-card class="mx-auto">
+    <v-col class="d-flex justify-center flex-column" cols="12" md="8" sm="6">
+      <v-card class="mx-auto">
           <v-divider></v-divider>
 
           <v-card-text>
@@ -25,7 +26,7 @@
                         New Item
                       </v-btn>
                     </template>
-                    <v-card>
+                    <v-card class="mx-auto">
                       <v-card-title>
                         <span class="text-h5">{{ formTitle }}</span>
                       </v-card-title>
@@ -413,11 +414,14 @@
                     </v-row>
                   </v-col>
                   <v-col v-else>
-                    <v-row>
-                      <v-col cols="12" md="2" sm="6" v-for="(color, index) in item.colors" :key="index">
-                        <v-card class="mx-auto" :color="color">
+                    <v-row fluid>
+                      <v-col cols="1" md="1" sm="1" v-for="(color, index) in item.colors" :key="index">
+                        <v-chip-goup>
+                          <v-chip :color="color" size="x-small" variant="elevated"></v-chip>
+                        </v-chip-goup>
+                        <!-- <v-card class="mx-auto" :color="color">
                           {{ color }}
-                        </v-card>
+                        </v-card> -->
                       </v-col>
                     </v-row>
 
@@ -436,7 +440,7 @@
                 <v-row>
                   <v-col cols="auto">
                     <v-chip-group>
-                      <v-chip v-for="size in JSON.parse(item.size)" :key="size" class="bg-green">
+                      <v-chip v-for="size in JSON.parse(item.size)" :key="size" class="bg-green" size="x-small">
                         {{ size }}
                       </v-chip>
                     </v-chip-group>
@@ -453,9 +457,12 @@
             </v-data-table>
           </v-card-text>
         </v-card>
-      </v-sheet>
+      
     </v-col>
   </v-row>
+    </v-sheet>
+  </v-container>
+  
 
 
 
