@@ -1,18 +1,15 @@
 <template>
-  <v-row>
+  <v-container>
+    <v-sheet class="px-2 py-2">
+      <v-row fluid>
     <v-col class="d-flex justify-center mb-6 flex-column" cols="auto">
       <Dashboard />
     </v-col>
   </v-row>
 
   <v-row justify="center" no-gutters>
-    <v-col class="d-flex justify-center flex-column" cols="auto">
-      <v-sheet>
-        <v-card class="mx-auto">
-          <v-divider></v-divider>
-
-          <v-card-text>
-            <v-data-table :headers="headers" :items="products" :sort-by="[{ key: 'calories', order: 'asc' }]"
+    <v-col class="d-flex justify-center flex-column" cols="auto" sm="12">
+       <v-data-table :headers="headers" :items="products" :sort-by="[{ key: 'calories', order: 'asc' }]"
               class="elevation-0">
               <template v-slot:top>
                 <v-toolbar flat class="bg-transparent">
@@ -25,7 +22,7 @@
                         New Item
                       </v-btn>
                     </template>
-                    <v-card>
+                    <v-card class="mx-auto">
                       <v-card-title>
                         <span class="text-h5">{{ formTitle }}</span>
                       </v-card-title>
@@ -343,10 +340,11 @@
                                 @click="st_turn"></v-switch>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
+                              {{ this.launch }}
                               <v-switch v-model="editedItem.launch" label="Launch product" color="success"
-                                @click="lc_turn"></v-switch>
+                                @click="lc_turn" :value="this.launch"></v-switch>
                             </v-col>
-                          </v-row>
+                          </v-row>  
                         </v-container>
                       </v-card-text>
 
@@ -413,11 +411,14 @@
                     </v-row>
                   </v-col>
                   <v-col v-else>
-                    <v-row>
-                      <v-col cols="12" md="2" sm="6" v-for="(color, index) in item.colors" :key="index">
-                        <v-card class="mx-auto" :color="color">
+                    <v-row fluid>
+                      <v-col cols="1" md="1" sm="1" v-for="(color, index) in item.colors" :key="index">
+                        <v-chip-goup>
+                          <v-chip :color="color" size="x-small" variant="elevated"></v-chip>
+                        </v-chip-goup>
+                        <!-- <v-card class="mx-auto" :color="color">
                           {{ color }}
-                        </v-card>
+                        </v-card> -->
                       </v-col>
                     </v-row>
 
@@ -436,7 +437,7 @@
                 <v-row>
                   <v-col cols="auto">
                     <v-chip-group>
-                      <v-chip v-for="size in JSON.parse(item.size)" :key="size" class="bg-green">
+                      <v-chip v-for="size in JSON.parse(item.size)" :key="size" class="bg-green" size="x-small">
                         {{ size }}
                       </v-chip>
                     </v-chip-group>
@@ -451,11 +452,11 @@
                 </v-btn>
               </template>
             </v-data-table>
-          </v-card-text>
-        </v-card>
-      </v-sheet>
     </v-col>
   </v-row>
+    </v-sheet>
+  </v-container>
+  
 
 
 
@@ -528,34 +529,7 @@ export default {
     desserts: [],
     editedIndex: -1,
     editedItem: {
-      id: '',
-      name: '',
-      description: '',
-      category_id: 0,
-      subcategory_id: 0,
-      images: [],
-      platform: '',
-      video_link: '',
-      colors: [],
-      size: [],
-      price: "0.00",
-      discount_id: '',
-      quantity: 0,
-      unity: '',
-      weight: 1.00,
-      height: 1.00,
-      width: 1.0,
-      length: 1.0,
-      sku: '',
-      meta_name: '',
-      meta_key: '',
-      meta_description: '',
-      slug: '',
-      highlights: false,
-      availability: false,
-      status: true,
-      lauch: false,
-      discount_id: null,
+     
     },
     defaultItem: {
       id: '',
@@ -634,7 +608,7 @@ export default {
           return true;
         })
         .catch((response) => {
-          console.log(response);
+         
           return false;
         });
     },
@@ -755,14 +729,17 @@ export default {
       }
     },
     lc_turn() {
-      if (this.editedItem.lauch) {
-        this.lauch = 0;
-        this.editedItem.lauch = this.lauch;
+      if (this.editedItem.launch) {
+        this.launch = 0;
+        this.editedItem.launch = this.launch;
+        alert(this.editedItem.launch);
       }
       else {
-        this.lauch = 1;
-        this.editedItem.lauch = this.lauch;
+        this.launch = 1;
+        this.editedItem.launch = this.launch;
+      
       }
+      return this.launch;
     },
     editItem(item) {
       this.editedIndex = this.products.indexOf(item)
@@ -775,8 +752,7 @@ export default {
       if (this.editedItem.highlight == 1) {
         this.highlights = 1;
         this.editedItem.highlights = this.highlights;
-
-      }
+       }
       else {
         this.highlights = 0;
         this.editedItem.highlights = this.highlights;
@@ -799,16 +775,18 @@ export default {
       }
       if (this.editedItem.colors) {
         this.colors = this.editedItem.colors;
+        this.color_qty = JSON.parse(this.editedItem.color_qty);
         this.editedItem.colors = '';
       }
-      if (this.editedItem.launch) {
-        this.launch = true;
+      if(this.editedItem.size){
+        this.editedItem.size = JSON.parse(this.editedItem.size);
+        this.size_qty = JSON.parse(this.editedItem.size_qty);
+      }
+      if (this.editedItem.launch == 1) {
+        this.launch = 1;
         this.editedItem.launch = this.launch;
       }
-      else {
-        this.lauch = false;
-        this.editedItem.lauch = this.lauch;
-      }
+      
       this.dialog = true;
     },
     deleteItem(item) {
@@ -862,7 +840,7 @@ export default {
           size_qty: this.size_qty,
           user_id: this.user.id,
           price: this.editedItem.price,
-          quantity: this.editedItem.quantity,
+          quantity: this.editedItem.stock_quantity,
           weight: this.editedItem.weight,
           height: this.editedItem.height,
           width: this.editedItem.width,
@@ -909,7 +887,7 @@ export default {
           user_id: this.user.id,
           discount: this.editedItem.discount_id,
           price: this.editedItem.price,
-          quantity: this.editedItem.quantity,
+          quantity: this.editedItem.stock_quantity,
           weight: this.editedItem.weight,
           height: this.editedItem.height,
           width: this.editedItem.width,
