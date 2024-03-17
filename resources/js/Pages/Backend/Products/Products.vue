@@ -991,15 +991,22 @@ export default {
           }
         }) 
         .then((response) => {
-          this.editedItem = response.data;
-    //      this.editedItem.images = JSON.parse(this.editedItem.original.images);
-          return this.products.push(this.editedItem.original, this.editedItem.images);
-           
-        })
-        .catch((response) => {
-          alert('Error: ' + response);
-          return false;
-        });
+    this.editedItem = response.data.original;
+    
+    // Verifica se a propriedade images não é null e não é uma string vazia
+    if (this.editedItem.images && this.editedItem.images !== "") {
+        this.editedItem.images = JSON.parse(this.editedItem.images);
+    } else {
+        this.editedItem.images = []; // Define como um array vazio caso seja null ou uma string vazia
+    }
+    
+    console.log(this.editedItem.images);
+    return this.products.push(this.editedItem);
+})
+.catch((error) => {
+    alert('Error: ' + error);
+    return false;
+});
       }
       this.close();
     },
