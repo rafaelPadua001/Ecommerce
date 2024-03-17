@@ -1,11 +1,15 @@
 <template>
-  <v-row fluid>
-    <v-col class="d-flex justify-center flex-column">
+
+    <v-sheet class="px-2 py-2">
+      <v-row fluid>
+    <v-col class="d-flex justify-center flex-column" cols="auto">
       <Dashboard />
     </v-col>
   </v-row>
- 
-      <v-data-table :headers="headers" :items="stocks" :sort-by="[{ key: 'id', order: 'asc' }]">
+
+    <v-row justify="center" no-gutters>
+      <v-col class="d-flex justify-center flex-column" cols="auto" sm="12">
+        <v-data-table :headers="headers" :items="stocks" :sort-by="[{ key: 'id', order: 'asc' }]" class="elevation-0">
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>Product Stock</v-toolbar-title>
@@ -127,10 +131,18 @@
           <v-row v-if="item.product_colors !== 0">
             <v-col v-if="typeof item.product_colors === 'string'">
               <v-row fluid>
-                  <v-col cols="12" md="4" sm="2" v-for="(color, index) in JSON.parse(item.product_colors)" :key="index">
-                  <v-card  class="mx-auto" :color="color" >
+                  <v-col cols="auto" md="4" sm="2" v-for="(color, index) in JSON.parse(item.product_colors)" :key="index">
+                    
+                      <v-chip :color="color" variant="elevated">
+                        <div v-for="(qty, index1) in JSON.parse(item.color_qty)" :key="index1">
+               
+                        </div>
+                       
+                      </v-chip>
+                 
+                  <!-- <v-card  class="mx-auto" :color="color" >
                     {{ color }}
-                  </v-card>
+                  </v-card> -->
                 </v-col>
               </v-row>
             </v-col>
@@ -154,12 +166,26 @@
           </v-row>
         </template>
 
+        <template v-slot:item.product_size="{item}">
+          <v-chip-group>
+            <v-chip v-for="(size,index) in JSON.parse(item.product_size)" :key="index" size="small" class="bg-green" variant="elevated">
+              {{ size }}
+            </v-chip>
+          </v-chip-group>
+         
+        </template>
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">
             Reset
           </v-btn>
         </template>
       </v-data-table>
+      </v-col>
+    </v-row>
+   
+    </v-sheet>
+
+  
 
 </template>
    
