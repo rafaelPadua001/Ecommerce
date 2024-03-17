@@ -4,523 +4,463 @@
       <Dashboard />
     </v-col>
   </v-row>
- 
-    <v-row  justify="center" no-gutters>
-    <v-col class="d-flex justify-center flex-column" cols="auto">
-     <v-sheet>
-        <v-card class="mx-auto">
-    <v-divider></v-divider>
 
-    <v-card-text>
-      <v-data-table :headers="headers" :items="products" :sort-by="[{ key: 'calories', order: 'asc' }]"
-        class="elevation-0">
-        <template v-slot:top>
-          <v-toolbar flat class="bg-transparent">
-            <v-toolbar-title>Produtos</v-toolbar-title>
-            <v-divider class="mx-2" inset vertical></v-divider>
-            <v-spacer></v-spacer>
-            <v-dialog v-model="dialog" fullscreen :scrim="true">
-              <template v-slot:activator="{ props }">
-                <v-btn color="primary" dark class="mb-2" v-bind="props">
-                  New Item
+  <v-row justify="center" no-gutters>
+    <v-col class="d-flex justify-center flex-column" cols="auto">
+      <v-sheet>
+        <v-card class="mx-auto">
+          <v-divider></v-divider>
+
+          <v-card-text>
+            <v-data-table :headers="headers" :items="products" :sort-by="[{ key: 'calories', order: 'asc' }]"
+              class="elevation-0">
+              <template v-slot:top>
+                <v-toolbar flat class="bg-transparent">
+                  <v-toolbar-title>Produtos</v-toolbar-title>
+                  <v-divider class="mx-2" inset vertical></v-divider>
+                  <v-spacer></v-spacer>
+                  <v-dialog v-model="dialog" fullscreen :scrim="true">
+                    <template v-slot:activator="{ props }">
+                      <v-btn color="primary" dark class="mb-2" v-bind="props">
+                        New Item
+                      </v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title>
+                        <span class="text-h5">{{ formTitle }}</span>
+                      </v-card-title>
+
+                      <v-divider></v-divider>
+
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col>
+                              <h5>Product</h5>
+                            </v-col>
+                          </v-row>
+
+                          <v-divider></v-divider>
+                          <v-spacer></v-spacer>
+
+                          <v-row>
+
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.name" label="Product name"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-select v-model="editedItem.category_name" label="Category" :items="categories"
+                                item-title="name" item-value="id"></v-select>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-select v-model="editedItem.subcategory_name" label="Subcategory" :items="subcategories"
+                                item-title="name" item-value="id"></v-select>
+                            </v-col>
+                          </v-row>
+
+                          <v-row>
+                            <v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-textarea clearable v-model="editedItem.description" label="Description"
+                                  variant="solo-filled"></v-textarea>
+                              </v-col>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col>
+                              <h5>Midias</h5>
+                            </v-col>
+                          </v-row>
+
+                          <v-divider></v-divider>
+                          <v-spacer></v-spacer>
+
+                          <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-file-input v-model="editedItem.images" @change="previewImages" multiple
+                                chips></v-file-input>
+                              <div v-if="previewImages">
+                                <v-row v-if="images">
+                                  <v-col v-for="(image, index) in images" :key="index" cols="12" md="6">
+                                    <v-card>
+                                      <v-img v-model="images" :src="image.src" :lazy-src="image.name"
+                                        :alt="'Image ' + index" cover>
+                                        <div float="right" justify="center">
+                                          <v-btn icon="fas fa-close" size="12px" density="compact"
+                                            @click="removeImagePreview">
+                                            <v-icon icon="fas fa-close" size="10px"></v-icon>
+
+                                          </v-btn>
+                                        </div>
+
+                                      </v-img>
+
+                                    </v-card>
+                                  </v-col>
+                                  <v-divider></v-divider>
+                                  <v-spacer></v-spacer>
+                                  <v-spacer></v-spacer>
+                                </v-row>
+                                <v-row v-if="images.length == 0">
+                                  <v-col v-for="(imageName, index) in editedItem.images" :key="index">
+                                    <v-img :src="`./storage/products/${imageName}`" max-width="100"
+                                      max-height="100"></v-img>
+                                  </v-col>
+                                </v-row>
+                              </div>
+                              <div v-else>
+                                <v-row v-if="!previewImages">
+
+                                  <v-col v-for="(image, index) in editedItem.images" :key="index" cols="12" md="6">
+                                    <v-card>
+
+                                      <v-img v-model="editedItem.images" :src="'./storage/uploads/' + image"
+                                        :lazy-src="image" :alt="'Image ' + index" cover>
+                                        <div float="right" justify="center">
+                                          <v-btn icon="fas fa-close" size="12px" density="compact"
+                                            @click="removeImagePreviewEdit(index)">
+                                            <v-icon icon="fas fa-close" size="10px"></v-icon>
+
+                                          </v-btn>
+                                        </div>
+
+                                      </v-img>
+
+                                    </v-card>
+
+
+                                  </v-col>
+                                  <v-divider></v-divider>
+                                  <v-spacer></v-spacer>
+                                  <v-spacer></v-spacer>
+                                </v-row>
+
+                              </div>
+
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.platform" label="Platform  (Ex:youtube)"></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.video_link" label="Videos"
+                                hint="www.youtube.com/watch?v=" persistent-hint @change="preview">
+                                <template v-slot:append>
+                                  <v-btn @click="preview" density="compact" icon size="x-small">
+                                    <v-icon icon="fas fa-upload fa-2xs">
+
+                                    </v-icon>
+                                  </v-btn>
+                                </template>
+                              </v-text-field>
+
+                              <v-card>
+                                <template v-slot:append>
+                                  <v-btn @click="removeVideoPreview" density="compact" icon size="x-small">
+                                    <v-icon icon="fas fa-close fa-2xs"></v-icon>
+                                  </v-btn>
+                                </template>
+                                <iframe id="ytplayer" type="text/html"
+                                  :src="`https://www.youtube.com/embed/${previewLink}`" frameborder="0" allowfullscreen
+                                  autoplay="1" controls="0" fs="0" color="white" v-if="editedItem.video_link" cover>
+                                </iframe>
+                              </v-card>
+
+                            </v-col>
+
+                          </v-row>
+
+
+                          <v-divider></v-divider>
+                          <v-spacer></v-spacer>
+                          <v-row>
+                            <v-col>
+                              <h5>Variants</h5>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="auto" md="4" sm="2">
+                              <h5>Select Colors:</h5>
+
+                              <v-color-picker v-model="editedItem.colors" class="ma-2" show-swatches
+                                swatches-max-height="75px" width="90%" v-bind:onChange="selectedColor()">
+
+                              </v-color-picker>
+
+
+                            </v-col>
+                            <v-row v-if="colors !== 0 && colors !== 'null'" fluid>
+                              <v-col>
+                                <v-row v-for="(color, index) in colors" :key="index" cols="auto" align="center">
+                                  <v-col cols="auto" sm="2">
+                                    <v-card :color="color">
+                                      <template v-slot:append>
+                                        <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
+                                          <v-icon icon="fas fa-close fa-2xs"></v-icon>
+                                        </v-btn>
+                                      </template>
+                                    </v-card>
+                                  </v-col>
+                                  <v-col cols="4" sm="4">
+                                    <v-text-field v-model="color_qty[index]" label="Quantity" type="number"
+                                      :prefix="color" :color="color"></v-text-field>
+                                  </v-col>
+
+                                </v-row>
+                              </v-col>
+                            </v-row>
+
+                          </v-row>
+
+                          <v-spacer></v-spacer>
+                          <v-divider></v-divider>
+
+                          <v-row>
+                            <v-col cols="auto" md="4" sm="2">
+                              <label>Sizes: </label>
+                              <v-select v-model="editedItem.size" chips label="Sizes"
+                                :items="['P', 'M', 'G', 'GG', 'XG']" multiple variant="underlined"></v-select>
+                            </v-col>
+                            <v-col cols="auto" md="4">
+                              <v-row v-for="(size, index) in editedItem.size" :key="index">
+                                <v-col cols="auto" sm="4">
+                                  <v-chip color="success" variant="elevated">{{ size }}</v-chip>
+
+                                </v-col>
+                                <v-col cols="auto">
+                                  <v-text-field v-model="size_qty[index]" label="Quantity" type="number" :prefix="color"
+                                    :color="color"></v-text-field>
+                                </v-col>
+
+                              </v-row>
+
+                            </v-col>
+
+                          </v-row>
+                          <v-row>
+                            <v-col>
+                              <h5>Scales</h5>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col>
+                              <v-select v-model="editedItem.unity" chips label="Unidade"
+                                :items="['cm', 'mm', 'und', 'pcs']" variant="underlined"></v-select>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.price" label="Price" prefix="R$ " v-bind="config">
+                              </v-text-field>
+
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.stock_quantity" label="Quantity"></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.weight" label="Weight" suffix="Kg"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.height" label="Height"
+                                :suffix="this.editedItem.unity"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.width" label="Width"
+                                :suffix="this.editedItem.unity"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.length" label="Length"
+                                :suffix="this.editedItem.unity"></v-text-field>
+                            </v-col>
+
+                          </v-row>
+                          <v-row>
+                            <v-col>
+                              <h5>Discount</h5>
+                            </v-col>
+                          </v-row>
+
+                          <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-select v-model="editedItem.discount_id" :items="discounts" density="compact"
+                                label="Select Discount" item-title="code" item-value="id"></v-select>
+                            </v-col>
+                            <v-col>
+                              <v-col cols="12" sm="6" md="4">
+                                <v-text-field v-model="editedItem.sku" label="Sku"></v-text-field>
+                              </v-col>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col>
+                              <h5>Seo </h5>
+                            </v-col>
+                          </v-row>
+
+                          <v-divider></v-divider>
+                          <v-spacer></v-spacer>
+
+                          <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.meta_name" label="Meta Name"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.meta_key" label="Meta Key"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-textarea clearable v-model="editedItem.meta_description" label="Meta Description"
+                                prepend-icon="$vuetify" variant="solo-filled"></v-textarea>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field v-model="editedItem.slug" label="Slug"></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-row>
+                            <v-col>
+                              <h5>Settings</h5>
+                            </v-col>
+                          </v-row>
+
+                          <v-divider></v-divider>
+                          <v-spacer></v-spacer>
+
+                          <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-switch v-model="editedItem.highlights" label="Highlight" color="success"
+                                @click="hl_turn" :value="this.highlights"></v-switch>
+
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-switch v-model="editedItem.availability" label="Availability" color="success"
+                                @click="av_turn" :value="this.availability"></v-switch>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="4">
+                              <v-switch v-model="editedItem.status" label="Status" color="success"
+                                @click="st_turn"></v-switch>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-switch v-model="editedItem.launch" label="Launch product" color="success"
+                                @click="lc_turn"></v-switch>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card-text>
+
+                      <v-spacer></v-spacer>
+                      <v-divider></v-divider>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue-darken-1" variant="text" @click="close">
+                          Cancel
+                        </v-btn>
+                        <v-btn color="blue-darken-1" variant="text" @click="save">
+                          Save
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                  <v-dialog v-model="dialogDelete" max-width="500">
+                    <v-card>
+                      <v-card-title class="text-h5">Remove </v-card-title>
+                      <v-card-text>
+                        Are you sure you want to delete this item ?
+                        {{ editedItem.name }}
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+                        <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">Remove</v-btn>
+                        <v-spacer></v-spacer>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-toolbar>
+              </template>
+              <template v-slot:item.actions="{ item }">
+                <v-icon size="x-small" class="me-2" @click="editItem(item)" icon="fa-regular fa-pen-to-square">
+
+                </v-icon>
+                <v-icon size="x-small" class="me-2" @click="deleteItem(item)" icon="fas fa-remove fa-2xs">
+
+                </v-icon>
+              </template>
+
+              <template v-slot:item.images="{ item }">
+
+                <v-row>
+                  <v-col v-for="(imageName, index) in item.images" :key="index">
+
+                    <v-img v-if="index === 0" :src="`/storage/products/${imageName}`" class="align-end text-white"
+                      :width="250" max-width="90" height="90" aspect-ratio="16/9"></v-img>
+                  </v-col>
+                </v-row>
+              </template>
+
+              <template v-slot:item.colors="{ item }">
+                <v-row v-if="item.colors !== '0'">
+                  <v-col v-if="typeof item.colors === 'string'">
+                    <v-row>
+                      <v-col cols="12" md="2" sm="6" v-for="(color, index) in JSON.parse(item.colors)" :key="index">
+                        <v-card class="mx-auto" :color="color">
+                          {{ color }}
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                  <v-col v-else>
+                    <v-row>
+                      <v-col cols="12" md="2" sm="6" v-for="(color, index) in item.colors" :key="index">
+                        <v-card class="mx-auto" :color="color">
+                          {{ color }}
+                        </v-card>
+                      </v-col>
+                    </v-row>
+
+
+                  </v-col>
+
+                </v-row>
+                <v-row v-else>
+                  <v-col>
+                    no color
+                  </v-col>
+                </v-row>
+              </template>
+
+              <template v-slot:item.size="{ item }">
+                <v-row>
+                  <v-col cols="auto">
+                    <v-chip-group>
+                      <v-chip v-for="size in JSON.parse(item.size)" :key="size" class="bg-green">
+                        {{ size }}
+                      </v-chip>
+                    </v-chip-group>
+                  </v-col>
+                </v-row>
+
+
+              </template>
+              <template v-slot:no-data>
+                <v-btn color="primary" @click="initialize">
+                  Reset
                 </v-btn>
               </template>
-              <v-card>
-                <v-card-title>
-                  <span class="text-h5">{{ formTitle }}</span>
-                </v-card-title>
-
-                <v-divider></v-divider>
-
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col>
-                        <h5>Product</h5>
-                      </v-col>
-                    </v-row>
-
-                    <v-divider></v-divider>
-                    <v-spacer></v-spacer>
-
-                    <v-row>
-                      
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.name" label="Product name"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-select v-model="editedItem.category_name" label="Category" :items="categories"
-                          item-title="name" item-value="id"></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-select v-model="editedItem.subcategory_name" label="Subcategory" :items="subcategories"
-                          item-title="name" item-value="id"></v-select>
-                      </v-col>
-                    </v-row>
-
-                    <v-row>
-                      <v-col>
-                        <v-col cols="12" sm="6" md="4">
-                        <v-textarea clearable v-model="editedItem.description" label="Description"
-                           variant="solo-filled"></v-textarea>
-                      </v-col>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <h5>Midias</h5>
-                      </v-col>
-                    </v-row>
-
-                    <v-divider></v-divider>
-                    <v-spacer></v-spacer>
-
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-file-input v-model="editedItem.images" @change="previewImages" multiple chips></v-file-input>
-                          <div v-if="previewImages">
-                            <v-row v-if="images">
-                              <v-col v-for="(image, index) in images" :key="index" cols="12" md="6">
-                                <v-card>
-                                  <v-img 
-                                      v-model="images"
-                                      :src="image.src" 
-                                      :lazy-src="image.name"
-                                      :alt="'Image ' + index"
-                                      cover
-                                      
-                                    >
-                                    <div float="right" justify="center">
-                                      <v-btn icon="fas fa-close" size="12px" density="compact" @click="removeImagePreview">
-                                        <v-icon icon="fas fa-close" size="10px"></v-icon>
-
-                                      </v-btn>
-                                    </div>
-                                  
-                                    </v-img>
-                                    
-                                </v-card>
-                              </v-col>
-                              <v-divider></v-divider>
-                              <v-spacer></v-spacer>
-                              <v-spacer></v-spacer>
-                            </v-row>
-                            <v-row v-if="images.length == 0">
-                            <v-col v-for="(imageName, index) in editedItem.images" :key="index">
-                              <v-img :src="`./storage/products/${imageName}`" max-width="100" max-height="100"></v-img>
-                            </v-col>
-                          </v-row>
-                          </div>
-                          <div v-else>
-                            <v-row v-if="!previewImages">
-                         
-                              <v-col v-for="(image, index) in editedItem.images" :key="index" cols="12" md="6">
-                                <v-card>
-                                 
-                                  <v-img 
-                                      v-model="editedItem.images" 
-                                      :src="'./storage/uploads/' + image"
-                                      :lazy-src="image"
-                                      :alt="'Image ' + index"
-                                      cover
-                                      
-                                    >
-                                   <div float="right" justify="center">
-                                      <v-btn icon="fas fa-close" size="12px" density="compact" @click="removeImagePreviewEdit(index)">
-                                        <v-icon icon="fas fa-close" size="10px"></v-icon>
-
-                                      </v-btn>
-                                    </div>
-                                  
-                                    </v-img>
-                                    
-                                </v-card>
-
-                                
-                              </v-col>
-                              <v-divider></v-divider>
-                              <v-spacer></v-spacer>
-                              <v-spacer></v-spacer>
-                            </v-row>
-                           
-                        </div>
-                        
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.platform" label="Platform  (Ex:youtube)"></v-text-field>
-                      </v-col>
-
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field  
-                          v-model="editedItem.video_link"
-                          label="Videos"
-                          hint="www.youtube.com/watch?v="
-                          persistent-hint
-                          @change="preview"
-                        >
-                          <template v-slot:append>
-                            <v-btn @click="preview" density="compact" icon size="x-small">
-                              <v-icon icon="fas fa-upload fa-2xs">
-
-                              </v-icon>
-                            </v-btn>
-                          </template>
-                        </v-text-field>
-                       
-                        <v-card>
-                          <template v-slot:append>
-                            <v-btn @click="removeVideoPreview" density="compact" icon size="x-small">
-                              <v-icon icon="fas fa-close fa-2xs"></v-icon>
-                            </v-btn>
-                          </template>
-                          <iframe id="ytplayer" type="text/html" :src="`https://www.youtube.com/embed/${previewLink}`"
-                            frameborder="0" allowfullscreen autoplay="1" controls="0" fs="0" color="white"
-                            v-if="editedItem.video_link" cover>
-                          </iframe>
-                        </v-card>
-
-                      </v-col>
-
-                    </v-row>
-                    
-
-                    <v-divider></v-divider>
-                    <v-spacer></v-spacer>
-                    <v-row>
-                      <v-col>
-                        <h5>Variants</h5>
-                      </v-col>
-                    </v-row>
-                     <v-row>
-                        <v-col cols="auto" md="4" sm="2">
-                            <h5>Select Colors:</h5>
-
-                            <v-color-picker
-                              v-model="editedItem.colors"
-                              class="ma-2"
-                              show-swatches
-                              swatches-max-height="75px"
-                              width="90%"
-                              v-bind:onChange="selectedColor()"
-                            >
-                              
-                            </v-color-picker>
-                           
-                          
-                        </v-col>
-                        <v-row v-if="colors !== 0 && colors !== 'null'" fluid>
-                          <v-col>
-                            <v-row v-for="(color, index) in colors" :key="index" cols="auto" align="center">
-                              <v-col cols="auto" sm="2">
-                                <v-card :color="color">
-                                  <template v-slot:append>
-                                    <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
-                                      <v-icon icon="fas fa-close fa-2xs"></v-icon>
-                                    </v-btn>
-                                  </template>
-                                </v-card>
-                              </v-col>
-                              <v-col cols="4" sm="4">
-                                <v-text-field v-model="color_qty[index]" label="Quantity" type="number" :prefix="color" :color="color"></v-text-field>
-                              </v-col>
-                            
-                            </v-row>
-                          </v-col>
-                      </v-row>
-                      
-                     </v-row>
-                     
-                     <v-spacer></v-spacer>
-                     <v-divider></v-divider>
-
-                     <v-row>
-                      <v-col cols="auto" md="4" sm="2">
-                        <label>Sizes: </label>
-                          <v-select
-                            v-model="editedItem.size"
-                            chips
-                            label="Sizes"
-                            :items="['P', 'M', 'G', 'GG', 'XG']"
-                            multiple
-                            variant="underlined"
-                          ></v-select>
-                        </v-col>
-                        <v-col cols="auto" md="4">
-                          <v-row v-for="(size, index) in editedItem.size" :key="index">
-                            <v-col cols="auto" sm="4">
-                              <v-chip color="success" variant="elevated">{{size}}</v-chip>
-                              
-                            </v-col>
-                            <v-col cols="auto">
-                              <v-text-field v-model="size_qty[index]" label="Quantity" type="number" :prefix="color" :color="color"></v-text-field>
-                            </v-col>
-                       
-                          </v-row>
-                          
-                        </v-col>
-                       
-                     </v-row>
-                     <v-row>
-                      <v-col>
-                        <h5>Scales</h5>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                          <v-select
-                            v-model="editedItem.unity"
-                            chips
-                            label="Unidade"
-                            :items="['cm', 'mm', 'und', 'pcs']"
-                            variant="underlined"
-                          ></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.price"
-                          label="Price"
-                           prefix="R$ "
-                          v-bind="config" 
-                        >
-                      </v-text-field>
-                      
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.stock_quantity" label="Quantity"></v-text-field>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.weight" label="Weight"
-                          suffix="Kg"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.height" label="Height" 
-                          :suffix="this.editedItem.unity"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.width" label="Width" 
-                          :suffix="this.editedItem.unity"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.length" label="Length" 
-                          :suffix="this.editedItem.unity"></v-text-field>
-                      </v-col>
-                      
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <h5>Discount</h5>
-                      </v-col>
-                    </v-row>
-
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-select
-                          v-model="editedItem.discount_id"
-                          :items="discounts"
-                          density="compact"
-                          label="Select Discount"
-                          item-title="code"
-                          item-value="id"
-                        ></v-select>
-                      </v-col>
-                      <v-col>
-                        <v-col cols="12" sm="6" md="4">
-                          <v-text-field v-model="editedItem.sku" label="Sku"></v-text-field>
-                        </v-col>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <h5>Seo </h5>
-                      </v-col>
-                    </v-row>
-
-                    <v-divider></v-divider>
-                    <v-spacer></v-spacer>
-
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.meta_name" label="Meta Name"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.meta_key" label="Meta Key"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-textarea clearable v-model="editedItem.meta_description" label="Meta Description"
-                          prepend-icon="$vuetify" variant="solo-filled"></v-textarea>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.slug" label="Slug"></v-text-field>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                        <h5>Settings</h5>
-                      </v-col>
-                    </v-row>
-
-                    <v-divider></v-divider>
-                    <v-spacer></v-spacer>
-
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-switch 
-                          v-model="editedItem.highlights"
-                          label="Highlight"
-                          color="success"
-                          @click="hl_turn"
-                          :value="this.highlights"
-                        ></v-switch>
-                        
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-switch 
-                          v-model="editedItem.availability"
-                          label="Availability"
-                          color="success"
-                          @click="av_turn"
-                          :value="this.availability"></v-switch>
-                      </v-col>
-
-                      <v-col cols="12" sm="6" md="4">
-                        <v-switch 
-                          v-model="editedItem.status"
-                          label="Status"
-                          color="success"
-                          @click="st_turn"
-                          ></v-switch>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-switch 
-                          v-model="editedItem.launch"
-                          label="Launch product"
-                          color="success"
-                          @click="lc_turn"
-                        
-                          ></v-switch>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-
-                <v-spacer></v-spacer>
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue-darken-1" variant="text" @click="close">
-                    Cancel
-                  </v-btn>
-                  <v-btn color="blue-darken-1" variant="text" @click="save">
-                    Save
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <v-dialog v-model="dialogDelete" max-width="500">
-              <v-card>
-                <v-card-title class="text-h5">Remove </v-card-title>
-                  <v-card-text>
-                    Are you sure you want to delete this item ? 
-                    {{ editedItem.name }}
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-                  <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">Remove</v-btn>
-                  <v-spacer></v-spacer>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-toolbar>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-icon size="x-small" class="me-2" @click="editItem(item)" icon="fa-regular fa-pen-to-square">
-            
-          </v-icon>
-          <v-icon size="x-small" class="me-2" @click="deleteItem(item)" icon="fas fa-remove fa-2xs">
-           
-          </v-icon>
-        </template>
-       
-       <template v-slot:item.images="{ item }">
-        
-          <v-row>
-            <v-col v-for="(imageName, index) in item.images" :key="index">
-              
-              <v-img v-if="index === 0" :src="`/storage/products/${imageName}`" class="align-end text-white" :width="250"
-                          max-width="90" height="90" aspect-ratio="16/9"></v-img>
-            </v-col>
-          </v-row>
-        </template> 
-
-        <template v-slot:item.colors="{ item }">
-          <v-row v-if="item.colors !== '0'">
-            <v-col v-if="typeof item.colors === 'string'">
-              <v-row>
-                  <v-col cols="12" md="2" sm="6" v-for="(color, index) in JSON.parse(item.colors)" :key="index">
-                  <v-card  class="mx-auto" :color="color" >
-                    {{ color }}
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col v-else>
-              <v-row>
-                <v-col  cols="12" md="2" sm="6" v-for="(color, index) in item.colors" :key="index">
-                  <v-card  class="mx-auto" :color="color">
-                  {{ color }}
-                  </v-card>
-                </v-col>
-              </v-row>
-             
-            
-            </v-col>
-             
-          </v-row>
-          <v-row v-else>
-            <v-col>
-              no color
-            </v-col>
-          </v-row>
-        </template>
-
-        <template v-slot:item.size="{item}">
-          <v-row>
-            <v-col
-              cols="auto"
-            >
-            <v-chip-group>
-            <v-chip v-for="size in JSON.parse(item.size)" :key="size" class="bg-green">
-              {{ size }}
-            </v-chip>
-          </v-chip-group>
-            </v-col>
-          </v-row>
-         
-        
-        </template>
-        <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize">
-            Reset
-          </v-btn>
-        </template>
-      </v-data-table>
-    </v-card-text>
-  </v-card>
+            </v-data-table>
+          </v-card-text>
+        </v-card>
       </v-sheet>
     </v-col>
   </v-row>
-    
-      
- 
- 
- 
+
+
+
+
+
 </template>
 
 <script>
@@ -626,7 +566,7 @@ export default {
       images: [],
       platform: '',
       video_link: '',
-     // colors: [],
+      // colors: [],
       size: [],
       unity: [],
       price: "0.00",
@@ -658,11 +598,11 @@ export default {
         prefix: "R$ ",
         suffix: "",
         precision: 2,
-        masked: false 
+        masked: false
       };
     },
   },
- watch: {
+  watch: {
     dialog(val) {
       val || this.close()
     },
@@ -670,17 +610,17 @@ export default {
       val || this.closeDelete()
     },
     previewImages(newUrl, oldUrl) {
-        // Executar lógica quando a imagem é alterada
-        console.log(`A imagem foi alterada de ${oldUrl} para ${newUrl}`);
-        return true;
-      },
+      // Executar lógica quando a imagem é alterada
+      console.log(`A imagem foi alterada de ${oldUrl} para ${newUrl}`);
+      return true;
+    },
   },
   created() {
     this.initialize()
   },
   methods: {
     initialize() {
-        this.user = [],
+      this.user = [],
         this.categories = [],
         this.subcategories = [],
         this.products = [],
@@ -702,7 +642,7 @@ export default {
       axios.get('/categories')
         .then((response) => {
           this.categories = response.data;
-          
+
         })
         .catch((response) => {
           alert('Error'.$response.error);
@@ -719,25 +659,25 @@ export default {
           return false;
         });
     },
-    getProducts(){
+    getProducts() {
       axios.get('/products')
         .then((response) => {
-            this.products = response.data;
+          this.products = response.data;
           //  this.editedItem.images = JSON.parse(this.editedItem.original.images);
-            this.editedItem.images = JSON.stringify(this.products.images);
-         })
+          this.editedItem.images = JSON.stringify(this.products.images);
+        })
         .catch((response) => {
           return alert('Error :' + response);
         });
     },
-    getDiscounts(){
+    getDiscounts() {
       axios.get('/coupons/all')
-      .then((response) => {
-        return this.discounts = response.data;
-      })
-      .catch((response) => {
-        return alert('Error' + response);
-      });
+        .then((response) => {
+          return this.discounts = response.data;
+        })
+        .catch((response) => {
+          return alert('Error' + response);
+        });
     },
     previewImages(event) {
       const files = event.target.files;
@@ -753,73 +693,73 @@ export default {
               name: file.name,
             });
           };
-         reader.readAsDataURL(file);
+          reader.readAsDataURL(file);
         }
       }
     },
-    removeImagePreview(index){
+    removeImagePreview(index) {
       return this.images.splice(index, 1);
     },
-    removeImagePreviewEdit(index){
+    removeImagePreviewEdit(index) {
       return this.editedItem.images.splice(index, 1);
     },
     handleFiles() {
       this.$refs.images[0];
     },
     preview() {
-     return this.previewLink = this.editedItem.video_link.slice(32);
+      return this.previewLink = this.editedItem.video_link.slice(32);
     },
-    removeVideoPreview(){
+    removeVideoPreview() {
       return this.editedItem.video_link = "";
     },
     onPriceInput(value) {
-      
+
     },
-    selectedColor(){
+    selectedColor() {
       let selected_colors = this.editedItem.colors;
       this.colors.push(selected_colors);
     },
-    removeSelectedColor(index){
+    removeSelectedColor(index) {
       return this.colors.splice(index, 1);
     },
-    hl_turn(){
-      if(this.editedItem.highlights){
+    hl_turn() {
+      if (this.editedItem.highlights) {
         this.highlights = 0;
         this.editedItem.highlights = this.highlights;
       }
-      else{
-         this.highlights = 1;
-         this.editedItem.highlights = this.highlights;
-       }
-      
+      else {
+        this.highlights = 1;
+        this.editedItem.highlights = this.highlights;
+      }
+
       return this.highlights;
     },
-    av_turn(){
-      if(this.editedItem.availability == 1){
+    av_turn() {
+      if (this.editedItem.availability == 1) {
         this.availability = 1;
         this.editedItem.availability = this.availability;
       }
-      else{
+      else {
         this.availability = 0;
         this.editedItem.availability = this.availability;
       }
     },
-    st_turn(){
-      if(this.editedItem.status){
+    st_turn() {
+      if (this.editedItem.status) {
         this.status = true;
         this.editedItem.status = this.status;
       }
-      else{
+      else {
         this.status = false;
         this.editedItem.status = this.status;
       }
     },
-    lc_turn(){
-      if(this.editedItem.lauch){
+    lc_turn() {
+      if (this.editedItem.lauch) {
         this.lauch = 0;
         this.editedItem.lauch = this.lauch;
       }
-      else{
+      else {
         this.lauch = 1;
         this.editedItem.lauch = this.lauch;
       }
@@ -827,45 +767,45 @@ export default {
     editItem(item) {
       this.editedIndex = this.products.indexOf(item)
       this.editedItem = Object.assign({}, item)
-     
+
       if (typeof this.editedItem.images === 'string') {
         this.editedItem.images = JSON.parse(this.editedItem.images);
       }
-   
-      if(this.editedItem.highlight == 1){
-          this.highlights = 1;
-          this.editedItem.highlights = this.highlights;
-          
+
+      if (this.editedItem.highlight == 1) {
+        this.highlights = 1;
+        this.editedItem.highlights = this.highlights;
+
       }
-      else{
-         this.highlights = 0;
-         this.editedItem.highlights = this.highlights;
+      else {
+        this.highlights = 0;
+        this.editedItem.highlights = this.highlights;
       }
-      if(this.editedItem.availability == 1){
+      if (this.editedItem.availability == 1) {
         this.availability = 1;
         this.editedItem.availability = this.availability;
       }
-      else{
+      else {
         this.availability = 0;
         this.editedItem.availability = this.availability;
       }
-      if(this.editedItem.status){
+      if (this.editedItem.status) {
         this.status = true;
         this.editedItem.status = this.status;
       }
-      else{
+      else {
         this.status = false;
         this.editedItem.status = this.status;
       }
-      if(this.editedItem.colors){
+      if (this.editedItem.colors) {
         this.colors = this.editedItem.colors;
         this.editedItem.colors = '';
       }
-      if(this.editedItem.launch){
+      if (this.editedItem.launch) {
         this.launch = true;
         this.editedItem.launch = this.launch;
       }
-      else{
+      else {
         this.lauch = false;
         this.editedItem.lauch = this.lauch;
       }
@@ -878,13 +818,13 @@ export default {
     },
     deleteItemConfirm() {
       axios.delete(`/api/products/delete/${this.editedItem.id}`)
-      .then((response) => {
-        return true;
-      })
-      .catch((response) => {
-        alert('Error:' . response);
-        return false;
-      });
+        .then((response) => {
+          return true;
+        })
+        .catch((response) => {
+          alert('Error:'.response);
+          return false;
+        });
       this.products.splice(this.editedIndex, 1)
       this.closeDelete()
     },
@@ -939,21 +879,21 @@ export default {
           launch: this.launch,
         };
         axios.post(`/api/products/update/${this.editedItem.id}`, data, {
-            headers: {
-              'X-CSRF-TOKEN': token,
-              'Content-Type': 'multipart/form-data'
-            }
+          headers: {
+            'X-CSRF-TOKEN': token,
+            'Content-Type': 'multipart/form-data'
+          }
         })
-        .then((response) => {
-          this.close();
-         return Object.assign(this.products[indexProduct], response.data);
-        })
-        .catch((error) => {
-          alert('Error: ' + error);
-        });
-    }
-    else {
-      const data = {
+          .then((response) => {
+            this.close();
+            return Object.assign(this.products[indexProduct], response.data);
+          })
+          .catch((error) => {
+            alert('Error: ' + error);
+          });
+      }
+      else {
+        const data = {
           name: this.editedItem.name,
           description: this.editedItem.description,
           category_id: this.editedItem.category_name,
@@ -985,28 +925,28 @@ export default {
           lauch: this.lauch
         };
         axios.post(`/products/store`, data,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }) 
-        .then((response) => {
-    this.editedItem = response.data.original;
-    
-    // Verifica se a propriedade images não é null e não é uma string vazia
-    if (this.editedItem.images && this.editedItem.images !== "") {
-        this.editedItem.images = JSON.parse(this.editedItem.images);
-    } else {
-        this.editedItem.images = []; // Define como um array vazio caso seja null ou uma string vazia
-    }
-    
-    console.log(this.editedItem.images);
-    return this.products.push(this.editedItem);
-})
-.catch((error) => {
-    alert('Error: ' + error);
-    return false;
-});
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          .then((response) => {
+            this.editedItem = response.data.original;
+
+
+            if (this.editedItem.images && this.editedItem.images !== "") {
+              this.editedItem.images = JSON.parse(this.editedItem.images);
+            } else {
+              this.editedItem.images = [];
+            }
+
+            console.log(this.editedItem.images);
+            return this.products.push(this.editedItem);
+          })
+          .catch((error) => {
+            alert('Error: ' + error);
+            return false;
+          });
       }
       this.close();
     },
@@ -1030,6 +970,7 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
 input {
   text-align: right;
 }
