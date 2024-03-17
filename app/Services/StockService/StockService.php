@@ -50,7 +50,9 @@ class StockService {
                     'name' => $request->name,
                     'stock_quantity' => $request->stock_quantity,
                     'product_size' => json_encode($request->size),
+                    'size_qty' => json_encode($request->size_qty),
                     'product_colors' => json_encode($request->colors),
+                    'color_qty' => json_encode($request->color_qty),
                     'product_id' =>$product->product_id,
                     'user_id' => $request->user_id,
                 ]);
@@ -61,7 +63,9 @@ class StockService {
                     'name' => $request->name,
                     'stock_quantity' => $request->quantity,
                     'product_size' => json_encode($request->size),
+                    'size_qty' => json_encode($request->size_qty),
                     'product_colors' => json_encode($request->colors),
+                    'color_qty' => json_encode($request->color_qty),
                     'product_id' => $id,
                     'user_id' => $request->user_id,
                 ]);

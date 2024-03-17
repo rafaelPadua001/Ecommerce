@@ -340,10 +340,11 @@
                                 @click="st_turn"></v-switch>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
+                              {{ this.launch }}
                               <v-switch v-model="editedItem.launch" label="Launch product" color="success"
-                                @click="lc_turn"></v-switch>
+                                @click="lc_turn" :value="this.launch"></v-switch>
                             </v-col>
-                          </v-row>
+                          </v-row>  
                         </v-container>
                       </v-card-text>
 
@@ -528,34 +529,7 @@ export default {
     desserts: [],
     editedIndex: -1,
     editedItem: {
-      id: '',
-      name: '',
-      description: '',
-      category_id: 0,
-      subcategory_id: 0,
-      images: [],
-      platform: '',
-      video_link: '',
-      colors: [],
-      size: [],
-      price: "0.00",
-      discount_id: '',
-      quantity: 0,
-      unity: '',
-      weight: 1.00,
-      height: 1.00,
-      width: 1.0,
-      length: 1.0,
-      sku: '',
-      meta_name: '',
-      meta_key: '',
-      meta_description: '',
-      slug: '',
-      highlights: false,
-      availability: false,
-      status: true,
-      lauch: false,
-      discount_id: null,
+     
     },
     defaultItem: {
       id: '',
@@ -634,7 +608,7 @@ export default {
           return true;
         })
         .catch((response) => {
-          console.log(response);
+         
           return false;
         });
     },
@@ -755,14 +729,17 @@ export default {
       }
     },
     lc_turn() {
-      if (this.editedItem.lauch) {
-        this.lauch = 0;
-        this.editedItem.lauch = this.lauch;
+      if (this.editedItem.launch) {
+        this.launch = 0;
+        this.editedItem.launch = this.launch;
+        alert(this.editedItem.launch);
       }
       else {
-        this.lauch = 1;
-        this.editedItem.lauch = this.lauch;
+        this.launch = 1;
+        this.editedItem.launch = this.launch;
+      
       }
+      return this.launch;
     },
     editItem(item) {
       this.editedIndex = this.products.indexOf(item)
@@ -775,8 +752,7 @@ export default {
       if (this.editedItem.highlight == 1) {
         this.highlights = 1;
         this.editedItem.highlights = this.highlights;
-
-      }
+       }
       else {
         this.highlights = 0;
         this.editedItem.highlights = this.highlights;
@@ -799,16 +775,18 @@ export default {
       }
       if (this.editedItem.colors) {
         this.colors = this.editedItem.colors;
+        this.color_qty = JSON.parse(this.editedItem.color_qty);
         this.editedItem.colors = '';
       }
-      if (this.editedItem.launch) {
-        this.launch = true;
+      if(this.editedItem.size){
+        this.editedItem.size = JSON.parse(this.editedItem.size);
+        this.size_qty = JSON.parse(this.editedItem.size_qty);
+      }
+      if (this.editedItem.launch == 1) {
+        this.launch = 1;
         this.editedItem.launch = this.launch;
       }
-      else {
-        this.lauch = false;
-        this.editedItem.lauch = this.lauch;
-      }
+      
       this.dialog = true;
     },
     deleteItem(item) {
