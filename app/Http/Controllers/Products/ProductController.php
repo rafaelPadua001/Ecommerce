@@ -47,7 +47,6 @@ class ProductController extends Controller
             $product['images'] = json_decode($product['images']);
             $product['colors'] = json_decode($product['colors']);
         }
-
         return response()->json($products);
     }
     public function show()

@@ -12,7 +12,7 @@
         public function getAll() {
             $product = Product::orderBy('id', 'desc')
             ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->join('subcategories', 'categories.id', '=', 'subcategories.id')
+            ->join('subcategories', 'categories.id', '=', 'subcategories.category_id')
             ->leftJoin('coupons', 'products.discount_id', '=', 'coupons.id')
             ->join('product_seos', 'products.id', '=', 'product_seos.product_id')
             ->select('products.*', 
@@ -32,9 +32,9 @@
         }
         public function create($product){
             $productCreate = Product::create($product);
-            $response = $productCreate->toArray();
+         //   $response = $productCreate->toArray();
             
-            return response()->json($response);
+            return response()->json($productCreate);
         }
         public function update($product, $id){
             $productUpdate = Product::findOrFail($id)->update($product);
