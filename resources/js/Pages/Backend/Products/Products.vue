@@ -5,26 +5,19 @@
     </v-col>
   </v-row>
  
-  <v-row>
-    <v-col>
-      
-    </v-col>
-  </v-row>
-    <v-container>
-      <v-sheet>
-        <v-row fluid>
-    <v-col class="d-flex justify-center flex-column" >
+    <v-row  justify="center" no-gutters>
+    <v-col class="d-flex justify-center flex-column" cols="auto">
      <v-sheet>
-        <v-card class="mx-auto" :width="1200">
+        <v-card class="mx-auto">
     <v-divider></v-divider>
 
     <v-card-text>
       <v-data-table :headers="headers" :items="products" :sort-by="[{ key: 'calories', order: 'asc' }]"
-        class="elevation-1">
+        class="elevation-0">
         <template v-slot:top>
-          <v-toolbar flat>
+          <v-toolbar flat class="bg-transparent">
             <v-toolbar-title>Produtos</v-toolbar-title>
-            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-divider class="mx-2" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialog" fullscreen :scrim="true">
               <template v-slot:activator="{ props }">
@@ -459,7 +452,8 @@
         
           <v-row>
             <v-col v-for="(imageName, index) in item.images" :key="index">
-              <v-img v-if="index === 0" :src="`./storage/products/${imageName}`" class="align-end text-white" :width="250"
+              
+              <v-img v-if="index === 0" :src="`/storage/products/${imageName}`" class="align-end text-white" :width="250"
                           max-width="90" height="90" aspect-ratio="16/9"></v-img>
             </v-col>
           </v-row>
@@ -496,7 +490,21 @@
           </v-row>
         </template>
 
-
+        <template v-slot:item.size="{item}">
+          <v-row>
+            <v-col
+              cols="auto"
+            >
+            <v-chip-group>
+            <v-chip v-for="size in JSON.parse(item.size)" :key="size" class="bg-green">
+              {{ size }}
+            </v-chip>
+          </v-chip-group>
+            </v-col>
+          </v-row>
+         
+        
+        </template>
         <template v-slot:no-data>
           <v-btn color="primary" @click="initialize">
             Reset
@@ -508,9 +516,9 @@
       </v-sheet>
     </v-col>
   </v-row>
-      </v-sheet>
+    
       
-    </v-container>
+ 
  
  
 </template>
@@ -715,6 +723,7 @@ export default {
       axios.get('/products')
         .then((response) => {
             this.products = response.data;
+          //  this.editedItem.images = JSON.parse(this.editedItem.original.images);
             this.editedItem.images = JSON.stringify(this.products.images);
          })
         .catch((response) => {
@@ -983,7 +992,8 @@ export default {
         }) 
         .then((response) => {
           this.editedItem = response.data;
-          return this.products.push(this.editedItem.original);
+    //      this.editedItem.images = JSON.parse(this.editedItem.original.images);
+          return this.products.push(this.editedItem.original, this.editedItem.images);
            
         })
         .catch((response) => {
