@@ -8,12 +8,8 @@
   </v-row>
 
   <v-row justify="center" no-gutters>
-    <v-col class="d-flex justify-center flex-column" cols="12" md="8" sm="6">
-      <v-card class="mx-auto">
-          <v-divider></v-divider>
-
-          <v-card-text>
-            <v-data-table :headers="headers" :items="products" :sort-by="[{ key: 'calories', order: 'asc' }]"
+    <v-col class="d-flex justify-center flex-column" cols="auto" sm="12">
+       <v-data-table :headers="headers" :items="products" :sort-by="[{ key: 'calories', order: 'asc' }]"
               class="elevation-0">
               <template v-slot:top>
                 <v-toolbar flat class="bg-transparent">
@@ -455,9 +451,6 @@
                 </v-btn>
               </template>
             </v-data-table>
-          </v-card-text>
-        </v-card>
-      
     </v-col>
   </v-row>
     </v-sheet>
@@ -869,7 +862,7 @@ export default {
           size_qty: this.size_qty,
           user_id: this.user.id,
           price: this.editedItem.price,
-          quantity: this.editedItem.quantity,
+          quantity: this.editedItem.stock_quantity,
           weight: this.editedItem.weight,
           height: this.editedItem.height,
           width: this.editedItem.width,
@@ -916,7 +909,7 @@ export default {
           user_id: this.user.id,
           discount: this.editedItem.discount_id,
           price: this.editedItem.price,
-          quantity: this.editedItem.quantity,
+          quantity: this.editedItem.stock_quantity,
           weight: this.editedItem.weight,
           height: this.editedItem.height,
           width: this.editedItem.width,
