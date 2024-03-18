@@ -9,6 +9,7 @@
 
     <v-row justify="center" no-gutters>
       <v-col class="d-flex justify-center flex-column" cols="auto" sm="12">
+      
         <v-data-table :headers="headers" :items="stocks" :sort-by="[{ key: 'id', order: 'asc' }]" class="elevation-0">
         <template v-slot:top>
           <v-toolbar flat>
@@ -132,18 +133,16 @@
             <v-col v-if="typeof item.product_colors === 'string'">
               <v-row fluid>
                   <v-col cols="auto" md="4" sm="2" v-for="(color, index) in JSON.parse(item.product_colors)" :key="index">
-                    
-                      <v-chip :color="color" variant="elevated">
-                        <div v-for="(qty, index1) in JSON.parse(item.color_qty)" :key="index1">
-               
-                        </div>
-                       
-                      </v-chip>
+                     
+                    <v-chip :color="color" variant="elevated">
+                      <div v-if="Array.isArray(JSON.parse(item.color_qty)) && JSON.parse(item.color_qty)[index] !== undefined">{{ JSON.parse(item.color_qty)[index] }}</div>
+                    </v-chip>
                  
                   <!-- <v-card  class="mx-auto" :color="color" >
                     {{ color }}
                   </v-card> -->
                 </v-col>
+            
               </v-row>
             </v-col>
             <v-col v-else>
