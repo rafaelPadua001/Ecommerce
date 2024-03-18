@@ -233,8 +233,8 @@
 
                                 </v-col>
                                 <v-col cols="auto">
-                                  <v-text-field v-model="size_qty[index]" label="Quantity" type="number" :prefix="color"
-                                    :color="color"></v-text-field>
+                                  <v-text-field v-model="size_qty[index]" label="Quantity" type="number"
+                                    ></v-text-field>
                                 </v-col>
 
                               </v-row>
