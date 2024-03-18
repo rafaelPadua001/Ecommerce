@@ -49,9 +49,9 @@ class StockService {
                 $stock = $this->productStock->where('id', $id)->update([
                     'name' => $request->name,
                     'stock_quantity' => $request->stock_quantity,
-                    'product_size' => json_encode($request->size),
+                    'product_size' => json_encode($request->product_size),
                     'size_qty' => json_encode($request->size_qty),
-                    'product_colors' => json_encode($request->colors),
+                    'product_colors' => json_encode($request->product_colors),
                     'color_qty' => json_encode($request->color_qty),
                     'product_id' =>$product->product_id,
                     'user_id' => $request->user_id,
@@ -62,9 +62,9 @@ class StockService {
                 $stock = $this->productStock->where('product_id', $id)->update([
                     'name' => $request->name,
                     'stock_quantity' => $request->quantity,
-                    'product_size' => json_encode($request->size),
+                    'product_size' => json_encode($request->product_size),
                     'size_qty' => json_encode($request->size_qty),
-                    'product_colors' => json_encode($request->colors),
+                    'product_colors' => json_encode($request->product_colors),
                     'color_qty' => json_encode($request->color_qty),
                     'product_id' => $id,
                     'user_id' => $request->user_id,

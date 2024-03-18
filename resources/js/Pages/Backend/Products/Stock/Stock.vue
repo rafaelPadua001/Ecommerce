@@ -59,9 +59,9 @@
                             </v-color-picker>
                      
                         </v-col>
-                      
-                        <v-col cols="auto" md="4" sm="2" v-if="Object.keys(editedItem.product_colors)">
-                          Selected Colors
+                     
+                        <v-col cols="auto" md="4" sm="2">
+                         
                           <v-row v-for="(color, index) in colors" :key="index">
                             <v-col>
                               <v-chip :color="color" variant="elevated"></v-chip>
@@ -327,7 +327,7 @@ export default {
   },
   selectedColor(){
       let selected_colors = this.editedItem.product_colors;
-      this.colors.push(selected_colors);
+      return this.colors.push(selected_colors);
   },
   close() {
     this.dialog = false
@@ -343,6 +343,8 @@ export default {
         name: this.editedItem.name,
         stock_quantity: this.editedItem.stock_quantity,
         product_size: this.editedItem.product_size,
+        size_qty: this.size_qty,
+        color_qty: this.color_qty,
         product_colors: this.colors,
         user_id: this.users.id
       }
@@ -355,7 +357,6 @@ export default {
       )
         .then((response) => {
           this.editedItem = response.data;
-          console.log(response.data);
           Object.assign(this.stocks[indexStock], this.editedItem);
           return true;
         })
