@@ -1,21 +1,21 @@
 <template>
-
+  <v-container>
     <v-sheet class="px-2 py-2">
       <v-row fluid>
     <v-col class="d-flex justify-center flex-column" cols="auto">
       <Dashboard />
     </v-col>
   </v-row>
-
-    <v-row justify="center" no-gutters>
+  <v-row justify="center" no-gutters>
       <v-col class="d-flex justify-center flex-column" cols="auto" sm="12">
+      
         <v-data-table :headers="headers" :items="stocks" :sort-by="[{ key: 'id', order: 'asc' }]" class="elevation-0">
         <template v-slot:top>
-          <v-toolbar flat>
+          <v-toolbar flat class="bg-transparent">
             <v-toolbar-title>Product Stock</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
-            <v-dialog v-model="dialog" max-width="900">
+            <v-dialog v-model="dialog" transition="dialog-top-transition" fullscreen>
               <template v-slot:activator="{ props }">
                 <v-btn color="primary" dark class="mb-2" v-bind="props" disabled>
                   New Item
@@ -45,13 +45,13 @@
                     </v-row>
                     <v-row>
 
-                      <v-col cols="12" sm="6" md="4">
+                      <v-col cols="auto" md="4" sm="2">
                             <h5>Select Colors:</h5>
                             <v-color-picker
                               v-model="editedItem.product_colors"
                               class="ma-2"
                               show-swatches
-                              swatches-max-height="55px"
+                              swatches-max-height="75px"
                               width="90%"
                               v-bind:onChange="selectedColor()"
                             >
@@ -59,20 +59,36 @@
                             </v-color-picker>
                      
                         </v-col>
-                       
-                        <v-col cols="8" sm="4" md="2" v-if="Object.keys(editedItem.product_colors)">
+                      
+                        <v-col cols="auto" md="4" sm="2" v-if="Object.keys(editedItem.product_colors)">
                           Selected Colors
-                          <v-card v-for="(color, index) in colors" :key="index" :color="color">
-                            <template v-slot:append>
-                                  <v-btn icon density="compact" size="small" @click="removeSelectedColor(index)">
+                          <v-row v-for="(color, index) in colors" :key="index">
+                            <v-col>
+                              <v-chip :color="color" variant="elevated"></v-chip>
+                            </v-col>
+                            <v-col cols="4" sm="4">
+                             
+                                    <v-text-field v-model="color_qty[index]" label="Quantity" type="number"
+                                      :color="color">
+                                      
+                                    </v-text-field>
+                                   
+                                  </v-col>
+                                  <v-col cols="auto" sm="2">
+                                   
+                                    <v-btn icon density="compact" size="x-small" @click="removeSelectedColor(index)" :color="color">
                                     <v-icon icon="fas fa-close fa-2xs"></v-icon>
                                   </v-btn>
-                                </template>
-                          </v-card>
+                           
+                                  </v-col>
+                          </v-row>
+                            
+                        
                         </v-col>
 
-                       
-                      <v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col  cols="auto" md="4" sm="2">
                           <v-select
                             v-model="editedItem.product_size"
                             chips
@@ -82,10 +98,22 @@
                             variant="underlined"
                             clearable
                           ></v-select>
-                        </v-col>
+                          </v-col>
+                          <v-col cols="auto" md="4">
+                              <v-row v-for="(size, index) in editedItem.product_size" :key="index">
+                                <v-col cols="auto" sm="4">
+                                  <v-chip color="success" variant="elevated">{{ size }}</v-chip>
 
+                                </v-col>
+                                <v-col cols="auto">
+                                  <v-text-field v-model="size_qty[index]" label="Quantity" type="number" :prefix="color"
+                                    :color="color"></v-text-field>
+                                </v-col>
+
+                              </v-row>
+
+                            </v-col>
                     </v-row>
-
 
                   </v-container>
                 </v-card-text>
@@ -132,18 +160,16 @@
             <v-col v-if="typeof item.product_colors === 'string'">
               <v-row fluid>
                   <v-col cols="auto" md="4" sm="2" v-for="(color, index) in JSON.parse(item.product_colors)" :key="index">
-                    
-                      <v-chip :color="color" variant="elevated">
-                        <div v-for="(qty, index1) in JSON.parse(item.color_qty)" :key="index1">
-               
-                        </div>
-                       
-                      </v-chip>
+                     
+                    <v-chip :color="color" variant="elevated">
+                      <div v-if="Array.isArray(JSON.parse(item.color_qty)) && JSON.parse(item.color_qty)[index] !== undefined">{{ JSON.parse(item.color_qty)[index] }}</div>
+                    </v-chip>
                  
                   <!-- <v-card  class="mx-auto" :color="color" >
                     {{ color }}
                   </v-card> -->
                 </v-col>
+            
               </v-row>
             </v-col>
             <v-col v-else>
@@ -184,6 +210,8 @@
     </v-row>
    
     </v-sheet>
+  </v-container>
+
 
   
 
@@ -202,6 +230,8 @@ export default {
     colors: [],
     dialog: false,
     dialogDelete: false,
+    color_qty: [],
+    size_qty: [],
     headers: [
       {
         title: 'Name',
@@ -283,8 +313,15 @@ export default {
     this.editedItem = Object.assign({}, item)
     if(this.editedItem.product_colors.length > 1){
       this.colors = JSON.parse(this.editedItem.product_colors);
+      this.color_qty = JSON.parse(this.editedItem.color_qty);
+      
       this.editedItem.product_colors = '';
     }
+    if(this.editedItem.size_qty.length >= 1 || this.editedItem.product_size.length >= 1){
+      this.editedItem.product_size = JSON.parse(this.editedItem.product_size);
+      this.size_qty = JSON.parse(this.editedItem.size_qty);
+    }
+    
     
     this.dialog = true
   },
