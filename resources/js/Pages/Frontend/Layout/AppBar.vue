@@ -1,64 +1,87 @@
 <template>
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="auto">
-           
-            <v-card  class="mx-auto elevation-0 text-black">
-                
+
+            <v-card class="mx-auto elevation-0 text-black">
+
                 <v-app-bar :color="this.appBarColor ?? 'trasparent'">
-                    
+
                     <!-- <template v-slot:image>
                         <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
                     </template> -->
 
                     <template v-slot:prepend>
-                        
+
                         <v-app-bar-title>
-                            <v-img v-if="store.app_logo" 
-                                :src="`./storage/app_icon/${JSON.parse(store.app_logo)}`"
-                                :width="70"
-                                :height="70"
-                            >
+                            <v-img v-if="store.app_logo" :src="`./storage/app_icon/${JSON.parse(store.app_logo)}`"
+                                :width="70" :height="70">
                             </v-img>
-                            
-                            <v-btn v-else class="text" variant="text" href="/">{{ store.app_name ?? 'ProjectName'}}</v-btn>
+
+                            <v-btn v-else class="text" variant="text" href="/" size="small">{{ store.app_name ??
+                    'ProjectName' }}</v-btn>
                         </v-app-bar-title>
-                        
-                      
+
+                        <v-divider vertical :thickness="1"></v-divider>
 
                         <div>
-                            <v-btn id="menu-categories" variant="flat" :color="this.appBarColor ?? 'trasparent'">
-                                <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
-                                </v-icon>
+                            <v-btn :to="'/dashboard'" variant="plain" size="small">
+                                <v-icon icon="fas fa-home"></v-icon>
                             </v-btn>
+                        </div>
+                        <v-btn variant="plain" size="small">
+                            Blog
+                        </v-btn>
 
-                            <v-menu activator="#menu-categories">
-                                <v-list elevation="1">
-                                    <v-list-item v-if="!categories">
-                                        no categories registered
+                        <div>
+
+
+                            <v-menu :activator="$refs.menuBtn" open-on-hover>
+                                <template v-slot:activator="{ props }">
+                                    <v-btn ref="menuBtn" variant="plain" :color="this.appBarColor ?? 'trasparent'"
+                                        size="small" v-bind="props">
+                                        <!-- <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
+                                </v-icon> -->
+                                        categories
+                                        <template v-slot:append>
+                                            <v-icon icon="fa-solid fa-chevron-down fa-2xs"></v-icon>
+                                        </template>
+
+
+                                    </v-btn>
+                                </template>
+                                <v-list elevation="0">
+                                    <v-list-item v-if="!categories || categories.length === 0">
+                                        no categories found
                                     </v-list-item>
                                     <v-list-item v-else v-for="category in categories" :key="category.id">
                                         <v-btn variant="flat" size="small" :to="`/subcategories/all/${category.id}`">
-                                            <v-icon :icon="category.icon"></v-icon>
+                                            <span>
+                                                <v-avatar color="surface-variant" size="28px">
+                                                    <v-img v-if="category.thumbnail"
+                                                        :src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
+                                                        :lazy-src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
+                                                        :alt="`${category.name}`"></v-img>
+                                                </v-avatar>
+                                            </span>
+                                            <!-- <v-icon v-else :icon="category.icon"></v-icon> -->
                                             <span>{{ category.name }}</span>
                                         </v-btn>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
+
+
                         </div>
 
-                        <div v-if="Object.keys(user).length === 1 || user" >
-                            <v-btn :to="'/dashboard'" variant="plain">
-                                <v-icon icon="fa-solid fa-house fa-2xs" ></v-icon>
-                            </v-btn>
-                        </div>
 
-                        <v-btn class="mr-2" variant="plain" to="/">
+
+                        <!-- <v-btn class="mr-2" variant="plain" to="/">
                             <v-icon icon="fas fa-globe fa-2xs"></v-icon>
-                        </v-btn>
+                        </v-btn> -->
                     </template>
                     <v-spacer></v-spacer>
 
-                    
+
 
                     <!-- Cart Button-->
                     <div class="d-flex justify-space-around" v-if="Object.keys(carts).length >= 1">
@@ -148,7 +171,8 @@
 
                                         </v-list-item>
 
-                                        <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block>Checkout</v-btn>
+                                        <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal"
+                                            block>Checkout</v-btn>
 
                                     </v-list>
                                 </v-menu>
@@ -157,27 +181,27 @@
 
                     </div>
 
-                    
-                    
-                   
+
+                    <v-divider vertical :thickness="1"></v-divider>
+
                     <!-- Cria o botao de menu do usuario -->
                     <v-menu :color="this.appBarColor ?? 'trasparent'">
                         <template v-slot:activator="{ props }">
-                            <v-btn icon v-bind="props">
+                            <v-btn class="mr-2" variant="plain" size="small" icon v-bind="props">
                                 <v-icon icon="fa-solid fa-user fa-2xs"></v-icon>
                             </v-btn>
 
                         </template>
                         <v-list>
                             <!-- login button -->
-                            
+
                             <v-list-item v-if="!user.original == 0">
                                 <v-list-item-title link>
-                              
-                                        <v-btn to="/login" class="me-2" size="x-small" variant="flat">
-                                            <v-icon icon="fa-solid fa-right-to-bracket"></v-icon>
-                                            Login
-                                        </v-btn>
+
+                                    <v-btn to="/login" class="me-2" size="x-small" variant="flat">
+                                        <v-icon icon="fa-solid fa-right-to-bracket"></v-icon>
+                                        Login
+                                    </v-btn>
                                 </v-list-item-title>
                             </v-list-item>
 
@@ -186,14 +210,14 @@
                             <v-list-item v-else @click="logout()">
 
                                 <v-list-item-title link>
-                                        <v-btn class="me-2" size="x-small" variant="flat">
-                                            <v-icon icon="fas fa-right-from-bracket"></v-icon>
-                                            Logout
-                                        </v-btn>
+                                    <v-btn class="me-2" size="x-small" variant="flat">
+                                        <v-icon icon="fas fa-right-from-bracket"></v-icon>
+                                        Logout
+                                    </v-btn>
                                 </v-list-item-title>
                             </v-list-item>
 
-                            
+
                             <v-list-item @click="openAddressDialog()">
 
                                 <v-list-item-title link>
@@ -211,7 +235,7 @@
             </v-card>
 
             <div>
-                <AddressForm v-model="addressDialog" v-if="addressDialog" :customer="this.customers" 
+                <AddressForm v-model="addressDialog" v-if="addressDialog" :customer="this.customers"
                     @close-dialog="closeAddressDialog" />
             </div>
         </v-col>
@@ -223,7 +247,7 @@ import axios from 'axios';
 import AddressForm from '../Dialogs/Address.vue';
 import DiscountWindow from '../Coupons/partials/Window.vue';
 export default {
-    components: { AddressForm , DiscountWindow},
+    components: { AddressForm, DiscountWindow },
     data: () => ({
         user: [],
         carts: [],
@@ -239,38 +263,38 @@ export default {
         }
     },
     methods: {
-        getStore(){
+        getStore() {
             axios.get('/store')
-            .then((response) => {
-                this.store.app_logo = JSON.parse(response.data.app_logo);
-                this.store = response.data
-            })
-            .catch((response) => {
-                return alert('Error: ' + response);
-            })
+                .then((response) => {
+                    this.store.app_logo = JSON.parse(response.data.app_logo);
+                    this.store = response.data
+                })
+                .catch((response) => {
+                    //return alert('Error: ' + response);
+                })
         },
-        getAppBar(){
+        getAppBar() {
             axios.get(`/api/appBar`)
-            .then((response) => {
-                this.appBarColor = JSON.parse(response.data.colors);
-                return this.appBar = response.data;
-            })
-            .catch((response) => {
-                return alert('Error :', response);
-            })
+                .then((response) => {
+                    this.appBarColor = JSON.parse(response.data.colors);
+                    return this.appBar = response.data;
+                })
+                .catch((response) => {
+                    return false;
+                })
         },
         getCategories() {
             axios.get('/categories')
                 .then((response) => {
                     return this.categories = response.data;
                 }).catch((response) => {
-                    return alert('Error: ' + response);
+                    return false;
                 });
         },
         getUser() {
             axios.get('/customer')
                 .then((response) => {
-                     return this.user = response.data;
+                    return this.user = response.data;
                 })
                 .catch((response) => {
 
@@ -283,7 +307,7 @@ export default {
                     return this.carts = response.data;
                 })
                 .catch((response) => {
-                    return alert('Error :' + response);
+                    return false;;
                 });
         },
         getLikes() {
@@ -292,7 +316,7 @@ export default {
                     return this.likes = response.data;
                 })
                 .catch((response) => {
-                    alert('Error: ' + response);
+                    return false;
                 });
         },
         openAddressDialog() {
@@ -335,3 +359,12 @@ export default {
 
 </script>
 
+<style>
+.custom-menu {
+    position: absolute;
+    top: calc(var(--v-toolbar-height) + 10px);
+    /* altura da app-bar + espaço extra */
+    z-index: 9999;
+    /* ou um valor maior do que o z-index da app-bar */
+}
+</style>

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Categories;
+use App\Services\CategoryService\CategoryService;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 
@@ -14,61 +15,51 @@ use App\Http\Controllers\Controller;
 class CategoriesController extends Controller
 {
     //
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService){
+        $this->categoryService = $categoryService;
+    }
     public function index(){
-      
-        $categories = Categories::join('users', 'categories.user_id', '=', 'users.id')
-        ->select('categories.*', 'users.name as user_name')
-        ->get();
-        
-        
+      try{
+        $categories = $this->categoryService->index();
         return response()->json($categories);
+      }
+      catch(Exception $e){
+        return response()->json($e->getMessage());
+      }
     }
     public function show(){
-        $categories = Categories::all();
+        $categories = $this->categoryService->show();
         return response()->json($categories);
     }
-    public function store(Request $request, $id){
-        $data = $request;
-        $user = User::findOrFail($id);
-      
+    public function create(Request $request, $id){
         try{
-            $category = Categories::create([
-                'user_id' => $user->id,
-                'name' => $request->name,
-                'icon' => $request->icon,
-            ]);
-            return response()->json($category);
+            $userId = $id;
+            $create = $this->categoryService->store($request, $userId);
+            return response()->json($create);
         }
         catch(Exception $e){
-            return $e;
+            return response()->json($e->getMessage());
         }
-       
     }
     public function update(Request $request, $id){
        
         try{
-            $category = Categories::where('id', $id)->first();
-           
-            $category->update($request->all());
-            return response()->json($category);
+            $category = $this->categoryService->update($request, $id);
+           return response()->json($category);
         }
         catch(Exception $e){
-            return $e;
+            return response()->json($e);
         };
     }
     public function destroy($id){
         try{
-            $category = Categories::findOrFail($id);
-            
-            if(!empty($category)){
-                $category->delete();
-                return response()->json($category);
-            }
-            else
-            {
-                return back()->with(['message' => 'Categoria não encontrada em nossos registros']);
-            }
+            $removeCategory = $this->categoryService->remove($id);
+            return response()->json($removeCategory);
         }
-        catch(Exception $e){}
+        catch(Exception $e){
+            return response()->json($e);
+        }
     }
 }

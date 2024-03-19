@@ -58,7 +58,7 @@ export default {
                     this.store = response.data
                 })
                 .catch((response) => {
-                    return alert('Error: ' + response);
+                    return false;
                 })
         },
     },

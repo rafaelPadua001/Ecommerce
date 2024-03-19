@@ -32,35 +32,108 @@ class ProductController extends Controller
         ProductVideoController $productVideos,
         ProductSeoController $productSeo,
         ProductStockController $productStock,
-    )
-    {
+    ) {
         $this->productService = $productService;
         $this->productImages = $productImages;
         $this->productVideos = $productVideos;
         $this->productSeo = $productSeo;
         $this->productStock = $productStock;
-
     }
     public function index()
     {
         $products = $this->productService->getAll();
 
-        foreach($products as &$product) { // Usando & para referência ao objeto original
+        foreach ($products as &$product) { // Usando & para referência ao objeto original
             $product['images'] = json_decode($product['images']);
             $product['colors'] = json_decode($product['colors']);
         }
-        
         return response()->json($products);
     }
-    public function getProduct($id){
-        try{
-            
+    public function show()
+    {
+        $products = Product::orderBy('id', 'desc')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->leftJoin('subcategories', 'categories.id', '=', 'subcategories.category_id')
+            ->leftJoin('coupons', 'products.discount_id', '=', 'coupons.id')
+            ->select(
+                'products.*',
+                'categories.id as category_id',
+                'subcategories.name as subcategoriy_id',
+                'coupons.id as discount_id',
+                'coupons.discount_percentage as discount_percentage'
+            )
+            ->get();
+
+
+        return response()->json($products);
+    }
+    public function search(Request $request)
+    {
+        dd($request);
+    }
+    public function getProduct($id)
+    {
+        try {
+
             $product = $this->productService->getProduct($id);
             return response()->json($product);
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
+    }
+    public function like($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $customer = Auth::guard('customer')->user();
+            $likedProduct = $this->getLikedController($product, $customer);
+            return response()->json($likedProduct);
+        } catch (Exception $e) {
+            return response()->json($e);
+        }
+    }
+    public function getLikedController($product, $customer)
+    {
+        $like = new LikedProductController();
+        return $like->store($product, $customer);
+    }
+    public function getDislikedController($product, $customer)
+    {
+        $like = new LikedProductController();
+        return $like->destroy($product, $customer);
+    }
+    public function dislike($id)
+    {
+        $product = Product::findOrFail($id);
+        $customer = Auth::guard('customer')->user();
+        $dislikedProduct = $this->getDisLikedController($product, $customer);
+
+        return response()->json($dislikedProduct);
+    }
+    public function uploadImg($request)
+    {
+        $randomNames = [];
+
+
+        foreach ($request->images as $file) {
+
+            if ($file) {
+                $randomName = Str::random(10) . '.webp';
+
+                $fileName = $file['src'];
+
+                $path = Storage::putFileAs('/public/products', $fileName, $randomName);
+
+                // Adiciona o novo nome de arquivo ao array $randomNames
+                $randomNames[] = $randomName;
+                // dd($randomName);
+                $product = Product::where('name', $request->name)->update([
+                    'images' => json_encode($randomNames, true)
+                ]);
+            }
+        }
+
+        return $randomNames;
     }
     public function store(Request $request)
     {
@@ -90,111 +163,42 @@ class ProductController extends Controller
             'availability' => $request->availability,
             'slug'   => $request->slug,
             'status'  => $request->status,
-            'featured' => $request->featured,
+            'lauch' => $request->lauch,
             'highlight' => $request->highlights ? true : false,
             'user_id' => (int) $request->user_id,
             'discount_id' => $request->has('discount') ? (int)$request->discount : null,
-            
+
         ];
 
         $newProduct = $this->productService->create($product);
-       
+        
         $image_class = $this->productImages->store($upload_file,  $newProduct->original['id'], $request->user_id);
-            
+
         $video_class = $this->productVideos->store($request->video_link, $newProduct->original['id'], $request->user_id, $request->name, $request->platform);
-     
-       
+
+
         $seo_class = $this->productSeo->store(
-                $request->name,
-                $request->meta_name,
-                $request->meta_key, 
-                $request->meta_description,
-                $request->slug,
-                $newProduct->original['id'],
-                $request->user_id
+            $request->name,
+            $request->meta_name,
+            $request->meta_key,
+            $request->meta_description,
+            $request->slug,
+            $newProduct->original['id'],
+            $request->user_id
         );
-       
+
         $stock_class = $this->productStock->store(
             $request->name,
             $request->quantity,
             $request->size,
+            $request->size_qty,
             $request->colors,
+            $request->color_qty,
             $newProduct->original['id'],
             $request->user_id
         );
-      
-  
+     
         return response()->json($newProduct);
-    }
-    public function uploadImg($request)
-    {
-        $randomNames = [];
-    
-        
-        foreach ($request->images as $file) {
-         
-            if ($file) {
-                $randomName = Str::random(10) . '.webp';
-
-                $fileName = $file['src'];
-
-                $path = Storage::putFileAs('/public/products', $fileName, $randomName);
-
-                // Adiciona o novo nome de arquivo ao array $randomNames
-                $randomNames[] = $randomName;
-                // dd($randomName);
-                $product = Product::where('name', $request->name)->update([
-                    'images' => json_encode($randomNames, true)
-                ]);
-            }
-        }
-        
-        return $randomNames;
-    }
-    public function show()
-    {
-        $products = Product::orderBy('id', 'desc')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->leftJoin('subcategories', 'categories.id', '=', 'subcategories.category_id')
-            ->leftJoin('coupons', 'products.discount_id', '=', 'coupons.id')
-            ->select('products.*',
-                'categories.id as category_id',
-                'subcategories.name as subcategoriy_id',
-                'coupons.id as discount_id',
-                'coupons.discount_percentage as discount_percentage'
-            )
-            ->get();
-            
-      
-        return response()->json($products);
-    }
-    public function like($id)
-    {
-        try {
-            $product = Product::findOrFail($id);
-            $customer = Auth::guard('customer')->user();
-            $likedProduct = $this->getLikedController($product, $customer);
-            return response()->json($likedProduct);
-        } catch (Exception $e) {
-            return response()->json($e);
-        }
-    }
-    public function getLikedController($product, $customer)
-    {
-        $like = new LikedProductController();
-        return $like->store($product, $customer);
-    }
-    public function getDislikedController($product, $customer)
-    {
-        $like = new LikedProductController();
-        return $like->destroy($product, $customer);
-    }
-    public function dislike($id){
-        $product = Product::findOrFail($id);
-        $customer = Auth::guard('customer')->user();
-        $dislikedProduct = $this->getDisLikedController($product, $customer);
-        
-        return response()->json($dislikedProduct);
     }
     public function update(Request $request, $id)
     {
@@ -224,24 +228,24 @@ class ProductController extends Controller
             'availability' => $request->availability,
             'slug'   => $request->slug,
             'status'  => $request->status,
-            'featured' => $request->featured,
+            'launch' => $request->launch,
             'highlight' => $request->highlights ? true : false,
             'user_id' => (int) $request->user_id,
             'discount_id' => $request->has('discount') ? (int)$request->discount : null,
         ];
-        
+
         $updateProduct = $this->productService->update($product, $id);
 
         $imageUpdate = $this->productImages->update($upload_file, $id, $request);
-       
+
         $videoUpdate = $this->productVideos->update($request, $id);
 
         $updateSeo = $this->productSeo->update($request, $id);
-       
+
         $updateStock = $this->productStock->update($request, $id);
 
         return response()->json($updateProduct);
-      
+
         try {
             $product = Product::where('id', $id)->update($request->all());
 
@@ -249,18 +253,15 @@ class ProductController extends Controller
                 $this->uploadImg($request);
             }
             $upload_file = $request->images;
-           
+
             $product_id = Product::where('id', $id)->first();
-           // $user_id = Auth::user()->id;
+         
             $image_class = $this->getImageClass($upload_file, $id, $request->user_id);
-          
+
             //return response()->json($request);
         } catch (Exception $e) {
             return response()->json($e);
         }
-    }
-    public function search(Request $request){
-        dd($request);
     }
     public function destroy($id)
     {
@@ -268,11 +269,11 @@ class ProductController extends Controller
             $removeProduct = $this->productService->destroy($id);
 
             $imageDelete = $this->productImages->destroy($id);
-           
+
             $videoDelete = $this->productVideos->destroy($id);
 
             $seoDelete = $this->productSeo->destroy($id);
-          
+
             $updateStock = $this->productStock->destroy($id);
             return response()->json($removeProduct);
         } catch (Exception $e) {

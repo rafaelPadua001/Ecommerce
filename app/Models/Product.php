@@ -17,7 +17,9 @@ class Product extends Model
         'platform',
         'video_links',
         'colors',
+        'color_qty',
         'size',
+        'size_qty',
         'unity',
         'manufacturer',
         'price',
@@ -31,7 +33,7 @@ class Product extends Model
         'availabity',
         'slug',
         'status',
-        'featured',
+        'launch',
         'highlight',
         'user_id'
         

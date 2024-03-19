@@ -49,7 +49,7 @@ Route::get('/card', [CardController::class, 'index'])->name('card.index');
 Route::get('/carrousel', [CarrouselService::class, 'getAttributes'])->name('carrousel.index');
 
 //Categories routes
-Route::post('/categories/store/{id}', [CategoriesController::class, 'store'])->name('store');
+Route::post('/categories/store/{id}', [CategoriesController::class, 'create'])->name('create');
 Route::post('/categories/update/{id}', [CategoriesController::class, 'update'])->name('categories.update');
 Route::delete('/categories/delete/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
 

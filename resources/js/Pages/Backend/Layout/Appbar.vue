@@ -47,23 +47,12 @@ export default {
                 });
         },
         logout() {
-        const token = document.head.querySelector('meta[name="csrf-token"]');
-                if (token) {
-                    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-                } else {
-                    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-                }
-        axios.post('/logout', { withCredentials: true }, {
-            headers: {
-              'X-CSRF-TOKEN': token
-            }
-        })
+        axios.post('/logout')
         .then((response) => {
-          alert('aguarde um instante, estamos limpando os nossos registros....');
-          console.log('disparando em 1 segundo');
+       //   alert('aguarde um instante, estamos limpando os nossos registros....');
+       //   console.log('disparando em 1 segundo');
           setTimeout(() => {
-            
-            window.location = '/login';
+            window.location = '/admin';
           }, 1000);
           
         })
