@@ -6,7 +6,9 @@
   </v-row>
     <v-data-table :headers="headers" :items="seo" :sort-by="[{ key: 'id', order: 'asc' }]" >
               <template v-slot:top>
-                <v-toolbar flat>
+                <v-toolbar 
+                  class="bg-transparent"
+                  flat>
                   <v-toolbar-title>Product SEO</v-toolbar-title>
                   <v-divider class="mx-4" inset vertical></v-divider>
                   <v-spacer></v-spacer>
