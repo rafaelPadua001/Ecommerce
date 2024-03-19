@@ -14,6 +14,7 @@
                 >
                   <template v-slot:top>
                     <v-toolbar
+                      class="bg-transparent"
                       flat
                     >
                       <v-toolbar-title>Subcategories</v-toolbar-title>
