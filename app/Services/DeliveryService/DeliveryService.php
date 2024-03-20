@@ -28,7 +28,7 @@ class DeliveryService {
     $image = base64_decode($base64Image);
 
     // Gerar um nome único para a imagem
-    $imageName = time() . '_' . uniqid() . '.jpg'; // Altere a extensão para a extensão real da imagem
+    $imageName = time() . '_' . uniqid() . '.webp'; // Altere a extensão para a extensão real da imagem
     $tempImagePath = storage_path('app/public/temp/' . $imageName);
     file_put_contents($tempImagePath, $image);
 
@@ -52,7 +52,7 @@ class DeliveryService {
     }
     public function uploadImage($imagePath, $imageName){
         
-        $path = Storage::putFileAs('public/delivery', $imagePath, $imageName);
+        $path = Storage::putFileAs('public/delivery/', $imagePath, $imageName);
         return $path;
     }
     public function alterStatus($data){
