@@ -73,15 +73,26 @@ class StoreService
             $fileName = 'Logos/app_icon.' . $img->Extension();
 
             $path = Storage::putFileAs('/public/app_icon/', $img, $fileName);
-
+            
             return $fileName;
         }
     }
     public function updateStore($id, $request)
     {
         try {
-            $updateStore = $this->store->findOrFail($id)->update($request->all());
-            return $request->all();
+            $upload_image = $this->uploadImg($request->file('app_logo'));
+            
+          
+            $updateStore = $this->store->findOrFail($id)->update([
+                'app_name' => $request->app_name,   
+                'app_address' => $request->app_address,
+                'app_logo' => json_encode($upload_image),
+                'app_mail' => $request->app_mail,
+                'app_phone' => $request->app_phone,
+                'app_address' => $request->app_address
+            ]);
+
+            return $updateStore;
         } catch (Exception $e) {
             return $e;
         }

@@ -129,6 +129,7 @@
                                 <v-file-input v-model="banner1" label="Main Banner" @change="previewBanner1">
                                 </v-file-input>
                             </v-col>
+                            
                             <v-col v-if="Object.keys(style).length == 0" v-for="banner in banner1" :key="banner.id" cols="2">
                                 <v-img :src="banner.src" :lazy-src="banner.src" :alt="banner.src" cover :width="200">
 
@@ -479,7 +480,7 @@ export default {
                 };
                 axios.post(`/store/style/create`, data)
                     .then((response) => {
-                        return this.style = response.data.original;
+                        return this.style = response.data.original; 
                     })
                     .catch((response) => {
                         return alert('Error: ' + response);
