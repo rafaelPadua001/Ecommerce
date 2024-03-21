@@ -4,7 +4,7 @@
             <v-sheet>
                 <v-card class="mx-auto">
                     <v-card-title>
-                        <v-toolbar>
+                        <v-toolbar class="bg-transparent">
                             <template v-slot:prepend>
                                 <p class="text-h5">Remover</p>
                             </template>

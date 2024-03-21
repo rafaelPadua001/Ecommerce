@@ -1,17 +1,16 @@
 <template>
     <v-container>
         <v-sheet class="px-2 py-2">
-            <v-row>
-                <v-col>
+            <v-row fluid>
+                <v-col class="d-flex justify-center flex-column" cols="auto">
                     <Dashboard />
                 </v-col>
             </v-row>
-
-            <v-row>
-                <v-col class="d-flex justify-center flex-column">
-                    <v-card class="mx-auto" :max-width="800">
+             <v-row justify="center" no-gutters>
+                <v-col class="d-flex justify-center flex-column" cols="auto">
+                    <v-card class="mx-auto">
                         <v-card-title>
-                            <v-toolbar>
+                            <v-toolbar class="bg-transparent">
                                 <template v-slot:prepend>
                                     <p class="text-h5">Deliveries</p>
                                 </template>
@@ -20,37 +19,43 @@
 
                                 <template v-slot:append>
                                     <v-btn-group>
-                                        <v-btn class="mb-2" variant="plain" color="primary" @click="newItemDialog">new
-                                            Item</v-btn>
+                                        <v-btn class="mb-2" variant="plain" color="primary" @click="newItemDialog">
+                                            new Item
+                                        </v-btn>
                                     </v-btn-group>
                                 </template>
                             </v-toolbar>
                         </v-card-title>
 
-
-
                         <v-card-text>
-                            <v-row v-if="Object.keys(deliveries).length >= 1">
+                            <v-row v-if="Object.keys(deliveries).length >= 1" no-gutters>
                                 <v-col v-for="(delivery, index) in deliveries" :key="index"
-                                    class="d-flex justify-center flex-column" cols="12" md="6" sm="3">
-                                    <v-sheet class="ma-2 pa-2">
-                                        <v-card class="mx-auto">
-                                            <v-toolbar v-slot:append>
-                                                <v-btn-group :id="'switch-activator-' + index">
-                                                    <v-switch v-model="delivery.activated" label="activated ?"
+                                    class="d-flex justify-center flex-column" cols="auto" md="8" sm="4">
+                                    <v-sheet class="px-1 pa-1">
+                                        <v-card class="mx-auto" :width="200">
+                                            <v-toolbar class="bg-transparent">
+                                                <v-switch 
+                                                        v-model="delivery.activated"
+                                                        label="activated ?"
                                                         :value="activated[index]"
                                                         :activator="'#switch-activator-' + index"
                                                         @change="alterStatus(delivery)"
+                                                        color="success"
                                                     >
-                                                    </v-switch>
+                                                </v-switch>
+                                               
+                                               
+                                                <template v-slot:append>
+                                                    <v-btn-group :id="'switch-activator-' + index">
+                                                   
+                                                   <v-btn icon variant="plain" :id="'menu-activator-' + index">
+                                                   <v-icon icon="fas fa-ellipsis-vertical"></v-icon>
+                                                   </v-btn>
 
-
-                                                    {{ delivery.activated }}
-                                                </v-btn-group>
-                                                <v-btn icon variant="plain" :id="'menu-activator-' + index">
-                                                    <v-icon icon="fas fa-ellipsis-vertical"></v-icon>
-                                                </v-btn>
-
+                                                   
+                                               </v-btn-group>
+                                                </template>
+                                               
                                                 <v-menu :activator="'#menu-activator-' + index">
                                                     <v-list>
                                                         <v-list-item-group></v-list-item-group>
@@ -67,8 +72,9 @@
                                                         </v-list-item>
                                                     </v-list>
                                                 </v-menu>
-
                                             </v-toolbar>
+
+                                            <v-divider></v-divider>
                                             <v-card-text>
                                                 <v-img :src="`./storage/delivery/${delivery.thumbnail}`"
                                                     :lazy-src="`./storage/delivery/${delivery.thumbnail}`" cover
@@ -90,7 +96,7 @@
                                                 </v-row>
                                                 <v-row>
                                                     <v-col>
-                                                        {{ delivery.created_at }}
+                                                        {{ delivery.created_at.split('T')[0] }}
                                                     </v-col>
                                                 </v-row>
 
@@ -122,14 +128,9 @@
                                 @close-dialog="closeRemoveDialog" />
                         </v-dialog>
                     </div>
-
-
                 </v-col>
             </v-row>
-
-
         </v-sheet>
-
     </v-container>
 </template>
 
