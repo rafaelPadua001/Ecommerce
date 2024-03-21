@@ -1,12 +1,14 @@
 <template>
-    <div>
-        <Dashboard />
-    </div>
-
-    <v-container>
-        <v-row fluid justify="center">
+     <v-container>
+        <v-sheet class="px-2 py-2">
+    <v-row>
+        <v-col class="d-flex justify-center flex-column" cols="auto">
+            <Dashboard />
+        </v-col>
+    </v-row>      
+    <v-row fluid justify="center">
             <v-col class="d-flex justify-center flex-column" cols="12">
-                <v-sheet>
+                <v-sheet class="px-2 py-2">
                     <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
                         <v-tab value="tab-1">App</v-tab>
                         <v-tab value="tab-2">Style</v-tab>
@@ -149,6 +151,7 @@
                 </v-sheet>
             </v-col>
         </v-row>
+    </v-sheet>
     </v-container>
 </template>
 <script setup>
