@@ -251,7 +251,17 @@
                             </v-col>
                         </v-row>
                     </v-card-text>
-                   
+                   <v-divider></v-divider>
+                    <v-card-text>
+                        <v-row>
+                            <v-col class="d-flex justify-center flex-column" cols="auto">
+                                <h4>Footer:</h4>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <FooterForm />
+                        </v-row>
+                    </v-card-text>
                     <v-card-actions>
                         <v-btn-group>
                             <v-btn class="me-2" variant="text" size="lg" color="primary" @click="save" v-if="Object.keys(style).length == 0">
@@ -281,11 +291,12 @@
 <script>
 import axios from 'axios';
 import DeleteStyleDialog from './deleteStyleDialog.vue';
-
+import FooterForm from './FooterForm.vue';
 export default {
     props: ['store'],
     components: {
-        DeleteStyleDialog
+        DeleteStyleDialog,
+        FooterForm
     },
     data: () => ({
         color: '',
