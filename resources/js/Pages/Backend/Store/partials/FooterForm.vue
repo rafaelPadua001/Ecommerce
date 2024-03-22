@@ -80,21 +80,48 @@
                 <v-col class="d-flex justify-center flex-column" cols="auto">
                     <h4>Background color:</h4>
                 </v-col>
-                <v-col class="d-flex justify-space-around flex-column" cols="auto">
+                <v-col class="d-flex justify-center flex-column" cols="auto">
                     <v-color-picker
+                    v-model="swatches"
                     class="ma-2"
-                    swatches-max-height="400px"
+                    swatches-max-height="100px"
                     show-swatches
-                    @click="previewColor()"
+                    @change="previewColor()"
                     ></v-color-picker>
-                 
+                   
                 </v-col>
 
-                <v-row v-if="swatches.length >= 1">
+                
                     <v-col>
-                        {{ swatches }}
+                        <v-card class="mx-auto" :color="swatches" variant="elevated">
+                          
+                            <v-card-text>
+                                <v-row fluid>
+                                    <v-col v-for="(link,index) in links" :key="index">
+                                        {{ link }}
+                                    </v-col>
+                                </v-row>
+                               
+                              
+                            </v-card-text>
+                            <v-card-text>
+                                <v-row fluid>
+                                    <v-col v-for="(icon,index) in socialMidiasIcon">
+                                        <v-icon :icon="icon"></v-icon>
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+                            <v-card-text>
+                                <v-row>
+                                    <v-col fluid>
+                                       <p>{{ footerText }}</p> 
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+                          
+                        </v-card>
                     </v-col>
-                </v-row>
+                    <v-btn @click="submitForm">Submit</v-btn>
             </v-row>
         </v-sheet>
     </v-container>
@@ -102,6 +129,7 @@
 
 <script>
     export default {
+        props: ['submitFormData'],
         data: () => ({
             links: [],
             defaultLinks: [
@@ -112,8 +140,7 @@
                 {title: 'Blog', props: {subtitle: '/blog'}, link: '/blog'},
                 {title: 'Contact Us', props: {subtitle: '/contactUs'}, link: '/contactUs'},
             ],
-            FooterText: '',
-             socialMidiasIcon: [],
+            socialMidiasIcon: [],
              defaultSocialMidias: [
                  {title: 'Facebook', props:{ subtitle: 'fa-brands facebook'}, value: 'fa-brands fa-facebook'},
                  {title : 'X (twitter)', props: {subtitle: 'fa-brands fa-x-twitter'}, value: 'fa-brands fa-x-twitter'},
@@ -127,14 +154,24 @@
                 {title: 'Youtube', props: {subtitle: 'fa-brands fa-youtube'}, value:'fa-brands fa-youtube'},
 
             ],
-            swatches: [
-        
-            ],
+            swatches: [],
             footerText: '',
         }),
         methods:{
             previewColor(){
-                console.log(this.swatches);
+                let selected_color = this.swatches;
+                return this.swatches.push(selected_color);
+            },
+            submitForm(){
+                const formData = {
+                    links: this.links,
+                    socialMidiasIcon: this.socialMidiasIcon,
+                    footerText: this.footerText,
+                    swatches: this.swatches,
+                };
+
+                
+                this.$emit('submitFormData', formData)
             }
         }
     }

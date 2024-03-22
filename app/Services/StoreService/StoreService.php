@@ -12,6 +12,7 @@ use App\Services\AppBarService\AppBarService;
 use App\Services\CardService\CardService;
 use App\Services\BannerService\BannerService;
 use App\Services\CarrouselService\CarrouselService;
+use App\Services\FooterService\FooterService;
 
 class StoreService
 {
@@ -20,6 +21,7 @@ class StoreService
     protected $cardService;
     protected $bannerService;
     protected $carrouselService;
+    protected $footerService;
 
     public function __construct(
         Store $store,
@@ -27,12 +29,14 @@ class StoreService
         CardService $cardService,
         BannerService $bannerService,
         CarrouselService $carrouselService,
+        FooterService $footerService,
     ) {
         $this->store = $store;
         $this->appBarService = $appBarService;
         $this->cardService = $cardService;
         $this->bannerService = $bannerService;
         $this->carrouselService = $carrouselService;
+        $this->footerService = $footerService;
     }
     public function getStore()
     {
@@ -122,6 +126,15 @@ class StoreService
 
             $createdCarrousel = $this->createCarrousel($upload_carrousel, $getStore->id);
 
+            $footer = [
+                'links' => $request->footerLinks,
+                'icons' => $request->footerIcons,
+                'text' => $request->footerText,
+                'color' => $request->footerColor,
+            ];
+
+            $storeFooter = $this->createFooter($footer);
+
             $response = [
                 'colors' => $appBar['colors'],
                 'chip_color' => $card['chip_color'],
@@ -157,6 +170,18 @@ class StoreService
             ];
             $uploadImageCarrousel = $this->uploadImgCarrousel($carrousel);
             $updateCarrousel = $this->carrouselService->update($uploadImageCarrousel, $request->storeId);
+
+
+            $footer = [
+                'links' => $request->footerLinks,
+                'icons' => $request->footerIcons,
+                'text' => $request->footerText,
+                'color' => $request->footerColor,
+            ];
+
+            $storeFooter = $this->createFooter($footer);
+
+            dd($storeFooter);
 
             $response = [
                 'colors' => $updateAppBar,
@@ -232,6 +257,10 @@ class StoreService
         }
 
         return $randomNames;
+    }
+    public function createFooter($footer){
+        $create = $this->footerService->store($footer);
+        return response()->json($create);
     }
     public function destroy($id)
     {
