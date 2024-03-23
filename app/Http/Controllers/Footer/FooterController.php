@@ -14,13 +14,16 @@ class FooterController extends Controller
     public function __construct(FooterService $footerService){
         $this->footerService = $footerService;
     }
-    public function create(Request $request){
+    public function create(Request $request, $id){
         try{
-            $store = $this->footerService->store($request);
+            $store = $this->footerService->store($request, $id);
             return response()->json($store);
         }
         catch(Exception $e){
             return response()->json($e);
         }
+    }
+    public function update($id, $request){
+        dd();
     }
 }

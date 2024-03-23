@@ -12,17 +12,18 @@ class FooterService{
     public function __construct(Footer $footer){
         $this->footer = $footer;
     }
-    public function store($request){
+    public function store($request, $id){
         try{
+            
             $userId = Auth::user();
-           
+          
             $create = Footer::create([
-                'user_id' => $userId,
-                'links' => $request->links,
-                'icons' => $request->icons,
-                'text' => $request->text,
-                'color' => $request->color
-
+                'user_id' => $userId->id,
+                'store_id' => $id,
+                'links' => json_encode($request['links']),
+                'icons' => json_encode($request['icons']),
+                'text' => $request['text'],
+                'color' => $request['color']
             ]);
 
             return $create;
@@ -30,6 +31,8 @@ class FooterService{
         catch(Exception $e){
             return $e->getMessage();
         }
-       
+    }
+    public function update($id, $request){
+        dd();
     }
 }
