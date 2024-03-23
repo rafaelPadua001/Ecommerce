@@ -133,16 +133,19 @@ class StoreService
                 'color' => $request->footerColor,
             ];
 
-            $storeFooter = $this->createFooter($footer);
-
+            $storeFooter = $this->createFooter($footer, $getStore->id);
+            
             $response = [
                 'colors' => $appBar['colors'],
                 'chip_color' => $card['chip_color'],
                 'banner_image' => json_encode($uploadBannerImage),
                 'images' => json_encode($upload_carrousel),
-
+                'footerColor' => $storeFooter['color'],
+                'footerIcons' => json_encode($storeFooter['icons']),
+                'footerLinks' => json_encode($storeFooter['footerLinks']),
+                'footerText' => $storeFooter['footerText']
             ];
-
+            
 
             return response()->json($response);
         } catch (Exception $e) {
@@ -179,7 +182,7 @@ class StoreService
                 'color' => $request->footerColor,
             ];
 
-            $storeFooter = $this->createFooter($footer);
+            $storeFooter = $this->footerService->update($footer, $request->storeId);
 
             dd($storeFooter);
 
@@ -188,7 +191,7 @@ class StoreService
                 'chip_color' => $updateCard,
                 'banner_image' => json_encode($uploadBannerImage),
                 'images' => json_encode($uploadImageCarrousel),
-
+                
             ];
 
 
@@ -258,8 +261,9 @@ class StoreService
 
         return $randomNames;
     }
-    public function createFooter($footer){
-        $create = $this->footerService->store($footer);
+    public function createFooter($footer, $id){
+        $create = $this->footerService->store($footer, $id);
+      
         return response()->json($create);
     }
     public function destroy($id)

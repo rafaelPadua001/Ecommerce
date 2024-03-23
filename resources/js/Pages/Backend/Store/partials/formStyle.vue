@@ -525,6 +525,11 @@ export default {
                     banner3: this.banner3,
                     banner4: this.banner4,
                     banner5: this.banner5,
+                    footerLinks: this.footerLinks,
+                    footerIcons: this.footerIcons,
+                    footerText: this.footerText,
+                    footerColor: this.footerColor,
+                    storeId: this.editedItem.store_id
                 };
                 axios.post(`/store/style/create`, data)
                     .then((response) => {
