@@ -16,7 +16,18 @@ class AppBarService{
             ->join('banners', 'banners.store_id', '=', 'app_bars.store_id')
             ->join('cards', 'cards.store_id', '=', 'banners.store_id')
             ->join('carrousels', 'carrousels.store_id', '=', 'cards.store_id')
-            ->select('app_bars.*', 'banners.image as banner_image', 'cards.chip_color', 'carrousels.images')
+            ->join('footers', 'footers.store_id', '=', 'carrousels.store_id')
+            ->select(
+                'app_bars.*',
+                'banners.image as banner_image',
+                'cards.chip_color',
+                'carrousels.images',
+                'footers.id as footer_id',
+                'footers.links',
+                'footers.icons',
+                'footers.text',
+                'footers.color'
+            )
             ->first();
           
             

@@ -134,7 +134,7 @@ class StoreService
             ];
 
             $storeFooter = $this->createFooter($footer, $getStore->id);
-            
+           
             $response = [
                 'colors' => $appBar['colors'],
                 'chip_color' => $card['chip_color'],
@@ -145,8 +145,7 @@ class StoreService
                 'footerLinks' => json_encode($storeFooter['footerLinks']),
                 'footerText' => $storeFooter['footerText']
             ];
-            
-
+       
             return response()->json($response);
         } catch (Exception $e) {
             return $e;
@@ -154,6 +153,7 @@ class StoreService
     }
     public function updateStyleStore($request, $storeId)
     {
+      
         try {
             $updateAppBar = $this->appBarService->update($request, $storeId);
 
@@ -180,21 +180,22 @@ class StoreService
                 'icons' => $request->footerIcons,
                 'text' => $request->footerText,
                 'color' => $request->footerColor,
+                'footer_id' => $request->id,
             ];
-
-            $storeFooter = $this->footerService->update($footer, $request->storeId);
-
-            dd($storeFooter);
-
+          
+            $updateFooter = $this->footerService->update($footer, $storeId);
+            
+         
             $response = [
                 'colors' => $updateAppBar,
                 'chip_color' => $updateCard,
                 'banner_image' => json_encode($uploadBannerImage),
                 'images' => json_encode($uploadImageCarrousel),
-                
+                'footerColor' => json_encode($updateFooter['color']),
+                'footerIcons' => json_encode($updateFooter['icons']),
+                'footerLinks' => json_encode($updateFooter['links']),
+                'footerText' => $updateFooter['text']
             ];
-
-
             return response()->json($response);
         } catch (Exception $e) {
             return response()->json($e->getMessage(), 500);
@@ -264,7 +265,7 @@ class StoreService
     public function createFooter($footer, $id){
         $create = $this->footerService->store($footer, $id);
       
-        return response()->json($create);
+        return $create->toArray();
     }
     public function destroy($id)
     {

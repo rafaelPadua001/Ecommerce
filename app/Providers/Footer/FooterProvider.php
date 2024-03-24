@@ -5,6 +5,7 @@ namespace App\Providers\Footer;
 use Illuminate\Support\ServiceProvider;
 use App\Services\FooterService\FooterService;
 use Illuminate\Foundation\Application;
+use App\Models\Footer;
 
 class FooterProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class FooterProvider extends ServiceProvider
     {
         //
         $this->app->singleton(FooterService::class, function(Application $app){
-            return new FooterService(config('footerService'));
+            return new FooterService($app->make(Footer::class));
         });
     }
 

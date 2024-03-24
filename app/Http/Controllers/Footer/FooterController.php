@@ -11,19 +11,26 @@ class FooterController extends Controller
 {
     //
     protected $footerService;
-    public function __construct(FooterService $footerService){
+    public function __construct(FooterService $footerService)
+    {
         $this->footerService = $footerService;
     }
-    public function create(Request $request, $id){
-        try{
+    public function create(Request $request, $id)
+    {
+        try {
             $store = $this->footerService->store($request, $id);
             return response()->json($store);
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($e);
         }
     }
-    public function update($id, $request){
-        dd();
+    public function update($id, $request)
+    {
+        try {
+            $update = $this->footerService->update($request, $id);
+            return response()->json($update);
+        } catch (Exception $e) {
+            return response()->json($e);
+        }
     }
 }

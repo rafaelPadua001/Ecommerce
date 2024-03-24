@@ -277,8 +277,7 @@
                             </v-col>
                         </v-row>
                         <v-row>
-                            <FooterForm @submitFormData="submitFormData" />
-                            <p>Dados recebidos do componente filho: {{ formData }}</p>
+                            <FooterForm :style="style" @submitFormData="submitFormData" />
                         </v-row>
                     </v-card-text>
                     <v-card-actions>
@@ -504,10 +503,11 @@ export default {
                     footerIcons: this.footerIcons,
                     footerText: this.footerText,
                     footerColor: this.footerColor,
-                    storeId: this.editedItem.store_id
+                    id: this.editedItem.footer_id
                 };
                 axios.post(`/store/style/update/${itemId}`, data)
                     .then((response) => {
+                        console.log(response);
                         return this.style = Object.assign({}, response.data.original);
                     })
                     .catch((response) => {
