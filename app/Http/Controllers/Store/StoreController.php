@@ -72,7 +72,6 @@ class StoreController extends Controller
         }
     }
     public function styleUpdate(Request $request, $storeId){
-        
         try{
             $styleUpdate = $this->storeService->updateStyleStore($request, $storeId);
             return response()->json($styleUpdate);

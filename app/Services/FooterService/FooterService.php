@@ -4,6 +4,7 @@ namespace App\Services\FooterService;
 
 use App\Models\Footer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Exception;
 
 class FooterService{
@@ -32,7 +33,25 @@ class FooterService{
             return $e->getMessage();
         }
     }
-    public function update($id, $request){
-        dd();
+    public function update($request, $id){
+      
+        try{
+            $user = Auth::user();
+            //$update = Footer::findOrFail($request['footer_id']);
+            
+            $update = Footer::findOrFail($request['footer_id'])->update([ 
+                'user_id' => $user->id,
+                'store_id' => $id,
+                'links' => json_encode($request['links']),
+                'icons' => json_encode($request['icons']),
+                'text' => $request['text'],
+                'color' => $request['color']
+            ]);
+           
+            return $request;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 }
