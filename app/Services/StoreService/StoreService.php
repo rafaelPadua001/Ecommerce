@@ -207,6 +207,7 @@ class StoreService
             $deleteCard = $this->cardService->delete($storeId);
             $banner = $this->bannerService->delete($storeId);
             $carrousel = $this->carrouselService->delete($storeId);
+            $deleteFooter = $this->footerService->delete($storeId);
             return true;
         } catch (Exception $e) {
             return response()->json($e->getMessage());
