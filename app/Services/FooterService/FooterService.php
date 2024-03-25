@@ -54,4 +54,14 @@ class FooterService{
             return $e->getMessage();
         }
     }
+    public function delete($id){
+        
+        try{
+            $delete = Footer::where('store_id', '=', $id)->delete();
+            return true;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
 }

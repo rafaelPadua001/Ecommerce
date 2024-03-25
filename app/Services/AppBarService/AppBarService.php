@@ -20,6 +20,7 @@ class AppBarService{
             ->select(
                 'app_bars.*',
                 'banners.image as banner_image',
+                'app_bars.id as appBar_id',
                 'cards.chip_color',
                 'carrousels.images',
                 'footers.id as footer_id',
@@ -56,15 +57,14 @@ class AppBarService{
         }
     }
     public function update($request, $id){
-        
         try{
             $user = Auth::user();
-            $storeUpdate = $this->appBar->where('store_id', '=', $id)->update([
+            $storeUpdate = $this->appBar->where('id', '=', $request->appBar_id)->update([
                 'colors' => $request->colors,
                 'user_id' => $user->id,
                 'store_id' => $request->storeId
             ]);
-           
+            
             return $request->colors;
         }
         catch(Exception $e){

@@ -503,7 +503,8 @@ export default {
                     footerIcons: this.footerIcons,
                     footerText: this.footerText,
                     footerColor: this.footerColor,
-                    id: this.editedItem.footer_id
+                    id: this.editedItem.footer_id,
+                    appBar_id: this.editedItem.appBar_id
                 };
                 axios.post(`/store/style/update/${itemId}`, data)
                     .then((response) => {
