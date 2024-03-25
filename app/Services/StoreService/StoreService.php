@@ -153,10 +153,9 @@ class StoreService
     }
     public function updateStyleStore($request, $storeId)
     {
-      
         try {
             $updateAppBar = $this->appBarService->update($request, $storeId);
-
+        
             $updateCard = $this->cardService->update($request, $storeId);
 
             $bannerImage = $request->banner1[1]['name'];
