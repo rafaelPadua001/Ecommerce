@@ -56,10 +56,10 @@ class AppBarService{
         }
     }
     public function update($request, $id){
-    
+        
         try{
             $user = Auth::user();
-            $storeUpdate = $this->appBar->where('id', '=', $id)->update([
+            $storeUpdate = $this->appBar->where('store_id', '=', $id)->update([
                 'colors' => $request->colors,
                 'user_id' => $user->id,
                 'store_id' => $request->storeId
