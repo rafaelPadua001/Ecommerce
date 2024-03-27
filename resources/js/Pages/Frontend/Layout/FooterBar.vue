@@ -1,39 +1,78 @@
 <template>
-    <v-footer color="transparent-darken-1 text-center d-flex flex-column" elevation="0">
-        <div>
-            <v-btn v-for="link in links" :key="link" color="black" variant="text" class="mx-4" rounded="xl">
-                {{ link }}
-            </v-btn>
-        </div>
-        <div>
-            <v-btn v-for="icon in icons" :key="icon" class="mx-4" :icon="icon" variant="text"></v-btn>
-        </div>
-        <div>
-            <v-row no-gutters>
-                <v-col>
-                    Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet.
-                    Mauris cursus commodo interdum. Praesent ut risus eget metus luctus accumsan id ultrices nunc.
-                    Sed at orci sed massa consectetur dignissim a sit amet dui. Duis commodo vitae velit et faucibus.
-                    Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus iaculis dui
-                    sollicitudin.
-                    Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci varius natoque penatibus et magnis dis
-                    parturient montes, nascetur ridiculus mus.
+    <v-container>
+        <v-sheet class="px-2 py-2">
+            <v-row v-for="(fo, index) in footer" :key="index" fluid>
+                <v-col class="d-flex justify-center flex-column" cols="12">
+                    <v-footer :color="fo.color">
+                        <div>
+                             <div class="align-left">
+                                 <v-img :src="`./storage/app_icon/${store.app_logo}`"
+                                        :lazy-src="`./storage/app_icon/${store.app_logo}`"
+                                        :alt="store.app_log" :width="80">
+                                    </v-img>
+                            </div>
+                            
+                        </div>
+
+                        <v-spacer></v-spacer>
+                        <div>
+                            <div class="align-left">
+                                    <v-btn class="mx-4" v-for="(link, index) in JSON.parse(fo.links)" :key="index" 
+                                    size="x-small" variant="plain" :to="'/' + link.toLowerCase()">
+                                    {{ link }}
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                            </div>
+                        </div>
+                     
+                     
+
+                        <v-spacer></v-spacer>
+                    
+                    <v-divider></v-divider>
+                      <div>
+                        <div class="pt-0">
+                            {{ fo.text }}
+
+                          
+                        </div>
+                        <v-spacer></v-spacer>
+                        <v-spacer></v-spacer>
+                        <div class="px-4 py-2 text-center w-100">
+                           
+                           {{ new Date().getFullYear() }} - <strong>{{ store.app_name }}</strong>
+                       </div>
+                      </div>
+                        <v-divider></v-divider>
+                       <div>
+                        <div class="d-flex flex-column" v-for="(icon, index) in JSON.parse(fo.icons)" :key="index">
+                            <v-btn  :icon="icon" class="mx-4" size="x-small"
+                                variant="plain"
+                            >
+
+                            </v-btn>
+                            
+                        </div>
+                       </div>
+                        
+                    </v-footer>
                 </v-col>
             </v-row>
-        </div>
-       
-        <v-divider></v-divider>
-        <div>
-            {{ new Date().getFullYear() }} - <strong>{{ store.app_name }}</strong>
-        </div>
-  </v-footer>
+
+        </v-sheet>
+    </v-container>
+
+
+
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data: () => ({
         store: [],
-
+        footer: [],
         links: [
             'Home',
             'About us',
@@ -61,9 +100,18 @@ export default {
                     return false;
                 })
         },
+        getFooter() {
+            axios.get('/footer')
+                .then((response) => {
+                    return this.footer = response.data;
+                }).catch((response) => {
+                    return alert('Error: ' + response);
+                });
+        }
     },
     created() {
         this.getStore();
+        this.getFooter();
     }
 }
 

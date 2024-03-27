@@ -13,6 +13,15 @@ class FooterService{
     public function __construct(Footer $footer){
         $this->footer = $footer;
     }
+    public function getFooter(){
+        try{
+            $footer = Footer::all();
+            return $footer;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
     public function store($request, $id){
         try{
             
