@@ -15,6 +15,10 @@ class FooterController extends Controller
     {
         $this->footerService = $footerService;
     }
+    public function index(){
+        $footer = $this->footerService->getFooter();
+        return response()->json($footer);
+    }
     public function create(Request $request, $id)
     {
         try {

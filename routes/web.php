@@ -27,6 +27,7 @@ use App\Http\Controllers\Coupons\CouponCustomer\CouponCustomerController;
 use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Shippment\ShippmentController;
 use App\Http\Controllers\Store\StoreController;
+use App\Http\Controllers\Footer\FooterController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -201,3 +202,6 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('produ
 //Route::get('/products', function(){s
 //    dd('teste product routes');
 //});
+
+//Footer Routes
+Route::get('/footer', [FooterController::class, 'index'])->name('footer.index');
