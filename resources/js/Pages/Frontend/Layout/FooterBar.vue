@@ -18,15 +18,13 @@
                         <div>
                             <div class="align-left">
                                     <v-btn class="mx-4" v-for="(link, index) in JSON.parse(fo.links)" :key="index" 
-                                    size="x-small" variant="plain" :to="'/' + link.toLowerCase()">
+                                    size="small" variant="plain" :to="'/' + link.toLowerCase()">
                                     {{ link }}
                                 </v-btn>
                                 <v-spacer></v-spacer>
                             </div>
                         </div>
-                     
-                     
-
+                        
                         <v-spacer></v-spacer>
                     
                     <v-divider></v-divider>
