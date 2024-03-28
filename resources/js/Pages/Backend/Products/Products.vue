@@ -882,7 +882,7 @@ export default {
         const data = {
           name: this.editedItem.name,
           description: this.editedItem.description,
-          category_id: this.editedItem.category_name,
+          category_id: this.editedItem.category_id,
           subcategory_id: this.editedItem.subcategory_name,
           images: this.images,
           platform: this.editedItem.platform,
