@@ -37,8 +37,7 @@
 
                             <v-menu :activator="$refs.menuBtn" open-on-hover>
                                 <template v-slot:activator="{ props }">
-                                    <v-btn ref="menuBtn" variant="plain" :color="this.appBarColor ?? 'trasparent'"
-                                        size="small" v-bind="props">
+                                    <v-btn ref="menuBtn" variant="plain" size="small" v-bind="props">
                                         <!-- <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
                                 </v-icon> -->
                                         categories

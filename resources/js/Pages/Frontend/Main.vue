@@ -73,13 +73,14 @@
           <v-row>
             
               <h4>Launch</h4>
+          
               <v-divider></v-divider>
               <v-spacer></v-spacer>
 
               <v-col v-if="Object.keys(products).length >= 1" class="d-flex justify-center flex-column" cols="auto"
                 v-for="(product,index) in products" :key="index"  
               >
-                <v-sheet v-if="index < 12 && product.featured" class="py-2 px-2">
+                <v-sheet v-if="index < 12 && product.launch" class="py-2 px-2">
                   <v-hover v-slot="{isHovering, props}">
                     <v-card class="mx-auto" :max-height="200" elevation="0" v-bind="props">
                       <div class="float-right">
@@ -136,9 +137,17 @@
           </v-row>
 
           <v-row no-gutters>
-            <v-col class="d-flex justify-center flex-column" cols="auto">
+            <v-col v-if="bannerImage" class="d-flex justify-center flex-column" cols="auto">
               <Banner></Banner>
             </v-col>
+
+            
+              <v-col v-else>
+              <v-sheet class="py-4 px-4">
+                <v-skeleton-loader type="image"></v-skeleton-loader>
+              </v-sheet>
+            </v-col>
+           
           </v-row>
 
           <v-row no-gutters>
@@ -195,12 +204,17 @@
                   </v-card>
                 </v-hover>
               </v-sheet>
-            </v-col>
-            <v-col v-else v-for="n in 8" class="d-flex justify-center flex-column" cols="auto" md="3" sm="2">
-              <v-sheet class="py-2 px-2">
-                <v-skeleton-loader type="card" :width="160"></v-skeleton-loader>
+              <v-sheet v-else>
+                <v-row>
+                   <v-col v-for="n in 8" :key="index"  class="d-flex justify-center flex-column" cols="auto" md="4" sm="2">
+                  <v-skeleton-loader type="card" :width="160"></v-skeleton-loader>
+                </v-col>
+                </v-row>
+               
+                
               </v-sheet>
             </v-col>
+           
           </v-row>
 
           <v-row justify="center">
@@ -380,6 +394,15 @@
         :coupon="this.welcomeDiscount" @close-welcome-dialog="this.discountDialog = false" />
     </div>
 
+    <!-- <div>
+      <v-row>
+        <v-col>
+          <v-sheet class="px-2 py-2">
+              <FloatButtons></FloatButtons>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </div> -->
     <div>
       <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="12">
@@ -400,6 +423,7 @@ import ProductDialog from './Dialogs/ProductDialog.vue';
 import DiscountWindow from './Coupons/partials/Window.vue';
 import WelcomeDiscount from './Coupons/partials/Welcome.vue';
 import Carousel from './Carrousel/Carrousel.vue';
+import FloatButtons from './FloatButtons/FloatButtons.vue';
 import FooterBar from './Layout/FooterBar.vue';
 
 
@@ -411,6 +435,7 @@ export default {
     DiscountWindow,
     WelcomeDiscount,
     Carousel,
+    FloatButtons,
     FooterBar
   },
   data: () => ({
