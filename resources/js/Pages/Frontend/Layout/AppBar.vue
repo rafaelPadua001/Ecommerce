@@ -53,7 +53,8 @@
                                         no categories found
                                     </v-list-item>
                                     <v-list-item v-else v-for="category in categories" :key="category.id">
-                                        <v-btn variant="flat" size="small" :to="`/subcategories/all/${category.id}`">
+                                        <v-btn variant="flat" size="small" 
+                                            :to="{path: `/subcategories/all/${category.id}`, query: {customer: this.user}}">
                                             <span>
                                                 <v-avatar color="surface-variant" size="28px">
                                                     <v-img v-if="category.thumbnail"

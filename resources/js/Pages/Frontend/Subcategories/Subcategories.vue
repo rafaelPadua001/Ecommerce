@@ -5,17 +5,18 @@
                 <AppBar />
             </v-col>
         </v-row>
-        <v-row no-gutters>
-            <v-col class="d-flex justify-center flex-column" cols="12" sm="8">
+        <v-row fluid>
+            <v-col class="d-flex justify-center flex-column" cols="auto">
+                {{ customer }}
                 <v-sheet class="px-2 py-2">
                     <v-row fluid>
-                        <v-col class="d-flex  flex-column" cols="2" sm="2">
+                        <v-col class="d-flex justify-start flex-column" cols="auto">
                             <v-card class="mx-auto">
                                 <v-card-title>Categories</v-card-title>
                                 <v-divider></v-divider>
                                 <v-card-text>
                                     <v-row v-for="(product, index) in products" :key="index">
-                                        <v-col class="d-flex flex-column">
+                                        <v-col class="d-flex flex-column" cols="auto" sm="2">
                                             <v-btn class="mr-2" size="small" variant="flat">
                                                 <span>
                                                     <v-avatar size="26">
@@ -36,18 +37,25 @@
                             </v-card>
                         </v-col>
 
-                        <v-col class="d-flex justify-center flex-column" cols="10">
-                            <v-card class="mx-auto elevation-1">
-                                <v-card-text>
-                                    <v-row v-for="product in products" :key="product.id">
-                                        <v-col class="d-flex flex-column" cols="auto">
-                                            <v-hover v-slot="{ isHovering, props }">
+                        <v-col v-for="product in products" :key="product.id" class="d-flex justify-center flex-column" cols="auto">
+                            <v-sheet class="py-2 px-2">
+                                <v-hover v-slot="{ isHovering, props }">
+                                    <v-card class="mx-auto elevation-1">
+                              
+                                            
                                                 <v-card class="mx-auto elevation-0" v-bind="props">
                                                     <v-toolbar class="bg-transparent">
 
                                                         <template v-slot:append>
                                                             <v-btn-group class="float-end">
-
+                                                                <v-btn icon size="x-small">
+                                                                    <v-icon icon="fa-regular fa-heart fa-2xs"
+                                                                        v-if="Object.keys(likes).length == 0"
+                                                                        class="bg-transparent" @click="like()"></v-icon>
+                                                                    <v-icon icon="fa-solid fa-heart fa-2xs"
+                                                                        color="red-darken-4" v-else
+                                                                        @click="like()"></v-icon>
+                                                                </v-btn>
                                                                 <v-btn icon size="x-small">
                                                                     <v-icon
                                                                         icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
@@ -57,43 +65,43 @@
                                                         </template>
                                                     </v-toolbar>
 
-                                                        <div v-for="(image, index) in JSON.parse(product.images)"
-                                                            :key="index">
+                                                    <div v-for="(image, index) in JSON.parse(product.images)"
+                                                        :key="index">
 
-                                                            <v-img v-if="index == 0" :vid-id="image" aspect-ratio="1/1"
-                                                                :src="`./storage/products/${image}`"
-                                                                :lazy-src="`./storage/products/${image}`" :height="300"
-                                                                :width="300" cover>
-                                                                <div v-if="product.discount_id"
-                                                                    class="d-flex justify-end text-center">
-                                                                    <v-chip class="ma-2" label
-                                                                        :color="cardDiscountColor ?? 'orange-darken-4'"
-                                                                        variant="elevated">
-                                                                        - {{ product.discount_percentage * 100 }}%
-                                                                    </v-chip>
+                                                        <v-img v-if="index == 0" :vid-id="image" aspect-ratio="1/1"
+                                                            :src="`./storage/products/${image}`"
+                                                            :lazy-src="`./storage/products/${image}`" :height="300"
+                                                            :width="300" cover>
+                                                            <div v-if="product.discount_id"
+                                                                class="d-flex justify-end text-center">
+                                                                <v-chip class="ma-2" label
+                                                                    :color="cardDiscountColor ?? 'orange-darken-4'"
+                                                                    variant="elevated">
+                                                                    - {{ product.discount_percentage * 100 }}%
+                                                                </v-chip>
 
+                                                            </div>
+
+                                                            <div v-if="product.discount_id"
+                                                                class="d-flex justify-end text-center">
+                                                                <v-chip class="ma-2" label
+                                                                    :color="cardDiscountColor ?? 'orange-darken-4'"
+                                                                    variant="elevated">
+                                                                    - {{ product.discount_percentage * 100 }}%
+                                                                </v-chip>
+
+                                                            </div>
+
+                                                            <template>
+                                                                <div
+                                                                    class="d-flex align-center justify-center fill-height">
+                                                                    <v-progress-circular color="grey-lighten-4">
+                                                                    </v-progress-circular>
                                                                 </div>
-                                                                
-                                                                <div v-if="product.discount_id"
-                                                                    class="d-flex justify-end text-center">
-                                                                    <v-chip class="ma-2" label
-                                                                        :color="cardDiscountColor ?? 'orange-darken-4'"
-                                                                        variant="elevated">
-                                                                        - {{ product.discount_percentage * 100 }}%
-                                                                    </v-chip>
+                                                            </template>
+                                                        </v-img>
+                                                    </div>
 
-                                                                </div>
-
-                                                                <template>
-                                                                    <div
-                                                                        class="d-flex align-center justify-center fill-height">
-                                                                        <v-progress-circular color="grey-lighten-4">
-                                                                        </v-progress-circular>
-                                                                    </div>
-                                                                </template>
-                                                            </v-img>
-                                                        </div>
-                                                    
 
                                                     <v-card-text>
                                                         <v-row fluid>
@@ -134,7 +142,7 @@
                                                                             <p>
                                                                                 <strong>R$:</strong>
                                                                                 {{ (product.price - (product.price *
-                                        product.discount_percentage)).toFixed(2)
+                    product.discount_percentage)).toFixed(2)
                                                                                 }}
                                                                             </p>
                                                                         </div>
@@ -168,16 +176,11 @@
                                                         </div>
                                                     </v-expand-transition>
                                                 </v-card>
-                                            </v-hover>
-
-                                        </v-col>
-                                    </v-row>
-
-
-                                </v-card-text>
-
-                            </v-card>
-
+                                            
+                                           
+                                </v-card>
+                            </v-hover>
+                            </v-sheet>
                         </v-col>
 
                         <!-- <v-col class="d-flex justify-end flex-column" cols="2" sm="2">
@@ -191,7 +194,25 @@
                 </v-sheet>
             </v-col>
         </v-row>
+        <div>
+            <ProductDialog v-if="buyDialog" v-model="buyDialog" :selectProduct="selectProduct" :buyDialog="buyDialog"
+                :showProductSeo="this.showProductSeo" :customer="this.customer" :likes="likes"
+                @close-dialog="buyDialog = false" @update:buyDialog="updateBuyDialog" />
 
+            <v-snackbar v-model="snackbar" :timeout="3500" color="cyan-darken-3" vertical>
+
+                <div class="text-subtitle-1 pb-2">Você deve estar logado para adicionar esse item ao carrinho
+                </div>
+
+                <template v-slot:actions>
+                    <v-btn-group>
+                        <v-btn size="small" variant="plain" color="white">Close</v-btn>
+                        <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
+                    </v-btn-group>
+                </template>
+
+            </v-snackbar>
+        </div>
 
     </v-container>
 
@@ -199,10 +220,13 @@
 
 <script>
 import AppBar from '../Layout/AppBar.vue';
+import ProductDialog from '../Dialogs/ProductDialog.vue';
 
 export default {
+    props: ['customer'],
     components: {
-        AppBar
+        AppBar,
+        ProductDialog
     },
     data: () => ({
         categories: [],
@@ -210,7 +234,12 @@ export default {
         subcategories: [],
         products: [],
         images: '',
+        likes: false,
+        productIndex: -1,
+        selectProduct: {},
+        buyDialog: false,
         value: [10, 100],
+        snackbar: false,
     }),
     methods: {
         getProducts() {
@@ -222,11 +251,57 @@ export default {
                 .catch((response) => {
                     return alert('Error: ' + response);
                 })
-        }
+        },
+        like() {
+            if (Object.keys(this.customer).length == 0) {
+                this.snackbar = true;
+            }
+            if (this.selectProduct >= 1) {
+                axios.post(`products/like/${this.selectProduct.id}`)
+                    .then((response) => {
+                        this.liked += 1;
+                        return true;
+                    })
+                    .catch((response) => {
+                        return;
+                    });
+            }
+            else {
+                axios.post(`products/like/${this.product.id}`)
+                    .then((response) => {
+                        this.liked += 1;
+                        return true;
+                    })
+                    .catch((response) => {
+                        return;
+                    });
+            }
+        },
+        getLikes() {
+            axios.get('/likes')
+                .then((response) => {
+
+                    return this.likes = response.data;
+                })
+                .catch((response) => {
+                    return false;
+                });
+        },
+        buy(product) {
+            this.productIndex = this.products.indexOf(product);
+            this.selectProduct = Object.assign({}, product);
+            this.showProductSeo = true;
+            this.buyDialog = true;
+        },
+        updateBuyDialog(value) {
+            this.buyDialog = value;
+
+        },
     },
     mounted() {
         this.category_id = this.$route.params.category_id;
         this.getProducts();
+        
     }
 }
 

@@ -1,18 +1,18 @@
 <template>
     <v-row>
         <v-col class="d-flex justify-center flex-column" cols="auto" md="12" sm="12">
-            <v-card elevation="0">
+            <v-card elevation="0" >
                 <v-card-title>
-                    <v-avatar color="surface-variant">
-                        <template v-slot="prepend">
+                    <v-avatar color="surface-variant"  v-if="this.customer">
+                        <template v-slot="prepend" >
                             <v-img :src="`./storage/avatars/${this.customer.first_name}`"
                                 :lazy-src="`./storage/avatars/${this.customer.last_name}`" cover>
 
                             </v-img>
                         </template>
                     </v-avatar>
-                    <strong>{{ customer.first_name }} {{ customer.last_name }}</strong>
-
+                    <strong v-if="customer">{{ customer.first_name }} {{ customer.last_name }}</strong>
+                   
                 </v-card-title>
                 <v-card-text>
                     <v-textarea v-model="comment" counter label="Live you'r comment" :rules="rules" :model-value="comment"
@@ -30,7 +30,7 @@
                 </v-card-text>
 
             </v-card>
-
+           
 
         </v-col>
     </v-row>
