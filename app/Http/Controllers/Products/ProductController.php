@@ -74,11 +74,19 @@ class ProductController extends Controller
     public function getProduct($id)
     {
         try {
-
             $product = $this->productService->getProduct($id);
             return response()->json($product);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
+        }
+    }
+    public function getCategory($id)
+    {
+        try {
+            $product = $this->productService->getPerSubcategory($id);
+            return response()->json($product);
+        } catch (Exception $e) {
+            return response()->json($e);
         }
     }
     public function like($id)
@@ -171,7 +179,7 @@ class ProductController extends Controller
         ];
 
         $newProduct = $this->productService->create($product);
-        
+
         $image_class = $this->productImages->store($upload_file,  $newProduct->original['id'], $request->user_id);
 
         $video_class = $this->productVideos->store($request->video_link, $newProduct->original['id'], $request->user_id, $request->name, $request->platform);
@@ -197,7 +205,7 @@ class ProductController extends Controller
             $newProduct->original['id'],
             $request->user_id
         );
-     
+
         return response()->json($newProduct);
     }
     public function update(Request $request, $id)
@@ -255,7 +263,7 @@ class ProductController extends Controller
             $upload_file = $request->images;
 
             $product_id = Product::where('id', $id)->first();
-         
+
             $image_class = $this->getImageClass($upload_file, $id, $request->user_id);
 
             //return response()->json($request);
