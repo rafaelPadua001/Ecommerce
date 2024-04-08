@@ -61,6 +61,7 @@ Route::get('/coupons/getOthers', [CouponsController::class, 'others'])->name('co
 
 
 //Subcategories route
+Route::get('/subcategories/{category_id}', [SubcategoriesController::class, 'getSubcategory'])->name('subcategory.getSubcategory');
 Route::post('/subcategories/store/{id}', [SubcategoriesController::class, 'store'])->name('store');
 Route::post('/subcategories/update/{id}', [SubcategoriesController::class, 'update'])->name('update');
 Route::delete('/subcategories/delete/{id}', [SubcategoriesController::class, 'destroy'])->name('destroy');
