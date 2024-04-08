@@ -26,6 +26,15 @@ class CategoryService {
         }
         return response()->json($categories);
     }
+    public function getCategories(){
+        try{
+            $categories = Categories::all();
+            return $categories;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
     public function show(){
         $categories = Categories::all();
         return response()->json($categories);
