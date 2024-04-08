@@ -18,7 +18,7 @@ WORKDIR /var/www/html
 RUN composer install
 RUN npm install 
 
-EXPOSE 9000
+#EXPOSE 9000
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
