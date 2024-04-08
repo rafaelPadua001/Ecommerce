@@ -66,6 +66,7 @@ Route::post('/subcategories/update/{id}', [SubcategoriesController::class, 'upda
 Route::delete('/subcategories/delete/{id}', [SubcategoriesController::class, 'destroy'])->name('destroy');
 
 //Products route
+Route::get('/products', [ProductController::class, 'show'])->name('products.show');
 #Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
 Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::post('/products/search/{id}', [ProductController::class, 'getProduct'])->name('product.search');
