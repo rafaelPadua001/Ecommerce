@@ -39,6 +39,16 @@ class SubcategoriesController extends Controller
         $subcategories = Subcategory::where('category_id', $category_id)->get();
         return response()->json($subcategories);
     }
+    public function getSubcategory($category_id){
+        try{
+            $categories = Subcategory::where('category_id', '=', $category_id)->get();
+            return response()->json($categories);
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }
+        
+    }
     public function store(Request $request, $id){
         $category = Categories::where('id', $request->category_id)->first();
        
