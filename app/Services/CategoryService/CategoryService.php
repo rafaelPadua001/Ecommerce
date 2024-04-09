@@ -35,6 +35,15 @@ class CategoryService {
             return $e->getMessage();
         }
     }
+    public function getCategory($id){
+        try{
+            $categories = Categories::findOrFail($id);
+            return $categories;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
     public function show(){
         $categories = Categories::all();
         return response()->json($categories);

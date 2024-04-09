@@ -38,6 +38,15 @@ class CategoriesController extends Controller
             return response()->json($e);
         }
     }
+    public function getCategory($id){
+        try{
+            $category = $this->categoryService->getCategory($id);
+            return response()->json($category);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
     public function show(){
         $categories = $this->categoryService->show();
         return response()->json($categories);

@@ -28,6 +28,7 @@ use App\Http\Controllers\Delivery\DeliveryController;
 use App\Http\Controllers\Shippment\ShippmentController;
 use App\Http\Controllers\Store\StoreController;
 use App\Http\Controllers\Footer\FooterController;
+use App\Models\Categories;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -113,6 +114,7 @@ Route::delete('/address/delete/{id}', [AddressesController::class, 'destroy'])->
 //Categories routes
 Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index');
 Route::get('/categories/show', [CategoriesController::class, 'show'])->name('categories.show');
+Route::get('/categories/{id}', [CategoriesController::class, 'getCategory'])->name('categories.getCategory');
 Route::post('/categories/store/{id}', [CategoriesController::class, 'create'])->name('create');
 //Cart Routes
 Route::get('/carts',[CartController::class, 'index'])->name('carts.get');
