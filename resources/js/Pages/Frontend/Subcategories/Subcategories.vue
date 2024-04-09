@@ -12,7 +12,7 @@
                     <v-row fluid>
                         <v-col class="d-flex justify-start flex-column" cols="auto">
                             <v-card class="mx-auto">
-                                <v-card-title>Categories</v-card-title>
+                                <!-- <v-card-title>Categories</v-card-title>
                                 <v-divider></v-divider>
                                 <v-card-text v-if="category">
                                     <v-row>
@@ -32,14 +32,14 @@
                                         </v-col>
                                         <v-divider></v-divider>
                                     </v-row>
-                                </v-card-text>
+                                </v-card-text> -->
 
                                 <v-card-text v-if="subcategories">
                                     <h5>Subcategories</h5>
                                     <v-row v-for="(subcategory, index) in subcategories" :key="index">
                                         <v-col class="d-flex justify-start flex-row">
 
-                                            <v-btn class="mr-2" size="small" variant="flat">
+                                            <v-btn class="mr-2" size="small" variant="flat" @click="getProductSubcategory(subcategory)">
                                                 {{ subcategory.name }}
                                             </v-btn>
                                         </v-col>
@@ -53,12 +53,16 @@
 
                         <v-col v-for="product in products" :key="product.id" class="d-flex justify-center flex-column"
                             cols="auto">
+                           
                             <v-sheet class="py-2 px-2">
+                                
                                 <v-hover v-slot="{ isHovering, props }">
                                     <v-card class="mx-auto elevation-1">
-                                        <v-card class="mx-auto elevation-0" v-bind="props">
+                                       
+                                        <v-card-text>
+                                            <v-card class="mx-auto elevation-0" v-bind="props">
                                             <v-toolbar class="bg-transparent">
-
+                                               
                                                 <template v-slot:append>
                                                     <v-btn-group class="float-end">
                                                         <v-btn icon size="x-small">
@@ -185,6 +189,8 @@
                                                 </div>
                                             </v-expand-transition>
                                         </v-card>
+                                        </v-card-text>
+                                        
 
 
                                     </v-card>
@@ -278,6 +284,22 @@ export default {
                 .catch((response) => {
                     return alert('Error: ' + response);
                 })
+        },
+        getProductSubcategory(subcategory){
+            const subcategory_id = subcategory.id;
+            const item = subcategory;
+            axios.get(`/products/subcategory/${subcategory_id}`)
+            .then((response) => {
+                if(response.data.length >= 1){
+                    return this.products.push(response.data);
+                }
+               
+                return alert('nenhum produto encontrado');
+            })
+            .catch((response) => {
+                return alert('Error:' + response);
+            })
+
         },
         like() {
             if (Object.keys(this.customer).length == 0) {

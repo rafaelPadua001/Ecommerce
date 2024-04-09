@@ -89,6 +89,15 @@ class ProductController extends Controller
             return response()->json($e);
         }
     }
+    public function getSubcategory($id){
+        try{
+            $product = $this->productService->getSubcategory($id);
+            return response()->json($product);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+    }
     public function like($id)
     {
         try {
