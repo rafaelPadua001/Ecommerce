@@ -3,6 +3,7 @@
 namespace App\Services\ProductService;
 
 use App\Models\Product;
+use Exception;
 
 class ProductService
 {
@@ -54,6 +55,15 @@ class ProductService
             ])
             ->get();
         return $product;
+    }
+    public function getSubcategory($id){
+        try{
+            $product = Product::where('products.subcategory_id', '=', $id)->get();
+            return $product;
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
     }
     public function create($product)
     {

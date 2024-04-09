@@ -145,6 +145,7 @@ Route::get('/subcategories/all/{category_id}', [SubcategoriesController::class, 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth');
 Route::get('/products/show', [ProductController::class, 'show'])->name('products.show');
 Route::get('/products/category/{id}', [ProductController::class, 'getCategory'])->name('product.category');
+Route::get('/products/subcategory/{id}', [ProductController::class, 'getSubcategory'])->name('product.subcategory');
 Route::post('/products/like/{id}', [ProductController::class , 'like'])->name('product.like');
 Route::delete('/products/dislike/{id}', [ProductController::class, 'dislike'])->name('product.dislike');
 
