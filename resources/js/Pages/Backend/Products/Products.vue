@@ -46,7 +46,7 @@
                               <v-text-field v-model="editedItem.name" label="Product name"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
-                              <v-select v-model="editedItem.category_name" label="Category" :items="categories"
+                              <v-select v-model="editedItem.category_id" label="Category" :items="categories"
                                 item-title="name" item-value="id"></v-select>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
