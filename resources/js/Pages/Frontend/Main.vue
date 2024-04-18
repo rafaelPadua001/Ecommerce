@@ -358,9 +358,9 @@
             <v-divider></v-divider>
             <v-spacer></v-spacer>
 
-            <v-col class="d-flex justify-center mb-6 flex-column" v-if="carousel">
-
-              <Carousel :carousel="carousel" />
+            <v-col class="d-flex justify-center mb-6 flex-column" v-if="carouselImages">
+                
+              <Carousel :carousel="carouselImages" />
 
             </v-col>
           </v-row>
@@ -464,7 +464,7 @@ export default {
     loading: false,
     liked: 0,
     likes: false,
-    bannerImage: false,
+    bannerImage: [],
     carouselImages: [],
     showList: true,
     showProductSeo: false,
@@ -566,7 +566,8 @@ export default {
     getCarousel() {
       axios.get(`/api/carrousel`)
         .then((response) => {
-          return this.carousel = response.data;
+          alert(response.data);
+          return this.carouselImages = response.data;
         })
         .catch((response) => {
           return false; 
