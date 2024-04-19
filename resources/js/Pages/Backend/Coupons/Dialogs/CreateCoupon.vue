@@ -25,17 +25,17 @@
         </v-row>
 
         <v-row fluid>
-          <v-col cols="12" sm="6">
+           <v-col cols="12" sm="6">
             <label>Init Date:</label>
             <v-date-picker v-model="init_date" show-adjacent-months></v-date-picker>
-            {{ init_date }}
+            {{ formatted_init_date }}
           </v-col>
           <v-col cols="12" sm="6">
             <v-label>End Date</v-label>
             <v-date-picker v-model="end_date" show-adjacent-months>
 
             </v-date-picker>
-            {{ end_date }}
+            {{ formatted_end_date }}
           </v-col>
         </v-row>
         <v-row fluid>
@@ -48,7 +48,7 @@
             <v-label>End Hour</v-label>
             <v-text-field v-model="end_hour" label="End Hour" type="time" suffix="PST"></v-text-field>
             {{ end_hour }}
-          </v-col>
+          </v-col> 
         </v-row>
         <v-row>
           <v-col cols="12" sm="6">
@@ -81,8 +81,8 @@ export default {
     code: '',
     discountPercentage: '',
     image: [],
-    init_date: '',
-    end_date: '',
+    init_date: new Date(),
+    end_date: new Date(),
     init_hour: '',
     end_hour: '',
     display: false,
@@ -99,6 +99,14 @@ export default {
     createDialog(val) {
       val || this.createDialog;
     },
+  },
+  computed: {
+    formatted_init_date(){
+      return this.init_date.toString().replace(/\d{2}:\d{2}:\d{2}.*/, '');
+    },
+    formatted_end_date(){
+      return this.end_date.toString().replace(/\d{2}:\d{2}:\d{2}.*/, '');
+    }
   },
   methods: {
     close() {
