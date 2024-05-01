@@ -73,6 +73,7 @@ Route::delete('/subcategories/delete/{id}', [SubcategoriesController::class, 'de
 //Products route
 Route::get('/products', [ProductController::class, 'show'])->name('products.show');
 Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('products.getProduct');
+Route::get('/products/subcategory/{id}', [ProductController::class, 'getSubcategory'])->name('product.subcategory');
 #Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
 Route::post('/products/update/{id}', [ProductController::class, 'update'])->name('products.update');
 Route::post('/products/search/{id}', [ProductController::class, 'getProduct'])->name('product.search');
