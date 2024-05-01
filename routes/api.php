@@ -36,9 +36,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::middleware('jwt.auth')->get('/jwt-example', function(Request $request){
-//     return $request->user();
-// });
+ Route::middleware('jwt.auth')->get('/jwt-example', function(Request $request){
+     return $request->user();
+ });
 
 //Route AppBar
 Route::get('/appBar', [AppBarController::class, 'index'])->name('appBar.index');

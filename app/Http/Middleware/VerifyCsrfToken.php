@@ -20,6 +20,6 @@ class VerifyCsrfToken extends Middleware
         'shippments/*',
         '/orders/refundTransaction/*',
         '/orders/alterStatus/*',
-        '/store/*'
+        '/store/*',
     ];
 }
