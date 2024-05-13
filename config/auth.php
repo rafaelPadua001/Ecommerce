@@ -44,11 +44,11 @@ return [
             'driver' => 'session',
             'provider' => 'customers',
         ],
-        'api' => [
-        'driver' => 'jwt',
-        'provider' => 'users',
-        'hash' => false,
-        ],
+        // 'api' => [
+        // 'driver' => 'jwt',
+        // 'provider' => 'users',
+        // 'hash' => false,
+        // ],
     ],
 
     /*
