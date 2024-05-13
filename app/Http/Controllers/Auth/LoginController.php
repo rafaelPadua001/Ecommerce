@@ -33,11 +33,11 @@ class LoginController extends Controller
 
             $user = User::where('email', $request->email)->first();
 
-            if (!$user || password_verify($request->password, $user->password, $user->password)) {
+            if (!$user || !password_verify($request->password, $user->password)) {
                 return back()->withErrors([
                     'email' => 'Credenciais invalidas.',
                 ])->onlyInput('email');
-
+            }
                 $credentials = $request->validate([
                     'email' => ['required', 'email'],
                     'password' => ['required'],
@@ -45,8 +45,8 @@ class LoginController extends Controller
 
                 if (! $token = Auth::attempt($credentials)) {
 
-                    // $request->session()->regenerate();
-                    // $request->session()->put($credentials);
+                    $request->session()->regenerate();
+                    $request->session()->put($credentials);
 
                     // return redirect()->intended('dashboard');
                     return response()->json(['email' => $request->email], 200);
@@ -57,15 +57,17 @@ class LoginController extends Controller
                     ])->onlyInput('email');
                 }
                 return $this->respondWithToken($token);
-            }
+            
 
-            return back()->withErrors([
-                'email' => 'Email não encontrado nos nossos registros.',
-            ])->onlyInput('email');
         } else {
             $customer = Customer::where('email', $request->email)->first();
 
-            if (!$customer || password_verify($request->password, $customer->password, $customer->password)) {
+            if (!$customer || !password_verify($request->password, $customer->password, $customer->password)) {
+              
+                return back()->withErrors([
+                    'email' => 'Credenciais invalidas.',
+                ])->onlyInput('email');
+            }
                 $credentials = $request->validate([
                     'email' => ['required', 'email'],
                     'password' => ['required'],
@@ -80,11 +82,11 @@ class LoginController extends Controller
                     return response()->json(['email' => $request->email, 200]);
                 }
                     return $this->respondWithToken($token);
-            }
+            
 
-            return back()->withErrors([
-                'email' => 'Email não encontrado nos nossos registros.',
-            ])->onlyInput('email');
+            // return back()->withErrors([
+            //     'email' => 'Email não encontrado nos nossos registros.',
+            // ])->onlyInput('email');
         }
     }
     public function getAppUrl()
