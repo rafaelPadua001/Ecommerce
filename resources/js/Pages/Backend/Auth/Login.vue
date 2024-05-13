@@ -117,8 +117,9 @@ export default {
                 password: this.password
             };
 
-            axios.post('/loginAdmin', data)
+            axios.post('/loginAdmin', data,)
                 .then((response) => {
+                  
                     this.$router.push('/adminDashboard');
                 })
                 .catch((response) => {
