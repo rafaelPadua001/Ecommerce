@@ -18,73 +18,76 @@ class LoginController extends Controller
     public function __construct(UserService $userService){
         $this->userService = $userService;
     }
-
-    public function Login(Request $request)
-    {
-        $getAppUrl = $this->getAppUrl();
-
-       if ($request->url() == $getAppUrl . '/loginAdmin') {
-
-            $user = User::where('email', $request->email)->first();
-
-            if (!$user || !password_verify($request->password, $user->password)) {
-                return back()->withErrors([
-                    'email' => 'Credenciais invalidas.',
-                ])->onlyInput('email');
-            }
-                $credentials = $request->validate([
-                    'email' => ['required', 'email'],
-                    'password' => ['required'],
-                ]);
-
-                if (! $token = Auth::attempt($credentials)) {
-
-                    $request->session()->regenerate();
-                    $request->session()->put($credentials);
-
-                    return response()->json(['email' => $request->email], 200);
-                }
-                else{
-                    return back()->withErrors([
-                        'password' => 'Senha não encontrada nos nossos registros.',
-                    ])->onlyInput('email');
-                }
-                return $this->respondWithToken($token);
-            
-
-        } else {
-            $customer = Customer::where('email', $request->email)->first();
-
-            if (!$customer || !password_verify($request->password, $customer->password)) {
-              
-                return back()->withErrors([
-                    'email' => 'Credenciais invalidas.',
-                ])->onlyInput('email');
-            }
-                $credentials = $request->validate([
-                    'email' => ['required', 'email'],
-                    'password' => ['required'],
-                ]);
-
-                if (!$token = Auth::guard('customer')->attempt($credentials)) {
-
-                    $request->session('customer')->regenerate();
-                    $request->session('customer')->put($credentials);
-                    return response()->json(['email' => $request->email, 200]);
-                }
-                else{
-                    return back()->withErrors([
-                        'password' => 'Senha não encontrada',
-                    ])->onlyInput('email');
-                }
-                    return $this->respondWithToken($token);
-        }
-    }
     public function getAppUrl()
     {
         $url = env('APP_URL') . ':8000';
         return $url;
     }
+    public function Login(Request $request)
+    {
+        $getAppUrl = $this->getAppUrl();
+
+       if ($request->url() == $getAppUrl . '/loginAdmin') {
+            return $this->LoginAdmin($request);
+        } else {
+           return $this->LoginCustomer($request);
+        }
+    }
+
+    public function LoginAdmin($request){
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !password_verify($request->password, $user->password)) {
+            return back()->withErrors([
+                'email' => 'Credenciais invalidas.',
+            ])->onlyInput('email');
+        }
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ]);
+
+            if (! $token = Auth::attempt($credentials)) {
+
+                $request->session()->regenerate();
+                $request->session()->put($credentials);
+
+                return response()->json(['email' => $request->email], 200);
+            }
+            else{
+                return back()->withErrors([
+                    'password' => 'Senha não encontrada nos nossos registros.',
+                ])->onlyInput('email');
+            }
+            return $this->respondWithToken($token);
+    }
+   public function LoginCustomer($request){
+    $customer = Customer::where('email', $request->email)->first();
+
+    if (!$customer || !password_verify($request->password, $customer->password)) {
+      
+        return back()->withErrors([
+            'email' => 'Credenciais invalidas.',
+        ])->onlyInput('email');
+    }
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (!$token = Auth::guard('customer')->attempt($credentials)) {
+
+            $request->session('customer')->regenerate();
+            $request->session('customer')->put($credentials);
+            return response()->json(['email' => $request->email, 200]);
+        }
+        else{
+            return back()->withErrors([
+                'password' => 'Senha não encontrada',
+            ])->onlyInput('email');
+        }
+            return $this->respondWithToken($token);
+   }
     public function register(Request $request)
     {
         try {
