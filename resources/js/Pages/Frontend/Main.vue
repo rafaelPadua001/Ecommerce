@@ -17,13 +17,13 @@
               </div>
 
               <div v-else>
-               
+
                 <v-skeleton-loader type="image"></v-skeleton-loader>
               </div>
             </v-col>
           </v-row>
 
-         
+
 
           <v-row fluid>
 
@@ -71,21 +71,20 @@
           </v-row>
 
           <v-row>
-            
-              <h4>Launch</h4>
-          
-              <v-divider></v-divider>
-              <v-spacer></v-spacer>
 
-              <v-col v-if="Object.keys(products).length >= 1" class="d-flex justify-center flex-column" cols="auto"
-                v-for="(product,index) in products" :key="index"  
-              >
-                <v-sheet v-if="index < 12 && product.launch" class="py-2 px-2">
-                  <v-hover v-slot="{isHovering, props}">
-                    <v-card class="mx-auto" :max-height="200" elevation="0" v-bind="props">
-                      <div class="float-right">
-                        <v-btn-group>
-                          <v-btn icon size="x-small">
+            <h4>Launch</h4>
+
+            <v-divider></v-divider>
+            <v-spacer></v-spacer>
+
+            <v-col v-if="Object.keys(products).length >= 1" class="d-flex justify-center flex-column" cols="auto"
+              v-for="(product, index) in products" :key="index">
+              <v-sheet v-if="index < 12 && product.launch" class="py-2 px-2">
+                <v-hover v-slot="{ isHovering, props }">
+                  <v-card class="mx-auto" :max-height="200" elevation="0" v-bind="props">
+                    <div class="float-right">
+                      <v-btn-group>
+                        <v-btn icon size="x-small">
                           <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
                             class="bg-transparent" @click="like()"></v-icon>
                           <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else @click="like()"></v-icon>
@@ -93,9 +92,9 @@
                         <v-btn icon size="x-small">
                           <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
                         </v-btn>
-                        </v-btn-group>
-                      </div>
-                      <v-carousel :cycle="timeToCarousel" :show-arrows="false" hide-delimiters inline>
+                      </v-btn-group>
+                    </div>
+                    <v-carousel :cycle="timeToCarousel" :show-arrows="false" hide-delimiters inline>
                       <v-carousel-item v-for="image in JSON.parse(product.images)" :key="image.id"
                         :src="`./storage/products/${image}`" class="align-end" inline height="100" :width="120"
                         aspect-ratio="1/1" cover>
@@ -123,17 +122,17 @@
                         </v-card-actions>
                       </div>
                     </v-expand-transition>
-                    </v-card>
-                  </v-hover>
-                </v-sheet>
-              </v-col>
-              <v-col v-else v-for="n in 8" class="d-flex justify-center flex-column" cols="auto" md="3" sm="2">
+                  </v-card>
+                </v-hover>
+              </v-sheet>
+            </v-col>
+            <v-col v-else v-for="n in 8" class="d-flex justify-center flex-column" cols="auto" md="3" sm="2">
               <v-sheet class="py-2 px-2">
                 <v-skeleton-loader type="card" :width="160"></v-skeleton-loader>
               </v-sheet>
             </v-col>
-           
-            
+
+
           </v-row>
 
           <v-row no-gutters>
@@ -141,13 +140,13 @@
               <Banner></Banner>
             </v-col>
 
-            
-              <v-col v-else>
+
+            <v-col v-else>
               <v-sheet class="py-4 px-4">
                 <v-skeleton-loader type="image"></v-skeleton-loader>
               </v-sheet>
             </v-col>
-           
+
           </v-row>
 
           <v-row no-gutters>
@@ -206,15 +205,16 @@
               </v-sheet>
               <v-sheet v-else>
                 <v-row>
-                   <v-col v-for="n in 8" :key="index"  class="d-flex justify-center flex-column" cols="auto" md="4" sm="2">
-                  <v-skeleton-loader type="card" :width="160"></v-skeleton-loader>
-                </v-col>
+                  <v-col v-for="n in 8" :key="index" class="d-flex justify-center flex-column" cols="auto" md="4"
+                    sm="2">
+                    <v-skeleton-loader type="card" :width="160"></v-skeleton-loader>
+                  </v-col>
                 </v-row>
-               
-                
+
+
               </v-sheet>
             </v-col>
-           
+
           </v-row>
 
           <v-row justify="center">
@@ -275,9 +275,9 @@
                         </v-col>
                       </v-row>
                       <v-row fluid>
-                        <v-col cols="auto">
+                        <!-- <v-col cols="auto">
                           <p>{{ product.description }}</p>
-                        </v-col>
+                        </v-col> -->
                       </v-row>
                       <v-row no-gutters>
                         <v-btn-group>
@@ -339,16 +339,17 @@
                 </v-hover>
               </v-sheet>
             </v-col>
-            
+
             <v-col v-else v-for="n in 24" class="d-flex justify-center flex-column" cols="auto" md="3" sm="3">
               <v-sheet class="py-2 px-2">
                 <v-skeleton-loader type="card" :width="150"></v-skeleton-loader>
               </v-sheet>
             </v-col>
-            <v-infinite-scroll :color="'grey-lighten-4'" ref="infinite" :height="200" :width="1800" @load="load" hide-scroll>
+            <v-infinite-scroll :color="'grey-lighten-4'" ref="infinite" :height="200" :width="1800" @load="load"
+              hide-scroll>
 
               <template v-slot:empty>
-              
+
                 <v-alert class="bg-transparent"> No more items to load</v-alert>
               </template>
             </v-infinite-scroll>
@@ -359,7 +360,7 @@
             <v-spacer></v-spacer>
 
             <v-col class="d-flex justify-center mb-6 flex-column" v-if="carouselImages">
-                
+
               <Carousel :carousel="carouselImages" />
 
             </v-col>
@@ -541,7 +542,7 @@ export default {
           return this.categories = response.data;
         })
         .catch((response) => {
-          return false; 
+          return false;
         });
     },
     getWelcomeDiscount() {
@@ -560,17 +561,17 @@ export default {
           return this.discounts = response.data;
         })
         .catch((response) => {
-          return false; 
+          return false;
         });
     },
     getCarousel() {
       axios.get(`/api/carrousel`)
         .then((response) => {
-          alert(response.data);
+          // alert(response.data);
           return this.carouselImages = response.data;
         })
         .catch((response) => {
-          return false; 
+          return false;
         })
     },
     onClick() {
@@ -592,7 +593,7 @@ export default {
           return this.search = response.data;
         })
         .catch((response) => {
-          return false; 
+          return false;
         });
     },
     closeShowList() {
@@ -659,7 +660,7 @@ export default {
           return this.likes = response.data;
         })
         .catch((response) => {
-          return false; 
+          return false;
         });
     },
     openDiscountDialog() {

@@ -1,7 +1,7 @@
 <template>
-  <!-- <div>
+  <div>
     <AppBar />
-  </div> -->
+  </div>
 
   <v-navigation-drawer expand-on-hover rail theme="dark">
     <v-list>
@@ -47,7 +47,7 @@
 
 <script>
 import { useLayout } from 'vuetify'
-// import AppBar from '../Layout/AppBar.vue';
+import AppBar from '../Layout/AppBar.vue';
 import axios from 'axios';
 import AddressForm from '../Dialogs/Address.vue';
 
@@ -64,7 +64,7 @@ const Child = {
 }
 
 export default {
-  components: { Child, /*AppBar,*/ AddressForm },
+  components: { Child, AppBar, AddressForm },
   data: () => ({
     customers: [],
     address: [],
