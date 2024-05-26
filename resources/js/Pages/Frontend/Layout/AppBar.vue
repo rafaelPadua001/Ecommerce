@@ -1,10 +1,8 @@
 <template>
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="auto">
-
             <v-card class="mx-auto elevation-0 text-black">
-
-                <v-app-bar :color="this.appBarColor ?? 'trasparent'">
+         <v-app-bar :color="this.appBarColor ?? 'trasparent'">
 
                     <!-- <template v-slot:image>
                         <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
