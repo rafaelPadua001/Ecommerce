@@ -18,6 +18,18 @@ class LoginController extends Controller
     public function __construct(UserService $userService){
         $this->userService = $userService;
     }
+    public function register(Request $request)
+    {
+        try {
+            $store = $this->userService->store($request);
+            if($store){
+                return redirect('/admin');
+            }
+            return response()->json($store);
+        } catch (Exception $e) {
+            return response()->json($e);
+        }
+    }
     public function getAppUrl()
     {
         $url = env('APP_URL') . ':8000';
@@ -26,14 +38,12 @@ class LoginController extends Controller
     public function Login(Request $request)
     {
         $getAppUrl = $this->getAppUrl();
-
-       if ($request->url() == $getAppUrl . '/loginAdmin') {
+        if ($request->url() == $getAppUrl . '/loginAdmin') {
             return $this->LoginAdmin($request);
         } else {
            return $this->LoginCustomer($request);
         }
     }
-
     public function LoginAdmin($request){
         $user = User::where('email', $request->email)->first();
 
@@ -88,16 +98,5 @@ class LoginController extends Controller
         }
             return $this->respondWithToken($token);
    }
-    public function register(Request $request)
-    {
-        try {
-            $store = $this->userService->store($request);
-            if($store){
-                return redirect('/admin');
-            }
-            return response()->json($store);
-        } catch (Exception $e) {
-            return response()->json($e);
-        }
-    }
+    
 }
