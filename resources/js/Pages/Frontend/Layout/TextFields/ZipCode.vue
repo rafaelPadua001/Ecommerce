@@ -1,10 +1,9 @@
 <template>
     <v-row no-gutters>
-        <v-col class="d-flex  mb-2 flex-column" cols="12" md="4" sm="3" >
+        <v-col class="d-flex mb-2 flex-column" cols="12" md="4" sm="3" >
             <v-card class="mx-auto" width="350px">
                 <v-card-title>
                     <v-toolbar class="px-0" color="transparent">
-                        Deliveries
                     <template v-slot:extension>
                         <v-tabs 
                             v-model="tabs" 
@@ -25,7 +24,7 @@
                                     
                                 </v-img>
 
-                               
+                               {{ delivery.name }}
                            </v-tab>
                         </v-tabs>
                     </template>

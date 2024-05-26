@@ -55,12 +55,15 @@ class ProductController extends Controller
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->leftJoin('subcategories', 'categories.id', '=', 'subcategories.category_id')
             ->leftJoin('coupons', 'products.discount_id', '=', 'coupons.id')
+            ->join('product_stocks', 'products.id', '=', 'product_stocks.product_id')
             ->select(
                 'products.*',
                 'categories.id as category_id',
                 'subcategories.name as subcategoriy_id',
                 'coupons.id as discount_id',
-                'coupons.discount_percentage as discount_percentage'
+                'coupons.discount_percentage as discount_percentage',
+                'product_stocks.color_qty as color_quantity',
+                'product_stocks.size_qty as size_quantity'
             )
             ->get();
 
