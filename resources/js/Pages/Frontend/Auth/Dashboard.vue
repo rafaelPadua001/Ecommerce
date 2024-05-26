@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <!-- <div>
     <AppBar />
-  </div>
+  </div> -->
 
-  <v-navigation-drawer expand-on-hover rail class="bg-cyan-darken-2">
+  <v-navigation-drawer expand-on-hover rail theme="dark">
     <v-list>
       <v-list-item prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
         :title="customers.first_name + ' ' + customers.last_name" :subtitle="customers.email"></v-list-item>
@@ -47,7 +47,7 @@
 
 <script>
 import { useLayout } from 'vuetify'
-import AppBar from '../Layout/AppBar.vue';
+// import AppBar from '../Layout/AppBar.vue';
 import axios from 'axios';
 import AddressForm from '../Dialogs/Address.vue';
 
@@ -64,7 +64,7 @@ const Child = {
 }
 
 export default {
-  components: { Child, AppBar, AddressForm },
+  components: { Child, /*AppBar,*/ AddressForm },
   data: () => ({
     customers: [],
     address: [],
