@@ -21,8 +21,8 @@
                 <v-card-text>
                     <v-window v-model="tabs">
                         <v-window-item v-for="(delivery, index) in deliveries" :key="index" :value="index">
-                            <v-row v-model="delivery.id" v-if="delivery.activated == 1" fluid>
-                                <v-col class="d-flex child-flex" cols="12">
+                            <v-row v-model="delivery.id" v-if="delivery.activated == 1" no-gutters>
+                                <v-col class="" cols="10">
                                     <v-form ref="form">
                                         <v-alert v-model="errorDialog" text="zip code is required" type="warning"
                                             closable>
