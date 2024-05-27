@@ -96,10 +96,12 @@
                         <v-spacer></v-spacer>
 
                         <p float="end">
-                            <strong>Price:</strong> R$ {{ selectProduct.price * quantity }}
+                            <strong>Price:</strong> R$ {{ (quantity * (selectProduct.price)).toFixed(2) }}
                         </p>
-                        <p v-for="item in shippment" :key="item.id">
-                            Delivery: R$ {{ item.price }}
+
+                        <p>
+
+                            Delivery: R$ {{ quantity * shippment.price }}
                         </p>
                         <p float="end" v-if="selectProduct.unity">
                             (Height x Width) {{ selectProduct.unity }}:
@@ -169,18 +171,20 @@
                                         <template v-slot:default="{ isHovering, props }">
                                             <div v-if="parsedQuantitySize[index] >= 1">
                                                 <v-avatar v-bind="props" :width="40" color="grey">
-                                                        {{ size }}
+                                                    {{ size }}
                                                 </v-avatar>
                                             </div>
                                             <div v-else>
                                                 <v-row fluid>
                                                     <v-col cols="2" sm="2" md="2">
                                                         <v-avatar @click="outOfStock()" v-bind="props" :bg-color="color"
-                                                    :color="isHovering ? undefined : color" :width="60" rounded="10">
-                                                    <span>
-                                                        <v-icon icon="fas fa-close" class="mr-1" size="sm"></v-icon>
-                                                    </span>
-                                                </v-avatar>
+                                                            :color="isHovering ? undefined : color" :width="60"
+                                                            rounded="10">
+                                                            <span>
+                                                                <v-icon icon="fas fa-close" class="mr-1"
+                                                                    size="sm"></v-icon>
+                                                            </span>
+                                                        </v-avatar>
                                                     </v-col>
                                                 </v-row>
                                             </div>
@@ -222,13 +226,13 @@
                                     </v-text-field>
                                 </v-col>
                             </v-row>
+                            <v-row no-gutters>
+                                <v-col>
+                                    <ZipCodeField :selectProduct="selectProduct" :quantity="this.quantity"
+                                        :customer="this.customer" @updateShippment="updateShippment" />
+                                </v-col>
+                            </v-row>
 
-
-                        </div>
-
-                        <div>
-                            <ZipCodeField :selectProduct="selectProduct" :quantity="this.quantity"
-                                :customer="this.customer" @updateShippment="updateShippment" />
                         </div>
 
 
@@ -569,7 +573,7 @@ export default {
             return this.bottomMenu = true;
         },
         updateShippment(selectedShippment, zip_code, delivery_name) {
-            this.shippment.push(selectedShippment);
+            this.shippment = selectedShippment;
             this.zip_code = zip_code;
             this.delivery_name = delivery_name;
             return this.finalValue(selectedShippment);

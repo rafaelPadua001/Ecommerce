@@ -1,62 +1,58 @@
 <template>
-    <v-row no-gutters>
-        <v-col class="d-flex mb-2 flex-column" cols="12" md="4" sm="3" >
-            <v-card class="mx-auto" width="350px">
-                <v-card-title>
-                    <v-toolbar class="px-0" color="transparent">
+    <v-row no-gutters justify="start">
+        <v-col class="d-flex mb-2  justify-start flex-column" cols="12">
+            <v-card class="mx-auto elevation-0" width="400px">
+                <v-toolbar class="px-0" color="transparent">
                     <template v-slot:extension>
-                        <v-tabs 
-                            v-model="tabs" 
-                            color="primary"
-                            grow v-for="(delivery, index) in deliveries" 
-                            :key="index"
-                            :value="index"
-                        >
+                        <v-tabs v-model="tabs" color="primary" grow v-for="(delivery, index) in deliveries" :key="index"
+                            :value="index">
                             <v-tab v-if="delivery.activated == 1 && index >= 0">
-                                <v-img
-                                    justify="left" 
-                                    :src="`./storage/delivery/${delivery.thumbnail}`"
-                                    :lazy-src="`./storage/delivery/${delivery.thumbnail}`" 
-                                    cover
-                                    :aspect-ratio="1/1"
-                                    :width="40" :max-height="40" 
-                                >
-                                    
+                                <v-img justify="left" :src="`./storage/delivery/${delivery.thumbnail}`"
+                                    :lazy-src="`./storage/delivery/${delivery.thumbnail}`" cover :aspect-ratio="1 / 1"
+                                    :width="40" :max-height="40">
+
                                 </v-img>
 
-                               {{ delivery.name }}
-                           </v-tab>
+                                {{ delivery.name }}
+                            </v-tab>
                         </v-tabs>
                     </template>
                 </v-toolbar>
-                </v-card-title>
-                
-
                 <v-card-text>
-
                     <v-window v-model="tabs">
                         <v-window-item v-for="(delivery, index) in deliveries" :key="index" :value="index">
                             <v-row v-model="delivery.id" v-if="delivery.activated == 1" fluid>
-                                <v-col class="d-flex child-flex" cols="12" md="12" sm="6">
-                                    <v-text-field v-model="zip_code" v-maska:[options] label="zip code" aria-required>
+                                <v-col class="d-flex child-flex" cols="10">
+                                    <v-text-field v-model="zip_code" v-maska:[options] aria-required variant="outlined"
+                                        placeholder="zip code" clearable>
                                         <template v-slot:append>
-                                            <v-btn variant="plain" size="xs" @click="calculateDelivery(delivery)">
-                                                delivery
-                                            </v-btn>
+                                            <v-btn-group>
+                                                <v-btn variant="text" color="primary"
+                                                    @click="calculateDelivery(delivery)" icon>
+                                                    <v-icon icon="fas fa-people-carry-box"></v-icon>
+                                                </v-btn>
+                                                <v-btn variant="text" size="xs" color="primary"
+                                                    @click="clearZipCode()"
+                                                >
+                                                    reset
+                                                </v-btn>
+                                            </v-btn-group>
+
                                         </template>
                                     </v-text-field>
                                 </v-col>
-                                
+
                             </v-row>
                             <v-list>
-                                <v-list-item v-for="shipping in shipping_companys" :key="shipping.id">
+                                <v-list-item v-for="(shipping, index) in shipping_companys" :key="index">
+
                                     <div v-if="!shipping.error" v-for="delivery in shipping" :key="delivery.id">
                                         <div v-if="!delivery.error">
                                             <v-row no-gutters>
                                                 <v-col cols="auto">
-
                                                     <v-radio-group v-model="selectedShippment">
-                                                        <v-radio :value="delivery" @change="selectShippment">
+                                                        <v-radio :value="delivery" @change="selectShippment"
+                                                            color="primary">
 
                                                         </v-radio>
                                                     </v-radio-group>
@@ -105,12 +101,12 @@
                             </v-list>
                         </v-window-item>
                     </v-window>
-
                 </v-card-text>
             </v-card>
-
         </v-col>
     </v-row>
+
+
 </template>
 <script setup>
 import { ref } from "vue";
@@ -170,6 +166,12 @@ export default {
         selectShippment() {
             console.log('Dados a serem enviados para o pai:', this.selectedShippment);
             return this.$emit('updateShippment', this.selectedShippment, this.zip_code, this.delivery_name);
+        },
+        clearZipCode(){
+            this.zip_code = '';
+            this.shipping_companys = [];
+            this.selectShippment = '';
+            return this.selectShippment();
         }
     },
     created() {
