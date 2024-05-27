@@ -22,26 +22,30 @@
                     <v-window v-model="tabs">
                         <v-window-item v-for="(delivery, index) in deliveries" :key="index" :value="index">
                             <v-row v-model="delivery.id" v-if="delivery.activated == 1" fluid>
-                                <v-col class="d-flex child-flex" cols="10">
-                                    <v-text-field v-model="zip_code" v-maska:[options] aria-required variant="outlined"
-                                        placeholder="zip code" clearable>
-                                        <template v-slot:append>
-                                            <v-btn-group>
-                                                <v-btn variant="text" color="primary"
-                                                    @click="calculateDelivery(delivery)" icon>
-                                                    <v-icon icon="fas fa-people-carry-box"></v-icon>
-                                                </v-btn>
-                                                <v-btn variant="text" size="xs" color="primary"
-                                                    @click="clearZipCode()"
-                                                >
-                                                    reset
-                                                </v-btn>
-                                            </v-btn-group>
+                                <v-col class="d-flex child-flex" cols="12">
+                                    <v-form ref="form">
+                                        <v-alert v-model="errorDialog" text="zip code is required" type="warning"
+                                            closable>
 
-                                        </template>
-                                    </v-text-field>
+                                        </v-alert>
+                                        <v-text-field v-model="zip_code" v-maska:[options] aria-required
+                                            variant="outlined" placeholder="zip code" :rules="zipCodeRules">
+                                            <template v-slot:append>
+                                                <v-btn-group>
+                                                    <v-btn variant="text" color="primary"
+                                                        @click="calculateDelivery(delivery)" icon>
+                                                        <v-icon icon="fas fa-people-carry-box"></v-icon>
+                                                    </v-btn>
+                                                    <v-btn variant="text" size="xs" color="primary"
+                                                        @click="clearZipCode()">
+                                                        reset
+                                                    </v-btn>
+                                                </v-btn-group>
+
+                                            </template>
+                                        </v-text-field>
+                                    </v-form>
                                 </v-col>
-
                             </v-row>
                             <v-list>
                                 <v-list-item v-for="(shipping, index) in shipping_companys" :key="index">
@@ -94,10 +98,7 @@
                                     <template v-slot:prepend>
 
                                     </template>
-
-
                                 </v-list-item>
-
                             </v-list>
                         </v-window-item>
                     </v-window>
@@ -105,7 +106,6 @@
             </v-card>
         </v-col>
     </v-row>
-
 
 </template>
 <script setup>
@@ -126,10 +126,15 @@ export default {
         tabs: null,
         deliveries: [],
         zip_code: '',
+        zipCodeRules: [
+            v => !!v || 'Zip code is required.',
+            v => /^[0-9]{5}-[0-9]{3}$/.test(v) || 'zip code is inválid. Fomat type: 12345-678'
+        ],
         shippment: false,
         shipping_companys: [],
         selectedShippment: {},
         delivery_name: false,
+        errorDialog: false,
     }),
     methods: {
         getDeliveries() {
@@ -144,7 +149,9 @@ export default {
         calculateDelivery(delivery) {
             const deliveryId = delivery.id;
             this.delivery_name = delivery.name;
-
+            if (this.zip_code.length < 8) {
+                return this.errorDialog = true;
+            }
             const data = {
                 postal_code: this.zip_code,
                 height: this.selectProduct.height,
@@ -164,10 +171,10 @@ export default {
                 })
         },
         selectShippment() {
-            console.log('Dados a serem enviados para o pai:', this.selectedShippment);
+            // console.log('Dados a serem enviados para o pai:', this.selectedShippment);
             return this.$emit('updateShippment', this.selectedShippment, this.zip_code, this.delivery_name);
         },
-        clearZipCode(){
+        clearZipCode() {
             this.zip_code = '';
             this.shipping_companys = [];
             this.selectShippment = '';

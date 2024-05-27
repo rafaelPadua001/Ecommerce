@@ -98,11 +98,14 @@
                         <p float="end">
                             <strong>Price:</strong> R$ {{ (quantity * (selectProduct.price)).toFixed(2) }}
                         </p>
+                        <div v-if="shippment.price">
+                            <p>
+                                <strong>Delivery:</strong> R$ {{ (quantity * (shippment.price)).toFixed(2) }}
+                            </p>
+                            <p>
+                                <strong>Total Price:</strong> {{ formattedTotalPrice }}</p>
+                        </div>
 
-                        <p>
-
-                            Delivery: R$ {{ quantity * shippment.price }}
-                        </p>
                         <p float="end" v-if="selectProduct.unity">
                             (Height x Width) {{ selectProduct.unity }}:
                             {{ selectProduct.height }} x {{ selectProduct.width }}
@@ -111,6 +114,8 @@
                         <p v-if="selectProduct.stock_quantity >= 1">
                             <strong>Quantity:</strong> {{ selectProduct.stock_quantity }}
                         </p>
+
+
 
                         <p color="red" v-else>
                             <strong> Fora de Estoque </strong>
@@ -431,6 +436,15 @@ export default {
         },
         parsedQuantitySize() {
             return JSON.parse(this.selectProduct.size_quantity);
+        },
+        formattedTotalPrice(){
+            
+      const selectProductPrice = Number(this.selectProduct.price);
+      const shippmentPrice = Number(this.shippment.price);
+      
+      const totalPrice = this.quantity * (selectProductPrice + shippmentPrice);
+      
+      return totalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
     },
     watch: {
@@ -576,11 +590,11 @@ export default {
             this.shippment = selectedShippment;
             this.zip_code = zip_code;
             this.delivery_name = delivery_name;
-            return this.finalValue(selectedShippment);
+            return this.finalValue(this.shippment);
 
         },
-        finalValue(selectedShippment) {
-            const sumValue = parseFloat(this.selectProduct.price) + parseFloat(selectedShippment.price);
+        finalValue(shippment) {
+            const sumValue = parseFloat(this.selectProduct.price) + parseFloat(shippment.price);
             return sumValue
         },
         async checkout() {
