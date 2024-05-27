@@ -96,12 +96,12 @@
                         <v-spacer></v-spacer>
 
                         <p float="end">
-                            <strong>Price:</strong> R$ {{ selectProduct.price * quantity }}
+                            <strong>Price:</strong> R$ {{ (quantity * (selectProduct.price)).toFixed(2) }}
                         </p>
-                 
+
                         <p>
-                           
-                            Delivery: R$ {{ shippment.price }}
+
+                            Delivery: R$ {{ quantity * shippment.price }}
                         </p>
                         <p float="end" v-if="selectProduct.unity">
                             (Height x Width) {{ selectProduct.unity }}:
@@ -234,8 +234,8 @@
                             </v-row>
 
                         </div>
-                            
-                        
+
+
                         <div>
                             <v-btn-group>
                                 <v-btn variant="flat" color="success" :loading="checkout_product"
