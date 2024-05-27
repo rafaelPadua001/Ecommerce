@@ -100,10 +100,11 @@
                         </p>
                         <div v-if="shippment.price">
                             <p>
-                                <strong>Delivery:</strong> R$ {{ (quantity * (shippment.price)).toFixed(2) }}
+                                <strong>Delivery:</strong> R$ {{ formatedShippmentPrice }}
                             </p>
                             <p>
-                                <strong>Total Price:</strong> {{ formattedTotalPrice }}</p>
+                                <strong>Total Price:</strong> {{ formattedTotalPrice }}
+                            </p>
                         </div>
 
                         <p float="end" v-if="selectProduct.unity">
@@ -400,7 +401,7 @@ export default {
         cart: [],
         deliveries: [],
         comments: [],
-        colors: false,
+        colors: [],
         quantity: 1,
         selectImageIndex: 0,
         loading: false,
@@ -437,14 +438,19 @@ export default {
         parsedQuantitySize() {
             return JSON.parse(this.selectProduct.size_quantity);
         },
-        formattedTotalPrice(){
-            
-      const selectProductPrice = Number(this.selectProduct.price);
-      const shippmentPrice = Number(this.shippment.price);
-      
-      const totalPrice = this.quantity * (selectProductPrice + shippmentPrice);
-      
-      return totalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        formattedTotalPrice() {
+            const selectProductPrice = Number(this.selectProduct.price);
+            const shippmentPrice = Number(this.shippment.price);
+
+            const totalPrice = this.quantity * (selectProductPrice + shippmentPrice);
+
+            return totalPrice.toFixed(2);
+        },
+        formatedShippmentPrice(){
+            const shippmentPrice = Number(this.shippment.price);
+
+            const totalShippmentPrice = this.quantity * shippmentPrice;
+            return totalShippmentPrice.toFixed(2);
         }
     },
     watch: {
@@ -487,29 +493,33 @@ export default {
             return this.selectImageIndex = index;
         },
         addItem() {
-            //    if (Object.keys(this.customer).length === 0) {
-            //         this.snackbar = true;
-            //         console.log(this.customer);
-            //         return false;
-            //     }
+            // if (Object.keys(this.customer).length === 0) {
+            //      this.snackbar = true;
+            //      this.message = 'you need login to do this.';
+            //      console.log(this.customer);
+            //      return false;
+            //  }
 
             const data = {
                 'product': this.selectProduct,
                 'quantity': this.quantity,
                 'color': this.colors,
+                // 'size': this.size,
+                'total_price': this.formattedTotalPrice,
+                'delivery_price': this.formatedShippmentPrice,
                 'delivery': this.shippment,
                 'delivery_name': this.delivery_name,
             }
             axios.post(`/carts/add`, data)
                 .then((response) => {
                     this.$emit('close-dialog');
-                    return this.cart.push(response.data)
+                    return this.cart.push(response.data);
 
                 })
                 .catch((response) => {
                     this.snackbar = true;
-                    this.message = response.error;
-                    console.log('response:'.response);
+                    this.message = response;
+
                     alert('Error :' + response);
                     return false;
 
@@ -518,7 +528,7 @@ export default {
             return true;
         },
         getColors(color) {
-            this.colors = color;
+            this.colors.push(color);
         },
         outOfStock() {
             alert('this color is out of stock');

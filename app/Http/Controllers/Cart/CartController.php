@@ -42,8 +42,7 @@ class CartController extends Controller
         
     }
     public function addItem(Request $request){
-       
-        try{
+       try{
             $customer = Auth::guard('customer')->user();
             $userId = $customer->id;
             $cartItem = $this->cartService->addItem($request, $userId);
