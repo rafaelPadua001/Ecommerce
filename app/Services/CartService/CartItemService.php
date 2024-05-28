@@ -36,6 +36,7 @@ class CartItemService
                 'quantity' => $product->quantity,
                 'price' => $product->product['price'],
                 'colors' => json_encode($product->color),
+                'size' => json_encode($product->size),
                 'delivery_price' =>  $product['delivery_price'],
                 'total_price' =>  $product['total_price'],
             ]);
