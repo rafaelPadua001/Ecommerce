@@ -2,7 +2,7 @@
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="auto">
             <v-card class="mx-auto elevation-0 text-black">
-         <v-app-bar :color="this.appBarColor ?? 'trasparent'">
+                <v-app-bar :color="this.appBarColor ?? 'trasparent'">
 
                     <!-- <template v-slot:image>
                         <v-img gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"></v-img>
@@ -51,8 +51,8 @@
                                         no categories found
                                     </v-list-item>
                                     <v-list-item v-else v-for="category in categories" :key="category.id">
-                                        <v-btn variant="flat" size="small" 
-                                            :to="{path: `/subcategories/all/${category.id}`, query: {customer: this.user}}">
+                                        <v-btn variant="flat" size="small"
+                                            :to="{ path: `/subcategories/all/${category.id}`, query: { customer: this.user } }">
                                             <span>
                                                 <v-avatar color="surface-variant" size="28px">
                                                     <v-img v-if="category.thumbnail"
@@ -91,88 +91,9 @@
                                             <v-icon icon="fa-solid fa-cart-shopping"></v-icon>
                                         </v-btn>
                                     </template>
-                                    <v-list :items="carts" item-props lines="three"
-                                        style="margin-top: 10px; margin-right: -55px">
-                                        <v-list-item v-for="item in carts" :key="item.id" :value="item.id">
-                                            <div v-if="item && item.is_active == 1">
-                                                <v-row>
-                                                    <v-col cols="auto" md="12" sm="4">
-                                                        <v-card class="mx-auto" elevation="0">
-                                                            <template v-slot:append>
-                                                                <v-btn-group>
 
-                                                                    <v-btn v-bind="props" icon size="x-small"
-                                                                        variant="plain">
-                                                                        <v-icon icon="fas fa-close fa-2xs"
-                                                                            @click="removeItem(item)"></v-icon>
-                                                                    </v-btn>
-                                                                </v-btn-group>
+                                    <CartList :carts="carts" />
 
-                                                            </template>
-
-                                                            <v-card-text>
-                                                                <v-row no-gutters>
-                                                                    <v-col cols="auto" md="2" sm="4">
-                                                                        <div v-for="(image, index) in JSON.parse(item.images)"
-                                                                            :key="index">
-                                                                            <v-avatar rounded="0" v-if="index === 0">
-                                                                                <v-img :vid-id="image"
-                                                                                    class="align-end text-white"
-                                                                                    aspect-ratio="1"
-                                                                                    :src="`./storage/products/${image}`"
-                                                                                    :lazy-src="`./storage/products/${image}`">
-                                                                                </v-img>
-
-                                                                            </v-avatar>
-                                                                        </div>
-
-
-                                                                    </v-col>
-                                                                    <v-col cols="6" md="4" sm="2">
-                                                                        <div>
-                                                                            <span>{{ item.name }}</span>
-                                                                        </div>
-                                                                    </v-col>
-
-
-                                                                </v-row>
-                                                                <v-row>
-                                                                    <v-col cols="auto" md="2" sm="1">
-                                                                        <v-card v-bind="props" :color="item.color"
-                                                                            :width="30">
-                                                                            <template v-slot:append>
-
-                                                                            </template>
-                                                                        </v-card>
-
-                                                                    </v-col>
-                                                                    <v-col cols="auto" md="5" sm="2">
-                                                                        <span>Price: {{ item.price }}</span>
-                                                                    </v-col>
-                                                                    <v-col cols="auto" md="5" sm="2">
-                                                                        Quantity: {{ item.quantity }}
-                                                                    </v-col>
-                                                                    <v-col cols="auto" sm="2">
-
-                                                                    </v-col>
-
-
-
-                                                                </v-row>
-                                                            </v-card-text>
-                                                        </v-card>
-                                                    </v-col>
-                                                </v-row>
-
-                                                <v-divider></v-divider>
-                                            </div>
-
-                                        </v-list-item>
-
-                                        <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal"
-                                            block>Checkout</v-btn>
-
-                                    </v-list>
                                 </v-menu>
                             </v-col>
                         </v-row>
@@ -244,8 +165,10 @@
 import axios from 'axios';
 import AddressForm from '../Dialogs/Address.vue';
 import DiscountWindow from '../Coupons/partials/Window.vue';
+import CartList from '../Cart/partials/CartList.vue';
+
 export default {
-    components: { AddressForm, DiscountWindow },
+    components: { AddressForm, DiscountWindow, CartList },
     data: () => ({
         user: [],
         carts: [],
@@ -322,16 +245,6 @@ export default {
         },
         closeAddressDialog() {
             this.addressDialog = false;
-        },
-        removeItem(item) {
-            axios.delete(`/cartItem/delete/${item.id}`)
-                .then((response) => {
-                    return this.carts.splice(this.carts.indexOf(item), 1);
-                })
-                .catch((response) => {
-                    return alert('Error :' + response);
-                });
-
         },
         logout() {
             axios.post('/logoutCustomer')
