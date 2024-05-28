@@ -205,7 +205,7 @@
                             <p>Size:</p>
                             <v-row fluid>
                                 <v-col cols="2" sm="2" md="2">
-                                    <v-card :width="60">
+                                    <v-card  @click="getSize(size)" :width="60">
                                         Unique
                                     </v-card>
                                 </v-col>
@@ -501,7 +501,7 @@ export default {
             //      console.log(this.customer);
             //      return false;
             //  }
-
+            
             const data = {
                 'product': this.selectProduct,
                 'quantity': this.quantity,
@@ -512,6 +512,13 @@ export default {
                 'delivery': this.shippment,
                 'delivery_name': this.delivery_name,
             }
+            
+            if(!data.color || data.color.length == 0 || !data.size || data.size.length == 0){
+                this.snackbar = true;
+                this.message = 'Escolha as cores e tamanhos desejados';
+                return false;
+            }
+
             axios.post(`/carts/add`, data)
                 .then((response) => {
                     this.$emit('close-dialog');
@@ -530,13 +537,22 @@ export default {
             return true;
         },
         getColors(color) {
-            this.colors.push(color);
+            return this.colors.push(color);
+      
         },
         outOfStock() {
             alert('this color is out of stock');
         },
         getSize(size) {
-            this.size.push(size);
+            alert(size.length);
+            if(size.length == 0){
+               
+              return this.size.push('unique');
+            }
+            else{
+                return this.size.push(size);
+            }
+           
         },
         closeBuy() {
             this.$emit('update:buyDialog', false);

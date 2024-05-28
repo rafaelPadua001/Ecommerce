@@ -53,17 +53,23 @@ class CartItemService
     }
     public function createItemCart($id, $customerId, $cart, $cartItem, $product)
     {
-        $delivery_item = [
-            'id' => $id,
-            'delivery' => $product['delivery'],
-            'delivery_name' => $product['delivery_name'],
-            'quantity' => $product->quantity,
-            'product_id' => $product->product['id'],
-            'user_id' => $customerId,
-            'cart_id' => $cart->id,
-            'cart_item_id' => $cartItem->id,
-        ];
-        return $delivery_item;
+        try{
+            $delivery_item = [
+                'id' => $id,
+                'delivery' => $product['delivery'],
+                'delivery_name' => $product['delivery_name'],
+                'quantity' => $product->quantity,
+                'product_id' => $product->product['id'],
+                'user_id' => $customerId,
+                'cart_id' => $cart->id,
+                'cart_item_id' => $cartItem->id,
+            ];
+            return $delivery_item;
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+      
     }
     public function buy($userId)
     {
