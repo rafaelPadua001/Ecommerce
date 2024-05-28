@@ -40,29 +40,28 @@ class CartItemService
                 'total_price' =>  $product['total_price'],
             ]);
 
-            $delivery_item = $this->createItemCart($id, $cart, $cartItem, $product);
-
+            $delivery_item = $this->createItemCart($id, $customer->id, $cart, $cartItem, $product);
+            
+            if ($delivery_item) {
+                $store_shippment = $this->shippmentService->store($delivery_item);
+            }
             return $cartItem;
         } catch (Exception $e) {
             return response()->json($e);
         }
     }
-    public function createItemCart($id, $cart, $cartItem, $product){
+    public function createItemCart($id, $customerId, $cart, $cartItem, $product){
         $delivery_item = [
+            'id' => $id,
             'delivery' => $product['delivery'],
             'delivery_name' => $product['delivery_name'],
+            'quantity' => $product->quantity,
             'product_id' => $product->product['id'],
-            'user_id' => $id,
+            'user_id' => $customerId,
             'cart_id' => $cart->id,
             'cart_item_id' => $cartItem->id,
-
         ];
-
-        if ($delivery_item) {
-            $store_shippment = $this->shippmentService->store($delivery_item);
-        }
-
-        return $store_shippment;
+         return $delivery_item;
     }
     public function buy($userId)
     {
