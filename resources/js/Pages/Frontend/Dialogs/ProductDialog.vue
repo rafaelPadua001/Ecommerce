@@ -176,15 +176,15 @@
                                     <v-hover>
                                         <template v-slot:default="{ isHovering, props }">
                                             <div v-if="parsedQuantitySize[index] >= 1">
-                                                <v-avatar v-bind="props" :width="40" color="grey">
+                                                <v-avatar @click="getSize(size)" v-bind="props" :width="40" :color="isHovering ? undefined : 'grey'">
                                                     {{ size }}
                                                 </v-avatar>
                                             </div>
                                             <div v-else>
                                                 <v-row fluid>
                                                     <v-col cols="2" sm="2" md="2">
-                                                        <v-avatar @click="outOfStock()" v-bind="props" :bg-color="color"
-                                                            :color="isHovering ? undefined : color" :width="60"
+                                                        <v-avatar @click="outOfStock()" v-bind="props" bg-color="grey"
+                                                            :color="isHovering ? undefined : 'grey'" :width="60"
                                                             rounded="10">
                                                             <span>
                                                                 <v-icon icon="fas fa-close" class="mr-1"
@@ -204,7 +204,7 @@
                             <p>Size:</p>
                             <v-row fluid>
                                 <v-col cols="2" sm="2" md="2">
-                                    <v-card @click="outOfStock()" :width="60">
+                                    <v-card  :width="60">
                                         Unique
                                     </v-card>
                                 </v-col>
@@ -402,6 +402,7 @@ export default {
         deliveries: [],
         comments: [],
         colors: [],
+        size: [],
         quantity: 1,
         selectImageIndex: 0,
         loading: false,
@@ -504,7 +505,7 @@ export default {
                 'product': this.selectProduct,
                 'quantity': this.quantity,
                 'color': this.colors,
-                // 'size': this.size,
+                'size': this.size,
                 'total_price': this.formattedTotalPrice,
                 'delivery_price': this.formatedShippmentPrice,
                 'delivery': this.shippment,
@@ -532,6 +533,9 @@ export default {
         },
         outOfStock() {
             alert('this color is out of stock');
+        },
+        getSize(size){
+            this.size.push(size);
         },
         closeBuy() {
             this.$emit('update:buyDialog', false);
