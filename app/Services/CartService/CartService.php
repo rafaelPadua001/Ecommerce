@@ -22,12 +22,17 @@ class CartService
         $cart = $this->carts->where('carts.user_id', $userId)
             ->join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
             ->leftJoin('products', 'cart_items.product_id', '=', 'products.id')
+            ->leftJoin('shippments', 'cart_items.cart_id', '=', 'carts.id')
             ->select(
                 'carts.id as cart_id',
                 'cart_items.*',
                 'products.name',
                 'products.price',
                 'products.images',
+                'shippments.name as shippment_name',
+                'shippments.company',
+                'shippments.price as shippment_price',
+               // 'shippments.name',
 
             )
             ->get();
