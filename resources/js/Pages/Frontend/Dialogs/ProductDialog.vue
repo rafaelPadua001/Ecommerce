@@ -176,7 +176,8 @@
                                     <v-hover>
                                         <template v-slot:default="{ isHovering, props }">
                                             <div v-if="parsedQuantitySize[index] >= 1">
-                                                <v-avatar @click="getSize(size)" v-bind="props" :width="40" :color="isHovering ? undefined : 'grey'">
+                                                <v-avatar @click="getSize(size)" v-bind="props" :width="40"
+                                                    :color="isHovering ? undefined : 'grey'">
                                                     {{ size }}
                                                 </v-avatar>
                                             </div>
@@ -204,7 +205,7 @@
                             <p>Size:</p>
                             <v-row fluid>
                                 <v-col cols="2" sm="2" md="2">
-                                    <v-card  :width="60">
+                                    <v-card :width="60">
                                         Unique
                                     </v-card>
                                 </v-col>
@@ -447,7 +448,7 @@ export default {
 
             return totalPrice.toFixed(2);
         },
-        formatedShippmentPrice(){
+        formatedShippmentPrice() {
             const shippmentPrice = Number(this.shippment.price);
 
             const totalShippmentPrice = this.quantity * shippmentPrice;
@@ -534,7 +535,7 @@ export default {
         outOfStock() {
             alert('this color is out of stock');
         },
-        getSize(size){
+        getSize(size) {
             this.size.push(size);
         },
         closeBuy() {

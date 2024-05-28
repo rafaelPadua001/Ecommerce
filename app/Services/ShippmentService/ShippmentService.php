@@ -1,40 +1,43 @@
 <?php
+
 namespace App\Services\ShippmentService;
 
 use App\Models\Shippment;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-class ShippmentService { 
+class ShippmentService
+{
     protected $shippment;
-    public function __construct(Shippment $shippment){
+    public function __construct(Shippment $shippment)
+    {
         $this->shippment = $shippment;
     }
-    public function getAll(){
-        try{
+    public function getAll()
+    {
+        try {
             $shippments = DB::table('shippments')
-            ->join('products', 'shippments.product_id', '=', 'products.id')
-            ->join('customers', 'shippments.user_id', '=', 'customers.id')
-            ->select(
-                'shippments.*',
-                'products.name as product_name',
-                'customers.first_name',
-                'customers.last_name'
-            )
-            ->get();
-            
-           
+                ->join('products', 'shippments.product_id', '=', 'products.id')
+                ->join('customers', 'shippments.user_id', '=', 'customers.id')
+                ->select(
+                    'shippments.*',
+                    'products.name as product_name',
+                    'customers.first_name',
+                    'customers.last_name'
+                )
+                ->get();
+
+
             // $this->shippment->all();
             return $shippments;
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
-       
     }
-    public function store($delivery_item){
+    public function store($delivery_item)
+    {
         // dd($delivery_item, $delivery_item['delivery']['id']);
-       // dd('teste');
+        // dd('teste');
         $data = [
             'name' => $delivery_item['delivery']['name'],
             'company' => $delivery_item['delivery']['company']['name'], //$delivery_item['delivery'][0]['company']['name'],
@@ -47,28 +50,29 @@ class ShippmentService {
             'cart_item_id' => $delivery_item['cart_item_id'],
             'delivery_id' =>  $delivery_item['delivery']['id'] // Use ['id'] se for o campo correto
         ];
-       
+
         $store_shippment = $this->shippment->create($data);
-        
+
         return $store_shippment;
     }
-    public function update($id, $request){
-        try{
+    public function update($id, $request)
+    {
+        try {
             $shippment_update = $this->shippment->findOrFail($id);
-           
+
             $update = $shippment_update->update($request->all());
-            
-           
+
+
             return $request->all();
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return  $e;
         }
-       
+
         return $request;
     }
-   public function destroy($id){
+    public function destroy($id)
+    {
         $shippment_delete = $this->shippment->findOrFail($id)->delete();
         return $shippment_delete;
-   }
-
-} 
+    }
+}

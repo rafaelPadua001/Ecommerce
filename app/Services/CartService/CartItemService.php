@@ -42,7 +42,7 @@ class CartItemService
             ]);
 
             $delivery_item = $this->createItemCart($id, $customer->id, $cart, $cartItem, $product);
-            
+
             if ($delivery_item) {
                 $store_shippment = $this->shippmentService->store($delivery_item);
             }
@@ -51,7 +51,8 @@ class CartItemService
             return response()->json($e);
         }
     }
-    public function createItemCart($id, $customerId, $cart, $cartItem, $product){
+    public function createItemCart($id, $customerId, $cart, $cartItem, $product)
+    {
         $delivery_item = [
             'id' => $id,
             'delivery' => $product['delivery'],
@@ -62,7 +63,7 @@ class CartItemService
             'cart_id' => $cart->id,
             'cart_item_id' => $cartItem->id,
         ];
-         return $delivery_item;
+        return $delivery_item;
     }
     public function buy($userId)
     {
