@@ -4,6 +4,8 @@ namespace App\Services\CartService;
 
 use App\Models\Cart;
 use App\Services\CartService\CartItemService;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class CartService
 {
@@ -19,25 +21,33 @@ class CartService
     }
     public function getCarts($userId)
     {
-        $cart = $this->carts->where('carts.user_id', $userId)
+        try{
+            $cart = $this->carts->where('carts.user_id', $userId)
             ->join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
-            ->leftJoin('products', 'cart_items.product_id', '=', 'products.id')
-            ->leftJoin('shippments', 'cart_items.cart_id', '=', 'carts.id')
-            ->select(
+            ->leftJoin('shippments', 'cart_items.id', '=', 'shippments.cart_item_id')
+            ->leftJoin('products', 'shippments.product_id', '=', 'products.id')
+             ->select(
                 'carts.id as cart_id',
-                'cart_items.*',
-                'products.name',
-                'products.price',
-                'products.images',
+                //'cart_items.quantity as cart_item_quantity',
+                'cart_items.colors as cart_item_colors',
+                'cart_items.price as cart_item_price',
+                'cart_items.is_active as cart_item_status',
                 'shippments.name as shippment_name',
                 'shippments.company',
                 'shippments.price as shippment_price',
-               // 'shippments.name',
-
+                'shippments.quantity as shippment_quantity',
+                'products.name',
+                'products.price as product_price',
+                'products.images',
             )
             ->get();
 
         return $cart;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+        
     }
     public function addItem($request, $userId)
     {
