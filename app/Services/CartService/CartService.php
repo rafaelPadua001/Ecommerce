@@ -29,6 +29,7 @@ class CartService
              ->select(
                 'carts.id as cart_id',
                 //'cart_items.quantity as cart_item_quantity',
+                'cart_items.id as cart_item_id',
                 'cart_items.colors as cart_item_colors',
                 'cart_items.size as cart_item_size',
                 'cart_items.price as cart_item_price',
