@@ -91,8 +91,12 @@
                                             <v-icon icon="fa-solid fa-cart-shopping"></v-icon>
                                         </v-btn>
                                     </template>
+                                    <v-row>
+                                        <v-col>
+                                            <CartList :carts="carts" />
+                                        </v-col>
+                                    </v-row>
                                     
-                                    <CartList :carts="carts" />
 
                                 </v-menu>
                             </v-col>
