@@ -24,62 +24,79 @@
                                                     :lazy-src="`./storage/products/${image}`">
 
                                                 </v-img>
-                                             </v-avatar>
-                                       </div>
+                                            </v-avatar>
+                                        </div>
 
 
                                     </v-col>
 
                                     <v-col cols="12">
-                                        <v-avatar v-for="(color, index) in parsedColors(item.cart_item_colors)" :key="index" v-bind="props" :color="color">
+                                        <v-avatar v-for="(color, index) in parsedColors(item.cart_item_colors)"
+                                            :key="index" v-bind="props" :color="color">
                                             <template v-slot:append>
-                                              
+
                                             </template>
                                         </v-avatar>
 
                                     </v-col>
-                                    <v-col cols="auto" v-for="(size, index) in parsedSizes(item.cart_item_size)" :key="index">
+                                    <v-col cols="auto" v-for="(size, index) in parsedSizes(item.cart_item_size)"
+                                        :key="index">
                                         <v-avatar v-bind="props" color="grey" size="40">
-                                          
-                                                <span>{{ size }}</span>
-                                           
+
+                                            <span>{{ size }}</span>
+
                                         </v-avatar>
 
                                     </v-col>
                                     <v-col cols="12">
                                         <div>
-                                            <span><strong>{{ item.name }}</strong></span>
+                                            <p class="text-body-1">
+                                                <span><strong>{{ item.name }}</strong></span>
+                                            </p>
+                                            
                                         </div>
                                     </v-col>
 
                                     <v-spacer></v-spacer>
                                     <v-col cols="12">
-                                        <span><strong>Price:</strong></span>
+                                        <p class="text-body-2">
+                                            <span><strong>Price:</strong></span>
                                         R$ {{ item.cart_item_price }} x {{ item.shippment_quantity }}
+                                        </p>
                                     </v-col>
                                     <v-col cols="12">
-                                       <span><strong>Delivery:</strong></span> {{item.shippment_name}}
-                                    </v-col>
-                                    <v-col cols="12">
+                                        <p class="text-body-2">
+                                            <span><strong>Delivery:</strong></span> {{ item.shippment_name }}
+                                        </p>
                                         
-                                        <span><strong>Price:</strong></span>
-                                          R$ {{ item.shippment_price }} x {{ item.shippment_quantity }}
-                                     </v-col>
-                                     <v-col cols="12">
-                                       <span><strong>Delivery Total:</strong></span> {{item.delivery_price}}
                                     </v-col>
-                             
+                                    <v-col cols="12">
+                                        <p class="text-body-2">
+                                            <span><strong>Price:</strong></span>
+                                        R$ {{ item.shippment_price }} x {{ item.shippment_quantity }}
+                                        </p>
+                                        
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <p class="text-body-2">
+                                            <span><strong>Delivery Total:</strong></span> {{ item.delivery_price }}
+                                        </p>
+                                        
+                                    </v-col>
+
                                     <v-col cols="8">
-                                        <strong>Quantity:</strong> {{ item.shippment_quantity }}
+                                        <p class="text-body-2">
+                                            <strong>Quantity:</strong> {{ item.shippment_quantity }}
+                                        </p>
+                                       
                                     </v-col>
                                     <v-col cols="8">
-                                        <span><strong>Total:</strong> R$ {{item.total_price  }}</span>
+                                        <p class="text-body-2">
+                                            <span><strong>Total:</strong> R$ {{ item.total_price }}</span>
+                                        </p>
                                     </v-col>
                                 </v-row>
                                 <v-row>
-                                    
-                                   
-                                   
                                     <v-col cols="auto" sm="2">
                                     </v-col>
                                 </v-row>
@@ -92,8 +109,19 @@
             </div>
 
         </v-list-item>
-        <span><strong>Total:</strong></span>
-        <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block>Checkout</v-btn>
+    
+            <v-row justify="center" no-gutters>
+                <v-col cols="auto">
+                    <p class="text-body-2"><span><strong>Total:</strong> R$ {{ totalPrice }}</span></p>
+                </v-col>
+            </v-row>
+        
+        <v-row fluid>
+            <v-col>
+                <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block>Checkout</v-btn>
+            </v-col>
+        </v-row>
+      
 
     </v-list>
 </template>
@@ -107,23 +135,42 @@ export default {
         }
     },
     data: () => {
-
+        totalPrice: 0;
+    },
+    watch: {
+        carts: {
+            handler: 'calculateTotalPrice',
+            deep: true,
+        }
     },
     computed: {
-    // Propriedade computada que retorna uma função
-    parsedImages() {
-      return imagesString => JSON.parse(imagesString);
+        // Propriedade computada que retorna uma função
+        parsedImages() {
+            return imagesString => JSON.parse(imagesString);
+        },
+        parsedColors() {
+            return colorsString => JSON.parse(colorsString);
+        },
+        parsedSizes() {
+            return sizesString => JSON.parse(sizesString);
+        },
+        totalPrice() {
+            return this.carts.reduce((sum, cart) => {
+                const price = parseFloat(cart.total_price) || 0;
+                return sum + price;
+            }, 0).toFixed(2);
+        }
     },
-    parsedColors(){
-     return colorsString => JSON.parse(colorsString);
-    },
-    parsedSizes(){
-        return sizesString => JSON.parse(sizesString);
-    }
-  },
     methods: {
+        calculateTotalPrice() {
+            this.totalPrice = this.carts.reduce((sum, cart) => {
+                const price = parseFloat(cart.total_price) || 0;
+                return sum + price;
+            }, 0).toFixed(2);
+        },
         removeItem(item) {
-            axios.delete(`/cartItem/delete/${item.id}`)
+            const cartItemId = item.cart_item_id;
+            axios.delete(`/cartItem/delete/${cartItemId}`)
                 .then((response) => {
                     return this.carts.splice(this.carts.indexOf(item), 1);
                 })
@@ -131,6 +178,9 @@ export default {
                     return alert('Error :' + response);
                 });
         },
+    },
+    mounted() {
+        this.calculateTotalPrice();
     }
 }
 </script>

@@ -142,7 +142,7 @@ class CartItemService
 
             return $remove_cartItem;
         } catch (Exception $e) {
-            dd($e->getMessage());
+            
             return response()->json($e);
         }
     }
