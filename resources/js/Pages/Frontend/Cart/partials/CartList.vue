@@ -1,5 +1,5 @@
 <template>
-    <v-list :items="carts" item-props :width="250" :max-height="625" lines="three"
+    <v-list :items="carts" item-props :width="270" :max-height="625" lines="three"
         style="margin: 0.6rem auto; margin-right: -15%; padding: 0%">
         <v-list-item v-for="item in carts" :key="item.id" :value="item.id">
             <div v-if="item && item.cart_item_status == 1">
@@ -26,34 +26,33 @@
                                                 </v-img>
                                             </v-avatar>
                                         </div>
-
-
                                     </v-col>
 
-                                    <v-col cols="12">
-                                        <v-avatar v-for="(color, index) in parsedColors(item.cart_item_colors)"
-                                            :key="index" v-bind="props" :color="color">
-                                            <template v-slot:append>
+                                     <div>
+                                            <v-col cols="auto">
+                                                <v-avatar v-for="(color, index) in parsedColors(item.cart_item_colors)"
+                                                    :key="index" v-bind="props" :color="color">
+                                                    <template v-slot:append>
 
-                                            </template>
-                                        </v-avatar>
+                                                    </template>
+                                                </v-avatar>
 
-                                    </v-col>
-                                    <v-col cols="auto" v-for="(size, index) in parsedSizes(item.cart_item_size)"
-                                        :key="index">
-                                        <v-avatar v-bind="props" color="grey" size="40">
-
-                                            <span>{{ size }}</span>
-
-                                        </v-avatar>
-
-                                    </v-col>
+                                            </v-col>
+                                        </div>
+                                        <div class="d-flex justify-space-around">
+                                            <v-col cols="auto" v-for="(size, index) in parsedSizes(item.cart_item_size)"
+                                                :key="index">
+                                                <v-avatar v-bind="props" color="grey">
+                                                    <span>{{ size }}</span>
+                                                </v-avatar>
+                                            </v-col>
+                                        </div>
                                     <v-col cols="12">
                                         <div>
                                             <p class="text-body-1">
                                                 <span><strong>{{ item.name }}</strong></span>
                                             </p>
-                                            
+
                                         </div>
                                     </v-col>
 
@@ -61,34 +60,34 @@
                                     <v-col cols="12">
                                         <p class="text-body-2">
                                             <span><strong>Price:</strong></span>
-                                        R$ {{ item.cart_item_price }} x {{ item.shippment_quantity }}
+                                            R$ {{ item.cart_item_price }} x {{ item.shippment_quantity }}
                                         </p>
                                     </v-col>
                                     <v-col cols="12">
                                         <p class="text-body-2">
                                             <span><strong>Delivery:</strong></span> {{ item.shippment_name }}
                                         </p>
-                                        
+
                                     </v-col>
                                     <v-col cols="12">
                                         <p class="text-body-2">
                                             <span><strong>Price:</strong></span>
-                                        R$ {{ item.shippment_price }} x {{ item.shippment_quantity }}
+                                            R$ {{ item.shippment_price }} x {{ item.shippment_quantity }}
                                         </p>
-                                        
+
                                     </v-col>
                                     <v-col cols="12">
                                         <p class="text-body-2">
                                             <span><strong>Delivery Total:</strong></span> {{ item.delivery_price }}
                                         </p>
-                                        
+
                                     </v-col>
 
                                     <v-col cols="8">
                                         <p class="text-body-2">
                                             <strong>Quantity:</strong> {{ item.shippment_quantity }}
                                         </p>
-                                       
+
                                     </v-col>
                                     <v-col cols="8">
                                         <p class="text-body-2">
@@ -109,19 +108,19 @@
             </div>
 
         </v-list-item>
-    
-            <v-row justify="center" no-gutters>
-                <v-col cols="auto">
-                    <p class="text-body-2"><span><strong>Total:</strong> R$ {{ totalPrice }}</span></p>
-                </v-col>
-            </v-row>
-        
+
+        <v-row justify="center" no-gutters>
+            <v-col cols="auto">
+                <p class="text-body-2"><span><strong>Total:</strong> R$ {{ totalPrice }}</span></p>
+            </v-col>
+        </v-row>
+
         <v-row fluid>
             <v-col>
                 <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block>Checkout</v-btn>
             </v-col>
         </v-row>
-      
+
 
     </v-list>
 </template>
