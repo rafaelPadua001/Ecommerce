@@ -84,8 +84,8 @@
                     <!-- Cart Button-->
                     <div class="d-flex justify-space-around" v-if="Object.keys(carts).length >= 1">
                         <v-row fluid>
-                            <v-col cols="auto">
-                                <v-menu>
+                            <v-col class="d-flex" cols="auto">
+                                <v-menu offset-y absolute :close-on-content-click="false">
                                     <template v-slot:activator="{ props }">
                                         <v-btn icon v-bind="props">
                                             <v-icon icon="fa-solid fa-cart-shopping"></v-icon>
@@ -96,8 +96,6 @@
                                             <CartList :carts="carts" />
                                         </v-col>
                                     </v-row>
-                                    
-
                                 </v-menu>
                             </v-col>
                         </v-row>
