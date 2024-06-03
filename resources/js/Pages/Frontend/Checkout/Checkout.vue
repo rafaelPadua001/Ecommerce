@@ -146,11 +146,19 @@
                                                                 </v-col>
                                                             </v-row>
                                                             <v-card-actions>
-                                                                <v-btn-group>
-                                                                    <v-btn type="text">Return</v-btn>
-                                                                    <v-btn @click="confirmNext()"
+                                                                <v-row>
+                                                                    <v-col class="text-start">
+                                                                        <v-btn type="text" :to="'/'">Return</v-btn>
+                                                                    </v-col>
+                                                                </v-row>
+                                                                <v-row>
+                                                                    <v-col class="text-end">
+                                                                        <v-btn @click="confirmNext()"
                                                                         color="primary">Confirmar</v-btn>
-                                                                </v-btn-group>
+                                                                    </v-col>
+                                                                </v-row>
+                                                                    
+                                                            
                                                             </v-card-actions>
 
                                                         </v-form>
@@ -210,7 +218,7 @@
                                                 :value="item">
                                                 <v-toolbar color="transparent">
                                                     <template v-slot:append>
-                                                        <v-btn icon size="x-small">
+                                                        <v-btn icon size="x-small" @click="removeItem()">
                                                             <v-icon icon="fas fa-trash"></v-icon>
                                                         </v-btn>
                                                     </template>
@@ -245,11 +253,11 @@
                                                 </v-row>
 
 
-                                                <v-row no-gutters class="text-body-2 justify-end">
+                                                <v-row no-gutters class="text-subtitle-2 justify-end">
                                                     <strong>Quantity:</strong> {{
         item.shippment_quantity }}
                                                 </v-row>
-                                                <v-row no-gutters class="text-body-2 justify-end">
+                                                <v-row no-gutters class="text-subtitle-2 justify-end">
 
                                                     <v-col cols="auto" v-for="(color, index) in item.cart_item_colors"
                                                         :key="index">
@@ -264,7 +272,7 @@
                                                     </v-col>
 
                                                 </v-row>
-                                                <v-row no-gutters class="text-body-2 justify-end">
+                                                <v-row no-gutters class="text-subtitle-2 justify-end">
 
                                                     <v-col cols="auto" v-for="(size, index) in item.cart_item_size"
                                                         :key="index">
@@ -277,7 +285,7 @@
                                                 </v-row>
 
 
-                                                <v-row fluid class="text-body-2 justify-end">
+                                                <v-row fluid class="text-subtitle-2 justify-end">
                                                     <v-col cols="auto">
                                                         <p>shippment: {{ item.company }}</p>
 
@@ -291,7 +299,7 @@
 
                                                 </v-row>
 
-                                                <v-row fluid class="text-body-2 justify-end">
+                                                <v-row fluid class="text-subtitle-2 justify-end">
                                                     <v-col cols="auto">
                                                         <p>Total Delivery: R$ {{ item.delivery_price }}</p>
                                                     </v-col>
@@ -314,7 +322,7 @@
                                         <v-col>
                                             <v-input label="Discount coupon">
                                                 <template v-slot:append>
-                                                    <v-btn @click="applyCoupon" color="grey">Apply</v-btn>
+                                                    <v-btn  color="grey" @click="couponApply">Apply</v-btn>
                                                 </template>
                                                 <v-text-field v-model="coupon" hide-details
                                                     label="Gift Card or offer code"></v-text-field>
@@ -1122,6 +1130,12 @@ export default {
         returnConfirmDatas() {
             this.dataConfirm = true;
             this.finish = false;
+        },
+        removeItem(){
+            alert('Working this ...');
+        },
+        couponApply(){
+            alert('Working this...');
         }
     },
     created() {
