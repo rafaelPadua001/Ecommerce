@@ -99,8 +99,6 @@
                                                                         label="apartamento, suite, casa, etc (opcional)">
 
                                                                     </v-text-field>
-
-
                                                                 </v-col>
 
                                                             </v-row>
@@ -111,16 +109,15 @@
                                                                         label="Cidade">
 
                                                                     </v-text-field>
-
-
                                                                 </v-col>
                                                                 <v-col cols="auto">
-                                                                    <v-text-field v-model="customer_state"
-                                                                        label="estado">
+                                                                    <v-combobox
+                                                                        label="state:"
+                                                                        :items="['AM','DF', 'RJ', 'SP', 'BH', 'BA']"
+                                                                    >
 
-                                                                    </v-text-field>
-
-
+                                                                    </v-combobox>
+                                                                  
                                                                 </v-col>
                                                                 <v-col>
                                                                     <v-text-field v-model="customer_zipCode"
@@ -211,14 +208,13 @@
 
                                             <v-list-item v-for="(item, index) in parsedProduct" :key="index"
                                                 :value="item">
-                                                <v-toolbar color="transparent" >
+                                                <v-toolbar color="transparent">
                                                     <template v-slot:append>
-                                                    <v-btn icon size="x-small">
-                                                        <v-icon icon="fas fa-trash"></v-icon>
-                                                    </v-btn>
-                                                </template>
+                                                        <v-btn icon size="x-small">
+                                                            <v-icon icon="fas fa-trash"></v-icon>
+                                                        </v-btn>
+                                                    </template>
                                                 </v-toolbar>
-                                               
 
                                                 <v-row>
                                                     <v-col class="d-flex child-flex">
@@ -328,13 +324,35 @@
 
                                     <v-spacer></v-spacer>
                                     <v-divider></v-divider>
+                                    <v-row no-gutters>
+                                        <v-col class="text-start text-subtitle-2">
+                                            <p >Subtotal: </p>
+                                        </v-col>
+                                        <v-col class="text-end text-subtitle-2">
+                                            {{ formattedSubtotal }}
+                                        </v-col>
+                                    </v-row>
+                                    <v-row no-gutters>
+                                        <v-col class="text-start text-subtitle-2">
+                                            <p >Shipping:</p>
+                                        </v-col>
+                                        <v-col class="text-end text-subtitle-2">
+                                            {{ formattedShippingPrice }}
+                                        </v-col>
+                                    </v-row>
 
-                                    <p class="text-start text-body-2">Subtotal: R$</p>
-                                    <p class="text-start text-body-2">Shipping: R$</p>
-
-                                    <v-spacer></v-spacer>
                                     <v-divider></v-divider>
-                                    <p class="text-start text-body-1"><strong>Total:</strong> R$</p>
+
+                                    <v-row fluid>
+                                        <v-col class="text-start text-body-1">
+                                            <p><strong>Total:</strong></p>
+                                        </v-col>
+                                        <v-col class="text-end">
+                                            {{ formatedFinalValue }}
+                                        </v-col>
+                                    </v-row>
+                                   
+                                   
                                 </v-col>
                             </v-row>
 
@@ -884,12 +902,7 @@ export default {
         CreditForm,
         PixForm,
     },
-    // props: {
-    //     carts: {
-    //         type: Array,
-    //         required: true,
-    //     }
-    // },
+
     data: () => ({
         itemCart: [],
         quotations: [],
@@ -928,6 +941,41 @@ export default {
                     images: JSON.parse(item.images),
                 }
             });
+        },
+        subtotal() {
+            return this.carts.reduce((acc, item) => {
+                return acc + (item.cart_item_price * item.shippment_quantity);
+            }, 0)
+        },
+        formattedSubtotal() {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+            }).format(this.subtotal);
+        },
+        shipping_price() {
+            return this.carts.reduce((acc, item) => {
+                const total_shipping = parseFloat(item.delivery_price);
+                return acc + (isNaN(total_shipping) ? 0 : total_shipping);
+            }, 0);
+        },
+        formattedShippingPrice() {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+            }).format(this.shipping_price);
+        },
+        finalValue() {
+            return this.carts.reduce((acc, item) => {
+                const total_value = parseFloat(item.total_price);
+                return acc + (isNaN(total_value) ? 0 : total_value);
+            }, 0);
+        },
+        formatedFinalValue() {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+            }).format(this.finalValue);
         }
     },
     methods: {
@@ -994,7 +1042,7 @@ export default {
                     this.address.cidade = response.data[0].cidade;
                     this.address.UF = response.data[0].uf;
                     //this.address.complemento = response.data[0].complemento;
-                    this.cepDialog = false;
+                    //this.cepDialog = false;
                     this.saveAddress(
                         this.itemCart.cep,
                         this.address.endereco,
