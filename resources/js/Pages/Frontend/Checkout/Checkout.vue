@@ -14,6 +14,7 @@
                             <v-row no-gutters>
                                 <v-col cols="auto">
                                     <v-card :width="600">
+
                                         <v-row fluid>
                                             <v-col>
                                                 <v-row>
@@ -27,13 +28,15 @@
                                                 <v-row>
                                                     <v-col>
                                                         <v-form>
-                                                            <v-text-field  v-if="!customer.email" v-model="email" label="email" required
-                                                                :rules="emailRules" prepend-icon="fas fa-envelope"
+                                                            <v-text-field v-if="!customer.email" v-model="email"
+                                                                label="email" required :rules="emailRules"
+                                                                prepend-icon="fas fa-envelope"
                                                                 placeholder="Email here...">
 
                                                             </v-text-field>
-                                                            <v-text-field  v-else v-model="customer.email" label="email" required
-                                                                :rules="emailRules" prepend-icon="fas fa-envelope"
+                                                            <v-text-field v-else v-model="customer.email" label="email"
+                                                                required :rules="emailRules"
+                                                                prepend-icon="fas fa-envelope"
                                                                 placeholder="Email here...">
 
                                                             </v-text-field>
@@ -43,8 +46,8 @@
 
                                                 <v-row>
                                                     <v-col>
-                                                        <v-checkbox 
-                                                            label="Desejo receber ofertas e novidades" color="primary">
+                                                        <v-checkbox label="Desejo receber ofertas e novidades"
+                                                            color="primary">
 
                                                         </v-checkbox>
                                                     </v-col>
@@ -127,19 +130,22 @@
                                                                 <v-col col="auto">
                                                                     <v-row no-gutters>
                                                                         <v-col cols="auto">
-                                                                            <v-btn size="x-small" variant="text" color="warning"
-                                                                        @click="itemCart.cep = ''">Clear</v-btn>
+                                                                            <v-btn size="x-small" variant="text"
+                                                                                color="warning"
+                                                                                @click="itemCart.cep = ''">Clear</v-btn>
                                                                         </v-col>
                                                                     </v-row>
-                                                                   <v-row no-gutters>
-                                                                    <v-col cols="auto">
-                                                                        <v-btn size="x-small" variant="text" color="blue"
-                                                                        @click="cepDialogOpen">Buscar Cep</v-btn>
+                                                                    <v-row no-gutters>
+                                                                        <v-col cols="auto">
+                                                                            <v-btn size="x-small" variant="text"
+                                                                                color="blue"
+                                                                                @click="cepDialogOpen">Buscar
+                                                                                Cep</v-btn>
 
 
-                                                                    </v-col>
-                                                                   </v-row>
-                                                                   
+                                                                        </v-col>
+                                                                    </v-row>
+
                                                                 </v-col>
                                                             </v-row>
                                                             <v-card-actions>
@@ -200,14 +206,19 @@
 
                                 <v-col>
                                     <v-card class="d-flex justify-center flex-column" :width="500">
+
                                         <v-list :lines="false" density="compact" nav>
+
                                             <v-list-item v-for="(item, index) in parsedProduct" :key="index"
                                                 :value="item">
-                                                <template v-slot:append>
-                                                    <v-btn icon color="white">
+                                                <v-toolbar color="transparent" >
+                                                    <template v-slot:append>
+                                                    <v-btn icon size="x-small">
                                                         <v-icon icon="fas fa-trash"></v-icon>
                                                     </v-btn>
                                                 </template>
+                                                </v-toolbar>
+                                               
 
                                                 <v-row>
                                                     <v-col class="d-flex child-flex">
