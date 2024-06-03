@@ -111,13 +111,11 @@
                                                                     </v-text-field>
                                                                 </v-col>
                                                                 <v-col cols="auto">
-                                                                    <v-combobox
-                                                                        label="state:"
-                                                                        :items="['AM','DF', 'RJ', 'SP', 'BH', 'BA']"
-                                                                    >
+                                                                    <v-combobox label="state:"
+                                                                        :items="['AM', 'DF', 'RJ', 'SP', 'BH', 'BA']">
 
                                                                     </v-combobox>
-                                                                  
+
                                                                 </v-col>
                                                                 <v-col>
                                                                     <v-text-field v-model="customer_zipCode"
@@ -154,11 +152,11 @@
                                                                 <v-row>
                                                                     <v-col class="text-end">
                                                                         <v-btn @click="confirmNext()"
-                                                                        color="primary">Confirmar</v-btn>
+                                                                            color="primary">Confirmar</v-btn>
                                                                     </v-col>
                                                                 </v-row>
-                                                                    
-                                                            
+
+
                                                             </v-card-actions>
 
                                                         </v-form>
@@ -218,7 +216,7 @@
                                                 :value="item">
                                                 <v-toolbar color="transparent">
                                                     <template v-slot:append>
-                                                        <v-btn icon size="x-small" @click="removeItem()">
+                                                        <v-btn icon size="x-small" @click="removeItemDialog(item)">
                                                             <v-icon icon="fas fa-trash"></v-icon>
                                                         </v-btn>
                                                     </template>
@@ -322,7 +320,7 @@
                                         <v-col>
                                             <v-input label="Discount coupon">
                                                 <template v-slot:append>
-                                                    <v-btn  color="grey" @click="couponApply">Apply</v-btn>
+                                                    <v-btn color="grey" @click="couponApply">Apply</v-btn>
                                                 </template>
                                                 <v-text-field v-model="coupon" hide-details
                                                     label="Gift Card or offer code"></v-text-field>
@@ -334,7 +332,7 @@
                                     <v-divider></v-divider>
                                     <v-row no-gutters>
                                         <v-col class="text-start text-subtitle-2">
-                                            <p >Subtotal: </p>
+                                            <p>Subtotal: </p>
                                         </v-col>
                                         <v-col class="text-end text-subtitle-2">
                                             {{ formattedSubtotal }}
@@ -342,7 +340,7 @@
                                     </v-row>
                                     <v-row no-gutters>
                                         <v-col class="text-start text-subtitle-2">
-                                            <p >Shipping:</p>
+                                            <p>Shipping:</p>
                                         </v-col>
                                         <v-col class="text-end text-subtitle-2">
                                             {{ formattedShippingPrice }}
@@ -359,8 +357,8 @@
                                             {{ formatedFinalValue }}
                                         </v-col>
                                     </v-row>
-                                   
-                                   
+
+
                                 </v-col>
                             </v-row>
 
@@ -368,6 +366,28 @@
                         </template>
                     </v-timeline-item>
                 </v-timeline>
+
+                <div>
+                    <v-dialog v-model="removeDialog">
+                        <v-card>
+                            <v-toolbar>
+                                <v-toolbar-title>{{ editedItem.name }}</v-toolbar-title>
+                            </v-toolbar>
+                            <v-card-text>
+                                Você deseja remover este Item ? {{ editedItem.cart_item_id }}
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-btn @click="closeRemoveItemDialog()">
+                                    Close
+                                </v-btn>
+                                <v-btn color="error" @click="removeItemConfirm()">
+                                    Confirm
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </div>
             </v-col>
         </v-row>
 
@@ -938,6 +958,9 @@ export default {
             v => !!v || 'O email é obrigatório',
             v => /.+@.+\..+/.test(v) || 'Email inválido',
         ],
+        index: -1,
+        editedItem: {},
+        removeDialog: false,
     }),
     computed: {
         parsedProduct() {
@@ -1100,7 +1123,6 @@ export default {
                 weight: this.itemCart.weight,
                 price: this.itemCart.price,
                 quantity: this.itemCart.quantity,
-
             }
             axios.post('/api/calculateDelivery', data)
                 .then((response) => {
@@ -1131,11 +1153,26 @@ export default {
             this.dataConfirm = true;
             this.finish = false;
         },
-        removeItem(){
-            alert('Working this ...');
-        },
-        couponApply(){
+        couponApply() {
             alert('Working this...');
+        },
+        removeItemDialog(item) {
+            this.index = this.carts.findIndex(cartItem => cartItem.cart_item_id === item.cart_item_id);
+            this.editedItem = Object.assign({}, item);
+            this.removeDialog = true;
+        },
+        removeItemConfirm() {
+
+            this.carts.splice(this.index, 1);
+            this.closeRemoveItemDialog();
+
+        },
+        closeRemoveItemDialog() {
+            this.removeDialog = false;
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, '');
+                this.index = -1;
+            });
         }
     },
     created() {
