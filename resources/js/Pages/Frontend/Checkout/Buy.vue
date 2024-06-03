@@ -2,7 +2,7 @@
     
         <Dashboard id="dashboard"/>
     
-   
+  
         <v-row no-gutters>
             <v-col class="d-flex flex-column justify-center" cols="auto" md="12" sm="8">
                 <v-timeline  direction="horizontal" line-inset="12">

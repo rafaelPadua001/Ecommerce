@@ -1,112 +1,174 @@
-
 <template>
     <div>
         <Dashboard />
     </div>
-
-    <div>
-        <v-row align="center" justify="center">
-            <v-col cols="8" sm="8">
-            <v-timeline direction="horizontal" side="center"  line-inset="12">
-            <v-timeline-item v-model="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home" fill-dot
-                size="x-small">
-                <template v-slot:opposite>
-                    <v-card class="d-flex justify-center flex-column" :max-width="500">
-                        <v-card-text>
+    <div v-if="!products">
+        <v-row justify="center" fluid>
+            <v-col class="d-flex flex-column" cols="auto">
+                <!-- CartItems: {{ carts }} -->
+                <v-timeline direction="horizontal" side="center" line-inset="12">
+                    <v-timeline-item v-model="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home"
+                        fill-dot size="small">
+                        <template v-slot:opposite>
                             <v-row>
-                                <v-col class="d-flex child-flex" >
-                                    <v-img
-                                        :src="`/storage/products/${productImages}`"
-                                        :lazy-src="`/storage/products/${productImages}`"
-                                        aspect-ratio="16/9"
-                                        :width="200"
-                                        cover
-                                    >
-
-                                    </v-img>
-                                   
-
-                                </v-col>
                                 <v-col>
-                                    <div>
-                                        <p><strong>Name Product:</strong> {{ itemCart.name }}</p>
-                                    </div>
+                                    <v-card class="d-flex justify-center flex-column" :max-width="500">
+                                    <v-list :lines="false" density="compact" nav>
+                                    <v-list-item 
+                                        v-for="(item, index) in parsedProduct"
+                                        :key="index"
+                                        :value="item">
+                                        <template v-slot:append>
+                                        
+                                            <v-btn icon color="white"> 
+                                                <v-icon icon="fas fa-trash"></v-icon>
+                                            </v-btn>
+                                            
+                                       
+                                        </template>
+                                        <v-row>
+                                            <v-col cols="auto" class="d-flex child-flex">
+                                                <v-img :src="`/storage/products/${item.images[0]}`"
+                                                    :lazy-src="`/storage/products/${item.images[0]}`"
+                                                    aspect-ratio="16/9" :width="200" cover :alt="item.name">
+                                                
+                                                </v-img>
+                                            </v-col>
+                                        </v-row>
 
+                                        <v-row no-gutters>
+                                            <v-col cols="auto" no-gutters>
+                                               <strong>Product Name:</strong> {{ item.name }}
+                                            </v-col>
+                                            <v-col cols="auto" no-gutters>
+                                               <strong>Product Price:</strong>
+                                                    R${{ item.cart_item_price}}
+                                            </v-col>
+                                        </v-row>
+                                        <v-row no-gutters>
+                                            <strong>Quantity:</strong> {{ item.shippment_quantity }}
+                                        </v-row>
+                                        <v-row no-gutters>
+                                            <v-col cols="auto" v-for="(color, index) in item.cart_item_colors"
+                                                :key="index">
+                                                <v-avatar :bg-color="color" :color="color" :width="1" rounded="10">
+                                                    <template v-slot:append>
+                                                        <!-- {{ parsedQuantityColors[index] }} -->
+                                                        <!-- <span>Available</span> -->
+                                                    </template>
+                                                </v-avatar>
+                                            </v-col>
+                                        </v-row>
 
-                                    <div>
-                                        <p><strong>Color:</strong>
-                                            <v-card :color="itemCart.color">
-                                                color
-                                            </v-card>
-                                        </p>
+                                        <v-row no-gutters>
+                                            <v-col cols="auto" v-for="(size, index) in item.cart_item_size"
+                                                :key="index">
+                                                <v-avatar color="grey" :width="75" rounded="10">
+                                                    {{ size }}
+                                                   
+                                                </v-avatar>
+                                            </v-col>
+                                        </v-row>
 
-                                    </div>
-                                    <div>
-                                        <strong>Quantity:</strong> {{ itemCart.quantity }}
-                                    </div>
-                                    <div>
-                                        <v-row fluid>
+                                        <v-row no-gutters>
                                             <v-col>
-                                                <v-text-field v-model="zip_code" v-if="itemCart.cep" v-maska:[options]
-                                                    label="postal code" :placeholder="itemCart.cep" :value="itemCart.cep">
-                                                </v-text-field>
-                                                <v-text-field v-model="zip_code" v-else v-maska:[options]
-                                                    label="postal code" :placeholder="itemCart.cep">
-                                                </v-text-field>
+                                                <p>delivery company: </p>
+                                                {{ item.company }}
+                                                
                                             </v-col>
-                                            <v-col col="8" sm="4">
 
-                                                <v-btn size="x-small" variant="text" color="primary"
-                                                    @click="calculateDelivery">calculate</v-btn>
-                                                <v-btn size="x-small" variant="text" color="warning"
-                                                    @click="itemCart.cep = ''">Clear</v-btn>
-                                                <v-btn size="x-small" variant="text" color="blue"
-                                                    @click="cepDialogOpen">Buscar Cep</v-btn>
-
-
+                                            <v-col>
+                                                <p>delivery price: </p>
+                                                R$ {{ item.shippment_price }}
+                                                
                                             </v-col>
                                         </v-row>
                                         <v-row>
-                                            <v-col v-if="respSearchAddress.length >= 1">
-                                                <strong>endereco:</strong> {{ address.complemento }},
-                                                <strong>Bairro:</strong> {{ respSearchAddress[0].bairro }},
-                                                <strong>Logradouro:</strong> {{ respSearchAddress[0].logradouro }},
-                                                <strong>CEP:</strong> {{ respSearchAddress[0].cep }} ,
-                                                <strong>Localidade:</strong>  {{ respSearchAddress[0].localidade }},
-                                                <strong>UF:</strong>  {{ respSearchAddress[0].uf }}
-                                                <strong>DDD:</strong>  {{ respSearchAddress[0].ddd }}
+                                            <v-col>
+                                              <p>Total Delivery:</p>  {{item.delivery_price}}
+                                            </v-col>
+                                            <v-col>
+                                              <p>Total Price:</p>  {{item.total_price}}
                                             </v-col>
                                         </v-row>
-                                        <v-row>
+                                        
+                                                
+                                    </v-list-item>
+                                </v-list>
+                                <v-card-actions>
+                                    <v-btn-group>
+                                        <v-btn @click="confirmNext()">Confirmar</v-btn>
+                                    </v-btn-group>
+                                </v-card-actions>
+                            </v-card>
+                                </v-col>
 
-                                        </v-row>
-                                        <v-row>
-                                            <v-col col="12" sm="12">
+                                <v-col>
+                                    <v-row fluid>
+                                                    <v-col>
+                                                        <v-text-field v-model="zip_code" v-if="itemCart.cep"
+                                                            v-maska:[options] label="postal code"
+                                                            :placeholder="itemCart.cep" :value="itemCart.cep">
+                                                        </v-text-field>
+                                                        <v-text-field v-model="zip_code" v-else v-maska:[options]
+                                                            label="postal code" :placeholder="itemCart.cep">
+                                                        </v-text-field>
+                                                    </v-col>
+                                                    <v-col col="8" sm="4">
+
+                                                        <v-btn size="x-small" variant="text" color="primary"
+                                                            @click="calculateDelivery">calculate</v-btn>
+                                                        <v-btn size="x-small" variant="text" color="warning"
+                                                            @click="itemCart.cep = ''">Clear</v-btn>
+                                                        <v-btn size="x-small" variant="text" color="blue"
+                                                            @click="cepDialogOpen">Buscar Cep</v-btn>
+
+
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col v-if="respSearchAddress.length >= 1">
+                                                        <strong>endereco:</strong> {{ address.complemento }},
+                                                        <strong>Bairro:</strong> {{ respSearchAddress[0].bairro }},
+                                                        <strong>Logradouro:</strong> {{ respSearchAddress[0].logradouro
+                                                        }},
+                                                        <strong>CEP:</strong> {{ respSearchAddress[0].cep }} ,
+                                                        <strong>Localidade:</strong> {{ respSearchAddress[0].localidade
+                                                        }},
+                                                        <strong>UF:</strong> {{ respSearchAddress[0].uf }}
+                                                        <strong>DDD:</strong> {{ respSearchAddress[0].ddd }}
+                                                    </v-col>
+                                                </v-row>
+
                                                 <v-row>
                                                     <v-col col="12" sm="12">
-                                                        <v-card class="mx-auto" :width="255">
-                                                            <v-list lines="three">
-                                                                <v-list-item v-for="quotation in quotations"
-                                                                    :key="quotation.id" :v-if="!quotation.error">
+                                                        <v-row>
+                                                            <v-col col="12" sm="12">
+                                                                <v-card class="mx-auto" :width="255">
+                                                                    <v-list lines="three">
+                                                                        <v-list-item v-for="quotation in quotations"
+                                                                            :key="quotation.id"
+                                                                            :v-if="!quotation.error">
 
-                                                                    <template v-slot:prepend>
+                                                                            <template v-slot:prepend>
 
-                                                                        <v-avatar :width="120"
-                                                                            color="transparent-lighten-1">
-                                                                            <v-img :src="quotation.company.picture"
-                                                                                :lazy-src="quotation.company.picture"
-                                                                                :placeholder="quotation.company.name">
-                                                                            </v-img>
-                                                                        </v-avatar>
-                                                                    </template>
+                                                                                <v-avatar :width="120"
+                                                                                    color="transparent-lighten-1">
+                                                                                    <v-img
+                                                                                        :src="quotation.company.picture"
+                                                                                        :lazy-src="quotation.company.picture"
+                                                                                        :placeholder="quotation.company.name">
+                                                                                    </v-img>
+                                                                                </v-avatar>
+                                                                            </template>
 
-                                                                    <div>
-                                                                        <p class="text-body-2">
-                                                                            Price:
-                                                                            <strong>{{ quotation.currency }}
-                                                                                {{ quotation.price }}</strong>
-                                                                        </p>
-                                                                        <!--<p class="text-body-2">
+                                                                            <div>
+                                                                                <p class="text-body-2">
+                                                                                    Price:
+                                                                                    <strong>{{ quotation.currency }}
+                                                                                        {{ quotation.price }}</strong>
+                                                                                </p>
+                                                                                <!--<p class="text-body-2">
                                                                                     Discount:
                                                                                     <strong>{{quotation.discount}}</strong>
                                                                                 </p>
@@ -121,353 +183,498 @@
                                                                                         }}
                                                                                     </strong>
                                                                                 </p> -->
-                                                                        <p class="text-body-2">
-                                                                            Prazo de entrega:
-                                                                            <strong>
-                                                                                {{ quotation.delivery_time }}
-                                                                                dias úteis
-                                                                            </strong>
-                                                                        </p>
-                                                                    </div>
+                                                                                <p class="text-body-2">
+                                                                                    Prazo de entrega:
+                                                                                    <strong>
+                                                                                        {{ quotation.delivery_time }}
+                                                                                        dias úteis
+                                                                                    </strong>
+                                                                                </p>
+                                                                            </div>
 
 
-                                                                    <template v-slot:append>
-                                                                        <v-radio-group v-model="selectedDelivery">
-                                                                            <v-radio :value="quotation"></v-radio>
-                                                                        </v-radio-group>
+                                                                            <template v-slot:append>
+                                                                                <v-radio-group
+                                                                                    v-model="selectedDelivery">
+                                                                                    <v-radio
+                                                                                        :value="quotation"></v-radio>
+                                                                                </v-radio-group>
 
 
-                                                                    </template>
+                                                                            </template>
 
 
-                                                                </v-list-item>
-                                                            </v-list>
-                                                        </v-card>
+                                                                        </v-list-item>
+                                                                    </v-list>
+                                                                </v-card>
+
+                                                            </v-col>
+                                                        </v-row>
+
+
+                                                    </v-col>
+                                                </v-row>
+                                </v-col>
+                            </v-row>
+                            
+                            
+                        </template>
+                    </v-timeline-item>
+                </v-timeline>
+            </v-col>
+        </v-row>
+
+    </div>
+    <div v-else>
+        CartItems: {{ carts }}
+        <v-row align="center" justify="center">
+            <v-col cols="8" sm="8">
+                <v-timeline direction="horizontal" side="center" line-inset="12">
+                    <v-timeline-item v-model="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home"
+                        fill-dot size="x-small">
+                        <template v-slot:opposite>
+                            <v-card class="d-flex justify-center flex-column" :max-width="500">
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col class="d-flex child-flex">
+                                            <v-img :src="`/storage/products/${productImages}`"
+                                                :lazy-src="`/storage/products/${productImages}`" aspect-ratio="16/9"
+                                                :width="200" cover>
+
+                                            </v-img>
+
+
+                                        </v-col>
+                                        <v-col>
+                                            <div>
+                                                <p><strong>Name Product:</strong> {{ itemCart.name }}</p>
+                                            </div>
+
+
+                                            <div>
+                                                <p><strong>Color:</strong>
+                                                    <v-card :color="itemCart.color">
+                                                        color
+                                                    </v-card>
+                                                </p>
+
+                                            </div>
+                                            <div>
+                                                <strong>Quantity:</strong> {{ itemCart.quantity }}
+                                            </div>
+                                            <div>
+                                                <v-row fluid>
+                                                    <v-col>
+                                                        <v-text-field v-model="zip_code" v-if="itemCart.cep"
+                                                            v-maska:[options] label="postal code"
+                                                            :placeholder="itemCart.cep" :value="itemCart.cep">
+                                                        </v-text-field>
+                                                        <v-text-field v-model="zip_code" v-else v-maska:[options]
+                                                            label="postal code" :placeholder="itemCart.cep">
+                                                        </v-text-field>
+                                                    </v-col>
+                                                    <v-col col="8" sm="4">
+
+                                                        <v-btn size="x-small" variant="text" color="primary"
+                                                            @click="calculateDelivery">calculate</v-btn>
+                                                        <v-btn size="x-small" variant="text" color="warning"
+                                                            @click="itemCart.cep = ''">Clear</v-btn>
+                                                        <v-btn size="x-small" variant="text" color="blue"
+                                                            @click="cepDialogOpen">Buscar Cep</v-btn>
+
+
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col v-if="respSearchAddress.length >= 1">
+                                                        <strong>endereco:</strong> {{ address.complemento }},
+                                                        <strong>Bairro:</strong> {{ respSearchAddress[0].bairro }},
+                                                        <strong>Logradouro:</strong> {{ respSearchAddress[0].logradouro
+                                                        }},
+                                                        <strong>CEP:</strong> {{ respSearchAddress[0].cep }} ,
+                                                        <strong>Localidade:</strong> {{ respSearchAddress[0].localidade
+                                                        }},
+                                                        <strong>UF:</strong> {{ respSearchAddress[0].uf }}
+                                                        <strong>DDD:</strong> {{ respSearchAddress[0].ddd }}
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col col="12" sm="12">
+                                                        <v-row>
+                                                            <v-col col="12" sm="12">
+                                                                <v-card class="mx-auto" :width="255">
+                                                                    <v-list lines="three">
+                                                                        <v-list-item v-for="quotation in quotations"
+                                                                            :key="quotation.id"
+                                                                            :v-if="!quotation.error">
+
+                                                                            <template v-slot:prepend>
+
+                                                                                <v-avatar :width="120"
+                                                                                    color="transparent-lighten-1">
+                                                                                    <v-img
+                                                                                        :src="quotation.company.picture"
+                                                                                        :lazy-src="quotation.company.picture"
+                                                                                        :placeholder="quotation.company.name">
+                                                                                    </v-img>
+                                                                                </v-avatar>
+                                                                            </template>
+
+                                                                            <div>
+                                                                                <p class="text-body-2">
+                                                                                    Price:
+                                                                                    <strong>{{ quotation.currency }}
+                                                                                        {{ quotation.price }}</strong>
+                                                                                </p>
+                                                                                <!--<p class="text-body-2">
+                                                                                    Discount:
+                                                                                    <strong>{{quotation.discount}}</strong>
+                                                                                </p>
+                                                                             
+                                                                                 <p class="text-body-2" v-if="!quotation.error && itemCart.price">
+                                                                                    total Value
+                                                                                    <strong>
+                                                                                        {{ 
+                                                                                            (
+                                                                                                (parseFloat(selectedDelivery.price) || 0) + 
+                                                                                                (parseFloat(itemCart.price) || 0)).toFixed(2) 
+                                                                                        }}
+                                                                                    </strong>
+                                                                                </p> -->
+                                                                                <p class="text-body-2">
+                                                                                    Prazo de entrega:
+                                                                                    <strong>
+                                                                                        {{ quotation.delivery_time }}
+                                                                                        dias úteis
+                                                                                    </strong>
+                                                                                </p>
+                                                                            </div>
+
+
+                                                                            <template v-slot:append>
+                                                                                <v-radio-group
+                                                                                    v-model="selectedDelivery">
+                                                                                    <v-radio
+                                                                                        :value="quotation"></v-radio>
+                                                                                </v-radio-group>
+
+
+                                                                            </template>
+
+
+                                                                        </v-list-item>
+                                                                    </v-list>
+                                                                </v-card>
+
+                                                            </v-col>
+                                                        </v-row>
+
 
                                                     </v-col>
                                                 </v-row>
 
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
 
+                                <v-card-actions>
+                                    <v-btn-group>
+                                        <v-btn @click="confirmNext()">Confirmar</v-btn>
+                                    </v-btn-group>
+                                </v-card-actions>
+                            </v-card>
+
+
+                            <!-- {{ itemCart }} -->
+                        </template>
+                        <div>
+                            <div>Confirmar pedido</div>
+                            <p>
+                                {{ itemCart.name }}
+                            </p>
+                        </div>
+                    </v-timeline-item>
+
+                    <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="x-small">
+                        <template v-slot:opposite>
+                            <v-card v-model="dataConfirm" class="d-flex align-center flex-column" v-if="dataConfirm"
+                                :width="500">
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col class="d-flex child-flex" cols="6">
+                                            <div>
+                                                <v-img :src="`/storage/products/${productImages}`"
+                                                    :lazy-src="`/storage/products/${productImages}`" aspect-ratio="16/9"
+                                                    :width="200" cover>
+
+
+                                                    <template>
+                                                        <div class="d-flex align-center justify-center fill-height">
+                                                            <v-progress-circular color="grey-lighten-4">
+                                                            </v-progress-circular>
+                                                        </div>
+                                                    </template>
+
+                                                </v-img>
+                                            </div>
+
+                                        </v-col>
+                                        <v-col col="12" md="4">
+
+                                            <div>
+
+                                                <p class="text-subititle-1">
+                                                    <strong>Customer name:</strong>
+                                                    {{ customer.first_name }}
+
+
+                                                </p>
+
+                                            </div>
+                                            <div>
+
+                                                <p class="text-subititle-1">
+                                                    <strong>Customer lastname:</strong>
+                                                    {{ customer.last_name }}
+
+                                                </p>
+
+                                            </div>
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>CPF:</strong>
+
+                                                </p>
+
+                                            </div>
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Contact:</strong>
+                                                    {{ address.telefone }}
+                                                </p>
+
+                                            </div>
+                                            <div>
+                                                <p class="text-subtitle-2"><strong>Celular:</strong> </p>
+
+                                            </div>
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Endereço:</strong> {{ address.endereco }}
+                                                </p>
+                                                <p class="text-subtitle-2">
+
+                                                    <strong>Complemento:</strong> {{ address.complemento }}
+                                                </p>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Bairro:</strong> {{ address.bairro }}
+                                                </p>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Cidade:</strong> {{ address.cidade }}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Zip Code</strong> {{ address.cep }}
+                                                </p>
+                                                <p class="text-subtitle-2">
+                                                    <strong>UF:</strong> {{ address.UF }}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p class="text-subtitle-2">
+                                                    <strong>Delivery: </strong>
+                                                    {{ selectedDelivery.currency }} {{ selectedDelivery.price }}
+
+                                                </p>
+
+                                            </div>
+
+                                            <div>
+                                                <p>
+                                                    <strong>Total Value</strong>
+                                                    {{ selectedDelivery.currency }}
+                                                    {{ (parseFloat(selectedDelivery.price) +
+        parseFloat(itemCart.price)).toFixed(2)
+                                                    }}
+                                                </p>
+
+                                            </div>
+
+                                        </v-col>
+                                    </v-row>
+
+                                </v-card-text>
+
+                                <v-card-actions>
+                                    <v-btn-group>
+                                        <v-btn @click="returnConfirm()">voltar</v-btn>
+                                        <v-btn @click="confirmDatas()">Confirmar</v-btn>
+
+                                    </v-btn-group>
+                                </v-card-actions>
+                            </v-card>
+                        </template>
+                        <div>
+                            <div>Datas User and Delivery Confirm</div>
+                            <p>
+                                {{ itemCart.name }}
+                            </p>
+
+                        </div>
+                    </v-timeline-item>
+
+                    <v-timeline-item dot-color="blue-darken-2" icon="fas fa-truck" fill-dot size="x-small">
+                        <template v-slot:opposite>
+
+                        </template>
+                        <div>
+                            <div class="text-h6">
+                                <v-card v-model="finish" class="d-flex align-center flex-column" v-if="finish"
+                                    :width="500">
+                                    <v-card-text>
+                                        <v-row>
+                                            <v-col class="d-flex child-flex" cols="6">
+                                                <div>
+
+                                                    <v-img :src="`/storage/products/${productImages}`"
+                                                        :lazy-src="`/storage/products/${productImages}`"
+                                                        aspect-ratio="16/9" :width="200" cover>
+
+                                                        <template>
+                                                            <div class="d-flex align-center justify-center fill-height">
+                                                                <v-progress-circular color="grey-lighten-4">
+                                                                </v-progress-circular>
+                                                            </div>
+                                                        </template>
+
+                                                    </v-img>
+
+                                                </div>
+                                            </v-col>
+                                            <v-col cols="6" md="4">
+                                                <div class="text-h6">
+                                                    {{ itemCart.name }}
+                                                </div>
+                                                <div>
+                                                    <p>
+                                                        <strong>Total Value</strong>
+                                                        {{ selectedDelivery.currency }}
+                                                        {{ (parseFloat(selectedDelivery.price) +
+        parseFloat(itemCart.price)).toFixed(2) }}
+                                                    </p>
+
+                                                </div>
+
+                                                <div>
+                                                    <strong>Cupom</strong> {{ itemCart.quantity }}
+                                                </div>
                                             </v-col>
                                         </v-row>
 
-                                    </div>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
+                                        <v-row>
+                                            <v-col cols="8" sm="6">
+                                                <v-card class="mx-auto" :width="450">
+                                                    <v-card-text>
+                                                        <v-row>
+                                                            <v-col cols="8" sm="8">
+                                                                <v-radio-group v-model="paymentType" inline>
+                                                                    <v-radio label="Debit" value="debit">
 
-                        <v-card-actions>
-                            <v-btn-group>
-                                <v-btn @click="confirmNext()">Confirmar</v-btn>
-                            </v-btn-group>
-                        </v-card-actions>
-                    </v-card>
+                                                                    </v-radio>
+                                                                    <v-radio label="Credit" value="credit">
 
+                                                                    </v-radio>
+                                                                    <v-radio label="Pix" value="pix">
 
-                    <!-- {{ itemCart }} -->
-                </template>
-                <div>
-                    <div>Confirmar pedido</div>
-                    <p>
-                        {{ itemCart.name }}
-                    </p>
-                </div>
-            </v-timeline-item>
+                                                                    </v-radio>
+                                                                </v-radio-group>
+                                                            </v-col>
+                                                        </v-row>
 
-            <v-timeline-item dot-color="blue-darken-2" icon="fas fa-check" fill-dot size="x-small">
-                <template v-slot:opposite>
-                    <v-card 
-                        v-model="dataConfirm"
-                        class="d-flex align-center flex-column" 
-                        v-if="dataConfirm" 
-                        :width="500"
-                        >
-                        <v-card-text>
-                            <v-row>
-                                <v-col class="d-flex child-flex" cols="6">
-                                    <div>
-                                        <v-img
-                                        :src="`/storage/products/${productImages}`"
-                                        :lazy-src="`/storage/products/${productImages}`"
-                                        aspect-ratio="16/9"
-                                        :width="200"
-                                        cover
-                                    >
-
-                                   
-                                            <template>
-                                                <div class="d-flex align-center justify-center fill-height">
-                                                    <v-progress-circular color="grey-lighten-4">
-                                                    </v-progress-circular>
-                                                </div>
-                                            </template>
-
-                                        </v-img>
-                                    </div>
-
-                                </v-col>
-                                <v-col col="12" md="4">
-
-                                    <div>
-
-                                        <p class="text-subititle-1">
-                                            <strong>Customer name:</strong>
-                                            {{ customer.first_name }}
+                                                        <v-row>
+                                                            <v-col>
+                                                                <div v-if="paymentType == 'debit'">
+                                                                    <v-card>
+                                                                        <DebitForm :paymentType="paymentType"
+                                                                            :id="this.itemCart.id"
+                                                                            :name="this.itemCart.name"
+                                                                            :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
+                                                                            :quantity="this.itemCart.quantity"
+                                                                            :delivery="selectedDelivery"
+                                                                            :description="this.itemCart.description"
+                                                                            :image="this.itemCart.images"
+                                                                            :color="this.itemCart.color"
+                                                                            :address="this.address" />
+                                                                    </v-card>
+                                                                </div>
+                                                                <div v-if="paymentType == 'credit'">
+                                                                    <v-card>
+                                                                        <CreditForm :paymentType="paymentType"
+                                                                            :name="this.itemCart.name"
+                                                                            :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
+                                                                            :quantity="this.itemCart.quantity"
+                                                                            :delivery="selectedDelivery"
+                                                                            :description="this.itemCart.description"
+                                                                            :image="this.itemCart.images"
+                                                                            :color="this.itemCart.color" />
 
 
-                                        </p>
-
-                                    </div>
-                                    <div>
-
-                                        <p class="text-subititle-1">
-                                            <strong>Customer lastname:</strong>
-                                            {{ customer.last_name }}
-
-                                        </p>
-
-                                    </div>
-                                    <div>
-                                        <p class="text-subtitle-2">
-                                            <strong>CPF:</strong>
-
-                                        </p>
-
-                                    </div>
-                                    <div>
-                                        <p class="text-subtitle-2">
-                                            <strong>Contact:</strong>
-                                            {{ address.telefone }}
-                                        </p>
-
-                                    </div>
-                                    <div>
-                                        <p class="text-subtitle-2"><strong>Celular:</strong> </p>
-
-                                    </div>
-                                    <div>
-                                        <p class="text-subtitle-2">
-                                            <strong>Endereço:</strong> {{ address.endereco }}
-                                        </p>
-                                        <p class="text-subtitle-2">
-                                            
-                                            <strong>Complemento:</strong> {{ address.complemento }}
-                                        </p>
-                                        <p class="text-subtitle-2">
-                                            <strong>Bairro:</strong> {{ address.bairro }}
-                                        </p>
-                                        <p class="text-subtitle-2">
-                                            <strong>Cidade:</strong> {{ address.cidade }}
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <p class="text-subtitle-2">
-                                            <strong>Zip Code</strong> {{ address.cep }}
-                                        </p>
-                                        <p class="text-subtitle-2">
-                                            <strong>UF:</strong> {{ address.UF }}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p class="text-subtitle-2">
-                                            <strong>Delivery: </strong>
-                                            {{ selectedDelivery.currency }} {{ selectedDelivery.price }}
-
-                                        </p>
-
-                                    </div>
-
-                                    <div>
-                                        <p>
-                                            <strong>Total Value</strong>
-                                            {{ selectedDelivery.currency }}
-                                            {{ (parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)
-                                            }}
-                                        </p>
-
-                                    </div>
-
-                                </v-col>
-                            </v-row>
-
-                        </v-card-text>
-
-                        <v-card-actions>
-                            <v-btn-group>
-                                <v-btn @click="returnConfirm()">voltar</v-btn>
-                                <v-btn @click="confirmDatas()">Confirmar</v-btn>
-
-                            </v-btn-group>
-                        </v-card-actions>
-                    </v-card>
-                </template>
-                <div>
-                    <div>Datas User and Delivery Confirm</div>
-                    <p>
-                        {{ itemCart.name }}
-                    </p>
-
-                </div>
-            </v-timeline-item>
-
-            <v-timeline-item dot-color="blue-darken-2" icon="fas fa-truck" fill-dot size="x-small">
-                <template v-slot:opposite>
-
-                </template>
-                <div>
-                    <div class="text-h6">
-                        <v-card 
-                            v-model="finish"
-                            class="d-flex align-center flex-column" 
-                            v-if="finish"
-                            :width="500"
-                        >
-                            <v-card-text>
-                                <v-row>
-                                    <v-col class="d-flex child-flex" cols="6">
-                                        <div>
-                                           
-                                                <v-img
-                                                    :src="`/storage/products/${productImages}`"
-                                                    :lazy-src="`/storage/products/${productImages}`"
-                                                    aspect-ratio="16/9"
-                                                    :width="200"
-                                                    cover
-                                                >
-
-                                                <template>
-                                                    <div class="d-flex align-center justify-center fill-height">
-                                                        <v-progress-circular color="grey-lighten-4">
-                                                        </v-progress-circular>
-                                                    </div>
-                                                </template>
-
-                                            </v-img>
-                                       
-                                        </div>
-                                    </v-col>
-                                    <v-col cols="6" md="4">
-                                        <div class="text-h6">
-                                            {{ itemCart.name }}
-                                        </div>
-                                        <div>
-                                            <p>
-                                                <strong>Total Value</strong>
-                                                {{ selectedDelivery.currency }}
-                                                {{ (parseFloat(selectedDelivery.price) +
-                                                    parseFloat(itemCart.price)).toFixed(2) }}
-                                            </p>
-
-                                        </div>
-
-                                        <div>
-                                            <strong>Cupom</strong> {{ itemCart.quantity }}
-                                        </div>
-                                    </v-col>
-                                </v-row>
-
-                                <v-row>
-                                    <v-col cols="8" sm="6">
-                                        <v-card class="mx-auto" :width="450">
-                                            <v-card-text>
-                                                <v-row>
-                                                    <v-col cols="8" sm="8">
-                                                        <v-radio-group v-model="paymentType" inline>
-                                                            <v-radio label="Debit" value="debit">
-
-                                                            </v-radio>
-                                                            <v-radio label="Credit" value="credit">
-
-                                                            </v-radio>
-                                                            <v-radio label="Pix" value="pix">
-
-                                                            </v-radio>
-                                                        </v-radio-group>
-                                                    </v-col>
-                                                </v-row>
-
-                                                <v-row>
-                                                    <v-col>
-                                                        <div v-if="paymentType == 'debit'">
-                                                            <v-card>
-                                                                <DebitForm 
-                                                                    :paymentType="paymentType"
-                                                                    :id="this.itemCart.id"
-                                                                    :name="this.itemCart.name"
-                                                                    :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
-                                                                    :quantity="this.itemCart.quantity"
-                                                                    :delivery="selectedDelivery"
-                                                                    :description="this.itemCart.description"
-                                                                    :image="this.itemCart.images"
-                                                                    :color="this.itemCart.color"
-                                                                    :address="this.address"
-                                                                    />
-                                                            </v-card>
-                                                        </div>
-                                                        <div v-if="paymentType == 'credit'">
-                                                            <v-card>
-                                                                <CreditForm :paymentType="paymentType"
-                                                                    :name="this.itemCart.name"
-                                                                    :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
-                                                                    :quantity="this.itemCart.quantity"
-                                                                    :delivery="selectedDelivery"
-                                                                    :description="this.itemCart.description"
-                                                                    :image="this.itemCart.images"
-                                                                    :color="this.itemCart.color"
-                                                                 />
+                                                                    </v-card>
+                                                                </div>
+                                                                <div v-if="paymentType == 'pix'">
+                                                                    <v-card>
+                                                                        <PixForm :paymentType="paymentType"
+                                                                            :name="this.itemCart.name"
+                                                                            :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
+                                                                            :quantity="this.itemCart.quantity"
+                                                                            :delivery="selectedDelivery"
+                                                                            :description="this.itemCart.description"
+                                                                            :image="this.itemCart.images"></PixForm>
+                                                                    </v-card>
+                                                                </div>
+                                                            </v-col>
+                                                        </v-row>
+                                                    </v-card-text>
+                                                </v-card>
+                                            </v-col>
+                                        </v-row>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-btn-group>
+                                            <v-btn @click="returnConfirmDatas()">Voltar</v-btn>
 
 
-                                                            </v-card>
-                                                        </div>
-                                                        <div v-if="paymentType == 'pix'">
-                                                            <v-card>
-                                                                <PixForm :paymentType="paymentType"
-                                                                    :name="this.itemCart.name"
-                                                                    :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
-                                                                    :quantity="this.itemCart.quantity"
-                                                                    :delivery="selectedDelivery"
-                                                                    :description="this.itemCart.description"
-                                                                    :image="this.itemCart.images"></PixForm>
-                                                                </v-card>
-                                                        </div>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-col>
-                                </v-row>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-btn-group>
-                                    <v-btn @click="returnConfirmDatas()">Voltar</v-btn>
+                                        </v-btn-group>
+                                    </v-card-actions>
+                                </v-card>
+                            </div>
+                            <p>
+
+                            </p>
+                        </div>
+                        <div>
+                            <div>Finalizar</div>
+                            <p>
+                                {{ itemCart.name }}
+                            </p>
+
+                        </div>
+                    </v-timeline-item>
+
+                </v-timeline>
 
 
-                                </v-btn-group>
-                            </v-card-actions>
-                        </v-card>
-                    </div>
-                    <p>
 
-                    </p>
-                </div>
-                <div>
-                    <div>Finalizar</div>
-                    <p>
-                        {{ itemCart.name }}
-                    </p>
-
-                </div>
-            </v-timeline-item>
-
-        </v-timeline>
-
-       
-               
             </v-col>
         </v-row>
-        
-        
+
+
 
     </div>
     <div>
@@ -479,8 +686,8 @@
                 <v-card-text>
                     <v-container>
                         <v-row>
-                            
-                           <v-col cols="12" sm="6" md="4">
+
+                            <v-col cols="12" sm="6" md="4">
                                 <v-text-field v-model="uf" label="UF"></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="4">
@@ -495,25 +702,25 @@
                             <v-col cols="12" sm="6" md="4">
                                 <v-text-field v-model="complemento" label="Complemento"></v-text-field>
                             </v-col>
-                            
+
                         </v-row>
                     </v-container>
                     <small>*indicates required field</small>
-                  
-               
+
+
                     <div v-if="respSearchAddress.length >= 1">
                         <v-row>
                             <v-col>
                                 CEP: {{ respSearchAddress[0].cep }} ,
                                 Logradouro: {{ respSearchAddress[0].logradouro }},
-                                Localidade:  {{ respSearchAddress[0].localidade }},
-                                UF:  {{ respSearchAddress[0].uf }}
-                                DDD:  {{ respSearchAddress[0].ddd }}
+                                Localidade: {{ respSearchAddress[0].localidade }},
+                                UF: {{ respSearchAddress[0].uf }}
+                                DDD: {{ respSearchAddress[0].ddd }}
                             </v-col>
                         </v-row>
-                      
+
                     </div>
-                  
+
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -545,15 +752,23 @@ import Dashboard from '../Auth/Dashboard.vue'
 import DebitForm from '../Payment/DebitForm.vue'
 import CreditForm from '../Payment/CreditForm.vue'
 import PixForm from '../Payment/PixForm.vue'
+import cartStorage from '@/Services/CartStorage/CartStorage';
 import axios from "axios";
 
 export default {
+    name: 'Checkout',
     components: {
         Dashboard,
         DebitForm,
         CreditForm,
         PixForm,
     },
+    // props: {
+    //     carts: {
+    //         type: Array,
+    //         required: true,
+    //     }
+    // },
     data: () => ({
         itemCart: [],
         quotations: [],
@@ -574,8 +789,21 @@ export default {
         uf: null,
         city: null,
         bairro: null,
-        complemento: null
+        complemento: null,
+        carts: [],
     }),
+    computed: {
+        parsedProduct() {
+            return this.carts.map((item) => {
+                return {
+                    ...item,
+                    cart_item_colors: JSON.parse(item.cart_item_colors),
+                    cart_item_size: JSON.parse(item.cart_item_size),
+                    images: JSON.parse(item.images),
+                }
+            });
+        }
+    },
     methods: {
         getProducts() {
             let url = window.location.href;
@@ -621,7 +849,7 @@ export default {
                 })
         },
         searchToAddress() {
-            const data = { 
+            const data = {
                 address: this.searchAddress,
                 postal_code: this.postal_code,
                 uf: this.uf,
@@ -629,8 +857,8 @@ export default {
                 bairro: this.bairro,
                 complemento: this.complemento
             };
-           
-            axios.get(`https://viacep.com.br/ws/${this.uf}/${this.city}/${this.searchAddress.replace(/\s/g, '+' )}/json/`)
+
+            axios.get(`https://viacep.com.br/ws/${this.uf}/${this.city}/${this.searchAddress.replace(/\s/g, '+')}/json/`)
                 .then((response) => {
                     this.itemCart.cep = " ";
                     this.itemCart.cep = response.data[0].cep;
@@ -652,34 +880,34 @@ export default {
                     );
 
                     return this.respSearchAddress.push(response.data[0]);
-                    
-                })  
+
+                })
                 .catch((response) => {
                     return alert('Error :', response);
                 })
         },
-        saveAddress(cep, endereco, bairro, city, uf, ibge, complemento){
-           
-          const newData = {
-              address: endereco,
-              postal_code: cep,
-              uf:  uf,
-              city: city,
-              bairro: bairro,
-              code_ibge: ibge,
-              complemento: complemento,
-              
-          };
-          console.log(newData);
-             axios.post('/saveSearchAddress', newData)
-             .then((response) => {
-              
-                return this.address = response.data;
-                
-             })
-             .catch((response) => {
-                 return alert('ERROR: ', response);
-             });
+        saveAddress(cep, endereco, bairro, city, uf, ibge, complemento) {
+
+            const newData = {
+                address: endereco,
+                postal_code: cep,
+                uf: uf,
+                city: city,
+                bairro: bairro,
+                code_ibge: ibge,
+                complemento: complemento,
+
+            };
+            console.log(newData);
+            axios.post('/saveSearchAddress', newData)
+                .then((response) => {
+
+                    return this.address = response.data;
+
+                })
+                .catch((response) => {
+                    return alert('ERROR: ', response);
+                });
         },
         calculateDelivery() {
             const data = {
@@ -694,7 +922,7 @@ export default {
             }
             axios.post('/api/calculateDelivery', data)
                 .then((response) => {
-                  return this.quotations = response.data;
+                    return this.quotations = response.data;
                 })
                 .catch((response) => {
                     alert('Error : ' + response);
@@ -727,6 +955,11 @@ export default {
         this.getProducts();
         this.getCustomer();
         this.getAddress();
+        this.carts = cartStorage.getCart();
+        if (!this.carts) {
+            this.$router.push({ name: 'cart' });
+        }
+        console.log(this.carts);
     }
 }
 </script>

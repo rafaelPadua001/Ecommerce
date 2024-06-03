@@ -28,25 +28,25 @@
                                         </div>
                                     </v-col>
 
-                                     <div>
-                                            <v-col cols="auto">
-                                                <v-avatar v-for="(color, index) in parsedColors(item.cart_item_colors)"
-                                                    :key="index" v-bind="props" :color="color">
-                                                    <template v-slot:append>
+                                    <div>
+                                        <v-col cols="auto">
+                                            <v-avatar v-for="(color, index) in parsedColors(item.cart_item_colors)"
+                                                :key="index" v-bind="props" :color="color">
+                                                <template v-slot:append>
 
-                                                    </template>
-                                                </v-avatar>
+                                                </template>
+                                            </v-avatar>
 
-                                            </v-col>
-                                        </div>
-                                        <div class="d-flex justify-space-around">
-                                            <v-col cols="auto" v-for="(size, index) in parsedSizes(item.cart_item_size)"
-                                                :key="index">
-                                                <v-avatar v-bind="props" color="grey">
-                                                    <span>{{ size }}</span>
-                                                </v-avatar>
-                                            </v-col>
-                                        </div>
+                                        </v-col>
+                                    </div>
+                                    <div class="d-flex justify-space-around">
+                                        <v-col cols="auto" v-for="(size, index) in parsedSizes(item.cart_item_size)"
+                                            :key="index">
+                                            <v-avatar v-bind="props" color="grey">
+                                                <span>{{ size }}</span>
+                                            </v-avatar>
+                                        </v-col>
+                                    </div>
                                     <v-col cols="12">
                                         <div>
                                             <p class="text-body-1">
@@ -117,7 +117,7 @@
 
         <v-row fluid>
             <v-col>
-                <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block>Checkout</v-btn>
+                <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block @click="redirectToCheckout(this.carts)">Checkout</v-btn>
             </v-col>
         </v-row>
 
@@ -126,6 +126,7 @@
 </template>
 
 <script>
+import cartStorage from '@/Services/CartStorage/CartStorage';
 export default {
     props: {
         carts: {
@@ -177,6 +178,11 @@ export default {
                     return alert('Error :' + response);
                 });
         },
+        redirectToCheckout(carts){
+            console.log(carts);
+            cartStorage.setCart(carts);
+            this.$router.push({name: 'checkout'});
+        }
     },
     mounted() {
         this.calculateTotalPrice();
