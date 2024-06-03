@@ -1,223 +1,333 @@
 <template>
-    <div>
+    <!-- <div>
         <Dashboard />
-    </div>
+    </div> -->
     <div v-if="!products">
-        <v-row justify="center" fluid>
+        <v-row justify="center" no-gutters>
             <v-col class="d-flex flex-column" cols="auto">
                 <!-- CartItems: {{ carts }} -->
                 <v-timeline direction="horizontal" side="center" line-inset="12">
                     <v-timeline-item v-model="confirm" v-if="confirm" dot-color="blue-darken-2" icon="fas fa-home"
                         fill-dot size="small">
                         <template v-slot:opposite>
-                            <v-row>
-                                <v-col>
-                                    <v-card class="d-flex justify-center flex-column" :max-width="500">
-                                    <v-list :lines="false" density="compact" nav>
-                                    <v-list-item 
-                                        v-for="(item, index) in parsedProduct"
-                                        :key="index"
-                                        :value="item">
-                                        <template v-slot:append>
-                                        
-                                            <v-btn icon color="white"> 
-                                                <v-icon icon="fas fa-trash"></v-icon>
-                                            </v-btn>
-                                            
-                                       
-                                        </template>
-                                        <v-row>
-                                            <v-col cols="auto" class="d-flex child-flex">
-                                                <v-img :src="`/storage/products/${item.images[0]}`"
-                                                    :lazy-src="`/storage/products/${item.images[0]}`"
-                                                    aspect-ratio="16/9" :width="200" cover :alt="item.name">
-                                                
-                                                </v-img>
+
+                            <v-row no-gutters>
+                                <v-col cols="auto">
+                                    <v-card :width="600">
+                                        <v-row fluid>
+                                            <v-col>
+                                                <v-row>
+                                                    <v-col>
+                                                        <p class="text-start text-body-1">Contact Information</p>
+                                                        <v-divider></v-divider>
+                                                        <v-spacer></v-spacer>
+                                                    </v-col>
+                                                </v-row>
+
+                                                <v-row>
+                                                    <v-col>
+                                                        <v-form>
+                                                            <v-text-field  v-if="!customer.email" v-model="email" label="email" required
+                                                                :rules="emailRules" prepend-icon="fas fa-envelope"
+                                                                placeholder="Email here...">
+
+                                                            </v-text-field>
+                                                            <v-text-field  v-else v-model="customer.email" label="email" required
+                                                                :rules="emailRules" prepend-icon="fas fa-envelope"
+                                                                placeholder="Email here...">
+
+                                                            </v-text-field>
+                                                        </v-form>
+                                                    </v-col>
+                                                </v-row>
+
+                                                <v-row>
+                                                    <v-col>
+                                                        <v-checkbox 
+                                                            label="Desejo receber ofertas e novidades" color="primary">
+
+                                                        </v-checkbox>
+                                                    </v-col>
+                                                </v-row>
+
+                                                <v-row>
+                                                    <v-col class="text-body-1 text-start">
+                                                        <p>Shipping address</p>
+                                                        <v-divider></v-divider>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+
+                                                    <v-col v-if="this.address">
+                                                        <v-form>
+                                                            <v-row>
+                                                                <v-col>
+                                                                    <v-text-field v-model="customer.first_name"
+                                                                        label="First Name">
+
+                                                                    </v-text-field>
+
+                                                                    {{ first_name }}
+                                                                </v-col>
+                                                                <v-col>
+                                                                    <v-text-field v-model="customer.last_name"
+                                                                        label="Last Name">
+
+                                                                    </v-text-field>
+
+                                                                    {{ last_name }}
+                                                                </v-col>
+                                                            </v-row>
+                                                            <v-row>
+                                                                <v-col>
+                                                                    <v-text-field v-model="customer_address"
+                                                                        label="Address">
+
+                                                                    </v-text-field>
+
+
+                                                                </v-col>
+
+                                                            </v-row>
+
+                                                            <v-row>
+                                                                <v-col>
+                                                                    <v-text-field v-model="customer_address"
+                                                                        label="apartamento, suite, casa, etc (opcional)">
+
+                                                                    </v-text-field>
+
+
+                                                                </v-col>
+
+                                                            </v-row>
+
+                                                            <v-row fluid>
+                                                                <v-col>
+                                                                    <v-text-field v-model="customer_city"
+                                                                        label="Cidade">
+
+                                                                    </v-text-field>
+
+
+                                                                </v-col>
+                                                                <v-col cols="auto">
+                                                                    <v-text-field v-model="customer_state"
+                                                                        label="estado">
+
+                                                                    </v-text-field>
+
+
+                                                                </v-col>
+                                                                <v-col>
+                                                                    <v-text-field v-model="customer_zipCode"
+                                                                        v-maska:[options] label="Zip Code">
+                                                                    </v-text-field>
+                                                                </v-col>
+                                                                <v-col col="auto">
+                                                                    <v-row no-gutters>
+                                                                        <v-col cols="auto">
+                                                                            <v-btn size="x-small" variant="text" color="warning"
+                                                                        @click="itemCart.cep = ''">Clear</v-btn>
+                                                                        </v-col>
+                                                                    </v-row>
+                                                                   <v-row no-gutters>
+                                                                    <v-col cols="auto">
+                                                                        <v-btn size="x-small" variant="text" color="blue"
+                                                                        @click="cepDialogOpen">Buscar Cep</v-btn>
+
+
+                                                                    </v-col>
+                                                                   </v-row>
+                                                                   
+                                                                </v-col>
+                                                            </v-row>
+                                                            <v-card-actions>
+                                                                <v-btn-group>
+                                                                    <v-btn type="text">Return</v-btn>
+                                                                    <v-btn @click="confirmNext()"
+                                                                        color="primary">Confirmar</v-btn>
+                                                                </v-btn-group>
+                                                            </v-card-actions>
+
+                                                        </v-form>
+
+                                                    </v-col>
+                                                    <v-col v-else>
+                                                        MAconha 1
+                                                    </v-col>
+                                                </v-row>
                                             </v-col>
+                                            <!-- <v-col>
+                                            <v-text-field v-model="zip_code" v-if="itemCart.cep" v-maska:[options]
+                                                label="postal code" :placeholder="itemCart.cep" :value="itemCart.cep">
+                                            </v-text-field>
+                                            <v-text-field v-model="zip_code" v-else v-maska:[options]
+                                                label="postal code" :placeholder="itemCart.cep">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col col="8" sm="4">
+
+                                            <v-btn size="x-small" variant="text" color="primary"
+                                                @click="calculateDelivery">calculate</v-btn>
+                                            <v-btn size="x-small" variant="text" color="warning"
+                                                @click="itemCart.cep = ''">Clear</v-btn>
+                                            <v-btn size="x-small" variant="text" color="blue"
+                                                @click="cepDialogOpen">Buscar Cep</v-btn>
+
+
+                                        </v-col> -->
                                         </v-row>
 
-                                        <v-row no-gutters>
-                                            <v-col cols="auto" no-gutters>
-                                               <strong>Product Name:</strong> {{ item.name }}
-                                            </v-col>
-                                            <v-col cols="auto" no-gutters>
-                                               <strong>Product Price:</strong>
-                                                    R${{ item.cart_item_price}}
-                                            </v-col>
-                                        </v-row>
-                                        <v-row no-gutters>
-                                            <strong>Quantity:</strong> {{ item.shippment_quantity }}
-                                        </v-row>
-                                        <v-row no-gutters>
-                                            <v-col cols="auto" v-for="(color, index) in item.cart_item_colors"
-                                                :key="index">
-                                                <v-avatar :bg-color="color" :color="color" :width="1" rounded="10">
-                                                    <template v-slot:append>
-                                                        <!-- {{ parsedQuantityColors[index] }} -->
-                                                        <!-- <span>Available</span> -->
-                                                    </template>
-                                                </v-avatar>
-                                            </v-col>
-                                        </v-row>
+                                    </v-card>
 
-                                        <v-row no-gutters>
-                                            <v-col cols="auto" v-for="(size, index) in item.cart_item_size"
-                                                :key="index">
-                                                <v-avatar color="grey" :width="75" rounded="10">
-                                                    {{ size }}
-                                                   
-                                                </v-avatar>
-                                            </v-col>
-                                        </v-row>
+                                    <!-- <v-row>
+                                        <v-col v-if="respSearchAddress.length >= 1">
+                                            <strong>endereco:</strong> {{ address.complemento }},
+                                            <strong>Bairro:</strong> {{ respSearchAddress[0].bairro }},
+                                            <strong>Logradouro:</strong> {{ respSearchAddress[0].logradouro
+                                            }},
+                                            <strong>CEP:</strong> {{ respSearchAddress[0].cep }} ,
+                                            <strong>Localidade:</strong> {{ respSearchAddress[0].localidade
+                                            }},
+                                            <strong>UF:</strong> {{ respSearchAddress[0].uf }}
+                                            <strong>DDD:</strong> {{ respSearchAddress[0].ddd }}
+                                        </v-col>
+                                    </v-row> -->
 
-                                        <v-row no-gutters>
-                                            <v-col>
-                                                <p>delivery company: </p>
-                                                {{ item.company }}
-                                                
-                                            </v-col>
 
-                                            <v-col>
-                                                <p>delivery price: </p>
-                                                R$ {{ item.shippment_price }}
-                                                
-                                            </v-col>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col>
-                                              <p>Total Delivery:</p>  {{item.delivery_price}}
-                                            </v-col>
-                                            <v-col>
-                                              <p>Total Price:</p>  {{item.total_price}}
-                                            </v-col>
-                                        </v-row>
-                                        
-                                                
-                                    </v-list-item>
-                                </v-list>
-                                <v-card-actions>
-                                    <v-btn-group>
-                                        <v-btn @click="confirmNext()">Confirmar</v-btn>
-                                    </v-btn-group>
-                                </v-card-actions>
-                            </v-card>
                                 </v-col>
 
                                 <v-col>
-                                    <v-row fluid>
-                                                    <v-col>
-                                                        <v-text-field v-model="zip_code" v-if="itemCart.cep"
-                                                            v-maska:[options] label="postal code"
-                                                            :placeholder="itemCart.cep" :value="itemCart.cep">
-                                                        </v-text-field>
-                                                        <v-text-field v-model="zip_code" v-else v-maska:[options]
-                                                            label="postal code" :placeholder="itemCart.cep">
-                                                        </v-text-field>
-                                                    </v-col>
-                                                    <v-col col="8" sm="4">
-
-                                                        <v-btn size="x-small" variant="text" color="primary"
-                                                            @click="calculateDelivery">calculate</v-btn>
-                                                        <v-btn size="x-small" variant="text" color="warning"
-                                                            @click="itemCart.cep = ''">Clear</v-btn>
-                                                        <v-btn size="x-small" variant="text" color="blue"
-                                                            @click="cepDialogOpen">Buscar Cep</v-btn>
-
-
-                                                    </v-col>
-                                                </v-row>
-                                                <v-row>
-                                                    <v-col v-if="respSearchAddress.length >= 1">
-                                                        <strong>endereco:</strong> {{ address.complemento }},
-                                                        <strong>Bairro:</strong> {{ respSearchAddress[0].bairro }},
-                                                        <strong>Logradouro:</strong> {{ respSearchAddress[0].logradouro
-                                                        }},
-                                                        <strong>CEP:</strong> {{ respSearchAddress[0].cep }} ,
-                                                        <strong>Localidade:</strong> {{ respSearchAddress[0].localidade
-                                                        }},
-                                                        <strong>UF:</strong> {{ respSearchAddress[0].uf }}
-                                                        <strong>DDD:</strong> {{ respSearchAddress[0].ddd }}
-                                                    </v-col>
-                                                </v-row>
+                                    <v-card class="d-flex justify-center flex-column" :width="500">
+                                        <v-list :lines="false" density="compact" nav>
+                                            <v-list-item v-for="(item, index) in parsedProduct" :key="index"
+                                                :value="item">
+                                                <template v-slot:append>
+                                                    <v-btn icon color="white">
+                                                        <v-icon icon="fas fa-trash"></v-icon>
+                                                    </v-btn>
+                                                </template>
 
                                                 <v-row>
-                                                    <v-col col="12" sm="12">
-                                                        <v-row>
-                                                            <v-col col="12" sm="12">
-                                                                <v-card class="mx-auto" :width="255">
-                                                                    <v-list lines="three">
-                                                                        <v-list-item v-for="quotation in quotations"
-                                                                            :key="quotation.id"
-                                                                            :v-if="!quotation.error">
+                                                    <v-col class="d-flex child-flex">
+                                                        <v-bagde color="grey" :content="item.shippment_quantity"
+                                                            :value="true" bordered>
+                                                            <v-img :width="4"
+                                                                :src="`/storage/products/${item.images[0]}`"
+                                                                :lazy-src="`/storage/products/${item.images[0]}`"
+                                                                aspect-ratio="16/9" cover>
+                                                                <template v-slot:placeholder>
+                                                                    <div
+                                                                        class="d-flex justify-center fill-height flex-column">
+                                                                        <v-progress-circular color="grey-lighten-4"
+                                                                            indeterminate></v-progress-circular>
+                                                                    </div>
+                                                                </template>
+                                                            </v-img>
+                                                        </v-bagde>
+                                                    </v-col>
+                                                    <v-col cols="auto" class="d-flex flex-child text-body-2">
+                                                        <strong>{{ item.name }}</strong>
+                                                    </v-col>
 
-                                                                            <template v-slot:prepend>
-
-                                                                                <v-avatar :width="120"
-                                                                                    color="transparent-lighten-1">
-                                                                                    <v-img
-                                                                                        :src="quotation.company.picture"
-                                                                                        :lazy-src="quotation.company.picture"
-                                                                                        :placeholder="quotation.company.name">
-                                                                                    </v-img>
-                                                                                </v-avatar>
-                                                                            </template>
-
-                                                                            <div>
-                                                                                <p class="text-body-2">
-                                                                                    Price:
-                                                                                    <strong>{{ quotation.currency }}
-                                                                                        {{ quotation.price }}</strong>
-                                                                                </p>
-                                                                                <!--<p class="text-body-2">
-                                                                                    Discount:
-                                                                                    <strong>{{quotation.discount}}</strong>
-                                                                                </p>
-                                                                             
-                                                                                 <p class="text-body-2" v-if="!quotation.error && itemCart.price">
-                                                                                    total Value
-                                                                                    <strong>
-                                                                                        {{ 
-                                                                                            (
-                                                                                                (parseFloat(selectedDelivery.price) || 0) + 
-                                                                                                (parseFloat(itemCart.price) || 0)).toFixed(2) 
-                                                                                        }}
-                                                                                    </strong>
-                                                                                </p> -->
-                                                                                <p class="text-body-2">
-                                                                                    Prazo de entrega:
-                                                                                    <strong>
-                                                                                        {{ quotation.delivery_time }}
-                                                                                        dias úteis
-                                                                                    </strong>
-                                                                                </p>
-                                                                            </div>
+                                                    <v-col cols="auto" class="d-flex flex-child text-body-2">
+                                                        <!-- <strong>Product Price:</strong> -->
+                                                        R$ {{ item.cart_item_price }}
+                                                    </v-col>
+                                                </v-row>
 
 
-                                                                            <template v-slot:append>
-                                                                                <v-radio-group
-                                                                                    v-model="selectedDelivery">
-                                                                                    <v-radio
-                                                                                        :value="quotation"></v-radio>
-                                                                                </v-radio-group>
+                                                <v-row no-gutters class="text-body-2 justify-end">
+                                                    <strong>Quantity:</strong> {{
+        item.shippment_quantity }}
+                                                </v-row>
+                                                <v-row no-gutters class="text-body-2 justify-end">
+
+                                                    <v-col cols="auto" v-for="(color, index) in item.cart_item_colors"
+                                                        :key="index">
+
+                                                        <v-avatar :bg-color="color" :color="color" :width="1"
+                                                            rounded="10">
+                                                            <template v-slot:append>
+                                                                <!-- {{ parsedQuantityColors[index] }} -->
+                                                                <!-- <span>Available</span> -->
+                                                            </template>
+                                                        </v-avatar>
+                                                    </v-col>
+
+                                                </v-row>
+                                                <v-row no-gutters class="text-body-2 justify-end">
+
+                                                    <v-col cols="auto" v-for="(size, index) in item.cart_item_size"
+                                                        :key="index">
+
+                                                        <v-avatar color="grey" :width="75" rounded="10">
+                                                            {{ size }}
+
+                                                        </v-avatar>
+                                                    </v-col>
+                                                </v-row>
 
 
-                                                                            </template>
-
-
-                                                                        </v-list-item>
-                                                                    </v-list>
-                                                                </v-card>
-
-                                                            </v-col>
-                                                        </v-row>
+                                                <v-row fluid class="text-body-2 justify-end">
+                                                    <v-col cols="auto">
+                                                        <p>shippment: {{ item.company }}</p>
 
 
                                                     </v-col>
+                                                    <v-col cols="auto">
+                                                        <p>R$ {{ item.shippment_price }}</p>
+
+
+                                                    </v-col>
+
                                                 </v-row>
+
+                                                <v-row fluid class="text-body-2 justify-end">
+                                                    <v-col cols="auto">
+                                                        <p>Total Delivery: R$ {{ item.delivery_price }}</p>
+                                                    </v-col>
+                                                    <v-col cols="auto">
+                                                        <p>Total Price: R$ {{ item.total_price }}</p>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-divider></v-divider>
+                                                <v-spacer></v-spacer>
+                                            </v-list-item>
+
+                                        </v-list>
+
+
+                                    </v-card>
+
+                                    <v-divider></v-divider>
+                                    <v-spacer></v-spacer>
+                                    <v-row>
+                                        <v-col>
+                                            <v-input label="Discount coupon">
+                                                <template v-slot:append>
+                                                    <v-btn @click="applyCoupon" color="grey">Apply</v-btn>
+                                                </template>
+                                                <v-text-field v-model="coupon" hide-details
+                                                    label="Gift Card or offer code"></v-text-field>
+                                            </v-input>
+                                        </v-col>
+                                    </v-row>
+
+                                    <v-spacer></v-spacer>
+                                    <v-divider></v-divider>
+
+                                    <p class="text-start text-body-2">Subtotal: R$</p>
+                                    <p class="text-start text-body-2">Shipping: R$</p>
+
+                                    <v-spacer></v-spacer>
+                                    <v-divider></v-divider>
+                                    <p class="text-start text-body-1"><strong>Total:</strong> R$</p>
                                 </v-col>
                             </v-row>
-                            
-                            
+
+
                         </template>
                     </v-timeline-item>
                 </v-timeline>
@@ -791,6 +901,11 @@ export default {
         bairro: null,
         complemento: null,
         carts: [],
+        email: '',
+        emailRules: [
+            v => !!v || 'O email é obrigatório',
+            v => /.+@.+\..+/.test(v) || 'Email inválido',
+        ],
     }),
     computed: {
         parsedProduct() {
@@ -949,7 +1064,6 @@ export default {
             this.dataConfirm = true;
             this.finish = false;
         }
-
     },
     created() {
         this.getProducts();
