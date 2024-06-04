@@ -8,13 +8,12 @@
                 <v-row justify="center" no-gutters>
                     <v-col class="d-flex flex-column" cols="auto">
                         <!-- CartItems: {{ carts }} -->
-                        <v-timeline direction="horizontal" side="center" line-inset="12">
-                            <v-timeline-item v-model="confirm" v-if="confirm" dot-color="blue-darken-2"
-                                icon="fas fa-home" fill-dot size="small">
+                        <v-timeline direction="horizontal" line-inset="12">
+                            <v-timeline-item dot-color="blue-darken-2" icon="fas fa-home" fill-dot size="x-small">
                                 <template v-slot:opposite>
                                     <v-row no-gutters>
                                         <v-col cols="auto">
-                                            <v-card :width="600">
+                                            <v-card v-model="confirm" v-if="confirm" class="mx-auto" :width="600">
                                                 <v-card-text>
                                                     <v-row fluid>
                                                         <v-col>
@@ -89,7 +88,7 @@
                                                                         </v-row>
                                                                         <v-row>
                                                                             <v-col>
-                                                                                <v-text-field 
+                                                                                <v-text-field
                                                                                     v-model="shippment_address"
                                                                                     label="Address">
 
@@ -102,7 +101,8 @@
 
                                                                         <v-row>
                                                                             <v-col>
-                                                                                <v-text-field v-model="shippment_complement"
+                                                                                <v-text-field
+                                                                                    v-model="shippment_complement"
                                                                                     label="Complemento (opcional)">
 
                                                                                 </v-text-field>
@@ -119,13 +119,12 @@
                                                                             </v-col>
                                                                             <v-col cols="auto">
 
-                                                                                <v-select
-                                                                                    v-model="select_uf"
-                                                                                    :items="ufs" 
+                                                                                <v-select v-model="select_uf"
+                                                                                    :items="ufs"
                                                                                     :hint="`${select_uf.state}, ${select_uf.uf}`"
-                                                                                    item-title="uf"
-                                                                                    item.value="state" placeholder="UF"
-                                                                                    return-object single-line
+                                                                                    item-title="uf" item.value="state"
+                                                                                    placeholder="UF" return-object
+                                                                                    single-line
                                                                                     :placeholder="customerAddress.uf">
 
                                                                                 </v-select>
@@ -179,12 +178,123 @@
 
                                                                 </v-col>
                                                                 <v-col v-else>
-                                                                    MAconha 1
+                                                                    teste 1
                                                                 </v-col>
                                                             </v-row>
                                                         </v-col>
                                                     </v-row>
                                                 </v-card-text>
+                                            </v-card>
+
+                                            <v-card  v-model="dataConfirm" v-if="dataConfirm"
+                                                class="d-flex mx-auto flex-column" :width="600">
+                                                <v-card-text>
+                                                    <v-row fluid>
+                                                        <v-col class="d-flex child-flex" cols="6">
+                                                            <div>
+                                                                <v-img :src="`/storage/products/${productImages}`"
+                                                                    :lazy-src="`/storage/products/${productImages}`"
+                                                                    aspect-ratio="16/9" :width="200" cover>
+
+
+                                                                    <template>
+                                                                        <div
+                                                                            class="d-flex align-center justify-center fill-height">
+                                                                            <v-progress-circular color="grey-lighten-4">
+                                                                            </v-progress-circular>
+                                                                        </div>
+                                                                    </template>
+
+                                                                </v-img>
+                                                            </div>
+
+                                                        </v-col>
+                                                        <v-col cols="auto">
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-body-1">
+                                                                    <strong>Customer name:</strong>
+                                                                    {{ customer.first_name }}  {{ customer.last_name }}
+                                                                </v-col>
+                                                            </v-row>
+                                                            <v-spacer></v-spacer>
+                                                            <v-divider></v-divider>
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-overline">
+                                                                    <strong>CPF:</strong>
+                                                                    {{ 'not found' }}
+                                                                </v-col>
+                                                            </v-row>
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-body-2">
+                                                                    <strong>Celular:</strong>
+                                                                    {{ 'not found' }}
+                                                                </v-col>
+                                                            </v-row>
+                                                            
+                                                            <v-spacer></v-spacer>
+                                                            <v-divider></v-divider>
+                                                            
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-body-2">
+                                                                    <strong>Endereço:</strong> 
+                                                                    {{ address.endereco ? 'not register'  : shippment_address}}
+                                                                </v-col>
+                                                            </v-row>
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-body-2">
+                                                                    <strong>Complemento:</strong> 
+                                                                    {{ address.complemento ?  'not register' : shippment_complement  }}
+                                                                </v-col>
+                                                            </v-row>
+                                                                
+                                                            <v-row no-gutters>
+                                                                <v-col>
+                                                                    <strong>Cidade:</strong> {{ address.cidade ? 'not register' : shippment_city}}
+                                                                </v-col>
+                                                            </v-row>
+                            
+
+                                                            <div>
+                                                                <p class="text-subtitle-2">
+                                                                    <strong>Zip Code</strong> {{ address.cep ? 'not register' : zip_code }}
+                                                                </p>
+                                                                <p class="text-subtitle-2">
+                                                                    <strong>UF:</strong> {{ address.UF ? 'not register' : select_uf.uf }}
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <!-- <p class="text-subtitle-2">
+                                                                    <strong>Delivery: </strong>
+                                                                    {{ selectedDelivery.currency }} {{
+                selectedDelivery.price }}
+
+                                                                </p> -->
+
+                                                            </div>
+
+                                                            <!-- <div>
+                                                                <p>
+                                                                    <strong>Total Value</strong>
+                                                                    {{ selectedDelivery.currency }}
+                                                                    {{ (parseFloat(selectedDelivery.price) +
+                parseFloat(itemCart.price)).toFixed(2)
+                                                                    }}
+                                                                </p>
+
+                                                            </div> -->
+
+                                                        </v-col>
+                                                    </v-row>
+
+                                                </v-card-text>
+
+                                                <v-card-actions>
+                                                    <v-btn-group>
+                                                        <v-btn @click="returnConfirm()">voltar</v-btn>
+                                                        <v-btn @click="confirmDatas()">Confirmar</v-btn>
+
+                                                    </v-btn-group>
+                                                </v-card-actions>
                                             </v-card>
                                         </v-col>
 
@@ -346,14 +456,17 @@
 
                                         </v-col>
                                     </v-row>
+
                                 </template>
                             </v-timeline-item>
 
-                            <v-timeline-item v-model="dataConfirm" v-if="dataConfirm" dot-color="blue-darken-2"
+                            <!-- <v-timeline-item v-model="dataConfirm" v-if="dataConfirm" dot-color="blue-darken-2"
                                 icon="fas fa-check" fill-dot size="small">
                                 <template v-slot:opposite>
-                                    <v-card  class="d-flex align-center flex-column"
-                                       :width="500">
+                                    
+                                </template>
+
+                                <v-card v-model="dataConfirm" v-if="dataConfirm" class="d-flex justify-start flex-column" :width="500">
                                         <v-card-text>
                                             <v-row>
                                                 <v-col class="d-flex child-flex" cols="6">
@@ -471,8 +584,7 @@
                                             </v-btn-group>
                                         </v-card-actions>
                                     </v-card>
-                                </template>
-                            </v-timeline-item>
+                            </v-timeline-item> -->
                         </v-timeline>
 
                         <div>
