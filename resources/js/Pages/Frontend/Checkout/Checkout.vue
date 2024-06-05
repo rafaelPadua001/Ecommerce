@@ -186,15 +186,18 @@
                                                 </v-card-text>
                                             </v-card>
 
-                                            <v-card  v-model="dataConfirm" v-if="dataConfirm"
+                                            <v-card v-model="dataConfirm" v-if="dataConfirm && !confirm"
                                                 class="d-flex mx-auto flex-column" :width="600">
                                                 <v-card-text>
                                                     <v-row fluid>
-                                                        <v-col class="d-flex child-flex" cols="6">
-                                                            <div>
-                                                                <v-img :src="`/storage/products/${productImages}`"
-                                                                    :lazy-src="`/storage/products/${productImages}`"
-                                                                    aspect-ratio="16/9" :width="200" cover>
+                                                        <div class="container-relative">
+                                                            <v-col v-for="(item, index) in parsedProduct" :key="index"
+                                                                class="avatar-stack" cols="auto"
+                                                                :style="{ 'z-index': parsedProduct.length - index }">
+                                                                <v-avatar :image="`/storage/products/${item.images[0]}`"
+                                                                    :lazy-src="`/storage/products/${item.images[0]}`"
+                                                                    aspect-ratio="16/9" :width="200" cover
+                                                                    alt="Image Here" color="grey-lighten-2" no-gutters>
 
 
                                                                     <template>
@@ -204,16 +207,20 @@
                                                                             </v-progress-circular>
                                                                         </div>
                                                                     </template>
+                                                                    <!-- {{ item.images[0] }} -->
+                                                                </v-avatar>
 
-                                                                </v-img>
-                                                            </div>
 
-                                                        </v-col>
-                                                        <v-col cols="auto">
+                                                            </v-col>
+                                                        </div>
+                                                   
+                                                    
+                                                        <div class="container-absolute">
+                                                            <v-col cols="auto">
                                                             <v-row no-gutters>
                                                                 <v-col class="text-body-1">
                                                                     <strong>Customer name:</strong>
-                                                                    {{ customer.first_name }}  {{ customer.last_name }}
+                                                                    {{ customer.first_name }} {{ customer.last_name }}
                                                                 </v-col>
                                                             </v-row>
                                                             <v-spacer></v-spacer>
@@ -230,36 +237,39 @@
                                                                     {{ 'not found' }}
                                                                 </v-col>
                                                             </v-row>
-                                                            
+
                                                             <v-spacer></v-spacer>
                                                             <v-divider></v-divider>
-                                                            
+
                                                             <v-row no-gutters>
                                                                 <v-col class="text-body-2">
-                                                                    <strong>Endereço:</strong> 
-                                                                    {{ address.endereco ? 'not register'  : shippment_address}}
+                                                                    <strong>Endereço:</strong>
+                                                                    {{ address.endereco ? 'not register' :
+                shippment_address }}
                                                                 </v-col>
                                                             </v-row>
                                                             <v-row no-gutters>
                                                                 <v-col class="text-body-2">
-                                                                    <strong>Complemento:</strong> 
-                                                                    {{ address.complemento ?  'not register' : shippment_complement  }}
+                                                                    <strong>Complemento:</strong>
+                                                                    {{ address.complemento ? 'not register' :
+                shippment_complement }}
                                                                 </v-col>
                                                             </v-row>
-                                                                
+
                                                             <v-row no-gutters>
                                                                 <v-col>
                                                                     <strong>Cidade:</strong> {{ address.cidade ? 'not register' : shippment_city}}
                                                                 </v-col>
                                                             </v-row>
-                            
+
 
                                                             <div>
                                                                 <p class="text-subtitle-2">
                                                                     <strong>Zip Code</strong> {{ address.cep ? 'not register' : zip_code }}
                                                                 </p>
                                                                 <p class="text-subtitle-2">
-                                                                    <strong>UF:</strong> {{ address.UF ? 'not register' : select_uf.uf }}
+                                                                    <strong>UF:</strong> {{ address.UF ? 'not register'
+                : select_uf.uf }}
                                                                 </p>
                                                             </div>
                                                             <div>
@@ -284,6 +294,8 @@
                                                             </div> -->
 
                                                         </v-col>
+                                                        </div>
+                                                        
                                                     </v-row>
 
                                                 </v-card-text>
@@ -1425,3 +1437,23 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.avatar-stack {
+    position: absolute;
+    transition: transform 0.3s ease;
+}
+
+.avatar-stack:hover {
+    transform: translateY(-10px);
+}
+
+.container-relative {
+    position: relative;
+    height: 10px;
+}
+.container-absolute {
+    position: relative;
+    margin-left: 50%;
+}
+</style>
