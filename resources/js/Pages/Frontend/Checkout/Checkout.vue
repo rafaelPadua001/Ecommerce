@@ -186,131 +186,10 @@
                                                 </v-card-text>
                                             </v-card>
 
-                                            <v-card v-model="dataConfirm" v-if="dataConfirm && !confirm"
-                                                class="d-flex mx-auto flex-column" :width="600">
-                                                <v-card-text>
-                                                    <v-row fluid>
-                                                        <div class="container-relative">
-                                                            <v-col v-for="(item, index) in parsedProduct" :key="index"
-                                                                class="avatar-stack" cols="auto"
-                                                                :style="{ 'z-index': parsedProduct.length - index }">
-                                                                <v-avatar :image="`/storage/products/${item.images[0]}`"
-                                                                    :lazy-src="`/storage/products/${item.images[0]}`"
-                                                                    aspect-ratio="16/9" :width="200" cover
-                                                                    alt="Image Here" color="grey-lighten-2" no-gutters>
-
-
-                                                                    <template>
-                                                                        <div
-                                                                            class="d-flex align-center justify-center fill-height">
-                                                                            <v-progress-circular color="grey-lighten-4">
-                                                                            </v-progress-circular>
-                                                                        </div>
-                                                                    </template>
-                                                                    <!-- {{ item.images[0] }} -->
-                                                                </v-avatar>
-
-
-                                                            </v-col>
-                                                        </div>
-                                                   
-                                                    
-                                                        <div class="container-absolute">
-                                                            <v-col cols="auto">
-                                                            <v-row no-gutters>
-                                                                <v-col class="text-body-1">
-                                                                    <strong>Customer name:</strong>
-                                                                    {{ customer.first_name }} {{ customer.last_name }}
-                                                                </v-col>
-                                                            </v-row>
-                                                            <v-spacer></v-spacer>
-                                                            <v-divider></v-divider>
-                                                            <v-row no-gutters>
-                                                                <v-col class="text-overline">
-                                                                    <strong>CPF:</strong>
-                                                                    {{ 'not found' }}
-                                                                </v-col>
-                                                            </v-row>
-                                                            <v-row no-gutters>
-                                                                <v-col class="text-body-2">
-                                                                    <strong>Celular:</strong>
-                                                                    {{ 'not found' }}
-                                                                </v-col>
-                                                            </v-row>
-
-                                                            <v-spacer></v-spacer>
-                                                            <v-divider></v-divider>
-
-                                                            <v-row no-gutters>
-                                                                <v-col class="text-body-2">
-                                                                    <strong>Endereço:</strong>
-                                                                    {{ address.endereco ? 'not register' :
-                shippment_address }}
-                                                                </v-col>
-                                                            </v-row>
-                                                            <v-row no-gutters>
-                                                                <v-col class="text-body-2">
-                                                                    <strong>Complemento:</strong>
-                                                                    {{ address.complemento ? 'not register' :
-                shippment_complement }}
-                                                                </v-col>
-                                                            </v-row>
-
-                                                            <v-row no-gutters>
-                                                                <v-col>
-                                                                    <strong>Cidade:</strong> {{ address.cidade ? 'not register' : shippment_city}}
-                                                                </v-col>
-                                                            </v-row>
-
-
-                                                            <div>
-                                                                <p class="text-subtitle-2">
-                                                                    <strong>Zip Code</strong> {{ address.cep ? 'not register' : zip_code }}
-                                                                </p>
-                                                                <p class="text-subtitle-2">
-                                                                    <strong>UF:</strong> {{ address.UF ? 'not register'
-                : select_uf.uf }}
-                                                                </p>
-                                                            </div>
-                                                            <div>
-                                                                <!-- <p class="text-subtitle-2">
-                                                                    <strong>Delivery: </strong>
-                                                                    {{ selectedDelivery.currency }} {{
-                selectedDelivery.price }}
-
-                                                                </p> -->
-
-                                                            </div>
-
-                                                            <!-- <div>
-                                                                <p>
-                                                                    <strong>Total Value</strong>
-                                                                    {{ selectedDelivery.currency }}
-                                                                    {{ (parseFloat(selectedDelivery.price) +
-                parseFloat(itemCart.price)).toFixed(2)
-                                                                    }}
-                                                                </p>
-
-                                                            </div> -->
-
-                                                        </v-col>
-                                                        </div>
-                                                        
-                                                    </v-row>
-
-                                                </v-card-text>
-
-                                                <v-card-actions>
-                                                    <v-btn-group>
-                                                        <v-btn @click="returnConfirm()">voltar</v-btn>
-                                                        <v-btn @click="confirmDatas()">Confirmar</v-btn>
-
-                                                    </v-btn-group>
-                                                </v-card-actions>
-                                            </v-card>
+                                            
                                         </v-col>
 
-                                        <v-col>
+                                        <v-col v-if="confirm">
                                             <v-card class="d-flex justify-center flex-column" :width="500">
 
                                                 <v-list :lines="false" density="compact" nav>
@@ -472,131 +351,142 @@
                                 </template>
                             </v-timeline-item>
 
-                            <!-- <v-timeline-item v-model="dataConfirm" v-if="dataConfirm" dot-color="blue-darken-2"
-                                icon="fas fa-check" fill-dot size="small">
+                            <v-timeline-item v-model="dataConfirm" v-if="dataConfirm && !confirm" dot-color="blue-darken-2"
+                                icon="fas fa-check" fill-dot size="small" class="justify-start">
                                 <template v-slot:opposite>
                                     
                                 </template>
 
-                                <v-card v-model="dataConfirm" v-if="dataConfirm" class="d-flex justify-start flex-column" :width="500">
-                                        <v-card-text>
-                                            <v-row>
-                                                <v-col class="d-flex child-flex" cols="6">
-                                                    <div>
-                                                        <v-img :src="`/storage/products/${productImages}`"
-                                                            :lazy-src="`/storage/products/${productImages}`"
-                                                            aspect-ratio="16/9" :width="200" cover>
+                                <v-card v-model="dataConfirm" v-if="dataConfirm && !confirm"
+                                                class="d-flex mx-auto flex-column" :width="600">
+                                                <v-card-text>
+                                                    <v-row fluid>
+                                                        <div class="container-relative">
+                                                            <v-col v-for="(item, index) in parsedProduct" :key="index"
+                                                                class="avatar-stack" cols="auto"
+                                                                :style="{ 'z-index': parsedProduct.length - index, 'left': `${index * 10}px` }" 
+                                                            >
+                                                                <v-badge
+                                                                    color="red"
+                                                                    :content="item.shippment_quantity"
+                                                                >
+                                                                    <v-avatar :image="`/storage/products/${item.images[0]}`"
+                                                                    :lazy-src="`/storage/products/${item.images[0]}`"
+                                                                    aspect-ratio="16/9" :width="200" cover
+                                                                    alt="Image Here" color="grey-lighten-2" no-gutters>
 
 
-                                                            <template>
-                                                                <div
-                                                                    class="d-flex align-center justify-center fill-height">
-                                                                    <v-progress-circular color="grey-lighten-4">
-                                                                    </v-progress-circular>
-                                                                </div>
-                                                            </template>
+                                                                    <template>
+                                                                        <div
+                                                                            class="d-flex align-center justify-center fill-height">
+                                                                            <v-progress-circular color="grey-lighten-4">
+                                                                            </v-progress-circular>
+                                                                        </div>
+                                                                    </template>
+                                                                    <!-- {{ item.images[0] }} -->
+                                                                </v-avatar>
 
-                                                        </v-img>
-                                                    </div>
+                                                                </v-badge>
+                                                                
 
-                                                </v-col>
-                                                <v-col col="12" md="4">
+                                                            </v-col>
+                                                        </div>
+                                                   
+                                                    
+                                                        <div class="container-absolute">
+                                                            <v-col cols="auto">
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-body-1">
+                                                                    <strong>Customer name:</strong>
+                                                                    {{ customer.first_name }} {{ customer.last_name }}
+                                                                </v-col>
+                                                            </v-row>
+                                                            <v-spacer></v-spacer>
+                                                            <v-divider></v-divider>
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-overline">
+                                                                    <strong>CPF:</strong>
+                                                                    {{ 'not found' }}
+                                                                </v-col>
+                                                            </v-row>
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-body-2">
+                                                                    <strong>Celular:</strong>
+                                                                    {{ 'not found' }}
+                                                                </v-col>
+                                                            </v-row>
 
-                                                    <div>
+                                                            <v-spacer></v-spacer>
+                                                            <v-divider></v-divider>
 
-                                                        <p class="text-subititle-1">
-                                                            <strong>Customer name:</strong>
-                                                            {{ customer.first_name }}
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-body-2">
+                                                                    <strong>Endereço:</strong>
+                                                                    {{ address.endereco ? 'not register' :
+                shippment_address }}
+                                                                </v-col>
+                                                            </v-row>
+                                                            <v-row no-gutters>
+                                                                <v-col class="text-body-2">
+                                                                    <strong>Complemento:</strong>
+                                                                    {{ address.complemento ? 'not register' :
+                shippment_complement }}
+                                                                </v-col>
+                                                            </v-row>
+
+                                                            <v-row no-gutters>
+                                                                <v-col>
+                                                                    <strong>Cidade:</strong> {{ address.cidade ? 'not register' : shippment_city}}
+                                                                </v-col>
+                                                            </v-row>
 
 
-                                                        </p>
+                                                            <div>
+                                                                <p class="text-subtitle-2">
+                                                                    <strong>Zip Code</strong> {{ address.cep ? 'not register' : zip_code }}
+                                                                </p>
+                                                                <p class="text-subtitle-2">
+                                                                    <strong>UF:</strong> {{ address.UF ? 'not register'
+                : select_uf.uf }}
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <!-- <p class="text-subtitle-2">
+                                                                    <strong>Delivery: </strong>
+                                                                    {{ selectedDelivery.currency }} {{
+                selectedDelivery.price }}
 
-                                                    </div>
-                                                    <div>
+                                                                </p> -->
 
-                                                        <p class="text-subititle-1">
-                                                            <strong>Customer lastname:</strong>
-                                                            {{ customer.last_name }}
+                                                            </div>
 
-                                                        </p>
-
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>CPF:</strong>
-
-                                                        </p>
-
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>Contact:</strong>
-                                                            {{ address.telefone }}
-                                                        </p>
-
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-subtitle-2"><strong>Celular:</strong> </p>
-
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>Endereço:</strong> {{ address.endereco }}
-                                                        </p>
-                                                        <p class="text-subtitle-2">
-
-                                                            <strong>Complemento:</strong> {{ address.complemento }}
-                                                        </p>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>Bairro:</strong> {{ address.bairro }}
-                                                        </p>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>Cidade:</strong> {{ address.cidade }}
-                                                        </p>
-                                                    </div>
-
-                                                    <div>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>Zip Code</strong> {{ address.cep }}
-                                                        </p>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>UF:</strong> {{ address.UF }}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>Delivery: </strong>
-                                                            {{ selectedDelivery.currency }} {{ selectedDelivery.price }}
-
-                                                        </p>
-
-                                                    </div>
-
-                                                    <div>
-                                                        <p>
-                                                            <strong>Total Value</strong>
-                                                            {{ selectedDelivery.currency }}
-                                                            {{ (parseFloat(selectedDelivery.price) +
+                                                            <!-- <div>
+                                                                <p>
+                                                                    <strong>Total Value</strong>
+                                                                    {{ selectedDelivery.currency }}
+                                                                    {{ (parseFloat(selectedDelivery.price) +
                 parseFloat(itemCart.price)).toFixed(2)
-                                                            }}
-                                                        </p>
+                                                                    }}
+                                                                </p>
 
-                                                    </div>
+                                                            </div> -->
 
-                                                </v-col>
-                                            </v-row>
+                                                        </v-col>
+                                                        </div>
+                                                        
+                                                    </v-row>
 
-                                        </v-card-text>
+                                                </v-card-text>
 
-                                        <v-card-actions>
-                                            <v-btn-group>
-                                                <v-btn @click="returnConfirm()">voltar</v-btn>
-                                                <v-btn @click="confirmDatas()">Confirmar</v-btn>
+                                                <v-card-actions>
+                                                    <v-btn-group>
+                                                        <v-btn @click="returnConfirm()">voltar</v-btn>
+                                                        <v-btn @click="confirmDatas()">Confirmar</v-btn>
 
-                                            </v-btn-group>
-                                        </v-card-actions>
-                                    </v-card>
-                            </v-timeline-item> -->
+                                                    </v-btn-group>
+                                                </v-card-actions>
+                                            </v-card>
+                            </v-timeline-item>
                         </v-timeline>
 
                         <div>
@@ -1441,7 +1331,7 @@ export default {
 <style scoped>
 .avatar-stack {
     position: absolute;
-    transition: transform 0.3s ease;
+    transition: transform 1s ease;
 }
 
 .avatar-stack:hover {
@@ -1450,7 +1340,7 @@ export default {
 
 .container-relative {
     position: relative;
-    height: 10px;
+    height: 100%; 
 }
 .container-absolute {
     position: relative;
