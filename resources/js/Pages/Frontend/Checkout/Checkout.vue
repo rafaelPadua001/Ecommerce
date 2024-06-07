@@ -529,27 +529,31 @@
 
                                                                 
                                                             </v-row>
-                                                            <v-row>
-                                                                <v-col cols="auto">
-                                                                    
-                                                                    <p class="text-subtitle-2">
-                                                                        <strong>Total Value</strong>
-                                                                        {{ selectedDelivery.currency }}
-                                                                        {{ (parseFloat(selectedDelivery.price) +
-                                                                        parseFloat(itemCart.price)).toFixed(2) }}
-                                                                    </p>
-                                                                </v-col>
-                                                                <v-col>
-                                                                    <div class="text-subtitle-2">
-                                                                        <strong>Cupom</strong> 
-                                                                    </div>
-                                                                </v-col>
-                                                            </v-row>
+                                                            
                                                         </div>
                                                     </v-col>
 
                                                   
                                                 </v-row>
+
+                                                <v-row>
+                                                                <v-col cols="auto">
+                                                                    
+                                                                    <p class="text-subtitle-2">
+                                                                        <strong>Total Value</strong>
+                                                                        {{ formatedFinalValue }}
+                                                                        <!-- {{ selectedDelivery.currency }}
+                                                                        {{ (parseFloat(selectedDelivery.price) +
+                                                                        parseFloat(itemCart.price)).toFixed(2) }} -->
+                                                                    </p>
+                                                                </v-col>
+                                                                <v-col>
+                                                                    <div class="text-subtitle-2">
+                                                                        <strong>Cupom:</strong> 
+                                                                        none
+                                                                    </div>
+                                                                </v-col>
+                                                            </v-row>
                                                 
                                                 <v-row>
                                                     <v-col cols="8" sm="6">
@@ -575,16 +579,8 @@
                                                                     <v-col>
                                                                         <div v-if="paymentType == 'debit'">
                                                                             <v-card>
-                                                                                <DebitForm :paymentType="paymentType"
-                                                                                    :id="this.itemCart.id"
-                                                                                    :name="this.itemCart.name"
-                                                                                    :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
-                                                                                    :quantity="this.itemCart.quantity"
-                                                                                    :delivery="selectedDelivery"
-                                                                                    :description="this.itemCart.description"
-                                                                                    :image="this.itemCart.images"
-                                                                                    :color="this.itemCart.color"
-                                                                                    :address="this.address" />
+                                                                                 <DebitForm :paymentType="paymentType"
+                                                                                    :carts="carts" />
                                                                             </v-card>
                                                                         </div>
                                                                         <div v-if="paymentType == 'credit'">
