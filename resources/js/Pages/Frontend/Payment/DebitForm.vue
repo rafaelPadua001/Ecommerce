@@ -3,10 +3,9 @@
         <v-sheet class="px-2 py-2">
             <v-row fluid justify="center">
                 <v-col>
-                        {{ sumQuantity }}
-                        {{ finalValue }}
-                        {{ formatedFinalValue.slice(2) }}
-                     {{carts}}
+                        
+                        <!-- {{ formatedFinalValue.slice(3).replace(/[.,]/g, '') }} -->
+                     <!-- {{ carts }} -->
                     <v-form>
             <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
            <v-text-field
@@ -187,20 +186,23 @@ export default {
                 expiryDate: this.expiryDate,
                 cvv: this.cvv,
                 cardBrand: this.cardBrand,
-                totalValue: this.formatedFinalValue.slice(3),
-                delivery: this.delivery,
-                payment: this.paymentSelected,
-                description: this.description,
-                name: this.name,
-                quantity: this.sumQuantity,
-                image: this.image,
-                color: this.color,
-                product_id: this.product_id,
-                address: this.address,
-                coupon_id: this.coupon_id,
-                cartItem_id: this.item_id,
-                cart_id: this.cart_id,
+                totalValue: this.formatedFinalValue.slice(3).replace(/[.,]/g, ''),
+                cartItem: this.carts,
+                // delivery: this.delivery,
+                // payment: this.paymentSelected,
+                // description: this.description,
+                // name: this.name,
+                // quantity: this.sumQuantity,
+                // image: this.image,
+                // color: this.color,
+                // product_id: this.product_id,
+                // address: this.address,
+                // coupon_id: this.coupon_id,
+                // cartItem_id: this.item_id,
+                // cart_id: this.cart_id,
             };
+
+            
             axios.post('/payment', data)
                 .then((response) => {
                     if(response.data.original.error){
