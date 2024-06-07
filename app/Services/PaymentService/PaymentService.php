@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\PaymentService;
 
 use Exception;
@@ -18,7 +19,8 @@ use App\Services\StockService\StockService;
 use App\Services\ShippmentService\ShippmentService;
 use App\Services\OrderService\OrderService;
 
-class PaymentService {
+class PaymentService
+{
     protected $payment;
     protected $carItemService;
     protected $couponCustomerService;
@@ -32,7 +34,7 @@ class PaymentService {
         StockService $stockService,
         ShippmentService $shippmentService,
         OrderService $orderService
-    ){
+    ) {
         $this->payment = $payment;
         $this->carItemService = $cartItemService;
         $this->couponCustomerService = $couponCustomerService;
@@ -40,7 +42,8 @@ class PaymentService {
         $this->shippmentService = $shippmentService;
         $this->orderService = $orderService;
     }
-    public function paymentType(Request $request){
+    public function paymentType(Request $request)
+    {
         $paymentType = $request->paymentType;
         if ($paymentType == 'credit') {
             return $this->creditPayment($request);
@@ -51,98 +54,171 @@ class PaymentService {
             // throw new Exception('Ainda não criamos isso !');
         }
     }
+    public function getApiClient()
+    {
+        $api_client = new Client([
+            'base_uri' => 'https://apisandbox.cieloecommerce.cielo.com.br',
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'MerchantId' => env('CIELO_MERCHANT_ID'),
+                'MerchantKey' => env('CIELO_MERCHANT_KEY'),
+            ]
+        ]);
+
+        return $api_client;
+    }
+    public function getCustomer()
+    {
+        $customer = Auth::guard('customer')->user();
+        return $customer;
+    }
     public function debitPayment(Request $request)
     {
-       $customer = Auth::guard('customer')->user();
-        
         try {
-            $client = new Client([
-                'base_uri' => 'https://apisandbox.cieloecommerce.cielo.com.br',
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'MerchantId' => env('CIELO_MERCHANT_ID'),
-                    'MerchantKey' => env('CIELO_MERCHANT_KEY'),
-                ]
-            ]);
+            $customer = $this->getCustomer();
+            $client = $this->getApiClient();
 
-            //Monta a requisição
-            $req = [
-                'MerchantOrderId' => uniqid(),
-                'Customer' => [
-                    'Name' => $customer->first_name . ' ' . $customer->last_name,
-                    'Email' => $customer->email,
-                ],
-                'Payment' => [
-                    'Type' => 'DebitCard',
-                    'Amount' => $request->totalValue * 100,
-                    'Installments' => 1,
-                    'SoftDescription' => $request->name,
-                    'ReturnUrl' => 'http://localhost:8000', 
-                    'DebitCard' => [
-                        'CardNumber' => $request->cardNumber,
-                        'Holder' => $request->cardHolder,
-                        'ExpirationDate' => $request->expiryDate,
-                        'SecurityCode' => $request->cvv,
-                        'Brand' => $request->brand
+            $cartItems = $request->input('cartItem');
+            if (is_array($cartItems)) {
+                foreach ($cartItems as $item) {
+                    // dd($item['name'], $request->name);
+                    $cartId = $item['cart_id'];
+                    $cartItemId = $item['cart_item_id'];
+                    $cartItemColors = $item['cart_item_colors'];
+                    $cartItemSize = $item['cart_item_size'];
+                    $cartItemPrice = $item['cart_item_price'];
+                    $cartItemStatus = $item['cart_item_status'];
+                    $totalPrice = $item['total_price'];
+                    $deliveryPrice = $item['delivery_price'];
+                    $shippmentName = $item['shippment_name'];
+                    $company = $item['company'];
+                    $shippmentPrice = $item['shippment_price'];
+                    $shippmentQuantity = $item['shippment_quantity'];
+                    $name = $item['name'];
+                    $productDescription = $item['product_description'];
+                    $productPrice = $item['product_price'];
+                    $images = $item['images'];
+
+                    
+                    // Faz algo com os dados do item, por exemplo, debug
+                    //dd($cartId, $cartItemId, $cartItemColors, $cartItemSize, $cartItemPrice, $cartItemStatus, $totalPrice, $deliveryPrice, $shippmentName, $company, $shippmentPrice, $shippmentQuantity, $name, $productDescription, $productPrice, $images);
+                }
+                $req = [
+                    'MerchantOrderId' => uniqid(),
+                    'Customer' => [
+                        'Name' => $customer->first_name . ' ' . $customer->last_name,
+                        'Email' => $customer->email,
                     ],
-                ],
+                    'Payment' => [
+                        'Type' => 'DebitCard',
+                        'Amount' => $request->totalValue * 100,
+                        'Installments' => 1,
+                        'SoftDescription' => $item['product_description'],
+                        'ReturnUrl' => 'http://localhost:8000',
+                        'DebitCard' => [
+                            'CardNumber' => $request->cardNumber,
+                            'Holder' => $request->cardHolder,
+                            'ExpirationDate' => $request->expiryDate,
+                            'SecurityCode' => $request->cvv,
+                            'Brand' => $request->brand
+                        ],
+                    ],
 
-            ];
-            try {
-                $response = $client->request('POST', '/1/sales', [
-                    'json' => $req
-                ]);
-                
-               
-                $responseData = json_decode($response->getBody()->getContents(), true);
-               
-                return $this->createDebitPayment($responseData, $request);
-               
-            } catch (Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
+                ];
+                try {
+                    $response = $client->request('POST', '/1/sales', [
+                        'json' => $req
+                    ]);
+
+
+                    $responseData = json_decode($response->getBody()->getContents(), true);
+                   
+                    return $this->createDebitPayment($responseData, $request);
+                } catch (Exception $e) {
+                    return response()->json(['error' => $e->getMessage()], 500);
+                }
+                dd($req);
+            } else {
+                // Lida com o caso onde 'cartItem' não é um array
+                return response()->json(['error' => 'Invalid cart data'], 400);
             }
+
+            // $req = [
+            //     'MerchantOrderId' => uniqid(),
+            //     'Customer' => [
+            //         'Name' => $customer->first_name . ' ' . $customer->last_name,
+            //         'Email' => $customer->email,
+            //     ],
+            //     'Payment' => [
+            //         'Type' => 'DebitCard',
+            //         'Amount' => $request->totalValue * 100,
+            //         'Installments' => 1,
+            //         'SoftDescription' => $request->name,
+            //         'ReturnUrl' => 'http://localhost:8000', 
+            //         'DebitCard' => [
+            //             'CardNumber' => $request->cardNumber,
+            //             'Holder' => $request->cardHolder,
+            //             'ExpirationDate' => $request->expiryDate,
+            //             'SecurityCode' => $request->cvv,
+            //             'Brand' => $request->brand
+            //         ],
+            //     ],
+
+            // ];
+            // try {
+            //     $response = $client->request('POST', '/1/sales', [
+            //         'json' => $req
+            //     ]);
+
+
+            //     $responseData = json_decode($response->getBody()->getContents(), true);
+
+            //     return $this->createDebitPayment($responseData, $request);
+
+            // } catch (Exception $e) {
+            //     return response()->json(['error' => $e->getMessage()], 500);
+            // }
         } catch (Exception $e) {
             return response()->json($e);
         }
     }
     public function createDebitPayment($responseData, $request)
     {
-       try {
+        try {
             $payer = Auth::guard('customer')->user();
             $payment = Payment::create([
                 "transaction_id" => $responseData['MerchantOrderId'],
                 "status" => "pendent",
-                "quantity" => $request->quantity,
+                "quantity" => $request->shippment_quantity,
                 "transaction_amount" => $request->totalValue,
                 "description" => $request->description,
                 "payment_method_id" => $request->paymentType,
                 "payer" => $payer->email,
                 "user_id" => $payer->id
             ]);
-          
+            
             $createOrder = $this->getOrder($request, $responseData);
-            
-            if($createOrder){
+
+            if ($createOrder) {
                 $melhorEnvio = $this->getMelhorEnvio($request);
-               
+
                 $createShippment = $this->shippmentService->store($melhorEnvio);
-               
             }
-            
+
             $itemId = $request['id'];
             $alterStatus = $this->alterStatusItem($itemId);
-            
-            if($request->coupon_id >= 1){
-               $removeCoupon =  $this->removeCoupon($request->coupon_id);
+
+            if ($request->coupon_id >= 1) {
+                $removeCoupon =  $this->removeCoupon($request->coupon_id);
             }
-            
-            if($request->quantity >= 1){
+
+            if ($request->quantity >= 1) {
                 try {
                     $reduceItem = $this->reduceStock($request);
-                
-                   
+
+
                     $responseData = $reduceItem->getData(true);
-                
+
                     if (isset($responseData['error'])) {
                         return response()->json(['message' => $responseData['error']], 400);
                     }
@@ -151,11 +227,11 @@ class PaymentService {
                     return response()->json(['message' => $e->getMessage()], 500);
                 }
             }
-            
+
             $notification = $this->notification($responseData);
             $shippment = $this->storeShippment($request);
-     
-           // dd($notification);
+
+            // dd($notification);
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -163,7 +239,7 @@ class PaymentService {
     }
     public function creditPayment(Request $request)
     {
-        
+
         try {
             $getAccess = $this->getAccess();
             $getClient = $this->getClient();
@@ -190,15 +266,15 @@ class PaymentService {
                     return response()->json($e);
                 }
             }
-             return $this->createCreditPayment($preference, $request);
+            return $this->createCreditPayment($preference, $request);
         } catch (Exception $e) {
             return response()->json($e);
         }
     }
     public function createCreditPayment($preference, $request)
-    {   
+    {
         $payer = Auth::guard('customer')->user();
-        
+
         try {
             $client = $this->getClient();
             if ($client) {
@@ -213,7 +289,7 @@ class PaymentService {
                     "payer" => $payer->email,
                     "user_id" => $payer->id
                 ]);
-         
+
                 return response()->json($preference);
             }
 
@@ -229,20 +305,20 @@ class PaymentService {
     }
     public function pixPayment(Request $request)
     {
-        
+
         $access = $this->getAccess();
         $client = $this->getClient();
         $customer = Auth::guard('customer')->user();
         if ($access) {
-         
-            try{
+
+            try {
                 $payment = $client->create([
                     "transaction_amount" => (float) $request->totalValue,
                     "description" => $request->description,
                     "installments" => 1,
                     "payer" => [
                         "email" => $customer->email,
-                        "first_name" => $customer->first_name ,
+                        "first_name" => $customer->first_name,
                         "last_name" => $customer->last_name,
                         "identification" => [
                             "type" => 'CPF',
@@ -251,54 +327,51 @@ class PaymentService {
                     ],
                     "payment_method_id" => 'pix'
                 ]);
-                
-                
+
+
                 return $this->createCreditPayment($payment, $request);
-            }
-            catch(Exception $e){
+            } catch (Exception $e) {
                 return response()->json($e->getMessage());
             }
-            
         }
     }
-    public function notification($response){
-        try{
+    public function notification($response)
+    {
+        try {
             $merchantKey = env('CIELO_MERCHANT_KEY');
             $url =  $response['Payment']['Links'][0]['Href'];
-            
+
             $headers = [
                 'Authorization:' . $merchantKey,
-                'Content-Type : application/json',   
+                'Content-Type : application/json',
             ];
 
             $ch = curl_init($url);
-           
+
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
             $return = curl_exec($ch);
-            if(!$return){
+            if (!$return) {
                 $error = curl_error($ch);
             }
 
             curl_close($ch);
 
             return $return;
-            
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return $e;
         }
-       // dd($response['Payment']['Links'][0]['Href']);
-       $link = $response['Payment']['Links'][0]['Href'];
-       header("Location: $link");
-       exit();
+        // dd($response['Payment']['Links'][0]['Href']);
+        $link = $response['Payment']['Links'][0]['Href'];
+        header("Location: $link");
+        exit();
         //redirect($response['Payment']['Links'][0]['Href']);
     }
-    public function alterStatusItem($id){
-       
+    public function alterStatusItem($id)
+    {
+
         return $this->carItemService->updateActive($id);
-        
     }
     public function getCieloClient()
     {
@@ -326,27 +399,32 @@ class PaymentService {
 
         return $client;
     }
-    public function getOrder($request, $responseData){
-        
+    public function getOrder($request, $responseData)
+    {
+
         $order = $this->orderService->store($request, $responseData); //new OrderController();
         return $order;
     }
-    public function getMelhorEnvio($request){
+    public function getMelhorEnvio($request)
+    {
         $melhorEnvio = new MelhorEnvioController();
-        
+
         return $melhorEnvio->createCart($request);
     }
-    public function removeCoupon($id){
+    public function removeCoupon($id)
+    {
         $coupon = $this->couponCustomerService->remove($id);
         return $coupon;
     }
-    public function reduceStock($request){
+    public function reduceStock($request)
+    {
         $quantity = $request->quantity;
         $cart = $request;
         $reduceStock = $this->stockService->reduceItemStock($quantity, $cart);
         return response()->json($reduceStock);
     }
-    public function storeShippment($request){
+    public function storeShippment($request)
+    {
         $store = $this->shippmentService->store($request);
     }
 }

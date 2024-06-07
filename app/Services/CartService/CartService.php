@@ -41,6 +41,7 @@ class CartService
                 'shippments.price as shippment_price',
                 'shippments.quantity as shippment_quantity',
                 'products.name',
+                'products.description as product_description',
                 'products.price as product_price',
                 'products.images',
             )
