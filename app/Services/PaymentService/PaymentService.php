@@ -47,7 +47,7 @@ class PaymentService
         $paymentType = $request->paymentType;
         if ($paymentType == 'credit') {
             return $this->creditPayment($request);
-        } else if ($paymentType == 'debit') {
+        } else if ($paymentType == 'DebitCard') {
             return $this->debitPayment($request);
         } else {
             return $this->pixPayment($request);
@@ -64,7 +64,6 @@ class PaymentService
                 'MerchantKey' => env('CIELO_MERCHANT_KEY'),
             ]
         ]);
-
         return $api_client;
     }
     public function getCustomer()
@@ -72,112 +71,56 @@ class PaymentService
         $customer = Auth::guard('customer')->user();
         return $customer;
     }
+    public function createRequest($request)
+    {
+        $customer = $this->getCustomer();
+
+        $req = [
+            'MerchantOrderId' => uniqid(),
+            'Customer' => [
+                'Name' => $customer->first_name . ' ' . $customer->last_name,
+                'Email' => $customer->email,
+            ],
+            'Payment' => $this->createPayment($request),
+        ];
+
+        return $req;
+    }
+    public function createPayment($request)
+    {
+        return [
+            'Type' => 'DebitCard',
+            'Authenticate' => true,
+            'Amount' => $request->totalValue * 100,
+            'Installments' => 1,
+            'SoftDescription' => 'Teste Ecommerce',
+            'ReturnUrl' => 'http://localhost:8000',
+            'DebitCard' => [
+                'CardNumber' => $request->cardNumber,
+                'Holder' => $request->cardHolder,
+                'ExpirationDate' => $request->expiryDate,
+                'SecurityCode' => $request->cvv,
+                'Brand' => $request->cardBrand
+            ],
+        ];
+    }
+
     public function debitPayment(Request $request)
     {
         try {
+
             $customer = $this->getCustomer();
             $client = $this->getApiClient();
 
-            $cartItems = $request->input('cartItem');
-            if (is_array($cartItems)) {
-                foreach ($cartItems as $item) {
-                    // dd($item['name'], $request->name);
-                    $cartId = $item['cart_id'];
-                    $cartItemId = $item['cart_item_id'];
-                    $cartItemColors = $item['cart_item_colors'];
-                    $cartItemSize = $item['cart_item_size'];
-                    $cartItemPrice = $item['cart_item_price'];
-                    $cartItemStatus = $item['cart_item_status'];
-                    $totalPrice = $item['total_price'];
-                    $deliveryPrice = $item['delivery_price'];
-                    $shippmentName = $item['shippment_name'];
-                    $company = $item['company'];
-                    $shippmentPrice = $item['shippment_price'];
-                    $shippmentQuantity = $item['shippment_quantity'];
-                    $name = $item['name'];
-                    $productDescription = $item['product_description'];
-                    $productPrice = $item['product_price'];
-                    $images = $item['images'];
+            $req = $this->createRequest($request);
 
-                    
-                    // Faz algo com os dados do item, por exemplo, debug
-                    //dd($cartId, $cartItemId, $cartItemColors, $cartItemSize, $cartItemPrice, $cartItemStatus, $totalPrice, $deliveryPrice, $shippmentName, $company, $shippmentPrice, $shippmentQuantity, $name, $productDescription, $productPrice, $images);
-                }
-                $req = [
-                    'MerchantOrderId' => uniqid(),
-                    'Customer' => [
-                        'Name' => $customer->first_name . ' ' . $customer->last_name,
-                        'Email' => $customer->email,
-                    ],
-                    'Payment' => [
-                        'Type' => 'DebitCard',
-                        'Amount' => $request->totalValue * 100,
-                        'Installments' => 1,
-                        'SoftDescription' => $item['product_description'],
-                        'ReturnUrl' => 'http://localhost:8000',
-                        'DebitCard' => [
-                            'CardNumber' => $request->cardNumber,
-                            'Holder' => $request->cardHolder,
-                            'ExpirationDate' => $request->expiryDate,
-                            'SecurityCode' => $request->cvv,
-                            'Brand' => $request->brand
-                        ],
-                    ],
+            $response = $client->request('POST', '/1/sales', [
+                'json' => $req
+            ]);
 
-                ];
-                try {
-                    $response = $client->request('POST', '/1/sales', [
-                        'json' => $req
-                    ]);
+            $responseData = json_decode($response->getBody()->getContents(), true);
 
-
-                    $responseData = json_decode($response->getBody()->getContents(), true);
-                   
-                    return $this->createDebitPayment($responseData, $request);
-                } catch (Exception $e) {
-                    return response()->json(['error' => $e->getMessage()], 500);
-                }
-                dd($req);
-            } else {
-                // Lida com o caso onde 'cartItem' não é um array
-                return response()->json(['error' => 'Invalid cart data'], 400);
-            }
-
-            // $req = [
-            //     'MerchantOrderId' => uniqid(),
-            //     'Customer' => [
-            //         'Name' => $customer->first_name . ' ' . $customer->last_name,
-            //         'Email' => $customer->email,
-            //     ],
-            //     'Payment' => [
-            //         'Type' => 'DebitCard',
-            //         'Amount' => $request->totalValue * 100,
-            //         'Installments' => 1,
-            //         'SoftDescription' => $request->name,
-            //         'ReturnUrl' => 'http://localhost:8000', 
-            //         'DebitCard' => [
-            //             'CardNumber' => $request->cardNumber,
-            //             'Holder' => $request->cardHolder,
-            //             'ExpirationDate' => $request->expiryDate,
-            //             'SecurityCode' => $request->cvv,
-            //             'Brand' => $request->brand
-            //         ],
-            //     ],
-
-            // ];
-            // try {
-            //     $response = $client->request('POST', '/1/sales', [
-            //         'json' => $req
-            //     ]);
-
-
-            //     $responseData = json_decode($response->getBody()->getContents(), true);
-
-            //     return $this->createDebitPayment($responseData, $request);
-
-            // } catch (Exception $e) {
-            //     return response()->json(['error' => $e->getMessage()], 500);
-            // }
+            return $this->createDebitPayment($responseData, $request);
         } catch (Exception $e) {
             return response()->json($e);
         }
@@ -185,26 +128,35 @@ class PaymentService
     public function createDebitPayment($responseData, $request)
     {
         try {
-            $payer = Auth::guard('customer')->user();
+            $payer = $this->getCustomer();
+            $cartItems = $request->input('cartItem');
+            $itemName = [];
+            foreach($cartItems as $item){
+                $itemNames[] = $item["name"];
+                
+            }
+            $itemNameJson = json_encode($itemNames);
+            
             $payment = Payment::create([
                 "transaction_id" => $responseData['MerchantOrderId'],
                 "status" => "pendent",
-                "quantity" => $request->shippment_quantity,
+                "quantity" => $request->quantity,
                 "transaction_amount" => $request->totalValue,
-                "description" => $request->description,
+                "products" => $itemNameJson,
                 "payment_method_id" => $request->paymentType,
                 "payer" => $payer->email,
                 "user_id" => $payer->id
             ]);
             
-            $createOrder = $this->getOrder($request, $responseData);
-
+            $createOrder = $this->getOrder($request, $itemNameJson, $responseData);
+            
             if ($createOrder) {
                 $melhorEnvio = $this->getMelhorEnvio($request);
 
                 $createShippment = $this->shippmentService->store($melhorEnvio);
+                
             }
-
+                
             $itemId = $request['id'];
             $alterStatus = $this->alterStatusItem($itemId);
 
@@ -399,16 +351,16 @@ class PaymentService
 
         return $client;
     }
-    public function getOrder($request, $responseData)
+    public function getOrder($request, $itemNameJson, $responseData)
     {
 
-        $order = $this->orderService->store($request, $responseData); //new OrderController();
+        $order = $this->orderService->store($request, $itemNameJson, $responseData); //new OrderController();
         return $order;
     }
     public function getMelhorEnvio($request)
     {
         $melhorEnvio = new MelhorEnvioController();
-
+        
         return $melhorEnvio->createCart($request);
     }
     public function removeCoupon($id)

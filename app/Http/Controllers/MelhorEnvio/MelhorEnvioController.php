@@ -62,12 +62,12 @@ class MelhorEnvioController extends Controller
     public function createCart(Request $request){
         $client = new Client();
         $customer = Auth::guard('customer')->user();
-        
+       
         try {
             $response = $client->post('https://sandbox.melhorenvio.com.br/api/v2/me/cart', [
                 'json' => [
-                    'service' => $request['delivery'][0]['id'],
-                    'agency' => $request['delivery'][0]['company']['id'],
+                    'service' => $request['delivery'][0]['id'] ?? 0,
+                    'agency' => $request['delivery'][0]['company']['id'] ?? 0,
                     'from' => [
                         'name' => env('APP_NAME'),
                         "phone" => 556195051731, //env('EMPLOYE_PHONE'),
@@ -83,11 +83,11 @@ class MelhorEnvioController extends Controller
                         "name" => $customer->first_name . $customer->last_name,
                         "phone" => $request['telefone'],
                           "email"   => $customer->email,
-                          "address" => $request['address']['endereco'],
-                          "complement" => $request['address']['complemento'],
-                          "city" => $request['address']['cidade'],
-                          "postal_code" => $request['address']['postal_code'],
-                          "state_abbr" => $request['address']['uf'],
+                          "address" => $request['address']['endereco'] ?? $request['address']['shippment_address'],
+                          "complement" => $request['address']['complemento'] ?? $request['address']['shippment_complement'],
+                          "city" => $request['address']['cidade'] ?? $request['adddress']['shippment_city'],
+                          "postal_code" => $request['address']['postal_code'] ?? $request['address']['zip_code'],
+                          "state_abbr" => $request['address']['uf'] ?? $request['adddress']['select_uf']['uf'],
                           'document' => $request['document']
                     ],
                     'products' => [
@@ -107,14 +107,14 @@ class MelhorEnvioController extends Controller
                         ]
                         // Adicione mais volumes conforme necessário
                     ],
-                    'options' => [
-                        'insurance_value' => $request['delivery'][0]['packages'][0]['insurance_value'],
-                        'receipt' => $request['delivery'][0]['additional_services']['receipt'],
-                        'own_hand' => $request['delivery'][0]['additional_services']['own_hand'],
-                        'reverse' => true,
-                        'non_commercial' => true,
+                    // 'options' => [
+                    //     'insurance_value' => $request['delivery'][0]['packages'][0]['insurance_value'],
+                    //     'receipt' => $request['delivery'][0]['additional_services']['receipt'],
+                    //     'own_hand' => $request['delivery'][0]['additional_services']['own_hand'],
+                    //     'reverse' => true,
+                    //     'non_commercial' => true,
                        
-                    ]
+                    // ]
                 ],
                 'headers' => [
                     'Accept' => 'application/json',
@@ -124,7 +124,7 @@ class MelhorEnvioController extends Controller
                 ],
             ]);
            
-           // dd($request);
+            dd($response);
             $orderShippment = json_decode($response->getBody()->getContents(), true);
             $mergedData = array_merge($orderShippment, $request->toArray());
 
