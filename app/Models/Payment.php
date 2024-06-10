@@ -13,7 +13,7 @@ class Payment extends Model
         'status',
         'quantity',
         'transaction_amount',
-        'description',
+        'products',
         'payment_method_id',
         'payer',
         'user_id'

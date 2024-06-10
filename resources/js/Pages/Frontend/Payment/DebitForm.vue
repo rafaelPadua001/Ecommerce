@@ -3,7 +3,7 @@
         <v-sheet class="px-2 py-2">
             <v-row fluid justify="center">
                 <v-col>
-                        
+                        {{ billing_address }}
                         <!-- {{ formatedFinalValue.slice(3).replace(/[.,]/g, '') }} -->
                      <!-- {{ carts }} -->
                     <v-form>
@@ -109,7 +109,8 @@ import axios from 'axios';
 export default {
     emits: ['completed'], 
     props: [
-        'carts'
+        'carts',
+        'billing_address',
         // 'paymentType',
         // 'product_id',
         // 'cart_id',
@@ -127,7 +128,7 @@ export default {
     ],
     data: () => ({
         loading: false,
-        paymentType: 'debit',
+        paymentType: 'DebitCard',
         paymentSelected: 'cielo',
         cardHolder: null,
         telefone: null,
@@ -138,7 +139,7 @@ export default {
         cardBrand: null,
         cardBrands: [
             'Visa',
-            'MasterCard',
+            'Master',
             'Maestro',
             'Elo',
         ],
@@ -188,6 +189,7 @@ export default {
                 cardBrand: this.cardBrand,
                 totalValue: this.formatedFinalValue.slice(3).replace(/[.,]/g, ''),
                 cartItem: this.carts,
+                quantity: this.sumQuantity,
                 // delivery: this.delivery,
                 // payment: this.paymentSelected,
                 // description: this.description,
@@ -196,7 +198,7 @@ export default {
                 // image: this.image,
                 // color: this.color,
                 // product_id: this.product_id,
-                // address: this.address,
+                 address: this.billing_address,
                 // coupon_id: this.coupon_id,
                 // cartItem_id: this.item_id,
                 // cart_id: this.cart_id,
@@ -213,7 +215,7 @@ export default {
                         this.loading = false;
                         return false;
                     }
-                    console.log(response.data);
+                    console.log(response);
                    return this.updateCompleted();
 
                 })

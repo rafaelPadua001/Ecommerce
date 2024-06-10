@@ -89,12 +89,12 @@
                                                                         <v-row>
                                                                             <v-col>
                                                                                 <v-text-field
-                                                                                    v-model="shippment_address"
+                                                                                    v-model=" billing_address.shippment_address"
                                                                                     label="Address">
 
                                                                                 </v-text-field>
 
-
+                                                                               
                                                                             </v-col>
 
                                                                         </v-row>
@@ -102,38 +102,42 @@
                                                                         <v-row>
                                                                             <v-col>
                                                                                 <v-text-field
-                                                                                    v-model="shippment_complement"
+                                                                                    v-model=" billing_address.shippment_complement"
                                                                                     label="Complemento (opcional)">
 
                                                                                 </v-text-field>
+                                                                               
                                                                             </v-col>
 
                                                                         </v-row>
 
                                                                         <v-row fluid>
                                                                             <v-col>
-                                                                                <v-text-field v-model="shippment_city"
+                                                                                <v-text-field v-model="billing_address.shippment_city"
                                                                                     label="Cidade">
 
                                                                                 </v-text-field>
+                                                                                {{ billing_address.shippment_city }}
                                                                             </v-col>
                                                                             <v-col cols="auto">
 
-                                                                                <v-select v-model="select_uf"
+                                                                                <v-select v-model="billing_address.select_uf"
                                                                                     :items="ufs"
-                                                                                    :hint="`${select_uf.state}, ${select_uf.uf}`"
+                                                                                    :hint="`${billing_address.select_uf.state}, ${billing_address.select_uf.uf}`"
                                                                                     item-title="uf" item.value="state"
                                                                                     placeholder="UF" return-object
                                                                                     single-line
                                                                                     :placeholder="customerAddress.uf">
 
                                                                                 </v-select>
-
+                                                                                {{ billing_address.select_uf }}
                                                                             </v-col>
                                                                             <v-col>
-                                                                                <v-text-field v-model="zip_code"
+                                                                                <v-text-field v-model="billing_address.zip_code"
                                                                                     v-maska:[options] label="Zip Code">
                                                                                 </v-text-field>
+
+                                                                                {{billing_address.zip_code}}
                                                                             </v-col>
                                                                             <v-col col="auto">
                                                                                 <v-row no-gutters>
@@ -419,33 +423,33 @@
                                                         <v-col class="text-body-2">
                                                             <strong>Endereço:</strong>
                                                             {{ address.endereco ? 'not register' :
-                shippment_address }}
+                billing_address.shippment_address }}
                                                         </v-col>
                                                     </v-row>
                                                     <v-row no-gutters>
                                                         <v-col class="text-body-2">
                                                             <strong>Complemento:</strong>
                                                             {{ address.complemento ? 'not register' :
-                shippment_complement }}
+                billing_address.shippment_complement }}
                                                         </v-col>
                                                     </v-row>
 
                                                     <v-row no-gutters>
                                                         <v-col>
                                                             <strong>Cidade:</strong> {{ address.cidade ? 'not register'
-                : shippment_city }}
+                : billing_address.shippment_city }}
                                                         </v-col>
                                                     </v-row>
 
 
                                                     <div>
                                                         <p class="text-subtitle-2">
-                                                            <strong>Zip Code</strong> {{ address.cep ? 'not register' :
-                zip_code }}
+                                                            <strong>Zip Code</strong> {{ cep ? 'not register' :
+                billing_address.zip_code }}
                                                         </p>
                                                         <p class="text-subtitle-2">
-                                                            <strong>UF:</strong> {{ address.UF ? 'not register'
-                : select_uf.uf }}
+                                                            <strong>UF:</strong> {{ address.uf ? 'not register'
+                : billing_address.select_uf.uf }}
                                                         </p>
                                                     </div>
                                                     <div>
@@ -580,7 +584,8 @@
                                                                         <div v-if="paymentType == 'debit'">
                                                                             <v-card>
                                                                                  <DebitForm :paymentType="paymentType"
-                                                                                    :carts="carts" />
+                                                                                    :carts="carts" 
+                                                                                    :billing_address="billing_address"/>
                                                                             </v-card>
                                                                         </div>
                                                                         <div v-if="paymentType == 'credit'">
@@ -664,7 +669,7 @@
                 </v-row>
 
             </div>
-            <div v-else>
+            <!-- <div v-else>
                 CartItems: {{ carts }}
                 <v-row align="center" justify="center">
                     <v-col cols="8" sm="8">
@@ -708,7 +713,7 @@
                                                                     v-maska:[options] label="postal code"
                                                                     :placeholder="itemCart.cep" :value="itemCart.cep">
                                                                 </v-text-field>
-                                                                <v-text-field v-model="zip_code" v-else
+                                                                <v-text-field v-model="billind_address.zip_code" v-else
                                                                     v-maska:[options] label="postal code"
                                                                     :placeholder="itemCart.cep">
                                                                 </v-text-field>
@@ -775,7 +780,7 @@
                                                                                                 {{ quotation.price
                                                                                                 }}</strong>
                                                                                         </p>
-                                                                                        <!--<p class="text-body-2">
+                                                                                        <p class="text-body-2">
                                                                                     Discount:
                                                                                     <strong>{{quotation.discount}}</strong>
                                                                                 </p>
@@ -789,7 +794,7 @@
                                                                                                 (parseFloat(itemCart.price) || 0)).toFixed(2) 
                                                                                         }}
                                                                                     </strong>
-                                                                                </p> -->
+                                                                                </p> 
                                                                                         <p class="text-body-2">
                                                                                             Prazo de entrega:
                                                                                             <strong>
@@ -837,7 +842,7 @@
                                     </v-card>
 
 
-                                    <!-- {{ itemCart }} -->
+                                    
                                 </template>
                                 <div>
                                     <div>Confirmar pedido</div>
@@ -1121,7 +1126,7 @@
                         </v-timeline>
                     </v-col>
                 </v-row>
-            </div>
+            </div> -->
         </v-sheet>
     </v-container>
 
@@ -1219,7 +1224,7 @@ export default {
         customer: [],
         address: [],
         respSearchAddress: [],
-        zip_code: false,
+        // zip_code: false,
         selectedDelivery: false,
         confirm: true,
         dataConfirm: false,
@@ -1235,10 +1240,16 @@ export default {
         bairro: null,
         complemento: null,
         carts: [],
-        shippment_address: '',
-        shippment_complement: '',
-        shippment_city: '',
-        select_uf: { state: 'Distrito Federal', uf: 'DF' },
+        billing_address: {
+            shippment_address: '',
+            shippment_complement: '',
+            shippment_city: '',
+            select_uf: { state: 'Distrito Federal', uf: 'DF' },
+            zip_code: false,
+            city: null,
+            bairro: null,
+        },
+       
         email: '',
         emailRules: [
             v => !!v || 'O email é obrigatório',
@@ -1473,7 +1484,6 @@ export default {
         if (!this.carts) {
             this.$router.push({ name: 'cart' });
         }
-        console.log(this.carts);
     }
 }
 </script>
