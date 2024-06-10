@@ -150,12 +150,12 @@ class PaymentService
             
             $createOrder = $this->getOrder($request, $itemNameJson, $responseData);
             
-            if ($createOrder) {
-                $melhorEnvio = $this->getMelhorEnvio($request);
+            // if ($createOrder) {
+            //     $melhorEnvio = $this->getMelhorEnvio($request);
 
-                $createShippment = $this->shippmentService->store($melhorEnvio);
+            //     $createShippment = $this->shippmentService->store($melhorEnvio);
                 
-            }
+            // }
                 
             $itemId = $request['id'];
             $alterStatus = $this->alterStatusItem($itemId);

@@ -13,7 +13,7 @@
 
                                 </v-img>
 
-                                {{ delivery.name }}
+                                
                             </v-tab>
                         </v-tabs>
                     </template>
@@ -76,7 +76,7 @@
 
 
                                             <p class="text-body">
-                                                {{ delivery.name }}
+                                                {{ delivery}}
                                                 <span>
                                                     Price: {{ delivery.currency }}: {{ delivery.price }}
                                                 </span>
@@ -149,6 +149,7 @@ export default {
         calculateDelivery(delivery) {
             const deliveryId = delivery.id;
             this.delivery_name = delivery.name;
+            console.log(this.selectedShippment);
             if (this.zip_code.length < 8) {
                 return this.errorDialog = true;
             }
@@ -171,7 +172,7 @@ export default {
                 })
         },
         selectShippment() {
-            // console.log('Dados a serem enviados para o pai:', this.selectedShippment);
+           console.log('Dados a serem enviados para o pai:', this.selectedShippment);
             return this.$emit('updateShippment', this.selectedShippment, this.zip_code, this.delivery_name);
         },
         clearZipCode() {
