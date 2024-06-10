@@ -44,6 +44,10 @@ class CartService
                 'products.description as product_description',
                 'products.price as product_price',
                 'products.images',
+                'products.weight',
+                'products.height',
+                'products.width',
+                'products.length',
             )
             ->get();
 

@@ -48,7 +48,9 @@ class ShippmentService
             'user_id' => $delivery_item['user_id'],
             'cart_id' => $delivery_item['cart_id'],
             'cart_item_id' => $delivery_item['cart_item_id'],
-            'delivery_id' =>  $delivery_item['delivery']['id'] // Use ['id'] se for o campo correto
+            'delivery_id' =>  $delivery_item['delivery']['id'],
+            'company_id' => $delivery_item['delivery']['id'],
+                'company_id_agency' => $delivery_item['delivery']['company']['id']// Use ['id'] se for o campo correto
         ];
 
         $store_shippment = $this->shippment->create($data);

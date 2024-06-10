@@ -39,8 +39,9 @@ class CartItemService
                 'size' => json_encode($product->size),
                 'delivery_price' =>  $product['delivery_price'],
                 'total_price' =>  $product['total_price'],
+                
             ]);
-
+            
             $delivery_item = $this->createItemCart($id, $customer->id, $cart, $cartItem, $product);
 
             if ($delivery_item) {
@@ -63,6 +64,8 @@ class CartItemService
                 'user_id' => $customerId,
                 'cart_id' => $cart->id,
                 'cart_item_id' => $cartItem->id,
+                'company_id' => $product['delivery']['id'],
+                'company_id_agency' => $product['delivery']['company']['id']
             ];
             return $delivery_item;
         }
