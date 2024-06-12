@@ -3,29 +3,23 @@
         <v-sheet class="px-2 py-2">
             <v-row fluid justify="center">
                 <v-col>
-                        {{ billing_address }}
-                        <!-- {{ formatedFinalValue.slice(3).replace(/[.,]/g, '') }} -->
-                     <!-- {{ carts }} -->
+
                     <v-form>
-            <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
-           <v-text-field
-                v-model="telefone"
-                label="Telefone"
-                outlined
-                v-maska:[phoneOptions]
-            ></v-text-field>
-      
-            
-            <v-text-field v-model="cardHolder" label="Nome do titular do cartão" required></v-text-field>
-            <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
-            <v-text-field v-model="expiryDate" label="Data de Expiração (MM/AA)" required></v-text-field>
-            <v-text-field v-model="cvv" label="CVV" required></v-text-field>
-            <v-select v-model="cardBrand" :items="cardBrands" label="Marca do Cartão" required></v-select>
-            <v-btn :loading="loading" class="flex-grow-1" variant="tonal" color="primary"
-                @click="load">Pagar</v-btn>
-        </v-form>
+                        <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
+                        <v-text-field v-model="telefone" label="Telefone" outlined
+                            v-maska:[phoneOptions]></v-text-field>
+
+
+                        <v-text-field v-model="cardHolder" label="Nome do titular do cartão" required></v-text-field>
+                        <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
+                        <v-text-field v-model="expiryDate" label="Data de Expiração (MM/AA)" required></v-text-field>
+                        <v-text-field v-model="cvv" label="CVV" required></v-text-field>
+                        <v-select v-model="cardBrand" :items="cardBrands" label="Marca do Cartão" required></v-select>
+                        <v-btn :loading="loading" class="flex-grow-1" variant="tonal" color="primary"
+                            @click="load">Pagar</v-btn>
+                    </v-form>
                 </v-col>
-            </v-row> 
+            </v-row>
         </v-sheet>
     </v-container>
 
@@ -47,8 +41,8 @@
             </template>
         </v-alert>
     </div>
-   
-    
+
+
     <!-- <v-container>
       
         <v-form @submit.prevent="submitForm">
@@ -107,10 +101,11 @@ const phoneMask = ref('');
 import axios from 'axios';
 
 export default {
-    emits: ['completed'], 
+    emits: ['completed'],
     props: [
         'carts',
         'billing_address',
+        'shippment',
         // 'paymentType',
         // 'product_id',
         // 'cart_id',
@@ -124,7 +119,7 @@ export default {
         // 'color',
         // 'coupon_id',
         // 'address',
-        
+
     ],
     data: () => ({
         loading: false,
@@ -147,7 +142,7 @@ export default {
         message: false,
     }),
     computed: {
-        sumQuantity(){
+        sumQuantity() {
             return this.carts.reduce((total, item) => {
                 return total + item.shippment_quantity;
             }, 0);
@@ -190,6 +185,8 @@ export default {
                 totalValue: this.formatedFinalValue.slice(3).replace(/[.,]/g, ''),
                 cartItem: this.carts,
                 quantity: this.sumQuantity,
+                company_id: this.shippment.id,
+                company_agency_id: this.shippment.company.id,
                 // delivery: this.delivery,
                 // payment: this.paymentSelected,
                 // description: this.description,
@@ -198,16 +195,16 @@ export default {
                 // image: this.image,
                 // color: this.color,
                 // product_id: this.product_id,
-                 address: this.billing_address,
+                address: this.billing_address,
                 // coupon_id: this.coupon_id,
                 // cartItem_id: this.item_id,
                 // cart_id: this.cart_id,
             };
 
-            
+
             axios.post('/payment', data)
                 .then((response) => {
-                    if(response.data.original.error){
+                    if (response.data.original.error) {
                         console.log(response.data);
                         console.log(response)
                         this.snackbar = true;
@@ -216,20 +213,19 @@ export default {
                         return false;
                     }
                     console.log(response);
-                   return this.updateCompleted();
+                    return this.updateCompleted();
 
                 })
                 .catch((response) => {
-                   
                     this.loading = false;
-                    return alert('Error: ', response.original.error);
+                    return alert('Error: ', response);
                 });
         },
         snackbarClose() {
             this.snackbar = false;
         },
         updateCompleted() {
-          return this.$emit('completed');
+            return this.$emit('completed');
         }
 
     }
