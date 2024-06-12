@@ -20,7 +20,6 @@ class MelhorEnvioController extends Controller
     public function calculate($request)
     {
         try {
-
             $client_postal_code = str_replace('-', '', $request->postal_code);
 
             $calculator = $this->createShipmentInstance()->calculator();
@@ -30,22 +29,15 @@ class MelhorEnvioController extends Controller
             $calculator->setOwnHand();
             $calculator->setReceipt(false);
             $calculator->setCollect(false);
+            $items = $this->createItem($request, $calculator);
+            // $calculator->addProducts(
+            //     $product = new Product(uniqid(), $height, $width, $length, $weight, 50.00, $price, $quantity),
 
-            $height = intval($request->height);
-            $width = intval($request->width);
-            $length = intval($request->length);
-            $weight = $request->weight;
-            $price = $request->price;
-            $quantity = $request->quantity;
-
-            $calculator->addProducts(
-                $product = new Product(uniqid(), $height, $width, $length, $weight, 50.00 /*$price*/, $quantity),
-
-            );
-
-            $quotations = $calculator->calculate();
-
-
+            // );
+       
+            $quotations = $items->calculate();
+            
+            
             return response()->json($quotations);
         } catch (Exception $e) {
             return response()->json($e);
@@ -53,7 +45,29 @@ class MelhorEnvioController extends Controller
 
         return response()->json($quotations);
     }
+    public function createItem($request, $calculator){
+        $items = $request->items;
+        $itemObject = [];
+        foreach($items as $item){
+            $itemObject[] = [
+                $height = intval($item['height']),
+                $width = intval($item['width']),
+                $length = intval($item['length']),
+                $weight = $item['weight'],
+                $price = $item['price'],
+                $quantity = $item['quantity'],
+            ];
+           
+           
+            $calculator->addProducts(
+                $product = new Product(uniqid(), $height, $width, $length, $weight, $price, $quantity)
+            );
 
+            
+        }
+  
+        return $calculator;
+    }
     public function createShipmentInstance()
     {
         $shipment = new Shipment(env('MELHORENVIO_ACCESS_TOKEN', Environment::SANDBOX));
@@ -63,13 +77,38 @@ class MelhorEnvioController extends Controller
     {
         $client = new Client();
         $customer = Auth::guard('customer')->user();
-
+    //     dd(['service' =>  $this->CompanyIds($request),
+    //     'agency' =>  $this->AgencyIds($request),
+    //     'from' => [
+    //         'name' => env('APP_NAME'),
+    //         "phone" => 556195051731, //env('EMPLOYE_PHONE'),
+    //         "email" => env('EMPLOYE_MAIL'),
+    //         "address" => env('EMPLOYE_ADDRESS'),
+    //         "city" => env('EMPLOYE_CITY'),
+    //         "postal_code" => env('EMPLOYE_POSTALCODE'),
+    //         "document" => env('EMPLOYE_DOCUMENT')
+    //         // Preencha os detalhes de origem aqui
+    //     ],
+    //     'to' => [
+    //         // Preencha os detalhes de destino aqui
+    //         "name" => $customer->first_name . ' ' . $customer->last_name,
+    //         "phone" => $request['telefone'],
+    //         "email"   => $customer->email,
+    //         "address" => $request['address']['shippment_address'],
+    //         "complement" =>  $request['address']['shippment_complement'],
+    //         "city" => $request['address']['shippment_city'],
+    //         "postal_code" =>  $request['address']['zip_code'],
+    //         "state_abbr" => $request['address']['select_uf']['uf'],
+    //         'document' => $request['document']
+    //     ],
+    //    'products' => $this->createProduct($request),
+    //    'volumes' => $this->createVolumes($request)]);
+       
         try {
-          //  dd($request['address']['shippment_address'], $customer, env('EMPLOYE_MAIL'));
             $response = $client->post('https://sandbox.melhorenvio.com.br/api/v2/me/cart', [
                 'json' => [
-                    'service' =>  17,
-                  //  'agency' =>  0,
+                    'service' =>  $this->CompanyIds($request),
+                    'agency' =>  $this->AgencyIds($request),
                     'from' => [
                         'name' => env('APP_NAME'),
                         "phone" => 556195051731, //env('EMPLOYE_PHONE'),
@@ -80,37 +119,20 @@ class MelhorEnvioController extends Controller
                         "document" => env('EMPLOYE_DOCUMENT')
                         // Preencha os detalhes de origem aqui
                     ],
-                    // 'to' => [
-                    //     // Preencha os detalhes de destino aqui
-                    //     "name" => $customer->first_name . $customer->last_name,
-                    //     "phone" => $request['telefone'],
-                    //     "email"   => $customer->email,
-                    //     "address" => $request['address']['shippment_address'],
-                    //     "complement" => $request['address']['complemento'] ?? $request['address']['shippment_complement'],
-                    //     "city" => $request['adddress']['shippment_city'],
-                    //     "postal_code" =>  $request['address']['zip_code'],
-                    //     "state_abbr" => $request['adddress']['select_uf']['uf'],
-                    //     'document' => $request['document']
-                    // ],
-                    // 'products' => $this->createProduct($request),
-                    // 'products' => [
-                    //     [
-                    //         'name' => $request->name,
-                    //         'quantity' => $request->quantity,
-                    //         'unitary_value' => $request->totalValue
-                    //     ]
-                    //    //  Adicione mais produtos conforme necessário
-                    // ],
-                    // 'volumes' => $this->createVolumes($request),
-                    // 'volumes' => [
-                    //     [
-                    //         'height' => $request['delivery'][0]['packages'][0]['dimensions']['height'],
-                    //         'width' => $request['delivery'][0]['packages'][0]['dimensions']['width'],
-                    //         'length' => $request['delivery'][0]['packages'][0]['dimensions']['length'],
-                    //         'weight' => $request['delivery'][0]['packages'][0]['weight']
-                    //     ]
-                    //     // Adicione mais volumes conforme necessário
-                    // ],
+                    'to' => [
+                        // Preencha os detalhes de destino aqui
+                        "name" => $customer->first_name . $customer->last_name,
+                        "phone" => $request['telefone'],
+                        "email"   => $customer->email,
+                        "address" => $request['address']['shippment_address'],
+                        "complement" =>  $request['address']['shippment_complement'],
+                        "city" => $request['address']['shippment_city'],
+                        "postal_code" =>  $request['address']['zip_code'],
+                        "state_abbr" => $request['address']['select_uf']['uf'],
+                        'document' => $request['document']
+                    ],
+                   'products' => $this->createProduct($request),
+                    'volumes' => $this->createVolumes($request),
                     // 'options' => [
                     //     'insurance_value' => $request['delivery'][0]['packages'][0]['insurance_value'],
                     //     'receipt' => $request['delivery'][0]['additional_services']['receipt'],
@@ -128,7 +150,7 @@ class MelhorEnvioController extends Controller
                 ],
             ]);
 
-            dd($response);
+           
             $orderShippment = json_decode($response->getBody()->getContents(), true);
             $mergedData = array_merge($orderShippment, $request->toArray());
 
@@ -145,30 +167,63 @@ class MelhorEnvioController extends Controller
     public function createProduct($request)
     {
         $product = $request->input('cartItem');
-        dd('Product: ' . $product);
+       
         $products = [];
         foreach ($product as $item) {
-            return $products[] = [
-                'id' => $item['cart_item_id'],
-                'name' => $item['name'],
-                'quantity' => $item['shippment_quantity'],
-                'unitary_value' => $item['total_price']
-            ];
+            $productObject = new \stdClass();
+            $productObject->id =  $item['cart_item_id'];
+            $productObject->name = $item['name'];
+            $productObject->quantity = strval($item['shippment_quantity']);
+            $productObject->unitary_value = $item['total_price'];
+
+            $products[] = $productObject;
         }
+      
+        return $products;
     }
     public function createVolumes($request)
     {
         $product = $request->input('cartItem');
-        dd('Product:' . $product);
+        
         $volumes = [];
         foreach ($product as $item) {
-            return $volumes[] = [
-                'height' => $item['height'],
-                'width' => $item['width'],
-                'length' => $item['length'],
-                'weight' => $item['weight']
-            ];
+            $volumesObject = new \stdClass();
+            $volumesObject->height = intval($item['height']);
+            $volumesObject->width = intval($item['width']);
+            $volumesObject->length = intval($item['length']);
+            $volumesObject->weight = $item['weight'];
+            
+            $volumes[] = $volumesObject;
         }
+      
+        return $volumes;
+    }
+    public function CompanyIds($request){
+        $companies = $request->input('cartItem');
+        $company_ids = [];
+        foreach($companies as $item) {
+            // Verifique se 'company_id' está definido e não é nulo
+            if (isset($item['company_id']) && !is_null($item['company_id'])) {
+                $company_ids[] = [
+                    $item['company_id'],
+                ];
+            }
+        }
+
+        return $company_ids;
+    }
+    public function AgencyIds($request){
+        $agencies = $request->input('cartItem');
+        $agency_ids = [];
+        foreach($agencies as $item){
+            if (isset($item['company_agency_id']) && !is_null($item['company_agency_id'])) {
+                $agency_ids[] = [
+                    $item['company_agency_id'],
+                ];
+            }
+            
+        }
+        return $agency_ids;
     }
     public function checkout(Request $request)
     {

@@ -61,8 +61,23 @@
                                                                 <v-col class="text-body-1 text-start">
                                                                     <p>Shipping address</p>
                                                                     <v-divider></v-divider>
+                                                                    
                                                                 </v-col>
                                                             </v-row>
+                                                            <div>
+                                                                <v-row fluid>
+                                                                    <v-col>
+
+                                                                        <ZipCodeField :selectProduct="this.carts"
+                                                                            :quantity="this.quantity"
+                                                                            :customer="this.customer"
+                                                                            @updateShippment="updateShippment"
+                                                                            @updateAddressFields="updateAddressFields" />
+
+                                                                    </v-col>
+                                                                </v-row>
+
+                                                            </div>
                                                             <v-row>
                                                                 <v-col v-if="Object.keys(this.address).length == 0">
                                                                     <v-form>
@@ -89,12 +104,12 @@
                                                                         <v-row>
                                                                             <v-col>
                                                                                 <v-text-field
-                                                                                    v-model=" billing_address.shippment_address"
+                                                                                    v-model="billing_address.shippment_address"
                                                                                     label="Address">
 
                                                                                 </v-text-field>
 
-                                                                               
+
                                                                             </v-col>
 
                                                                         </v-row>
@@ -102,18 +117,19 @@
                                                                         <v-row>
                                                                             <v-col>
                                                                                 <v-text-field
-                                                                                    v-model=" billing_address.shippment_complement"
+                                                                                    v-model="billing_address.shippment_complement"
                                                                                     label="Complemento (opcional)">
 
                                                                                 </v-text-field>
-                                                                               
+
                                                                             </v-col>
 
                                                                         </v-row>
 
                                                                         <v-row fluid>
                                                                             <v-col>
-                                                                                <v-text-field v-model="billing_address.shippment_city"
+                                                                                <v-text-field
+                                                                                    v-model="billing_address.shippment_city"
                                                                                     label="Cidade">
 
                                                                                 </v-text-field>
@@ -121,7 +137,8 @@
                                                                             </v-col>
                                                                             <v-col cols="auto">
 
-                                                                                <v-select v-model="billing_address.select_uf"
+                                                                                <v-select
+                                                                                    v-model="billing_address.select_uf"
                                                                                     :items="ufs"
                                                                                     :hint="`${billing_address.select_uf.state}, ${billing_address.select_uf.uf}`"
                                                                                     item-title="uf" item.value="state"
@@ -132,34 +149,8 @@
                                                                                 </v-select>
                                                                                 {{ billing_address.select_uf }}
                                                                             </v-col>
-                                                                            <v-col>
-                                                                                <v-text-field v-model="billing_address.zip_code"
-                                                                                    v-maska:[options] label="Zip Code">
-                                                                                </v-text-field>
-
-                                                                                {{billing_address.zip_code}}
-                                                                            </v-col>
-                                                                            <v-col col="auto">
-                                                                                <v-row no-gutters>
-                                                                                    <v-col cols="auto">
-                                                                                        <v-btn size="x-small"
-                                                                                            variant="text"
-                                                                                            color="warning"
-                                                                                            @click="itemCart.cep = ''">Clear</v-btn>
-                                                                                    </v-col>
-                                                                                </v-row>
-                                                                                <v-row no-gutters>
-                                                                                    <v-col cols="auto">
-                                                                                        <v-btn size="x-small"
-                                                                                            variant="text" color="blue"
-                                                                                            @click="cepDialogOpen">Buscar
-                                                                                            Cep</v-btn>
 
 
-                                                                                    </v-col>
-                                                                                </v-row>
-
-                                                                            </v-col>
                                                                         </v-row>
                                                                         <v-card-actions>
                                                                             <v-row>
@@ -213,9 +204,23 @@
                                                             <v-col class="d-flex child-flex">
                                                                 <v-bagde color="grey" :content="item.shippment_quantity"
                                                                     :value="true" bordered>
-                                                                    <v-img :width="4"
+                                                                    <v-img v-if="item.images && item.images.length > 0"
+                                                                        :width="4"
                                                                         :src="`/storage/products/${item.images[0]}`"
                                                                         :lazy-src="`/storage/products/${item.images[0]}`"
+                                                                        aspect-ratio="16/9" cover>
+                                                                        <template v-slot:placeholder>
+                                                                            <div
+                                                                                class="d-flex justify-center fill-height flex-column">
+                                                                                <v-progress-circular
+                                                                                    color="grey-lighten-4"
+                                                                                    indeterminate></v-progress-circular>
+                                                                            </div>
+                                                                        </template>
+                                                                    </v-img>
+                                                                    <v-img v-else :width="4"
+                                                                        :src="`/path/to/default/image.jpg`"
+                                                                        :lazy-src="`/path/to/default/image.jpg`"
                                                                         aspect-ratio="16/9" cover>
                                                                         <template v-slot:placeholder>
                                                                             <div
@@ -273,28 +278,28 @@
                                                         </v-row>
 
 
-                                                        <v-row fluid class="text-subtitle-2 justify-end">
+                                                        <v-row fluid class="text-subtitle-2 justify-end" v-if="this.shippment.company">
                                                             <v-col cols="auto">
-                                                                <p>shippment: {{ item.company }}</p>
+                                                                <p>shippment: {{ this.shippment.company.name }}</p>
 
 
                                                             </v-col>
-                                                            <v-col cols="auto">
+                                                            <!-- <v-col cols="auto">
                                                                 <p>R$ {{ item.shippment_price }}</p>
 
 
-                                                            </v-col>
+                                                            </v-col> -->
 
                                                         </v-row>
 
-                                                        <v-row fluid class="text-subtitle-2 justify-end">
+                                                        <!-- <v-row fluid class="text-subtitle-2 justify-end">
                                                             <v-col cols="auto">
                                                                 <p>Total Delivery: R$ {{ item.delivery_price }}</p>
                                                             </v-col>
                                                             <v-col cols="auto">
                                                                 <p>Total Price: R$ {{ item.total_price }}</p>
                                                             </v-col>
-                                                        </v-row>
+                                                        </v-row> -->
                                                         <v-divider></v-divider>
                                                         <v-spacer></v-spacer>
                                                     </v-list-item>
@@ -333,7 +338,7 @@
                                                     <p>Shipping:</p>
                                                 </v-col>
                                                 <v-col class="text-end text-subtitle-2">
-                                                    {{ formattedShippingPrice }}
+                                                   R$ {{ formatedShippmentPrice }}
                                                 </v-col>
                                             </v-row>
 
@@ -344,7 +349,7 @@
                                                     <p><strong>Total:</strong></p>
                                                 </v-col>
                                                 <v-col class="text-end">
-                                                    {{ formatedFinalValue }}
+                                                   R$ {{ totalPrice}}
                                                 </v-col>
                                             </v-row>
 
@@ -501,7 +506,7 @@
                                                 <v-row fluid v-for="(item, index) in parsedProduct" :key="index">
                                                     <v-col class="d-flex child-flex" cols="auto">
                                                         <div>
-                                                            <v-row >
+                                                            <v-row>
                                                                 <v-col class="avatar-stack"
                                                                     :style="{ 'z-index': parsedProduct.length - index }"
                                                                     cols="auto">
@@ -531,34 +536,34 @@
                                                                     {{ item.name }} R$ {{ item.total_price }}
                                                                 </v-col>
 
-                                                                
+
                                                             </v-row>
-                                                            
+
                                                         </div>
                                                     </v-col>
 
-                                                  
+
                                                 </v-row>
 
                                                 <v-row>
-                                                                <v-col cols="auto">
-                                                                    
-                                                                    <p class="text-subtitle-2">
-                                                                        <strong>Total Value</strong>
-                                                                        {{ formatedFinalValue }}
-                                                                        <!-- {{ selectedDelivery.currency }}
+                                                    <v-col cols="auto">
+
+                                                        <p class="text-subtitle-2">
+                                                            <strong>Total Value</strong>
+                                                            {{ formatedFinalValue }}
+                                                            <!-- {{ selectedDelivery.currency }}
                                                                         {{ (parseFloat(selectedDelivery.price) +
                                                                         parseFloat(itemCart.price)).toFixed(2) }} -->
-                                                                    </p>
-                                                                </v-col>
-                                                                <v-col>
-                                                                    <div class="text-subtitle-2">
-                                                                        <strong>Cupom:</strong> 
-                                                                        none
-                                                                    </div>
-                                                                </v-col>
-                                                            </v-row>
-                                                
+                                                        </p>
+                                                    </v-col>
+                                                    <v-col>
+                                                        <div class="text-subtitle-2">
+                                                            <strong>Cupom:</strong>
+                                                            none
+                                                        </div>
+                                                    </v-col>
+                                                </v-row>
+
                                                 <v-row>
                                                     <v-col cols="8" sm="6">
                                                         <v-card class="mx-auto" :width="450">
@@ -583,9 +588,9 @@
                                                                     <v-col>
                                                                         <div v-if="paymentType == 'debit'">
                                                                             <v-card>
-                                                                                 <DebitForm :paymentType="paymentType"
-                                                                                    :carts="carts" 
-                                                                                    :billing_address="billing_address"/>
+                                                                                <DebitForm :paymentType="paymentType"
+                                                                                    :carts="carts"
+                                                                                    :billing_address="billing_address" />
                                                                             </v-card>
                                                                         </div>
                                                                         <div v-if="paymentType == 'credit'">
@@ -1207,12 +1212,14 @@ import DebitForm from '../Payment/DebitForm.vue'
 import CreditForm from '../Payment/CreditForm.vue'
 import PixForm from '../Payment/PixForm.vue'
 import cartStorage from '@/Services/CartStorage/CartStorage';
+import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
 import axios from "axios";
 
 export default {
     name: 'Checkout',
     components: {
         Dashboard,
+        ZipCodeField,
         DebitForm,
         CreditForm,
         PixForm,
@@ -1249,7 +1256,6 @@ export default {
             city: null,
             bairro: null,
         },
-       
         email: '',
         emailRules: [
             v => !!v || 'O email é obrigatório',
@@ -1263,6 +1269,7 @@ export default {
         index: -1,
         editedItem: {},
         removeDialog: false,
+        shippment: [],
     }),
     computed: {
         parsedProduct() {
@@ -1271,13 +1278,13 @@ export default {
                     ...item,
                     cart_item_colors: JSON.parse(item.cart_item_colors),
                     cart_item_size: JSON.parse(item.cart_item_size),
-                    images: JSON.parse(item.images),
+                    images: item.images ? JSON.parse(item.images) : [],
                 }
             });
         },
         subtotal() {
             return this.carts.reduce((acc, item) => {
-                return acc + (item.cart_item_price * item.shippment_quantity);
+                return acc + item.cart_item_price;
             }, 0)
         },
         formattedSubtotal() {
@@ -1286,29 +1293,20 @@ export default {
                 currency: 'BRL',
             }).format(this.subtotal);
         },
-        shipping_price() {
-            return this.carts.reduce((acc, item) => {
-                const total_shipping = parseFloat(item.delivery_price);
-                return acc + (isNaN(total_shipping) ? 0 : total_shipping);
-            }, 0);
+       formatedShippmentPrice() {
+        const shippmentPrice = this.shippment && !isNaN(Number(this.shippment.price)) 
+        ? Number(this.shippment.price) 
+        : 0;
+        return shippmentPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         },
-        formattedShippingPrice() {
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-            }).format(this.shipping_price);
-        },
-        finalValue() {
-            return this.carts.reduce((acc, item) => {
-                const total_value = parseFloat(item.total_price);
-                return acc + (isNaN(total_value) ? 0 : total_value);
-            }, 0);
-        },
-        formatedFinalValue() {
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-            }).format(this.finalValue);
+        totalPrice(){
+           
+            const subtotal = !isNaN(Number(this.subtotal)) ? Number(this.subtotal) : 0; 
+            const shippmentPrice = this.shippment && !isNaN(Number(this.shippment.price)) 
+          ? Number(this.shippment.price) 
+          : 0;
+            const sumValues = subtotal + shippmentPrice;
+            return sumValues.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
     },
     methods: {
@@ -1416,27 +1414,24 @@ export default {
                     return alert('ERROR: ', response);
                 });
         },
-        calculateDelivery() {
-            const data = {
-                postal_code: this.zip_code,
-                height: this.itemCart.height,
-                width: this.itemCart.width,
-                length: this.itemCart.length,
-                weight: this.itemCart.weight,
-                price: this.itemCart.price,
-                quantity: this.itemCart.quantity,
-            }
-            axios.post('/api/calculateDelivery', data)
-                .then((response) => {
-                    return this.quotations = response.data;
-                })
-                .catch((response) => {
-                    alert('Error : ' + response);
-                })
-        },
-        cepDialogOpen() {
-            this.cepDialog = true;
+        updateShippment(selectedShippment, zip_code, delivery_name) {
+            this.shippment = selectedShippment;
+            this.zip_code = zip_code;
+            this.delivery_name = delivery_name;
+            return this.finalValue(this.shippment);
 
+        },
+        finalValue(shippment) {
+            const sumValue = parseFloat(shippment.price);
+           
+            return sumValue
+        },
+        updateAddressFields(newItem) {
+            console.log(newItem);
+            this.billing_address.shippment_address = newItem.endereco;
+            this.billing_address.shippment_city = newItem.city ?? '';
+            this.billing_address.select_uf = newItem.UF,
+                console.log(this.billing_address.shippment_address);
         },
         confirmNext() {
             this.dataConfirm = true;

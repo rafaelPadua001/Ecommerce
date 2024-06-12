@@ -3,7 +3,7 @@
         <v-sheet class="px-2 py-2">
             <v-row fluid justify="center">
                 <v-col>
-                        {{ billing_address }}
+                       
                         <!-- {{ formatedFinalValue.slice(3).replace(/[.,]/g, '') }} -->
                      <!-- {{ carts }} -->
                     <v-form>
