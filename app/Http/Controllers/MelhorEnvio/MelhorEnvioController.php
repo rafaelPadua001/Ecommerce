@@ -45,6 +45,7 @@ class MelhorEnvioController extends Controller
 
         return response()->json($quotations);
     }
+
     public function createItem($request, $calculator){
         $items = $request->items;
         $itemObject = [];
@@ -73,42 +74,19 @@ class MelhorEnvioController extends Controller
         $shipment = new Shipment(env('MELHORENVIO_ACCESS_TOKEN', Environment::SANDBOX));
         return $shipment;
     }
+    public function getCustomer(){
+        $customer = Auth::guar('customer')->user();
+        return $customer;
+    }
     public function createCart(Request $request)
     {
-        $client = new Client();
-        $customer = Auth::guard('customer')->user();
-    //     dd(['service' =>  $this->CompanyIds($request),
-    //     'agency' =>  $this->AgencyIds($request),
-    //     'from' => [
-    //         'name' => env('APP_NAME'),
-    //         "phone" => 556195051731, //env('EMPLOYE_PHONE'),
-    //         "email" => env('EMPLOYE_MAIL'),
-    //         "address" => env('EMPLOYE_ADDRESS'),
-    //         "city" => env('EMPLOYE_CITY'),
-    //         "postal_code" => env('EMPLOYE_POSTALCODE'),
-    //         "document" => env('EMPLOYE_DOCUMENT')
-    //         // Preencha os detalhes de origem aqui
-    //     ],
-    //     'to' => [
-    //         // Preencha os detalhes de destino aqui
-    //         "name" => $customer->first_name . ' ' . $customer->last_name,
-    //         "phone" => $request['telefone'],
-    //         "email"   => $customer->email,
-    //         "address" => $request['address']['shippment_address'],
-    //         "complement" =>  $request['address']['shippment_complement'],
-    //         "city" => $request['address']['shippment_city'],
-    //         "postal_code" =>  $request['address']['zip_code'],
-    //         "state_abbr" => $request['address']['select_uf']['uf'],
-    //         'document' => $request['document']
-    //     ],
-    //    'products' => $this->createProduct($request),
-    //    'volumes' => $this->createVolumes($request)]);
-       
         try {
+            $client = new Client();
+            $customer = $this->getCustomer();
             $response = $client->post('https://sandbox.melhorenvio.com.br/api/v2/me/cart', [
                 'json' => [
-                    'service' =>  $this->CompanyIds($request),
-                    'agency' =>  $this->AgencyIds($request),
+                    'service' =>  $request->company_id,
+                    'agency' =>  $request->company_agency_id,
                     'from' => [
                         'name' => env('APP_NAME'),
                         "phone" => 556195051731, //env('EMPLOYE_PHONE'),
@@ -131,7 +109,7 @@ class MelhorEnvioController extends Controller
                         "state_abbr" => $request['address']['select_uf']['uf'],
                         'document' => $request['document']
                     ],
-                   'products' => $this->createProduct($request),
+                   'package' => $this->createPackage($request),
                     'volumes' => $this->createVolumes($request),
                     // 'options' => [
                     //     'insurance_value' => $request['delivery'][0]['packages'][0]['insurance_value'],
@@ -149,25 +127,19 @@ class MelhorEnvioController extends Controller
                     'User-Agent' => 'rafael.f.p.faria@hotmail.com',
                 ],
             ]);
-
+            
            
             $orderShippment = json_decode($response->getBody()->getContents(), true);
             $mergedData = array_merge($orderShippment, $request->toArray());
-
-
-
             //$this->getOrder($order, $request);
-
-
             return $mergedData;
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
     }
-    public function createProduct($request)
+    public function createPackage($request)
     {
         $product = $request->input('cartItem');
-       
         $products = [];
         foreach ($product as $item) {
             $productObject = new \stdClass();
@@ -198,33 +170,7 @@ class MelhorEnvioController extends Controller
       
         return $volumes;
     }
-    public function CompanyIds($request){
-        $companies = $request->input('cartItem');
-        $company_ids = [];
-        foreach($companies as $item) {
-            // Verifique se 'company_id' está definido e não é nulo
-            if (isset($item['company_id']) && !is_null($item['company_id'])) {
-                $company_ids[] = [
-                    $item['company_id'],
-                ];
-            }
-        }
-
-        return $company_ids;
-    }
-    public function AgencyIds($request){
-        $agencies = $request->input('cartItem');
-        $agency_ids = [];
-        foreach($agencies as $item){
-            if (isset($item['company_agency_id']) && !is_null($item['company_agency_id'])) {
-                $agency_ids[] = [
-                    $item['company_agency_id'],
-                ];
-            }
-            
-        }
-        return $agency_ids;
-    }
+   
     public function checkout(Request $request)
     {
         //dd($request->order);

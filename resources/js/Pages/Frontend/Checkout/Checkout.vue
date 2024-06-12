@@ -7,13 +7,12 @@
             <div v-if="!products">
                 <v-row justify="center" no-gutters>
                     <v-col class="d-flex flex-column" cols="auto">
-                        <!-- CartItems: {{ carts }} -->
                         <v-timeline direction="horizontal" line-inset="12">
                             <v-timeline-item dot-color="blue-darken-2" icon="fas fa-home" fill-dot size="x-small">
                                 <template v-slot:opposite>
-                                    <v-row no-gutters>
+                                    <v-row no-gutters v-model="confirm" v-if="confirm">
                                         <v-col cols="auto">
-                                            <v-card v-model="confirm" v-if="confirm" class="mx-auto" :width="600">
+                                            <v-card  class="mx-auto" :width="600">
                                                 <v-card-text>
                                                     <v-row fluid>
                                                         <v-col>
@@ -280,6 +279,7 @@
 
                                                         <v-row fluid class="text-subtitle-2 justify-end" v-if="this.shippment.company">
                                                             <v-col cols="auto">
+                                                               
                                                                 <p>shippment: {{ this.shippment.company.name }}</p>
 
 
@@ -349,7 +349,7 @@
                                                     <p><strong>Total:</strong></p>
                                                 </v-col>
                                                 <v-col class="text-end">
-                                                   R$ {{ totalPrice}}
+                                                   R$ {{ totalPrice}} 
                                                 </v-col>
                                             </v-row>
 
@@ -371,6 +371,7 @@
                                     <v-card-text>
                                         <v-row fluid>
                                             <div class="container-relative">
+                                                
                                                 <v-col v-for="(item, index) in parsedProduct" :key="index"
                                                     class="avatar-stack" cols="auto"
                                                     :style="{ 'z-index': parsedProduct.length - index, 'left': `${index * 10}px` }">
@@ -449,7 +450,7 @@
 
                                                     <div>
                                                         <p class="text-subtitle-2">
-                                                            <strong>Zip Code</strong> {{ cep ? 'not register' :
+                                                            <strong>Zip Code</strong> {{ 
                 billing_address.zip_code }}
                                                         </p>
                                                         <p class="text-subtitle-2">
@@ -497,7 +498,7 @@
                             <v-timeline-item v-model="finish" dot-color="blue-darken-2" icon="fas fa-truck" fill-dot
                                 size="small" v-if="finish && !dataConfirm && !confirm">
                                 <template v-slot:opposite>
-
+                                 
                                 </template>
                                 <div>
                                     <div>
@@ -549,8 +550,9 @@
                                                     <v-col cols="auto">
 
                                                         <p class="text-subtitle-2">
-                                                            <strong>Total Value</strong>
-                                                            {{ formatedFinalValue }}
+                                                            <strong>Total Value</strong>    
+                                                            {{totalPrice}}
+                                                            <!-- {{ formatedFinalValue }} -->
                                                             <!-- {{ selectedDelivery.currency }}
                                                                         {{ (parseFloat(selectedDelivery.price) +
                                                                         parseFloat(itemCart.price)).toFixed(2) }} -->
@@ -590,7 +592,9 @@
                                                                             <v-card>
                                                                                 <DebitForm :paymentType="paymentType"
                                                                                     :carts="carts"
-                                                                                    :billing_address="billing_address" />
+                                                                                    :billing_address="billing_address"
+                                                                                    :shippment="this.shippment"
+                                                                                     />
                                                                             </v-card>
                                                                         </div>
                                                                         <div v-if="paymentType == 'credit'">
@@ -1416,7 +1420,8 @@ export default {
         },
         updateShippment(selectedShippment, zip_code, delivery_name) {
             this.shippment = selectedShippment;
-            this.zip_code = zip_code;
+            this.billing_address.zip_code = zip_code;
+            this.billing_address.city = selectedShippment.city;
             this.delivery_name = delivery_name;
             return this.finalValue(this.shippment);
 
