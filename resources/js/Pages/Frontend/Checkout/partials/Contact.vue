@@ -153,10 +153,12 @@
 
                         <v-row>
                             <v-col class="d-flex child-flex">
-                                <v-bagde color="grey" :content="item.shippment_quantity" :value="true" bordered>
+                               
+                                <v-bagde color="red" :content="item.shippment_quantity" :value="true" bordered>
                                     <v-img v-if="item.images && item.images.length > 0" :width="4"
-                                        :src="`/storage/products/${item.images[0]}`"
-                                        :lazy-src="`/storage/products/${item.images[0]}`" aspect-ratio="16/9" cover>
+                                        :src="`./storage/products/${item.images[0]}`"
+                                        :lazy-src="`./storage/products/${item.images[0]}`" aspect-ratio="16/9" cover
+                                        :alt="item.images[0]" color="grey-lighten-2">
                                         <template v-slot:placeholder>
                                             <div class="d-flex justify-center fill-height flex-column">
                                                 <v-progress-circular color="grey-lighten-4"
@@ -164,6 +166,7 @@
                                             </div>
                                         </template>
                                     </v-img>
+                                    
                                     <v-img v-else :width="4" :src="`/path/to/default/image.jpg`"
                                         :lazy-src="`/path/to/default/image.jpg`" aspect-ratio="16/9" cover>
                                         <template v-slot:placeholder>
@@ -327,9 +330,7 @@ export default {
             { state: 'Goiás', uf: 'GO' },
             { state: 'Maranhão', uf: 'MA' },
         ],
-        index: -1,
-        editedItem: {},
-        removeDialog: false,
+        
         shippment: [],
     }),
     computed: {
@@ -392,10 +393,43 @@ export default {
                 console.log(this.billing_address.shippment_address);
         },
         confirmNext() {
-            
-            return this.$emit('confirmNext', this.dataConfirm);
-           s
+            const data = {
+                billing_address: this.billing_address,
+                email: this.email ?? this.customer.email,
+                shippment: this.shippment,
+            }
+            return this.$emit('confirmNext', data);
+           
         },
     }
 }
 </script>
+
+<style scoped>
+.avatar-stack {
+    position: absolute;
+    transition: transform 0.3s ease;
+
+}
+
+.avatar-stack:hover {
+    transform: translateY(-10px);
+}
+
+.container-relative {
+    position: relative;
+    height: 100%;
+
+}
+
+.container-absolute {
+    position: relative;
+    margin-left: 50%;
+}
+
+.text-caption {
+    display: flex;
+    margin-left: 32%;
+    /* Espaço entre nome e preço */
+}
+</style>

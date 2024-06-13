@@ -75,7 +75,7 @@ class MelhorEnvioController extends Controller
         return $shipment;
     }
     public function getCustomer(){
-        $customer = Auth::guar('customer')->user();
+        $customer = Auth::guard('customer')->user();
         return $customer;
     }
     public function createCart(Request $request)
@@ -83,6 +83,7 @@ class MelhorEnvioController extends Controller
         try {
             $client = new Client();
             $customer = $this->getCustomer();
+            
             $response = $client->post('https://sandbox.melhorenvio.com.br/api/v2/me/cart', [
                 'json' => [
                     'service' =>  $request->company_id,
@@ -127,7 +128,7 @@ class MelhorEnvioController extends Controller
                     'User-Agent' => 'rafael.f.p.faria@hotmail.com',
                 ],
             ]);
-            
+           
            
             $orderShippment = json_decode($response->getBody()->getContents(), true);
             $mergedData = array_merge($orderShippment, $request->toArray());
