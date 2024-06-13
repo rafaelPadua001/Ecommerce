@@ -20,7 +20,8 @@
                                                             <Contact :customer="this.customer" :carts="this.carts"
                                                                 :address="this.address" :confirm="this.confirm" 
                                                                 :quantity="this.quantity"
-                                                                @confirmNext="confirmNext"/>
+                                                                @confirmNext="confirmNext"
+                                                               />
                                                         </v-col>
                                                     </v-row>
                                                 </v-card-text>
@@ -40,7 +41,9 @@
                                 <DataConfirm 
                                     :carts="this.carts"
                                     :billing_address="this.billing_address"
-                                    :address="this.address" :customer="this.customer"></DataConfirm>
+                                    :address="this.address" :customer="this.customer"
+                                    @confirmDatas="confirmDatas"
+                                    @returnConfirm="returnConfirm"></DataConfirm>
                                
                                
                             </v-timeline-item>
@@ -50,155 +53,13 @@
                                 <template v-slot:opposite>
 
                                 </template>
-                                <div>
-                                    <div>
-                                        <v-card v-model="finish" class="d-flex align-center flex-column" :width="800">
-                                            <v-card-text>
-                                                <v-row fluid v-for="(item, index) in parsedProduct" :key="index">
-                                                    <v-col class="d-flex child-flex" cols="auto">
-                                                        <div>
-                                                            <v-row>
-                                                                <v-col class="avatar-stack"
-                                                                    :style="{ 'z-index': parsedProduct.length - index }"
-                                                                    cols="auto">
-                                                                    <v-badge :content="item.shippment_quantity"
-                                                                        color="primary">
-                                                                        <v-avatar
-                                                                            :image="`/storage/products/${item.images[0]}`"
-                                                                            :lazy-src="`/storage/products/${item.images[0]}`"
-                                                                            alt="product image here" aspect-ratio="16/9"
-                                                                            :width="200" color="grey-lighten-2"
-                                                                            no-gutters cover>
-
-                                                                            <template>
-                                                                                <div
-                                                                                    class="d-flex align-center justify-center fill-height">
-                                                                                    <v-progress-circular
-                                                                                        color="grey-lighten-4">
-                                                                                    </v-progress-circular>
-                                                                                </div>
-                                                                            </template>
-
-                                                                        </v-avatar>
-                                                                    </v-badge>
-
-                                                                </v-col>
-                                                                <v-col class="text-caption" cols="auto">
-                                                                    {{ item.name }} R$ {{ item.total_price }}
-                                                                </v-col>
-
-
-                                                            </v-row>
-
-                                                        </div>
-                                                    </v-col>
-
-
-                                                </v-row>
-
-                                                <v-row>
-                                                    <v-col cols="auto">
-
-                                                        <p class="text-subtitle-2">
-                                                            <strong>Total Value</strong>
-                                                            {{ totalPrice }}
-                                                            <!-- {{ formatedFinalValue }} -->
-                                                            <!-- {{ selectedDelivery.currency }}
-                                                                        {{ (parseFloat(selectedDelivery.price) +
-                                                                        parseFloat(itemCart.price)).toFixed(2) }} -->
-                                                        </p>
-                                                    </v-col>
-                                                    <v-col>
-                                                        <div class="text-subtitle-2">
-                                                            <strong>Cupom:</strong>
-                                                            none
-                                                        </div>
-                                                    </v-col>
-                                                </v-row>
-
-                                                <v-row>
-                                                    <v-col cols="8" sm="6">
-                                                        <v-card class="mx-auto" :width="450">
-                                                            <v-card-text>
-                                                                <v-row>
-                                                                    <v-col cols="8" sm="8">
-                                                                        <v-radio-group v-model="paymentType" inline>
-                                                                            <v-radio label="Debit" value="debit">
-
-                                                                            </v-radio>
-                                                                            <v-radio label="Credit" value="credit">
-
-                                                                            </v-radio>
-                                                                            <v-radio label="Pix" value="pix">
-
-                                                                            </v-radio>
-                                                                        </v-radio-group>
-                                                                    </v-col>
-                                                                </v-row>
-
-                                                                <v-row>
-                                                                    <v-col>
-                                                                        <div v-if="paymentType == 'debit'">
-                                                                            <v-card>
-                                                                                <DebitForm :paymentType="paymentType"
-                                                                                    :carts="carts"
-                                                                                    :billing_address="billing_address"
-                                                                                    :shippment="this.shippment" />
-                                                                            </v-card>
-                                                                        </div>
-                                                                        <div v-if="paymentType == 'credit'">
-                                                                            <v-card>
-                                                                                <CreditForm :paymentType="paymentType"
-                                                                                    :name="this.itemCart.name"
-                                                                                    :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
-                                                                                    :quantity="this.itemCart.quantity"
-                                                                                    :delivery="selectedDelivery"
-                                                                                    :description="this.itemCart.description"
-                                                                                    :image="this.itemCart.images"
-                                                                                    :color="this.itemCart.color" />
-
-
-                                                                            </v-card>
-                                                                        </div>
-                                                                        <div v-if="paymentType == 'pix'">
-                                                                            <v-card>
-                                                                                <PixForm :paymentType="paymentType"
-                                                                                    :name="this.itemCart.name"
-                                                                                    :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
-                                                                                    :quantity="this.itemCart.quantity"
-                                                                                    :delivery="selectedDelivery"
-                                                                                    :description="this.itemCart.description"
-                                                                                    :image="this.itemCart.images">
-                                                                                </PixForm>
-                                                                            </v-card>
-                                                                        </div>
-                                                                    </v-col>
-                                                                </v-row>
-                                                            </v-card-text>
-                                                        </v-card>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-card-text>
-                                            <v-card-actions>
-                                                <v-btn-group>
-                                                    <v-btn @click="returnConfirmDatas()">Voltar</v-btn>
-
-
-                                                </v-btn-group>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </div>
-                                    <p>
-
-                                    </p>
-                                </div>
-                                <div>
-                                    <div>Finalizar</div>
-                                    <p>
-                                        {{ itemCart.name }}
-                                    </p>
-
-                                </div>
+                                <Finish
+                                    :carts="this.carts"
+                                    :billing_address="this.billing_address"
+                                    :shippment="this.shippment"
+                                    @returnConfirmDatas="returnConfirmDatas"
+                                />
+                               
                             </v-timeline-item>
                         </v-timeline>
 
@@ -767,6 +628,7 @@ import PixForm from '../Payment/PixForm.vue'
 import cartStorage from '@/Services/CartStorage/CartStorage';
 import Contact from './partials/Contact.vue';
 import DataConfirm from './partials/DataConfirm.vue';
+import Finish from './partials/Finish.vue';
 // import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
 import axios from "axios";
 
@@ -776,6 +638,7 @@ export default {
         Dashboard,
         Contact,
         DataConfirm,
+        Finish,
         // ZipCodeField,
         DebitForm,
         CreditForm,
@@ -933,7 +796,10 @@ export default {
                     return alert('ERROR: ', response);
                 });
         },
-        confirmNext() {
+        confirmNext(data) {
+            console.log(data);
+            this.billing_address = data.billing_address;
+            this.shippment = data.shippment;
             this.dataConfirm = true;
             return this.confirm = false;
         },

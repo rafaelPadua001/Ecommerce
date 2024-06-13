@@ -201,7 +201,7 @@ export default {
                 // cart_id: this.cart_id,
             };
 
-
+         
             axios.post('/payment', data)
                 .then((response) => {
                     if (response.data.original.error) {
@@ -212,7 +212,7 @@ export default {
                         this.loading = false;
                         return false;
                     }
-                    console.log(response);
+                    alert('Payment Successfull')
                     return this.updateCompleted();
 
                 })
