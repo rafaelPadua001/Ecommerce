@@ -86,7 +86,8 @@
                                                 <v-card>
                                                     <DebitForm :paymentType="paymentType" :carts="carts"
                                                         :billing_address="billing_address"
-                                                        :shippment="this.shippment" />
+                                                        :shippment="this.shippment"
+                                                        @updateCompleted="updateCompleted" />
                                                 </v-card>
                                             </div>
                                             <div v-if="paymentType == 'credit'">

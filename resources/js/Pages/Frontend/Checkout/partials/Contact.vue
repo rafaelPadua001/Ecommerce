@@ -296,7 +296,27 @@
 
         </v-col>
     </v-row>
+    <div>
+                            <v-dialog v-model="removeDialog">
+                                <v-card>
+                                    <v-toolbar>
+                                        <v-toolbar-title>{{ editedItem.name }}</v-toolbar-title>
+                                    </v-toolbar>
+                                    <v-card-text>
+                                        Você deseja remover este Item ? {{ editedItem.cart_item_id }}
+                                    </v-card-text>
 
+                                    <v-card-actions>
+                                        <v-btn @click="closeRemoveItemDialog()">
+                                            Close
+                                        </v-btn>
+                                        <v-btn color="error" @click="removeItemConfirm()">
+                                            Confirm
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </div>
 
 </template>
 
@@ -310,6 +330,7 @@ export default {
         ZipCodeField
     },
     data: () => ({
+        removeDialog: false,
         dataConfirm: false,
         billing_address: {
             shippment_address: '',
@@ -401,6 +422,24 @@ export default {
             return this.$emit('confirmNext', data);
            
         },
+        removeItemDialog(item) {
+            this.index = this.carts.findIndex(cartItem => cartItem.cart_item_id === item.cart_item_id);
+            this.editedItem = Object.assign({}, item);
+            this.removeDialog = true;
+        },
+        removeItemConfirm() {
+
+            this.carts.splice(this.index, 1);
+            this.closeRemoveItemDialog();
+
+        },
+        closeRemoveItemDialog() {
+            this.removeDialog = false;
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, '');
+                this.index = -1;
+            });
+        }
     }
 }
 </script>
