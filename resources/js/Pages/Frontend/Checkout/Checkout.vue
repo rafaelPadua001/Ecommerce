@@ -12,348 +12,19 @@
                                 <template v-slot:opposite>
                                     <v-row no-gutters v-model="confirm" v-if="confirm">
                                         <v-col cols="auto">
-                                            <v-card  class="mx-auto" :width="600">
+                                            <v-card class="mx-auto">
                                                 <v-card-text>
+
                                                     <v-row fluid>
                                                         <v-col>
-                                                            <v-row>
-                                                                <v-col>
-                                                                    <p class="text-start text-body-1">Contact
-                                                                        Information
-                                                                    </p>
-                                                                    <v-divider></v-divider>
-                                                                    <v-spacer></v-spacer>
-                                                                </v-col>
-                                                            </v-row>
-
-                                                            <v-row>
-                                                                <v-col>
-                                                                    <v-form>
-                                                                        <v-text-field v-if="!customer.email"
-                                                                            v-model="email" label="email" required
-                                                                            :rules="emailRules"
-                                                                            prepend-icon="fas fa-envelope"
-                                                                            placeholder="Email here...">
-
-                                                                        </v-text-field>
-                                                                        <v-text-field v-else v-model="customer.email"
-                                                                            label="email" required :rules="emailRules"
-                                                                            prepend-icon="fas fa-envelope"
-                                                                            placeholder="Email here...">
-
-                                                                        </v-text-field>
-                                                                    </v-form>
-                                                                </v-col>
-                                                            </v-row>
-
-                                                            <v-row>
-                                                                <v-col>
-                                                                    <v-checkbox
-                                                                        label="Desejo receber ofertas e novidades"
-                                                                        color="primary">
-
-                                                                    </v-checkbox>
-                                                                </v-col>
-                                                            </v-row>
-
-                                                            <v-row>
-                                                                <v-col class="text-body-1 text-start">
-                                                                    <p>Shipping address</p>
-                                                                    <v-divider></v-divider>
-                                                                    
-                                                                </v-col>
-                                                            </v-row>
-                                                            <div>
-                                                                <v-row fluid>
-                                                                    <v-col>
-
-                                                                        <ZipCodeField :selectProduct="this.carts"
-                                                                            :quantity="this.quantity"
-                                                                            :customer="this.customer"
-                                                                            @updateShippment="updateShippment"
-                                                                            @updateAddressFields="updateAddressFields" />
-
-                                                                    </v-col>
-                                                                </v-row>
-
-                                                            </div>
-                                                            <v-row>
-                                                                <v-col v-if="Object.keys(this.address).length == 0">
-                                                                    <v-form>
-                                                                        <v-row>
-                                                                            <v-col>
-                                                                                <v-text-field
-                                                                                    v-model="customer.first_name"
-                                                                                    label="First Name">
-
-                                                                                </v-text-field>
-
-                                                                                {{ first_name }}
-                                                                            </v-col>
-                                                                            <v-col>
-                                                                                <v-text-field
-                                                                                    v-model="customer.last_name"
-                                                                                    label="Last Name">
-
-                                                                                </v-text-field>
-
-                                                                                {{ last_name }}
-                                                                            </v-col>
-                                                                        </v-row>
-                                                                        <v-row>
-                                                                            <v-col>
-                                                                                <v-text-field
-                                                                                    v-model="billing_address.shippment_address"
-                                                                                    label="Address">
-
-                                                                                </v-text-field>
-
-
-                                                                            </v-col>
-
-                                                                        </v-row>
-
-                                                                        <v-row>
-                                                                            <v-col>
-                                                                                <v-text-field
-                                                                                    v-model="billing_address.shippment_complement"
-                                                                                    label="Complemento (opcional)">
-
-                                                                                </v-text-field>
-
-                                                                            </v-col>
-
-                                                                        </v-row>
-
-                                                                        <v-row fluid>
-                                                                            <v-col>
-                                                                                <v-text-field
-                                                                                    v-model="billing_address.shippment_city"
-                                                                                    label="Cidade">
-
-                                                                                </v-text-field>
-                                                                                {{ billing_address.shippment_city }}
-                                                                            </v-col>
-                                                                            <v-col cols="auto">
-
-                                                                                <v-select
-                                                                                    v-model="billing_address.select_uf"
-                                                                                    :items="ufs"
-                                                                                    :hint="`${billing_address.select_uf.state}, ${billing_address.select_uf.uf}`"
-                                                                                    item-title="uf" item.value="state"
-                                                                                    placeholder="UF" return-object
-                                                                                    single-line
-                                                                                    :placeholder="customerAddress.uf">
-
-                                                                                </v-select>
-                                                                                {{ billing_address.select_uf }}
-                                                                            </v-col>
-
-
-                                                                        </v-row>
-                                                                        <v-card-actions>
-                                                                            <v-row>
-                                                                                <v-col class="text-start">
-                                                                                    <v-btn type="text"
-                                                                                        :to="'/'">Return</v-btn>
-                                                                                </v-col>
-                                                                            </v-row>
-                                                                            <v-row>
-                                                                                <v-col class="text-end">
-                                                                                    <v-btn @click="confirmNext()"
-                                                                                        color="primary">Confirmar</v-btn>
-                                                                                </v-col>
-                                                                            </v-row>
-
-
-                                                                        </v-card-actions>
-
-                                                                    </v-form>
-
-                                                                </v-col>
-                                                                <v-col v-else>
-                                                                    teste 1
-                                                                </v-col>
-                                                            </v-row>
+                                                            <Contact :customer="this.customer" :carts="this.carts"
+                                                                :address="this.address" :confirm="this.confirm" 
+                                                                :quantity="this.quantity"
+                                                                @confirmNext="confirmNext"/>
                                                         </v-col>
                                                     </v-row>
                                                 </v-card-text>
                                             </v-card>
-
-
-                                        </v-col>
-
-                                        <v-col v-if="confirm">
-                                            <v-card class="d-flex justify-center flex-column" :width="500">
-
-                                                <v-list :lines="false" density="compact" nav>
-
-                                                    <v-list-item v-for="(item, index) in parsedProduct" :key="index"
-                                                        :value="item">
-                                                        <v-toolbar color="transparent">
-                                                            <template v-slot:append>
-                                                                <v-btn icon size="x-small"
-                                                                    @click="removeItemDialog(item)">
-                                                                    <v-icon icon="fas fa-trash"></v-icon>
-                                                                </v-btn>
-                                                            </template>
-                                                        </v-toolbar>
-
-                                                        <v-row>
-                                                            <v-col class="d-flex child-flex">
-                                                                <v-bagde color="grey" :content="item.shippment_quantity"
-                                                                    :value="true" bordered>
-                                                                    <v-img v-if="item.images && item.images.length > 0"
-                                                                        :width="4"
-                                                                        :src="`/storage/products/${item.images[0]}`"
-                                                                        :lazy-src="`/storage/products/${item.images[0]}`"
-                                                                        aspect-ratio="16/9" cover>
-                                                                        <template v-slot:placeholder>
-                                                                            <div
-                                                                                class="d-flex justify-center fill-height flex-column">
-                                                                                <v-progress-circular
-                                                                                    color="grey-lighten-4"
-                                                                                    indeterminate></v-progress-circular>
-                                                                            </div>
-                                                                        </template>
-                                                                    </v-img>
-                                                                    <v-img v-else :width="4"
-                                                                        :src="`/path/to/default/image.jpg`"
-                                                                        :lazy-src="`/path/to/default/image.jpg`"
-                                                                        aspect-ratio="16/9" cover>
-                                                                        <template v-slot:placeholder>
-                                                                            <div
-                                                                                class="d-flex justify-center fill-height flex-column">
-                                                                                <v-progress-circular
-                                                                                    color="grey-lighten-4"
-                                                                                    indeterminate></v-progress-circular>
-                                                                            </div>
-                                                                        </template>
-                                                                    </v-img>
-                                                                </v-bagde>
-                                                            </v-col>
-                                                            <v-col cols="auto" class="d-flex flex-child text-body-2">
-                                                                <strong>{{ item.name }}</strong>
-                                                            </v-col>
-
-                                                            <v-col cols="auto" class="d-flex flex-child text-body-2">
-                                                                <!-- <strong>Product Price:</strong> -->
-                                                                R$ {{ item.cart_item_price }}
-                                                            </v-col>
-                                                        </v-row>
-
-
-                                                        <v-row no-gutters class="text-subtitle-2 justify-end">
-                                                            <strong>Quantity:</strong> {{
-                item.shippment_quantity }}
-                                                        </v-row>
-                                                        <v-row no-gutters class="text-subtitle-2 justify-end">
-
-                                                            <v-col cols="auto"
-                                                                v-for="(color, index) in item.cart_item_colors"
-                                                                :key="index">
-
-                                                                <v-avatar :bg-color="color" :color="color" :width="1"
-                                                                    rounded="10">
-                                                                    <template v-slot:append>
-                                                                        <!-- {{ parsedQuantityColors[index] }} -->
-                                                                        <!-- <span>Available</span> -->
-                                                                    </template>
-                                                                </v-avatar>
-                                                            </v-col>
-
-                                                        </v-row>
-                                                        <v-row no-gutters class="text-subtitle-2 justify-end">
-
-                                                            <v-col cols="auto"
-                                                                v-for="(size, index) in item.cart_item_size"
-                                                                :key="index">
-
-                                                                <v-avatar color="grey" :width="75" rounded="10">
-                                                                    {{ size }}
-
-                                                                </v-avatar>
-                                                            </v-col>
-                                                        </v-row>
-
-
-                                                        <v-row fluid class="text-subtitle-2 justify-end" v-if="this.shippment.company">
-                                                            <v-col cols="auto">
-                                                               
-                                                                <p>shippment: {{ this.shippment.company.name }}</p>
-
-
-                                                            </v-col>
-                                                            <!-- <v-col cols="auto">
-                                                                <p>R$ {{ item.shippment_price }}</p>
-
-
-                                                            </v-col> -->
-
-                                                        </v-row>
-
-                                                        <!-- <v-row fluid class="text-subtitle-2 justify-end">
-                                                            <v-col cols="auto">
-                                                                <p>Total Delivery: R$ {{ item.delivery_price }}</p>
-                                                            </v-col>
-                                                            <v-col cols="auto">
-                                                                <p>Total Price: R$ {{ item.total_price }}</p>
-                                                            </v-col>
-                                                        </v-row> -->
-                                                        <v-divider></v-divider>
-                                                        <v-spacer></v-spacer>
-                                                    </v-list-item>
-
-                                                </v-list>
-
-
-                                            </v-card>
-
-                                            <v-divider></v-divider>
-                                            <v-spacer></v-spacer>
-                                            <v-row>
-                                                <v-col>
-                                                    <v-input label="Discount coupon">
-                                                        <template v-slot:append>
-                                                            <v-btn color="grey" @click="couponApply">Apply</v-btn>
-                                                        </template>
-                                                        <v-text-field v-model="coupon" hide-details
-                                                            label="Gift Card or offer code"></v-text-field>
-                                                    </v-input>
-                                                </v-col>
-                                            </v-row>
-
-                                            <v-spacer></v-spacer>
-                                            <v-divider></v-divider>
-                                            <v-row no-gutters>
-                                                <v-col class="text-start text-subtitle-2">
-                                                    <p>Subtotal: </p>
-                                                </v-col>
-                                                <v-col class="text-end text-subtitle-2">
-                                                    {{ formattedSubtotal }}
-                                                </v-col>
-                                            </v-row>
-                                            <v-row no-gutters>
-                                                <v-col class="text-start text-subtitle-2">
-                                                    <p>Shipping:</p>
-                                                </v-col>
-                                                <v-col class="text-end text-subtitle-2">
-                                                   R$ {{ formatedShippmentPrice }}
-                                                </v-col>
-                                            </v-row>
-
-                                            <v-divider></v-divider>
-
-                                            <v-row fluid>
-                                                <v-col class="text-start text-body-1">
-                                                    <p><strong>Total:</strong></p>
-                                                </v-col>
-                                                <v-col class="text-end">
-                                                   R$ {{ totalPrice}} 
-                                                </v-col>
-                                            </v-row>
-
-
                                         </v-col>
                                     </v-row>
 
@@ -366,139 +37,18 @@
                                 <template v-slot:opposite>
 
                                 </template>
-
-                                <v-card class="d-flex mx-auto flex-column" :width="600">
-                                    <v-card-text>
-                                        <v-row fluid>
-                                            <div class="container-relative">
-                                                
-                                                <v-col v-for="(item, index) in parsedProduct" :key="index"
-                                                    class="avatar-stack" cols="auto"
-                                                    :style="{ 'z-index': parsedProduct.length - index, 'left': `${index * 10}px` }">
-                                                    <v-badge color="red" :content="item.shippment_quantity">
-                                                        <v-avatar :image="`/storage/products/${item.images[0]}`"
-                                                            :lazy-src="`/storage/products/${item.images[0]}`"
-                                                            aspect-ratio="16/9" :width="200" cover alt="Image Here"
-                                                            color="grey-lighten-2" no-gutters>
-
-
-                                                            <template>
-                                                                <div
-                                                                    class="d-flex align-center justify-center fill-height">
-                                                                    <v-progress-circular color="grey-lighten-4">
-                                                                    </v-progress-circular>
-                                                                </div>
-                                                            </template>
-                                                            <!-- {{ item.images[0] }} -->
-                                                        </v-avatar>
-
-                                                    </v-badge>
-
-
-                                                </v-col>
-                                            </div>
-
-
-                                            <div class="container-absolute">
-                                                <v-col cols="auto">
-                                                    <v-row no-gutters>
-                                                        <v-col class="text-body-1">
-                                                            <strong>Customer name:</strong>
-                                                            {{ customer.first_name }} {{ customer.last_name }}
-                                                        </v-col>
-                                                    </v-row>
-                                                    <v-spacer></v-spacer>
-                                                    <v-divider></v-divider>
-                                                    <v-row no-gutters>
-                                                        <v-col class="text-overline">
-                                                            <strong>CPF:</strong>
-                                                            {{ 'not found' }}
-                                                        </v-col>
-                                                    </v-row>
-                                                    <v-row no-gutters>
-                                                        <v-col class="text-body-2">
-                                                            <strong>Celular:</strong>
-                                                            {{ 'not found' }}
-                                                        </v-col>
-                                                    </v-row>
-
-                                                    <v-spacer></v-spacer>
-                                                    <v-divider></v-divider>
-
-                                                    <v-row no-gutters>
-                                                        <v-col class="text-body-2">
-                                                            <strong>Endereço:</strong>
-                                                            {{ address.endereco ? 'not register' :
-                billing_address.shippment_address }}
-                                                        </v-col>
-                                                    </v-row>
-                                                    <v-row no-gutters>
-                                                        <v-col class="text-body-2">
-                                                            <strong>Complemento:</strong>
-                                                            {{ address.complemento ? 'not register' :
-                billing_address.shippment_complement }}
-                                                        </v-col>
-                                                    </v-row>
-
-                                                    <v-row no-gutters>
-                                                        <v-col>
-                                                            <strong>Cidade:</strong> {{ address.cidade ? 'not register'
-                : billing_address.shippment_city }}
-                                                        </v-col>
-                                                    </v-row>
-
-
-                                                    <div>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>Zip Code</strong> {{ 
-                billing_address.zip_code }}
-                                                        </p>
-                                                        <p class="text-subtitle-2">
-                                                            <strong>UF:</strong> {{ address.uf ? 'not register'
-                : billing_address.select_uf.uf }}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <!-- <p class="text-subtitle-2">
-                                                                    <strong>Delivery: </strong>
-                                                                    {{ selectedDelivery.currency }} {{
-                selectedDelivery.price }}
-
-                                                                </p> -->
-
-                                                    </div>
-
-                                                    <!-- <div>
-                                                                <p>
-                                                                    <strong>Total Value</strong>
-                                                                    {{ selectedDelivery.currency }}
-                                                                    {{ (parseFloat(selectedDelivery.price) +
-                parseFloat(itemCart.price)).toFixed(2)
-                                                                    }}
-                                                                </p>
-
-                                                            </div> -->
-
-                                                </v-col>
-                                            </div>
-
-                                        </v-row>
-
-                                    </v-card-text>
-
-                                    <v-card-actions>
-                                        <v-btn-group>
-                                            <v-btn @click="returnConfirm()">voltar</v-btn>
-                                            <v-btn @click="confirmDatas()">Confirmar</v-btn>
-                                        </v-btn-group>
-                                    </v-card-actions>
-                                </v-card>
+                                <DataConfirm 
+                                    :carts="this.carts"
+                                    :billing_address="this.billing_address"
+                                    :address="this.address" :customer="this.customer"></DataConfirm>
+                               
+                               
                             </v-timeline-item>
 
                             <v-timeline-item v-model="finish" dot-color="blue-darken-2" icon="fas fa-truck" fill-dot
                                 size="small" v-if="finish && !dataConfirm && !confirm">
                                 <template v-slot:opposite>
-                                 
+
                                 </template>
                                 <div>
                                     <div>
@@ -550,8 +100,8 @@
                                                     <v-col cols="auto">
 
                                                         <p class="text-subtitle-2">
-                                                            <strong>Total Value</strong>    
-                                                            {{totalPrice}}
+                                                            <strong>Total Value</strong>
+                                                            {{ totalPrice }}
                                                             <!-- {{ formatedFinalValue }} -->
                                                             <!-- {{ selectedDelivery.currency }}
                                                                         {{ (parseFloat(selectedDelivery.price) +
@@ -593,8 +143,7 @@
                                                                                 <DebitForm :paymentType="paymentType"
                                                                                     :carts="carts"
                                                                                     :billing_address="billing_address"
-                                                                                    :shippment="this.shippment"
-                                                                                     />
+                                                                                    :shippment="this.shippment" />
                                                                             </v-card>
                                                                         </div>
                                                                         <div v-if="paymentType == 'credit'">
@@ -1216,14 +765,18 @@ import DebitForm from '../Payment/DebitForm.vue'
 import CreditForm from '../Payment/CreditForm.vue'
 import PixForm from '../Payment/PixForm.vue'
 import cartStorage from '@/Services/CartStorage/CartStorage';
-import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
+import Contact from './partials/Contact.vue';
+import DataConfirm from './partials/DataConfirm.vue';
+// import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
 import axios from "axios";
 
 export default {
     name: 'Checkout',
     components: {
         Dashboard,
-        ZipCodeField,
+        Contact,
+        DataConfirm,
+        // ZipCodeField,
         DebitForm,
         CreditForm,
         PixForm,
@@ -1275,44 +828,6 @@ export default {
         removeDialog: false,
         shippment: [],
     }),
-    computed: {
-        parsedProduct() {
-            return this.carts.map((item) => {
-                return {
-                    ...item,
-                    cart_item_colors: JSON.parse(item.cart_item_colors),
-                    cart_item_size: JSON.parse(item.cart_item_size),
-                    images: item.images ? JSON.parse(item.images) : [],
-                }
-            });
-        },
-        subtotal() {
-            return this.carts.reduce((acc, item) => {
-                return acc + item.cart_item_price;
-            }, 0)
-        },
-        formattedSubtotal() {
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-            }).format(this.subtotal);
-        },
-       formatedShippmentPrice() {
-        const shippmentPrice = this.shippment && !isNaN(Number(this.shippment.price)) 
-        ? Number(this.shippment.price) 
-        : 0;
-        return shippmentPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        },
-        totalPrice(){
-           
-            const subtotal = !isNaN(Number(this.subtotal)) ? Number(this.subtotal) : 0; 
-            const shippmentPrice = this.shippment && !isNaN(Number(this.shippment.price)) 
-          ? Number(this.shippment.price) 
-          : 0;
-            const sumValues = subtotal + shippmentPrice;
-            return sumValues.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-    },
     methods: {
         getProducts() {
             let url = window.location.href;
@@ -1417,26 +932,6 @@ export default {
                 .catch((response) => {
                     return alert('ERROR: ', response);
                 });
-        },
-        updateShippment(selectedShippment, zip_code, delivery_name) {
-            this.shippment = selectedShippment;
-            this.billing_address.zip_code = zip_code;
-            this.billing_address.city = selectedShippment.city;
-            this.delivery_name = delivery_name;
-            return this.finalValue(this.shippment);
-
-        },
-        finalValue(shippment) {
-            const sumValue = parseFloat(shippment.price);
-           
-            return sumValue
-        },
-        updateAddressFields(newItem) {
-            console.log(newItem);
-            this.billing_address.shippment_address = newItem.endereco;
-            this.billing_address.shippment_city = newItem.city ?? '';
-            this.billing_address.select_uf = newItem.UF,
-                console.log(this.billing_address.shippment_address);
         },
         confirmNext() {
             this.dataConfirm = true;
