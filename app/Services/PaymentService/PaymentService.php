@@ -130,7 +130,7 @@ class PaymentService
         try {
             $payer = $this->getCustomer();
             $cartItems = $request->input('cartItem');
-            $itemName = [];
+            $itemNames = [];
             foreach($cartItems as $item){
                 $itemNames[] = $item["name"];
                 
@@ -149,12 +149,12 @@ class PaymentService
             ]);
             
             $createOrder = $this->getOrder($request, $itemNameJson, $responseData);
-            
+           
             if ($createOrder) {
                 $melhorEnvio = $this->getMelhorEnvio($request);
-
-                $createShippment = $this->shippmentService->store($melhorEnvio);
                 
+                $createShippment = $this->shippmentService->store($melhorEnvio);
+              
             }
                 
             $itemId = $request['id'];
@@ -183,7 +183,7 @@ class PaymentService
             $notification = $this->notification($responseData);
             $shippment = $this->storeShippment($request);
 
-            // dd($notification);
+             dd($notification);
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -353,7 +353,6 @@ class PaymentService
     }
     public function getOrder($request, $itemNameJson, $responseData)
     {
-
         $order = $this->orderService->store($request, $itemNameJson, $responseData); //new OrderController();
         return $order;
     }
@@ -378,5 +377,6 @@ class PaymentService
     public function storeShippment($request)
     {
         $store = $this->shippmentService->store($request);
+        return $store;
     }
 }

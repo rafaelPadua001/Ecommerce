@@ -180,6 +180,7 @@ export default {
                         return false;
                     }
                     this.loading = false;
+                    console.log(response);
                     return this.completed();
 
                 })

@@ -5,6 +5,7 @@ namespace App\Services\ShippmentService;
 use App\Models\Shippment;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class ShippmentService
 {
@@ -34,27 +35,30 @@ class ShippmentService
             return response()->json($e->getMessage());
         }
     }
+    public function getAuthenticated(){
+        $customer = Auth::guard('customer')->user();
+        return $customer;
+    }
     public function store($delivery_item)
     {
-        // dd($delivery_item, $delivery_item['delivery']['id']);
-        // dd('teste');
+        $customer = $this->getAuthenticated();
         $data = [
-            'name' => $delivery_item['delivery']['name'],
-            'company' => $delivery_item['delivery']['company']['name'], //$delivery_item['delivery'][0]['company']['name'],
-            'price' => $delivery_item['delivery']['price'],
-            'deadline' => $delivery_item['delivery']['delivery_time'],
-            'product_id' => $delivery_item['product_id'],
+            'name' => $delivery_item['cartItem']['shippment_name'],
+            'company' => $delivery_item['cartItem']['shippment_name'], //$delivery_item['delivery'][0]['company']['name'],
+            'price' => $delivery_item['cartItem']['price'],
+            'deadline' => $delivery_item['cartItem']['delivery_time'] ? false : 0,
+            'product_id' => $delivery_item['cartItem']['product_id'],
             'quantity' => $delivery_item['quantity'],
-            'user_id' => $delivery_item['user_id'],
-            'cart_id' => $delivery_item['cart_id'],
-            'cart_item_id' => $delivery_item['cart_item_id'],
-            'delivery_id' =>  $delivery_item['delivery']['id'],
-            'company_id' => $delivery_item['delivery']['id'],
-                'company_id_agency' => $delivery_item['delivery']['company']['id']// Use ['id'] se for o campo correto
+            'user_id' => $customer->id,
+            'cart_id' => $delivery_item['cartItem']['cart_id'],
+            'cart_item_id' => $delivery_item['cartItem']['cart_item_id'],
+            'delivery_id' =>  $delivery_item['cartItem']['company_id'],
+            'company_id' => $delivery_item['cartItem']['id'],
+                'company_id_agency' => $delivery_item['cartItem']['company_agency_id'] //['id']// Use ['id'] se for o campo correto
         ];
 
         $store_shippment = $this->shippment->create($data);
-
+        dd($store_shippment);
         return $store_shippment;
     }
     public function update($id, $request)
