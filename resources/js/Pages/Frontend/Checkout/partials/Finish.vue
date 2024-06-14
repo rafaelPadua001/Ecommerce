@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{ paymentType }}
         <div>
             <v-card v-model="finish" class="d-flex align-center flex-column" :width="800">
                 <v-card-text>
@@ -199,6 +198,11 @@ export default {
         returnConfirmDatas() {
             return this.$emit('returnConfirmDatas');
         },
+        updateCompleted(){
+            return this.$emit('updateCompleted');
+            this.completed = true;
+            return this.finish = false;
+        }
     }
 
 }
