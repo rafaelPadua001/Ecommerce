@@ -42,6 +42,7 @@ class CartService
                 'shippments.quantity as shippment_quantity',
                 'shippments.company_id as company_id',
                 'shippments.company_id_agency as company_agency_id',
+                'products.id as product_id',
                 'products.name',
                 'products.description as product_description',
                 'products.price as product_price',

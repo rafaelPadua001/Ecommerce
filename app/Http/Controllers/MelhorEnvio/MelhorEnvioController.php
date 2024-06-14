@@ -130,6 +130,7 @@ class MelhorEnvioController extends Controller
 
             $orderShippment = json_decode($response->getBody()->getContents(), true);
             $mergedData = array_merge($orderShippment, $request->toArray());
+           
             //$this->getOrder($order, $request);
             return $mergedData;
         } catch (\Exception $e) {

@@ -599,19 +599,13 @@ export default {
     data: () => ({
         customer: [],
         address: [],
+        carts: [],
+        shippment: [],
         paymentType: false,
         confirm: true,
         dataConfirm: false,
         finish: false,
         completed: false,
-        productImages: false,
-        colors: false,
-        postal_code: null,
-        uf: null,
-        city: null,
-        bairro: null,
-        complemento: null,
-        carts: [],
         billing_address: {
             shippment_address: '',
             shippment_complement: '',
@@ -634,33 +628,8 @@ export default {
         index: -1,
         editedItem: {},
         removeDialog: false,
-        shippment: [],
     }),
     methods: {
-        getProducts() {
-            let url = window.location.href;
-
-            // Use uma expressão regular para encontrar o número no final da URL
-            let itemId = url.match(/\d+$/);
-
-            // Verifique se o número foi encontrado
-            if (itemId !== null) {
-                // Converta o número para um valor inteiro
-                itemId = parseInt(itemId[0]);
-
-                axios.get(`/cartItem/checkout/${itemId}`)
-                    .then((response) => {
-                        this.productImages = JSON.parse(response.data.images);
-                        this.colors = JSON.parse(response.data.colors);
-
-                        return this.itemCart = response.data;
-                    })
-                    .catch((response) => {
-                        return alert('Error: ' + response);
-                    })
-
-            }
-        },
         getCustomer() {
             axios.get('/customer')
                 .then((response) => {
@@ -702,24 +671,7 @@ export default {
         couponApply() {
             alert('Working this...');
         },
-        removeItemDialog(item) {
-            this.index = this.carts.findIndex(cartItem => cartItem.cart_item_id === item.cart_item_id);
-            this.editedItem = Object.assign({}, item);
-            this.removeDialog = true;
-        },
-        removeItemConfirm() {
-
-            this.carts.splice(this.index, 1);
-            this.closeRemoveItemDialog();
-
-        },
-        closeRemoveItemDialog() {
-            this.removeDialog = false;
-            this.$nextTick(() => {
-                this.editedItem = Object.assign({}, '');
-                this.index = -1;
-            });
-        },
+        
         updateCompleted(){
             
             this.completed = true;
@@ -727,7 +679,7 @@ export default {
         }
     },
     created() {
-        this.getProducts();
+      //  this.getProducts();
         this.getCustomer();
         this.getAddress();
         this.carts = cartStorage.getCart();
