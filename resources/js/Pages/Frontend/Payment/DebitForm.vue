@@ -42,48 +42,6 @@
         </v-alert>
     </div>
 
-
-    <!-- <v-container>
-      
-        <v-form @submit.prevent="submitForm">
-            <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
-           <v-text-field
-                v-model="telefone"
-                label="Telefone"
-                outlined
-                v-maska:[phoneOptions]
-            ></v-text-field>
-      
-            
-            <v-text-field v-model="cardHolder" label="Nome do titular do cartão" required></v-text-field>
-            <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
-            <v-text-field v-model="expiryDate" label="Data de Expiração (MM/AA)" required></v-text-field>
-            <v-text-field v-model="cvv" label="CVV" required></v-text-field>
-            <v-select v-model="cardBrand" :items="cardBrands" label="Marca do Cartão" required></v-select>
-            <v-btn :loading="loading" class="flex-grow-1" variant="tonal" type="submit" color="primary"
-                @click="load">Pagar</v-btn>
-        </v-form>
-
-
-    </v-container>
-    <div>
-        <v-alert v-model="snackbar" :timeout="1500" color="cyan-darken-3" vertical>
-            <template v-slot:append>
-                <v-btn icon class="me-6" variant="plain" size="xs">
-                    <v-icon icon="fas fa-close" @click="snackbarClose()"></v-icon>
-                </v-btn>
-            </template>
-            <div class="text-subtitle-1 pb-2">
-                {{ message }}
-            </div>
-            <template v-slot:actions>
-                <v-btn-group>
-                    <v-btn size="small" variant="plain" color="white" to="/">back</v-btn>
-                    <v-btn size="small" variant="plain" color="white" :to="`/login`">Login</v-btn>
-                </v-btn-group>
-            </template>
-        </v-alert>
-    </div> -->
 </template>
 
 <script setup>
@@ -101,7 +59,7 @@ const phoneMask = ref('');
 import axios from 'axios';
 
 export default {
-    emits: ['completed'],
+    emits: ['updateCompleted'],
     props: [
         'carts',
         'billing_address',
@@ -173,6 +131,7 @@ export default {
             }, 500);
         },
         payments() {
+            console.log(this.shippment.packages[0].insurance_value);
             const data = {
                 paymentType: this.paymentType,
                 cardHolder: this.cardHolder,
@@ -185,8 +144,16 @@ export default {
                 totalValue: this.formatedFinalValue.slice(3).replace(/[.,]/g, ''),
                 cartItem: this.carts,
                 quantity: this.sumQuantity,
-                company_id: this.shippment.id,
-                company_agency_id: this.shippment.company.id,
+                // company_id: this.shippment.id,
+                // company_agency_id: this.shippment.company.id,
+                shippment: {
+                    company_id: this.shippment.id,
+                    company_agency_id: this.shippment.company.id,
+                    insurance_value: this.shippment.packages[0].insurance_value,
+                    receipt: this.shippment.additional_services.receipt,
+                    own_hand: this.shippment.additional_services.own_hand,
+
+                },
                 // delivery: this.delivery,
                 // payment: this.paymentSelected,
                 // description: this.description,
@@ -212,8 +179,8 @@ export default {
                         this.loading = false;
                         return false;
                     }
-                    alert('Payment Successfull')
-                    return this.updateCompleted();
+                    this.loading = false;
+                    return this.completed();
 
                 })
                 .catch((response) => {
@@ -224,8 +191,9 @@ export default {
         snackbarClose() {
             this.snackbar = false;
         },
-        updateCompleted() {
-            return this.$emit('completed');
+        completed() {
+           
+            return this.$emit('updateCompleted');
         }
 
     }

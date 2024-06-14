@@ -83,11 +83,11 @@ class MelhorEnvioController extends Controller
         try {
             $client = new Client();
             $customer = $this->getCustomer();
-            
+           
             $response = $client->post('https://sandbox.melhorenvio.com.br/api/v2/me/cart', [
                 'json' => [
-                    'service' =>  $request->company_id,
-                    'agency' =>  $request->company_agency_id,
+                    'service' =>  $request['shippment']['company_id'],
+                    'agency' =>  $request['shippment']['company_agency_id'],
                     'from' => [
                         'name' => env('APP_NAME'),
                         "phone" => 556195051731, //env('EMPLOYE_PHONE'),
@@ -96,11 +96,10 @@ class MelhorEnvioController extends Controller
                         "city" => env('EMPLOYE_CITY'),
                         "postal_code" => env('EMPLOYE_POSTALCODE'),
                         "document" => env('EMPLOYE_DOCUMENT')
-                        // Preencha os detalhes de origem aqui
+                       
                     ],
                     'to' => [
-                        // Preencha os detalhes de destino aqui
-                        "name" => $customer->first_name . $customer->last_name,
+                        "name" => $customer->first_name . ' ' . $customer->last_name,
                         "phone" => $request['telefone'],
                         "email"   => $customer->email,
                         "address" => $request['address']['shippment_address'],
@@ -112,24 +111,23 @@ class MelhorEnvioController extends Controller
                     ],
                    'package' => $this->createPackage($request),
                     'volumes' => $this->createVolumes($request),
-                    // 'options' => [
-                    //     'insurance_value' => $request['delivery'][0]['packages'][0]['insurance_value'],
-                    //     'receipt' => $request['delivery'][0]['additional_services']['receipt'],
-                    //     'own_hand' => $request['delivery'][0]['additional_services']['own_hand'],
-                    //     'reverse' => true,
-                    //     'non_commercial' => true,
+                    'options' => [
+                        'insurance_value' => $request['shippment']['insurance_value'],
+                        'receipt' => $request['shippment']['receipt'],
+                        'own_hand' => $request['shippment']['own_hand'],
+                        'reverse' => true,
+                        'non_commercial' => true,
 
-                    // ]
+                    ]
                 ],
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Bearer ' . env('MELHORENVIO_ACCESS_TOKEN'), //  Substitua com seu token do Melhor Envio
+                    'Authorization' => 'Bearer ' . env('MELHORENVIO_ACCESS_TOKEN'),
                     'Content-Type' => 'application/json',
                     'User-Agent' => 'rafael.f.p.faria@hotmail.com',
                 ],
             ]);
 
-           
             $orderShippment = json_decode($response->getBody()->getContents(), true);
             $mergedData = array_merge($orderShippment, $request->toArray());
             //$this->getOrder($order, $request);
