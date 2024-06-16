@@ -78,9 +78,7 @@
                         </v-btn> -->
                     </template>
                     <v-spacer></v-spacer>
-
-
-
+                
                     <!-- Cart Button-->
                     <div class="d-flex justify-space-around" v-if="Object.keys(carts).length >= 1">
                         <v-row fluid>

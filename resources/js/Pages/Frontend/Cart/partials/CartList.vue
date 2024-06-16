@@ -60,33 +60,15 @@
                                     <v-col cols="12">
                                         <p class="text-body-2">
                                             <span><strong>Price:</strong></span>
-                                            R$ {{ item.cart_item_price }} x {{ item.shippment_quantity }}
+                                            R$ {{ item.cart_item_price }}
                                         </p>
                                     </v-col>
-                                    <v-col cols="12">
-                                        <p class="text-body-2">
-                                            <span><strong>Delivery:</strong></span> {{ item.shippment_name }}
-                                        </p>
 
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <p class="text-body-2">
-                                            <span><strong>Price:</strong></span>
-                                            R$ {{ item.shippment_price }} x {{ item.shippment_quantity }}
-                                        </p>
-
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <p class="text-body-2">
-                                            <span><strong>Delivery Total:</strong></span> {{ item.delivery_price }}
-                                        </p>
-
-                                    </v-col>
 
                                     <v-col cols="8">
-                                        <p class="text-body-2">
-                                            <strong>Quantity:</strong> {{ item.shippment_quantity }}
-                                        </p>
+                                        <!-- <p class="text-body-2">
+                                          <strong>Quantity:</strong> {{ item.shippment_quantity }} 
+                                        </p> -->
 
                                     </v-col>
                                     <v-col cols="8">
@@ -117,7 +99,8 @@
 
         <v-row fluid>
             <v-col>
-                <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block @click="redirectToCheckout(this.carts)">Checkout</v-btn>
+                <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal" block
+                    @click="redirectToCheckout(this.carts)">Checkout</v-btn>
             </v-col>
         </v-row>
 
@@ -178,10 +161,10 @@ export default {
                     return alert('Error :' + response);
                 });
         },
-        redirectToCheckout(carts){
+        redirectToCheckout(carts) {
             console.log(carts);
             cartStorage.setCart(carts);
-            this.$router.push({name: 'checkout'});
+            this.$router.push({ name: 'checkout' });
         }
     },
     mounted() {

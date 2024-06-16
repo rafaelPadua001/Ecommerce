@@ -96,12 +96,9 @@
                         <v-spacer></v-spacer>
 
                         <p float="end">
-                            <strong>Price:</strong> R$ {{ (quantity * (selectProduct.price)).toFixed(2) }}
+                            <strong>Price:</strong> R$ {{ selectProduct.price }}
                         </p>
-                        <div v-if="shippment.price">
-                            <p>
-                                <strong>Delivery:</strong> R$ {{ formatedShippmentPrice }}
-                            </p>
+                        <div>
                             <p>
                                 <strong>Total Price:</strong> {{ formattedTotalPrice }}
                             </p>
@@ -233,15 +230,7 @@
                                     </v-text-field>
                                 </v-col>
                             </v-row>
-                            <v-row no-gutters>
-                                <v-col>
-                                    <ZipCodeField :selectProduct="selectProduct" :quantity="this.quantity"
-                                        :customer="this.customer" @updateShippment="updateShippment" />
-                                </v-col>
-                            </v-row>
-
                         </div>
-
 
                         <div>
                             <v-btn-group>
@@ -384,7 +373,6 @@
 </template>
 
 <script>
-import ZipCodeField from '../Layout/TextFields/ZipCode.vue';
 import CommentsField from '../Layout/TextFields/Comments.vue';
 import MenuBottomSheet from '../Layout/BottomSheet.vue';
 import RemoveDialog from '../Comment/patials/Remove.vue';
@@ -393,7 +381,6 @@ import axios from 'axios';
 export default {
     props: ['selectProduct', 'buyDialog', 'customer', 'likes', 'showProductSeo'],
     components: {
-        ZipCodeField,
         CommentsField,
         RemoveDialog,
         MenuBottomSheet,
@@ -420,9 +407,6 @@ export default {
             'fa-brands fa-x-twitter',
             'fa-brands fa-telegram',
         ],
-        shippment: [],
-        zip_code: false,
-        delivery_name: false,
         removeDialog: false,
         removeComment: {},
 
@@ -442,18 +426,15 @@ export default {
         },
         formattedTotalPrice() {
             const selectProductPrice = Number(this.selectProduct.price);
-            const shippmentPrice = Number(this.shippment.price);
-
-            const totalPrice = this.quantity * (selectProductPrice + shippmentPrice);
+            const totalPrice = this.quantity * selectProductPrice;
 
             return totalPrice.toFixed(2);
         },
-        formatedShippmentPrice() {
-            const shippmentPrice = Number(this.shippment.price);
-
-            const totalShippmentPrice = this.quantity * shippmentPrice;
-            return totalShippmentPrice.toFixed(2);
-        }
+        // formatedShippmentPrice() {
+        //     const shippmentPrice = Number(this.shippment.price);
+        //     const totalShippmentPrice = this.quantity * shippmentPrice;
+        //     return totalShippmentPrice.toFixed(2);
+        // }
     },
     watch: {
         buyDialog(val) {
@@ -508,9 +489,9 @@ export default {
                 'color': this.colors,
                 'size': this.size,
                 'total_price': this.formattedTotalPrice,
-                'delivery_price': this.formatedShippmentPrice,
-                'delivery': this.shippment,
-                'delivery_name': this.delivery_name,
+                // 'delivery_price': this.formatedShippmentPrice,
+                // 'delivery': this.shippment,
+                // 'delivery_name': this.delivery_name,
             }
 
             if (!data.color || data.color.length == 0 || !data.size || data.size.length == 0) {
@@ -615,17 +596,6 @@ export default {
         openBottomMenu() {
             return this.bottomMenu = true;
         },
-        updateShippment(selectedShippment, zip_code, delivery_name) {
-            this.shippment = selectedShippment;
-            this.zip_code = zip_code;
-            this.delivery_name = delivery_name;
-            return this.finalValue(this.shippment);
-
-        },
-        finalValue(shippment) {
-            const sumValue = parseFloat(this.selectProduct.price) + parseFloat(shippment.price);
-            return sumValue
-        },
         async checkout() {
             try {
                 const resultAdd = await this.addItem();
@@ -637,7 +607,7 @@ export default {
                 else {
                     const checkoutRedirect = this.$router.push({
                         name: 'item.buy',
-                        query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
+                        //  query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
                     });
 
                     await checkoutRedirect;
@@ -652,7 +622,7 @@ export default {
         redirectToCheckout() {
             const checkoutRedirect = this.$router.push({
                 name: 'item.buy',
-                query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
+                // query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
             });
         }
     },

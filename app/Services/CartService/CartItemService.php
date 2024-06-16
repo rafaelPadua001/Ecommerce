@@ -37,16 +37,10 @@ class CartItemService
                 'price' => $product->product['price'],
                 'colors' => json_encode($product->color),
                 'size' => json_encode($product->size),
-                'delivery_price' =>  $product['delivery_price'],
                 'total_price' =>  $product['total_price'],
-                
-            ]);
-            
-            $delivery_item = $this->createItemCart($id, $customer->id, $cart, $cartItem, $product);
 
-            if ($delivery_item) {
-                $store_shippment = $this->shippmentService->store($delivery_item);
-            }
+            ]);
+
             return $cartItem;
         } catch (Exception $e) {
             return response()->json($e);
@@ -54,7 +48,7 @@ class CartItemService
     }
     public function createItemCart($id, $customerId, $cart, $cartItem, $product)
     {
-        try{
+        try {
             $delivery_item = [
                 'id' => $id,
                 'delivery' => $product['delivery'],
@@ -68,11 +62,9 @@ class CartItemService
                 'company_id_agency' => $product['delivery']['company']['id']
             ];
             return $delivery_item;
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($e);
         }
-      
     }
     public function buy($userId)
     {
@@ -145,7 +137,7 @@ class CartItemService
 
             return $remove_cartItem;
         } catch (Exception $e) {
-            
+
             return response()->json($e);
         }
     }
