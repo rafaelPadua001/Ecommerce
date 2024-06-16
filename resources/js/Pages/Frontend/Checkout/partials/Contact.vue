@@ -191,7 +191,7 @@
 
                         <v-row no-gutters class="text-subtitle-2 justify-end">
                             <strong>Quantity:</strong> {{
-                            item.shippment_quantity }}
+                            item.quantity }}
                         </v-row>
                         <v-row no-gutters class="text-subtitle-2 justify-end">
 
@@ -367,7 +367,7 @@ export default {
         },
         subtotal() {
             return this.carts.reduce((acc, item) => {
-                return acc + item.cart_item_price;
+                return item.quantity * (acc + item.cart_item_price);
             }, 0)
         },
         formattedSubtotal() {
@@ -383,7 +383,6 @@ export default {
             return shippmentPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         },
         totalPrice() {
-
             const subtotal = !isNaN(Number(this.subtotal)) ? Number(this.subtotal) : 0;
             const shippmentPrice = this.shippment && !isNaN(Number(this.shippment.price))
                 ? Number(this.shippment.price)

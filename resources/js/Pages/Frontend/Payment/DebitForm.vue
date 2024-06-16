@@ -3,7 +3,7 @@
         <v-sheet class="px-2 py-2">
             <v-row fluid justify="center">
                 <v-col>
-
+               
                     <v-form>
                         <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
                         <v-text-field v-model="telefone" label="Telefone" outlined
@@ -102,12 +102,12 @@ export default {
     computed: {
         sumQuantity() {
             return this.carts.reduce((total, item) => {
-                return total + item.shippment_quantity;
+                return total + item.quantity;
             }, 0);
         },
         finalValue() {
             return this.carts.reduce((acc, item) => {
-                const total_value = parseFloat(item.total_price);
+                const total_value = parseFloat(item.total_price) + parseFloat(this.shippment.price);
                 return acc + (isNaN(total_value) ? 0 : total_value);
             }, 0);
         },
@@ -131,7 +131,7 @@ export default {
             }, 500);
         },
         payments() {
-            console.log(this.shippment.packages[0].insurance_value);
+            console.log(this.shippment);
             const data = {
                 paymentType: this.paymentType,
                 cardHolder: this.cardHolder,
@@ -147,11 +147,12 @@ export default {
                 // company_id: this.shippment.id,
                 // company_agency_id: this.shippment.company.id,
                 shippment: {
+                    company: this.shippment.company,
+                    package: this.shippment.packages,
+                    additional_services: this.shippment.additional_services,
                     company_id: this.shippment.id,
-                    company_agency_id: this.shippment.company.id,
-                    insurance_value: this.shippment.packages[0].insurance_value,
-                    receipt: this.shippment.additional_services.receipt,
-                    own_hand: this.shippment.additional_services.own_hand,
+                    price: this.shippment.price,
+                    delivery_time: this.shippment.delivery_time,
 
                 },
                 // delivery: this.delivery,

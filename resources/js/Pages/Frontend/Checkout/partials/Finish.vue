@@ -9,7 +9,7 @@
                                 <v-row>
                                     <v-col class="avatar-stack" :style="{ 'z-index': parsedProduct.length - index }"
                                         cols="auto">
-                                        <v-badge :content="item.shippment_quantity" color="primary">
+                                        <v-badge :content="item.quantity" color="primary">
                                             <v-avatar :image="`/storage/products/${item.images[0]}`"
                                                 :lazy-src="`/storage/products/${item.images[0]}`"
                                                 alt="product image here" aspect-ratio="16/9" :width="200"
@@ -168,7 +168,7 @@ export default {
         },
         subtotal() {
             return this.carts.reduce((acc, item) => {
-                return acc + item.cart_item_price;
+                return item.quantity * (acc + item.cart_item_price);
             }, 0)
         },
         formattedSubtotal() {
@@ -184,7 +184,6 @@ export default {
             return shippmentPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         },
         totalPrice() {
-
             const subtotal = !isNaN(Number(this.subtotal)) ? Number(this.subtotal) : 0;
             const shippmentPrice = this.shippment && !isNaN(Number(this.shippment.price))
                 ? Number(this.shippment.price)

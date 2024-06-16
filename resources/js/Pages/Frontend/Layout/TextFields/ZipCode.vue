@@ -229,7 +229,7 @@ export default {
                 length: item.length,
                 weight: item.weight,
                 price: item.cart_item_price,
-                quantity: item.shippment_quantity,
+                quantity: item.quantity,
 
             }));
 

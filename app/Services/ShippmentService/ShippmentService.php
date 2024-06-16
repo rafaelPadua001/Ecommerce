@@ -35,31 +35,45 @@ class ShippmentService
             return response()->json($e->getMessage());
         }
     }
-    public function getAuthenticated(){
+    public function getAuthenticated()
+    {
         $customer = Auth::guard('customer')->user();
         return $customer;
     }
     public function store($delivery_item)
     {
-        $customer = $this->getAuthenticated();
-        $data = [
-            'name' => $delivery_item['cartItem']['shippment_name'],
-            'company' => $delivery_item['cartItem']['shippment_name'], //$delivery_item['delivery'][0]['company']['name'],
-            'price' => $delivery_item['cartItem']['price'],
-            'deadline' => $delivery_item['cartItem']['delivery_time'] ? false : 0,
-            'product_id' => $delivery_item['cartItem']['product_id'],
-            'quantity' => $delivery_item['quantity'],
-            'user_id' => $customer->id,
-            'cart_id' => $delivery_item['cartItem']['cart_id'],
-            'cart_item_id' => $delivery_item['cartItem']['cart_item_id'],
-            'delivery_id' =>  $delivery_item['cartItem']['company_id'],
-            'company_id' => $delivery_item['cartItem']['id'],
-                'company_id_agency' => $delivery_item['cartItem']['company_agency_id'] //['id']// Use ['id'] se for o campo correto
-        ];
 
-        $store_shippment = $this->shippment->create($data);
-        dd($store_shippment);
-        return $store_shippment;
+        try {
+            $customer = $this->getAuthenticated();
+            $itens = $this->createCart($delivery_item);
+
+            $data = [
+                'name' => $delivery_item['shippment']['company']['name'],
+                'company' => $delivery_item['shippment']['company']['name'], //$delivery_item['delivery'][0]['company']['name'],
+                'price' => $delivery_item['shippment']['price'],
+                'deadline' => $delivery_item['shippment']['delivery_time'] ? false : 0,
+                'product_id' => $delivery_item['cartItem'][0]['product_id'],
+                'itens' => $itens,
+                'quantity' => $delivery_item['quantity'],
+                'user_id' => $customer->id,
+                'cart_id' => $delivery_item['cartItem'][0]['cart_id'],
+                'cart_item_id' => $delivery_item['cartItem'][0]['cart_item_id'],
+                'delivery_id' =>  $delivery_item['shippment']['company_id'],
+                'company_id' => $delivery_item['shippment']['company']['id'],
+                'company_id_agency' => $delivery_item['shippment']['company_id'] //['id']// Use ['id'] se for o campo correto
+            ];
+
+            $store_shippment = $this->shippment->create($data);
+
+            return $store_shippment;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    public function createCart($delivery_item)
+    {
+        $items = json_encode($delivery_item['cartItem']);
+        return $items;
     }
     public function update($id, $request)
     {

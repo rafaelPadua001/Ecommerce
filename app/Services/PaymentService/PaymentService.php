@@ -91,7 +91,7 @@ class PaymentService
         return [
             'Type' => 'DebitCard',
             'Authenticate' => true,
-            'Amount' => $request->totalValue * 100,
+            'Amount' => ($request->totalValue) * 100,
             'Installments' => 1,
             'SoftDescription' => 'Teste Ecommerce',
             'ReturnUrl' => 'http://localhost:8000',
@@ -131,12 +131,11 @@ class PaymentService
             $payer = $this->getCustomer();
             $cartItems = $request->input('cartItem');
             $itemNames = [];
-            foreach($cartItems as $item){
+            foreach ($cartItems as $item) {
                 $itemNames[] = $item["name"];
-                
             }
             $itemNameJson = json_encode($itemNames);
-            
+
             $payment = Payment::create([
                 "transaction_id" => $responseData['MerchantOrderId'],
                 "status" => "pendent",
@@ -147,43 +146,43 @@ class PaymentService
                 "payer" => $payer->email,
                 "user_id" => $payer->id
             ]);
-            
+
             $createOrder = $this->getOrder($request, $itemNameJson, $responseData);
-           
+
             if ($createOrder) {
                 $melhorEnvio = $this->getMelhorEnvio($request);
-                
+
                 $createShippment = $this->shippmentService->store($melhorEnvio);
-              
             }
-                
-            $itemId = $request['id'];
-            $alterStatus = $this->alterStatusItem($itemId);
+
+            // $itemId = $request['id'];
+            // dd($request, $itemId);
+            // $alterStatus = $this->alterStatusItem($itemId);
 
             if ($request->coupon_id >= 1) {
                 $removeCoupon =  $this->removeCoupon($request->coupon_id);
             }
 
-            if ($request->quantity >= 1) {
-                try {
-                    $reduceItem = $this->reduceStock($request);
+            // if ($request->quantity >= 1) {
+            //     try {
+            //         $reduceItem = $this->reduceStock($request);
 
 
-                    $responseData = $reduceItem->getData(true);
+            //         $responseData = $reduceItem->getData(true);
 
-                    if (isset($responseData['error'])) {
-                        return response()->json(['message' => $responseData['error']], 400);
-                    }
-                    return $responseData;
-                } catch (Exception $e) {
-                    return response()->json(['message' => $e->getMessage()], 500);
-                }
-            }
+            //         if (isset($responseData['error'])) {
+            //             return response()->json(['message' => $responseData['error']], 400);
+            //         }
+            //         return $responseData;
+            //     } catch (Exception $e) {
+            //         return response()->json(['message' => $e->getMessage()], 500);
+            //     }
+            // }
+            // dd('maconha');
+            //$notification = $this->notification($responseData);
+            //$shippment = $this->storeShippment($request);
 
-            $notification = $this->notification($responseData);
-            $shippment = $this->storeShippment($request);
-
-             dd($notification);
+         
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
@@ -359,7 +358,7 @@ class PaymentService
     public function getMelhorEnvio($request)
     {
         $melhorEnvio = new MelhorEnvioController();
-        
+
         return $melhorEnvio->createCart($request);
     }
     public function removeCoupon($id)

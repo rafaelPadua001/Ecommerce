@@ -20,7 +20,8 @@ class Shippment extends Model
         'cart_item_id',
         'delivery_id',
         'company_id',
-        'company_id_agency'
+        'company_id_agency',
+        'itens'
     ];
 
 }

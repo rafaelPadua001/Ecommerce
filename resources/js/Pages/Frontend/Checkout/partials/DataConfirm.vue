@@ -6,7 +6,7 @@
 
                     <v-col v-for="(item, index) in parsedProduct" :key="index" class="avatar-stack" cols="auto"
                         :style="{ 'z-index': parsedProduct.length - index, 'left': `${index * 10}px` }">
-                        <v-badge color="red" :content="item.shippment_quantity">
+                        <v-badge color="red" :content="item.quantity">
                             <v-avatar :image="`/storage/products/${item.images[0]}`"
                                 :lazy-src="`/storage/products/${item.images[0]}`" aspect-ratio="16/9" :width="200" cover
                                 alt="Image Here" color="grey-lighten-2" no-gutters>

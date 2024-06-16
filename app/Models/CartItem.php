@@ -16,7 +16,6 @@ class CartItem extends Model
         'price',
         'colors',
         'size',
-        'delivery_price',
         'total_price',
         'cart_item_active',
         
