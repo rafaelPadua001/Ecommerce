@@ -121,13 +121,14 @@ class CartItemService
             return response()->json($e);
         };
     }
-    public function updateActive($id)
+    public function updateActive($ids)
     {
-        $cartItemStatus = $this->cartItem->where('cart_items.id', $id)->update([
-            'is_active' => false
-        ]);
-
-        return true;
+        foreach($ids as $id){
+            return $cartItemStatus = $this->cartItem->where('cart_items.id', $id)->update([
+                'is_active' => false
+            ]);
+        }
+        //return true;
     }
     public function destroy($id)
     {

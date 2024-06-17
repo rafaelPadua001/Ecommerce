@@ -18,6 +18,7 @@ use App\Services\CouponService\CouponCustomer\CouponCustomerService;
 use App\Services\StockService\StockService;
 use App\Services\ShippmentService\ShippmentService;
 use App\Services\OrderService\OrderService;
+use Illuminate\Support\Str;
 
 class PaymentService
 {
@@ -155,37 +156,53 @@ class PaymentService
                 $createShippment = $this->shippmentService->store($melhorEnvio);
             }
 
-            // $itemId = $request['id'];
-            // dd($request, $itemId);
-            // $alterStatus = $this->alterStatusItem($itemId);
+
+            $itemIds = $this->getItensId($request['cartItem']);
+
+            $alterStatus = $this->alterStatusItem($itemIds);
 
             if ($request->coupon_id >= 1) {
                 $removeCoupon =  $this->removeCoupon($request->coupon_id);
             }
 
-            // if ($request->quantity >= 1) {
-            //     try {
-            //         $reduceItem = $this->reduceStock($request);
+            $reduceItems = $this->reduceQuantityItens($request);
+
+            $capture = $this->captureTransaction($responseData);
 
 
-            //         $responseData = $reduceItem->getData(true);
-
-            //         if (isset($responseData['error'])) {
-            //             return response()->json(['message' => $responseData['error']], 400);
-            //         }
-            //         return $responseData;
-            //     } catch (Exception $e) {
-            //         return response()->json(['message' => $e->getMessage()], 500);
-            //     }
-            // }
-            // dd('maconha');
-            //$notification = $this->notification($responseData);
             //$shippment = $this->storeShippment($request);
 
-         
+
             return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e);
+        }
+    }
+    public function getItensId($cartItems)
+    {
+        $cartItemId = [];
+        foreach ($cartItems as $item) {
+            return $cartItemId[] = [
+                'cart_item_ids' => $item['cart_item_id'],
+            ];
+        }
+    }
+    public function reduceQuantityItens($request)
+    {
+        if ($request->quantity >= 1) {
+            try {
+                $reduceItem = $this->reduceStock($request);
+
+
+                $responseData = $reduceItem->getData(true);
+
+                if (isset($responseData['error'])) {
+                    return response()->json(['message' => $responseData['error']], 400);
+                }
+                return $responseData;
+            } catch (Exception $e) {
+                return response()->json(['message' => $e->getMessage()], 500);
+            }
         }
     }
     public function creditPayment(Request $request)
@@ -286,32 +303,46 @@ class PaymentService
             }
         }
     }
-    public function notification($response)
+    public function captureTransaction($response)
     {
         try {
+            $merchantId = env('CIELO_MERCHANT_ID');
             $merchantKey = env('CIELO_MERCHANT_KEY');
+            $requestId = (string) Str::uuid();
+            // dd($merchantId, $merchantKey);
+            if (!$merchantId || !$merchantKey) {
+                return throw new Exception("MerchantId or MerchantKey is not set in the environment file.");
+            }
+
+
             $url =  $response['Payment']['Links'][0]['Href'];
 
             $headers = [
-                'Authorization:' . $merchantKey,
-                'Content-Type : application/json',
+                'Content-Type: application/json',
+                'MerchantId: ' . $merchantId,
+                'MerchantKey: ' . $merchantKey,
+                'RequestId: ' . $requestId,
             ];
 
             $ch = curl_init($url);
 
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
 
             $return = curl_exec($ch);
-            if (!$return) {
+
+            if ($return == false) {
                 $error = curl_error($ch);
+                curl_close($ch);
+                throw new Exception('Curl error:' . $error);
             }
 
             curl_close($ch);
 
             return $return;
         } catch (Exception $e) {
-            return $e;
+            return $e->getMessage();
         }
         // dd($response['Payment']['Links'][0]['Href']);
         $link = $response['Payment']['Links'][0]['Href'];
@@ -319,10 +350,10 @@ class PaymentService
         exit();
         //redirect($response['Payment']['Links'][0]['Href']);
     }
-    public function alterStatusItem($id)
+    public function alterStatusItem($ids)
     {
 
-        return $this->carItemService->updateActive($id);
+        return $this->carItemService->updateActive($ids);
     }
     public function getCieloClient()
     {
@@ -369,8 +400,9 @@ class PaymentService
     public function reduceStock($request)
     {
         $quantity = $request->quantity;
-        $cart = $request;
+        $cart = $request['cartItem'];
         $reduceStock = $this->stockService->reduceItemStock($quantity, $cart);
+
         return response()->json($reduceStock);
     }
     public function storeShippment($request)

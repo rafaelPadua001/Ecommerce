@@ -78,25 +78,60 @@ class StockService {
     }
     public function reduceItemStock($quantity, $cart){
        try{
-            $stock = $this->productStock->where('product_id', $cart->product_id)->first();
-            $product = Product::where('id', $cart->product_id)->first();
+           
+            $productIds = $this->cartIds($cart);
             
-            if($stock->stock_quantity > $quantity){
+            foreach($productIds as $productId){
+                $id = $productId;
+                $stock = $stock = $this->productStock->where('product_id', $id)->get();
+                $product = Product::where('id',  $id)->get();
                 
-                $reduceQuantity = $stock->stock_quantity - $quantity;
-                $reduceProduct = $product->stock_quantity - $quantity;
-                $stock->update(['stock_quantity' => $reduceQuantity]);
-                $product->update(['stock_quantity' => $reduceProduct]);
-                return response()->json($stock);
+                foreach($stock as $stockItem){
+                    $stockQuantity = $stockItem['stock_quantity'];
+                    $stockColorsQty = $stockItem['colors_qty'];
+                    if($stockQuantity > $quantity){
+                        $reduceQuantity = $stockQuantity - $quantity;
+                        // $reduceQuantityColors = $this->removeColorsQtys($stockColorsQty, $quantity);
+                        // dd($reduceQuantityColors);
+                        $stockItem->update(['stock_quantity' => $reduceQuantity]);
+                        
+                        $reduceProduct = $this->reduceProductQuantity($product, $quantity);
+                       
+                        return response()->json($stock);
+                    }
+                    else{
+                        return response()->json(['error' => 'Não é possível adquirir uma quantidade maior do que a temos em estoque.'], 400);
+                    }
+                }
+                
             }
-            else{
-                return response()->json(['error' => 'Não é possível adquirir uma quantidade maior do que a temos em estoque.'], 400);
-            }
-            
-            
         }
         catch(Exception $e){
             return $e;
+        }
+    }
+    public function cartIds($productIds){
+        
+        $ids = [];
+        foreach($productIds as $id){
+            $productId = $id['product_id'];
+            return $ids[] = [
+                'product_ids' => $productId
+            ];
+        }
+    }
+    // public function removeColorsQtys($colorsQty, $quantity){
+    //     dd($colorsQty, $quantity);
+    //     foreach($colorsQty as $colorQty){
+    //         return $colorQty -= $quantity;
+    //     }
+    // }
+    public function reduceProductQuantity($product, $quantity){
+        foreach($product as $item){
+            $reduce = $item->stock_quantity - $quantity;
+            $item->update(['stock_quantity' => $reduce]);
+            
+            return $product;
         }
     }
 }
