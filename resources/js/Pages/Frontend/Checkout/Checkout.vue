@@ -64,7 +64,7 @@
                                 />
                                
                             </v-timeline-item>
-                            <v-timeline-item v-model="completed" dot-color="blue-darken-2" icon="fas fa-truck" fill-dot
+                            <v-timeline-item v-model="completed" dot-color="blue-darken-2" icon="fas fa-check-double" fill-dot
                                 size="small" v-if="completed && !finish && !dataConfirm && !confirm"
                             >
                                 <Completed 
