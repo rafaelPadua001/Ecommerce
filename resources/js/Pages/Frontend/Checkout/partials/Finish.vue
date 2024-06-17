@@ -154,6 +154,7 @@ export default {
     },
     data: () => ({
         paymentType: false,
+        paymentResponse: false,
     }),
     computed: {
         parsedProduct() {
@@ -197,8 +198,9 @@ export default {
         returnConfirmDatas() {
             return this.$emit('returnConfirmDatas');
         },
-        updateCompleted(){
-            return this.$emit('updateCompleted');
+        updateCompleted(response){
+            this.paymentResponse = response;
+            return this.$emit('updateCompleted', this.paymentResponse);
             this.completed = true;
             return this.finish = false;
         }
