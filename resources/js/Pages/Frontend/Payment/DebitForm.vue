@@ -83,6 +83,7 @@ export default {
         loading: false,
         paymentType: 'DebitCard',
         paymentSelected: 'cielo',
+        paymentResponse: false,
         cardHolder: null,
         telefone: null,
         cardNumber: null,
@@ -134,6 +135,7 @@ export default {
             console.log(this.shippment);
             const data = {
                 paymentType: this.paymentType,
+                
                 cardHolder: this.cardHolder,
                 telefone: this.telefone,
                 cardNumber: this.cardNumber,
@@ -173,29 +175,26 @@ export default {
             axios.post('/payment', data)
                 .then((response) => {
                     if (response.data.original.error) {
-                        console.log(response.data);
-                        console.log(response)
-                        this.snackbar = true;
+                       this.snackbar = true;
                         this.message = response.data.original.error;
                         this.loading = false;
                         return false;
                     }
                     this.loading = false;
-                    console.log(response);
-                    return this.completed();
+                    this.paymentResponse = response;
+                    return this.completed(this.paymentResponse);
 
                 })
                 .catch((response) => {
                     this.loading = false;
-                    return alert('Error: ', response);
+                    return alert('Error: ' + response);
                 });
         },
         snackbarClose() {
             this.snackbar = false;
         },
-        completed() {
-           
-            return this.$emit('updateCompleted');
+        completed(response) {
+            return this.$emit('updateCompleted', response);
         }
 
     }

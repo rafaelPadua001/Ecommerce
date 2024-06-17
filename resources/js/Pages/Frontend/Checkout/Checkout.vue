@@ -8,6 +8,7 @@
                 <v-row justify="center" no-gutters>
                     <v-col class="d-flex flex-column" cols="auto">
                         <v-timeline direction="horizontal" line-inset="12">
+                            
                             <v-timeline-item dot-color="blue-darken-2" icon="fas fa-home" fill-dot size="x-small">
                                 <template v-slot:opposite>
                                     <v-row no-gutters v-model="confirm" v-if="confirm">
@@ -53,6 +54,7 @@
                                 <template v-slot:opposite>
 
                                 </template>
+                                
                                 <Finish
                                     :carts="this.carts"
                                     :billing_address="this.billing_address"
@@ -66,7 +68,8 @@
                                 size="small" v-if="completed && !finish && !dataConfirm && !confirm"
                             >
                                 <Completed 
-                                    @updateCompleted="updateCompleted"
+                                    :responsePayment="this.responsePayment"
+                                    
                                 />
                             </v-timeline-item>
                         </v-timeline>
@@ -628,6 +631,7 @@ export default {
         index: -1,
         editedItem: {},
         removeDialog: false,
+        responsePayment: false,
     }),
     methods: {
         getCustomer() {
@@ -672,8 +676,8 @@ export default {
             alert('Working this...');
         },
         
-        updateCompleted(){
-            
+        updateCompleted(paymentResponse){
+            this.responsePayment = paymentResponse;
             this.completed = true;
             return this.finish = false;
         }
