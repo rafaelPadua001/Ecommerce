@@ -121,7 +121,7 @@ class CreditPayment {
             ]);
             
            $responseData = json_decode($response->getBody()->getContents(), true);
-            dd($responseData);
+           
             return $this->createCreditPayment($responseData, $request);
         } catch (Exception $e) {
             return response()->json($e);
