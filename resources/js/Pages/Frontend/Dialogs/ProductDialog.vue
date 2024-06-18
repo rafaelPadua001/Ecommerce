@@ -607,7 +607,6 @@ export default {
                 else {
                     const checkoutRedirect = this.$router.push({
                         name: 'item.buy',
-                        //  query: { shippment: JSON.stringify(this.shippment), zip_code: this.zip_code }
                     });
 
                     await checkoutRedirect;

@@ -29,26 +29,17 @@
                                     <v-col class="text-caption" cols="auto">
                                         {{ item.name }} R$ {{ item.total_price }}
                                     </v-col>
-
-
                                 </v-row>
-
                             </div>
                         </v-col>
-
-
                     </v-row>
 
                     <v-row>
                         <v-col cols="auto">
-
-                            <p class="text-subtitle-2">
+                             <p class="text-subtitle-2">
                                 <strong>Total Value</strong>
                                 {{ totalPrice }}
-                                <!-- {{ formatedFinalValue }} -->
-                                <!-- {{ selectedDelivery.currency }}
-                                                                        {{ (parseFloat(selectedDelivery.price) +
-                                                                        parseFloat(itemCart.price)).toFixed(2) }} -->
+                                
                             </p>
                         </v-col>
                         <v-col>
@@ -91,11 +82,10 @@
                                             </div>
                                             <div v-if="paymentType == 'credit'">
                                                 <v-card>
-                                                    <CreditForm :paymentType="paymentType" :name="this.itemCart.name"
-                                                        :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
-                                                        :quantity="this.itemCart.quantity" :delivery="selectedDelivery"
-                                                        :description="this.itemCart.description"
-                                                        :image="this.itemCart.images" :color="this.itemCart.color" />
+                                                    <CreditForm :paymentType="paymentType" :carts="carts"
+                                                        :billing_address="billing_address"
+                                                        :shippment="this.shippment"
+                                                     />
 
 
                                                 </v-card>

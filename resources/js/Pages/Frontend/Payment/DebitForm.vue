@@ -146,8 +146,6 @@ export default {
                 totalValue: this.formatedFinalValue.slice(3).replace(/[.,]/g, ''),
                 cartItem: this.carts,
                 quantity: this.sumQuantity,
-                // company_id: this.shippment.id,
-                // company_agency_id: this.shippment.company.id,
                 shippment: {
                     company: this.shippment.company,
                     package: this.shippment.packages,
