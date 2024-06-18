@@ -44,6 +44,7 @@ class CreditPayment {
                 'Content-Type' => 'application/json',
                 'MerchantId' => env('CIELO_MERCHANT_ID'),
                 'MerchantKey' => env('CIELO_MERCHANT_KEY'),
+                'User-Agent' => 'GuzzleHttp/7',
             ]
         ]);
         return $api_client;
@@ -61,7 +62,10 @@ class CreditPayment {
             'MerchantOrderId' => uniqid(),
             'Customer' => [
                 'Name' => $customer->first_name . ' ' . $customer->last_name,
+                // 'Identity' => $request->document,
+                // 'IdentityType' => "CPF",
                 'Email' => $customer->email,
+                
             ],
             'Payment' => $this->createPayment($request),
         ];
@@ -71,19 +75,31 @@ class CreditPayment {
     public function createPayment($request)
     {
         return [
-            'Type' => 'CreditCard',
-            'Authenticate' => true,
-            'Amount' => ($request->totalValue) * 100,
+            'Currency' => 'BRL',
+            'Country' => 'BRA',
+            'ServiceTaxAmount' => 0,
             'Installments' => $request->installments,
+            'Interest' => "ByIssuer",
+            'Capture' => true,
+            'Authenticate' => false,
+            'Recurrent' => false,
             'SoftDescription' => 'Teste Ecommerce',
             'ReturnUrl' => 'http://localhost:8000',
             'CreditCard' => [
                 'CardNumber' => $request->cardNumber,
                 'Holder' => $request->cardHolder,
-                'ExpirationDate' => $request->expiryMounth . '/' . $request->expiryYear,
+                'ExpirationDate' => str_pad($request->expiryMonth, 2, '0', STR_PAD_LEFT) . '/' . $request->expiryYear,
                 'SecurityCode' => $request->cvv,
-                'Brand' => $request->cardBrand
+                'SaveCard' => false,
+                'Brand' => $request->cardBrand,
+                'CardOnFile' => [
+                    'Usage' => 'Used',
+                    'Reason' => 'Unscheduled'
+                ]
             ],
+            'IsCryptoCurrencyNegotiation' => false,
+            'Type' => 'CreditCard',
+            'Amount' => ($request->totalValue) * 100,
         ];
     }
 
@@ -98,8 +114,8 @@ class CreditPayment {
             $response = $client->request('POST', '/1/sales', [
                 'json' => $req
             ]);
-            dd($response);
-            $responseData = json_decode($response->getBody()->getContents(), true);
+            dd($req, $response);
+           $responseData = json_decode($response->getBody()->getContents(), true);
             dd($responseData);
             return $this->createCreditPayment($responseData, $request);
         } catch (Exception $e) {
