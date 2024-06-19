@@ -135,7 +135,6 @@ export default {
             console.log(this.shippment);
             const data = {
                 paymentType: this.paymentType,
-                
                 cardHolder: this.cardHolder,
                 telefone: this.telefone,
                 cardNumber: this.cardNumber,
