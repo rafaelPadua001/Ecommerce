@@ -129,7 +129,6 @@ export default {
                 });
         },
         completed(response) {
-            console.log(response);
             return this.$emit('updateCompleted', response);
         }
     }

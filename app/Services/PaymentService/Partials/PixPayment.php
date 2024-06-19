@@ -32,17 +32,21 @@ class PixPayment
 
         return $client;
     }
+    public function getAuthenticated(){
+        $customer = Auth::guard('customer')->user();
+        return $customer;
+    }
     public function pixPayment(Request $request)
     {
-
-        $access = $this->getAccess();
-        $client = $this->getClient();
-        $customer = Auth::guard('customer')->user();
-        if ($access) {
-            try {
+        try{
+            $access = $this->getAccess();
+            $client = $this->getClient();
+            $customer = $this->getAuthenticated();
+            
+            if($access){
                 $payment = $client->create([
                     "transaction_amount" => (float) $request->totalValue,
-                    "description" => $request->description,
+                    "description" => 'Ecommerce Teste',
                     "installments" => 1,
                     "payer" => [
                         "email" => $customer->email,
@@ -50,18 +54,19 @@ class PixPayment
                         "last_name" => $customer->last_name,
                         "identification" => [
                             "type" => 'CPF',
-                            "number" => $request->cpfPayer
+                            "number" => $request->document
                         ]
                     ],
                     "payment_method_id" => 'pix'
                 ]);
-
-
-                //return $this->createCreditPayment($payment, $request);
-            } catch (Exception $e) {
-                return response()->json($e->getMessage());
             }
+                
+                return $payment;
         }
+        catch (Exception $e) {
+            return response()->json($e->getMessage());
+        }
+       
     }
     public function alterStatusItem($ids)
     {
