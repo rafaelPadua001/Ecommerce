@@ -69,7 +69,6 @@
                             >
                                 <Completed 
                                     :responsePayment="this.responsePayment"
-                                    
                                 />
                             </v-timeline-item>
                         </v-timeline>

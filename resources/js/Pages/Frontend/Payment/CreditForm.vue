@@ -1,14 +1,4 @@
 <template>
-    <!-- <v-container>
-      
-        <p>Você será redirecionado ao mercado pago</p>
-        <v-btn :loading="loading" class="flex-grow-1" variant="tonal" size="small" type="submit" color="blue-darken-2"
-            @click="load">
-            <v-img src="../../../../../storage/app/public/Logos/mercado-pago.png" max-height="20" />
-            Pagar com Mercado Pago
-        </v-btn>
-    </v-container> -->
-
     <v-container>
         <v-sheet class="px-2 py-2">
             <v-row fluid justify="center">
@@ -23,12 +13,8 @@
                         <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
                         <v-text-field v-model="expiryDate" label="Data de Expiração (MM/AA)" required></v-text-field>
                         <v-text-field v-model="cvv" label="CVV" required></v-text-field>
-                        <v-combobox
-                            v-model="installments"
-                            :items="installmentOptions"
-                            label="Installments"
-
-                        ></v-combobox>
+                        <v-combobox v-model="installments" :items="installmentOptions"
+                            label="Installments"></v-combobox>
                         <v-select v-model="cardBrand" :items="cardBrands" label="Marca do Cartão" required></v-select>
                         <v-btn :loading="loading" class="flex-grow-1" variant="tonal" color="primary"
                             @click="load">Pagar</v-btn>
@@ -50,35 +36,18 @@ const phoneOptions = { mask: '55+ (##) #####-####' };
 const phoneMask = ref('');
 </script>
 
-
-
 <script>
-// import axios from 'axios';
-// import { loadMercadoPago } from "@mercadopago/sdk-js";
-// import { resolveDirective } from 'vue';
-
-// await loadMercadoPago();
-
-// const mp = new MercadoPago("TEST-48a8cf41-8570-4ec7-975d-25a6114c9677");
-
 export default {
     props: [
         'paymentType',
         'carts',
         'billing_address',
         'shippment'
-        // 'name',
-        // 'quantity',
-        // 'totalValue',
-        // 'delivery',
-        // 'description',
-        // 'image'
     ],
     data: () => ({
         loading: false,
         document: null,
         telefone: null,
-        //paymentSelected: 'mercadoPago',
         cardHolder: '',
         cardNumber: '',
         cardBrand: null,
@@ -94,7 +63,8 @@ export default {
         installments: 1, // Valor padrão é 1 (sem parcelamento)
         installmentOptions: [
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
-        ]
+        ],
+        paymentResponse: false,
     }),
     computed: {
         sumQuantity() {
@@ -128,11 +98,9 @@ export default {
                 cardHolder: this.cardHolder,
                 cardNumber: this.cardNumber,
                 expiryMonth: this.expiryDate.split('/')[0],
-                expiryYear:  this.expiryDate.split('/')[1],
+                expiryYear: this.expiryDate.split('/')[1],
                 cvv: this.cvv,
-                //bank: this.bank,
                 installments: this.installments,
-                // installmentOptions: this.installmentOptions,
                 paymentType: this.paymentType,
                 cardBrand: this.cardBrand,
                 totalValue: this.formatedFinalValue.slice(3).replace(/[.,]/g, ''),
@@ -147,28 +115,23 @@ export default {
                     delivery_time: this.shippment.delivery_time,
 
                 },
-                // totalValue: this.totalValue,
-                // delivery: this.delivery,
-                // payment: this.paymentSelected,
-                // description: this.description,
-                // name: this.name,
-                // quantity: this.quantity,
-                //image: this.image
+
             };
             axios.post(`/payment`, data)
                 .then((response) => {
                     this.loading = false;
-                    console.log(response.data);
-                   // window.location.href = response.data.original.sandbox_init_point;
+                    this.paymentResponse = response;
+                    return this.completed(this.paymentResponse);
+
                 })
                 .catch((response) => {
                     alert('Error:' + response);
                 });
-
-           
         },
-
-
+        completed(response) {
+            console.log(response);
+            return this.$emit('updateCompleted', response);
+        }
     }
 }
 </script>

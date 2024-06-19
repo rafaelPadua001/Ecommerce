@@ -117,7 +117,7 @@ class CreditPayment {
             
             $response = $client->request('POST', '/1/sales', [
                 'json' => $req,
-                'debug' => true
+                //'debug' => true
             ]);
             
            $responseData = json_decode($response->getBody()->getContents(), true);
