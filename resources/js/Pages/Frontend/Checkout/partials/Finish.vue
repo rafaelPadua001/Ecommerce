@@ -85,6 +85,7 @@
                                                     <CreditForm :paymentType="paymentType" :carts="carts"
                                                         :billing_address="billing_address"
                                                         :shippment="this.shippment"
+                                                        @updateCompleted="updateCompleted"
                                                      />
 
 
@@ -92,11 +93,10 @@
                                             </div>
                                             <div v-if="paymentType == 'pix'">
                                                 <v-card>
-                                                    <PixForm :paymentType="paymentType" :name="this.itemCart.name"
-                                                        :totalValue="(parseFloat(selectedDelivery.price) + parseFloat(itemCart.price)).toFixed(2)"
-                                                        :quantity="this.itemCart.quantity" :delivery="selectedDelivery"
-                                                        :description="this.itemCart.description"
-                                                        :image="this.itemCart.images">
+                                                    <PixForm :paymentType="paymentType" :carts="carts"
+                                                        :billing_address="billing_address"
+                                                        :shippment="this.shippment"
+                                                    >
                                                     </PixForm>
                                                 </v-card>
                                             </div>
@@ -191,8 +191,7 @@ export default {
         updateCompleted(response){
             this.paymentResponse = response;
             return this.$emit('updateCompleted', this.paymentResponse);
-            this.completed = true;
-            return this.finish = false;
+            
         }
     }
 

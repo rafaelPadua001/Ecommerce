@@ -1,7 +1,8 @@
 <template>
-   
+
     <!-- <v-text-field v-model="cpf" label="CPF" mask="###.###.###-##" hint="Informe seu CPF" persistent-hint outlined
         v-maska:[cpfOptions]></v-text-field> -->
+        
     <v-btn :loading="loading" class="flex-grow-1" variant="tonal" color="primary" size="small" @click="load">Gerar Qr
         Code</v-btn>
     <div v-if="paymentResponse">
@@ -56,12 +57,12 @@ const cpfMask = ref('');
 export default {
     props: [
         'paymentType',
-        'name',
-        'quantity',
-        'totalValue',
-        'delivery',
-        'description',
-        'image'
+        'carts',
+        'billing_address',
+        'shippment',
+        // 'delivery',
+        // 'description',
+        // 'image'
     ],
     data: () => ({
         cpf: null,
@@ -79,19 +80,19 @@ export default {
         payment() {
             const data = {
                 paymentType: 'Pix',
-                totalValue: this.totalValue,
-                delivery: this.delivery,
-                payment: this.paymentSelected,
-                description: this.description,
-                name: this.name,
-                quantity: this.quantity,
-                image: this.image,
-           //     cpfPayer: this.cpf
+                // totalValue: this.totalValue,
+                // delivery: this.delivery,
+                // payment: this.paymentSelected,
+                // description: this.description,
+                // name: this.name,
+                // quantity: this.quantity,
+                // image: this.image,
+                //     cpfPayer: this.cpf
             };
             axios.post('/payment', data)
                 .then((response) => {
                     this.loading = false;
-                    
+
                     return this.paymentResponse = response.data;
                 })
                 .catch((response) => {
