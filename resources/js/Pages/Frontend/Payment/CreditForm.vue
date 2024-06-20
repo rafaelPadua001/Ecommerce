@@ -125,7 +125,9 @@ export default {
 
                 })
                 .catch((response) => {
-                    alert('Error:' + response);
+                    this.paymentResponse = response;
+                    return this.completed(this.paymentResponse);
+                   
                 });
         },
         completed(response) {
