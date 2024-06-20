@@ -2,6 +2,7 @@
     <v-container>
         <v-sheet>
             <v-row justify="center">
+                
                 <v-col cols="auto" v-if="responsePayment.data.original['Payment']['DebitCard']">
                   <v-row>
                         <v-col>
@@ -91,8 +92,8 @@
                     <v-spacer></v-spacer>
   
                 </v-col>
-                <v-col v-else>
-                   <strong>{{responsePayment.data.original['Payment']['ReturnMessage']}}</strong> 
+                <v-col v-else-if="responsePayment.data.original['Payment']['CreditCard']">
+                  
                    <v-row>
                         <v-col>
                             <p class="text-h4"><strong>{{ responsePayment.data.original['Payment']['ReturnMessage'] }}</strong></p>
