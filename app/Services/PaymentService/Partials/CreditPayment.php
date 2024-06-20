@@ -149,7 +149,11 @@ class CreditPayment {
                 "user_id" => $payer->id
             ]);
 
-            $createOrder = $this->getOrder($request, $itemNameJson, $responseData);
+            $reduceItems = $this->reduceQuantityItens($request);
+            if($reduceItems){
+                $createOrder = $this->getOrder($request, $itemNameJson, $responseData);
+            }
+            
             if ($createOrder) {
                 $melhorEnvio = $this->getMelhorEnvio($request);
                
@@ -164,8 +168,6 @@ class CreditPayment {
             if ($request->coupon_id >= 1) {
                 $removeCoupon =  $this->removeCoupon($request->coupon_id);
             }
-
-            $reduceItems = $this->reduceQuantityItens($request);
 
             $capture = $this->captureTransaction($responseData);
             

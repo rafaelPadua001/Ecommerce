@@ -88,8 +88,8 @@ class StockService {
                 
                 foreach($stock as $stockItem){
                     $stockQuantity = $stockItem['stock_quantity'];
-                    $stockColorsQty = $stockItem['colors_qty'];
-                    if($stockQuantity > $quantity){
+                    //$stockColorsQty = $stockItem['colors_qty'];
+                    if($stockQuantity >= $quantity){
                         $reduceQuantity = $stockQuantity - $quantity;
                         // $reduceQuantityColors = $this->removeColorsQtys($stockColorsQty, $quantity);
                         // dd($reduceQuantityColors);
