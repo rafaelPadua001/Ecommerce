@@ -43,20 +43,51 @@
             </template>
             <template v-slot:item.color="{ item }">
                 <v-row>
-                    <v-col v-if="item.color != 0">
-                        <v-card
-                            :color="item.color"
-                            width="200"
+                    <v-col>
+                        <v-avatar
+                            v-for="(color, index) in JSON.parse(item.cart_item_colors)" :key="index"
+                            :color="color"
+                            size="x-small"
                         >
-                           color
+                          
+                        </v-avatar>
+                      
+                    </v-col>
+                   
+                </v-row>
+            </template>
+            <template v-slot:item.size="{ item }">
+                
+                <v-row>
+                    <v-col>
+                        <v-card
+                            v-for="(color, index) in JSON.parse(item.cart_item_size)"
+                            :key="index"
+                            
+                        >
+                        {{ item.cart_item_size }}
                         </v-card>
                       
                     </v-col>
-                    <v-col v-else>
-                        <p>no color selected</p>
+                   
+                </v-row>
+            </template>
+            <template v-slot:item.price="{ item }">
+                
+                <v-row>
+                    <v-col >
+                      R$ {{ item.cart_item_price }}
                     </v-col>
                 </v-row>
             </template>
+            <!-- <template v-slot:item.created_at="{ item }">
+                
+                <v-row>
+                    <v-col >
+                      R$ {{ item.created_at }}
+                    </v-col>
+                </v-row>
+            </template> -->
             <template v-slot:item.actions="{ item }">
                 <v-btn-group>
                     <v-btn icon @click="buy(item)" size="x-small">
