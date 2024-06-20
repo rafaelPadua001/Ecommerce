@@ -117,10 +117,10 @@ class CreditPayment {
             
             $response = $client->request('POST', '/1/sales', [
                 'json' => $req,
-                //'debug' => true
+                'debug' => false
             ]);
             
-           $responseData = json_decode($response->getBody()->getContents(), true);
+            $responseData = json_decode($response->getBody()->getContents(), true);
            
             return $this->createCreditPayment($responseData, $request);
         } catch (Exception $e) {
@@ -169,14 +169,13 @@ class CreditPayment {
             $reduceItems = $this->reduceQuantityItens($request);
 
             $capture = $this->captureTransaction($responseData);
-
-
+            
             //$shippment = $this->storeShippment($request);
 
-
-            return response()->json($responseData);
+           
+            return response()->json($capture);
         } catch (Exception $e) {
-            return response()->json($e);
+            return response()->json($e->getMessage());
         }
     }
     public function getItensId($cartItems)
@@ -224,6 +223,7 @@ class CreditPayment {
     }
     public function captureTransaction($response)
     {
+        
         try {
             $merchantId = env('CIELO_MERCHANT_ID');
             $merchantKey = env('CIELO_MERCHANT_KEY');
@@ -235,7 +235,7 @@ class CreditPayment {
 
 
             $url =  $response['Payment']['Links'][0]['Href'];
-
+           
             $headers = [
                 'Content-Type: application/json',
                 'MerchantId: ' . $merchantId,
@@ -250,7 +250,7 @@ class CreditPayment {
             curl_setopt($ch, CURLOPT_VERBOSE, true);
 
             $return = curl_exec($ch);
-
+           
             if ($return == false) {
                 $error = curl_error($ch);
                 curl_close($ch);
@@ -258,7 +258,7 @@ class CreditPayment {
             }
 
             curl_close($ch);
-
+          
             return $return;
         } catch (Exception $e) {
             return $e->getMessage();

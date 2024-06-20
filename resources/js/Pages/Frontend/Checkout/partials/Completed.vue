@@ -2,8 +2,8 @@
     <v-container>
         <v-sheet>
             <v-row justify="center">
-                <v-col cols="auto">
-                    <v-row>
+                <v-col cols="auto" v-if="responsePayment.data.original">
+                  <v-row>
                         <v-col>
                             <p class="text-h4"><strong>{{ responsePayment.data.original['Payment']['ReturnMessage'] }}</strong></p>
                         </v-col>
@@ -86,11 +86,15 @@
 
                         </v-col>
                    </v-row>
-                    <!-- {{responsePayment.data.original}}
+                 
    
                     <v-spacer></v-spacer>
-    {{ 'Status:' + responsePayment.status }} -->
+  
                 </v-col>
+                <v-col v-else>
+                    {{responsePayment.data}}
+                </v-col>
+               
             </v-row>
         </v-sheet>
     </v-container>

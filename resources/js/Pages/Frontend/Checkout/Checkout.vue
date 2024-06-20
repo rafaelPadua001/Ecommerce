@@ -67,6 +67,7 @@
                             <v-timeline-item v-model="completed" dot-color="blue-darken-2" icon="fas fa-check-double" fill-dot
                                 size="small" v-if="completed && !finish && !dataConfirm && !confirm"
                             >
+                                
                                 <Completed 
                                     :responsePayment="this.responsePayment"
                                 />
@@ -674,9 +675,9 @@ export default {
         couponApply() {
             alert('Working this...');
         },
-        
         updateCompleted(paymentResponse){
             this.responsePayment = paymentResponse;
+            console.log(this.responsePayment);
             this.completed = true;
             return this.finish = false;
         }
