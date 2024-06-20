@@ -127,11 +127,12 @@ class MelhorEnvioController extends Controller
                     'User-Agent' => 'rafael.f.p.faria@hotmail.com',
                 ],
             ]);
-
+            
             $orderShippment = json_decode($response->getBody()->getContents(), true);
             $mergedData = array_merge($orderShippment, $request->toArray());
 
             //$this->getOrder($order, $request);
+            
             return $mergedData;
         } catch (\Exception $e) {
             echo $e->getMessage();

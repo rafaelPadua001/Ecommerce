@@ -60,7 +60,7 @@ class CreditPayment {
         $customer = $this->getCustomer();
         
         $merchantOrderId = uniqid();
-
+        
         $req = [
             'MerchantOrderId' => $merchantOrderId,
             'Customer' => [
@@ -72,7 +72,7 @@ class CreditPayment {
             ],
             'Payment' => $this->createPayment($request),
         ];
-
+       
         return $req;
     }
     public function createPayment($request)
@@ -91,7 +91,7 @@ class CreditPayment {
             'CreditCard' => [
                 'CardNumber' => $request->cardNumber,
                 'Holder' => $request->cardHolder,
-                'ExpirationDate' => $request->expiryMonth . '/' . $request->expiryYear,
+                'ExpirationDate' => $request->expiryDate,
                 'SecurityCode' => $request->cvv,
                 'SaveCard' => false,
                 'Brand' => $request->cardBrand,
@@ -150,10 +150,9 @@ class CreditPayment {
             ]);
 
             $createOrder = $this->getOrder($request, $itemNameJson, $responseData);
-
             if ($createOrder) {
                 $melhorEnvio = $this->getMelhorEnvio($request);
-
+               
                 $createShippment = $this->shippmentService->store($melhorEnvio);
             }
 
@@ -171,9 +170,9 @@ class CreditPayment {
             $capture = $this->captureTransaction($responseData);
             
             //$shippment = $this->storeShippment($request);
-
            
-            return response()->json($capture);
+           
+            return response()->json($responseData);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }

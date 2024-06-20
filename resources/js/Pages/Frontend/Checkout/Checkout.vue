@@ -70,6 +70,7 @@
                                 
                                 <Completed 
                                     :responsePayment="this.responsePayment"
+                                    :billing_address="this.billing_address"
                                 />
                             </v-timeline-item>
                         </v-timeline>

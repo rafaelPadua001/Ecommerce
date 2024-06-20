@@ -95,10 +95,10 @@ export default {
         payment() {
             const data = {
                 document: this.document,
+                telefone: this.telefone,
                 cardHolder: this.cardHolder,
                 cardNumber: this.cardNumber,
-                expiryMonth: this.expiryDate.split('/')[0],
-                expiryYear: this.expiryDate.split('/')[1],
+                expiryDate: this.expiryDate,
                 cvv: this.cvv,
                 installments: this.installments,
                 paymentType: this.paymentType,
@@ -115,6 +115,8 @@ export default {
                     delivery_time: this.shippment.delivery_time,
 
                 },
+                address: this.billing_address,
+
 
             };
             axios.post(`/payment`, data)
