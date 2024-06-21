@@ -278,7 +278,7 @@ export default {
     customer: false,
     customerAddress: [],
     profileImage: [],
-    panel: ['first_address', 'secondary_address'],
+    panel: [1, 0],
     address: '',
     number: 0,
     complemento: '',
