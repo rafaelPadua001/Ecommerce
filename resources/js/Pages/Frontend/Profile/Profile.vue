@@ -82,7 +82,10 @@
                             <FirstAddress 
                               :editedItem="this.editedItem"
                               :customerAddress="this.customerAddress"
-                              :uf="this.uf"/>
+                              :uf="this.uf"
+                              @saveAddress="save"
+                              @updateAddress="update"
+                              @removeAddress="remove"/>
                             
                               <div>
                               <ProfileUpload
@@ -180,16 +183,6 @@ export default {
     customerAddress: [],
     profileImage: [],
     panel: [1, 0],
-    address: '',
-    number: 0,
-    complemento: '',
-    bairro: '',
-    uf: '',
-    cidade: '',
-    estado: '',
-    zip_code: '',
-    country: '',
-    phone: '',
     first_name: '',
     last_name: '',
     email: '',
@@ -286,43 +279,22 @@ export default {
     closeImageDialog() {
       this.dialogImage = false;
     },
-    // openDialogRemoveAddress(item){
-    //  // this.editedItem = Object.assign({}, item);
-    // //  this.editedIndex = this.customerAddress.indexOf(item);
-    //   this.dialogRemoveAddress = true;
-    // },
     uploadProfileImage() {
       this.dialogImage = true;
     },
-      // save() {
-      //   const data = {
-      //     address: this.editedItem.address,
-      //     number: this.editedItem.number,
-      //     complemento: this.editedItem.complemento,
-      //     bairro: this.editedItem.bairro,
-      //     uf: this.editedItem.uf.uf,
-      //     state: this.editedItem.uf.state,
-      //     postal_code: this.editedItem.zip_code,
-      //     city: this.editedItem.cidade,
-      //     country: this.editedItem.country,
-      //     phone: this.editedItem.phone,
-      //   };
-      //   axios.post('/address/save', data)
-      //     .then((response) => {
-            
-      //       return this.customerAddress = response.data;
-      //     })
-      //     .catch((response) => {
-      //       return alert('Error :' + response);
-      //     });
-
-      // },
+    save(response) {
+        
+        return this.customerAddress = response.data;
+      },
     editAddress() {
       return this.update();
     },
     update(response) {
-      alert(response);
-      return this.customer = Object.assign({}, response.data);
+      return this.customerAddress = Object.assign({}, response.data);
+    },
+    remove(item){
+     
+      return this.customerAddress = '';
     }
   },
   created() {

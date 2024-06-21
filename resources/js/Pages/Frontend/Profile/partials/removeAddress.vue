@@ -13,7 +13,7 @@
                 </v-toolbar>
             </v-card-title>
             <v-card-text>
-                How your shure to remove this address ?
+                How your shure to remove this address ? 
               
             </v-card-text>
             
@@ -51,11 +51,17 @@ export default {
             axios.delete(`/address/delete/${item.id}`)
             .then((response) => {
                 this.$emit('close-dialog');
+               
+                return this.deleteAddress(item);
                 //return this.address = '';
             })
             .catch((response) => {
                 alert('Error:' + response);
             });
+        },
+        deleteAddress(item){
+            
+            return this.$emit('removeAddress', item)
         }
     }
 }

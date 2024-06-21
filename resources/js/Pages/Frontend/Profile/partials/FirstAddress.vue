@@ -45,8 +45,9 @@
                         </v-col>
                         <v-col cols="auto" sm="4">
                             <label>State:</label>
-                            <v-text-field v-model="editedItem.estado" required hide-details :placeholder="uf.state"
-                                :label="customerAddress.estado"></v-text-field>
+                            <v-text-field v-model="editedItem.estado" required hide-details
+                                :placeholder="editedItem.uf.state" :label="customerAddress.estado"
+                                :value="editedItem.uf.estado"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -105,7 +106,7 @@
             </v-card>
 
             <RemoveAddressDialog v-model="dialogRemoveAddress" v-if="dialogRemoveAddress"
-                :address="this.customerAddress" @close-dialog="this.dialogRemoveAddress = false" />
+                :address="this.customerAddress" @close-dialog="this.dialogRemoveAddress = false" @removeAddress="removeAddress"/>
         </v-sheet>
     </v-container>
 
@@ -122,6 +123,7 @@ export default {
     },
     data: () => ({
         address: '',
+        customerAddress: [],
         number: 0,
         complemento: '',
         bairro: '',
@@ -134,18 +136,16 @@ export default {
         loading: false,
         loadingUpdate: false,
         dialogRemoveAddress: false,
-        ufs: [{
-            state: 'Distrito Federal', uf: 'DF',
-            state: 'Goiás', uf: 'Go',
-            state: 'Maranhão', uf: 'MA',
-        }
+        ufs: [
+            { state: 'Distrito Federal', uf: 'DF' },
+            { state: 'Goiás', uf: 'Go' },
+            { state: 'Maranhão', uf: 'MA' },
 
-            //     'RJ',
-            //    'SP',
         ],
         countryItems: [
             'Brazil'
         ],
+        
     }),
     watch: {
         loading(val) {
@@ -164,8 +164,7 @@ export default {
     },
     methods: {
         openDialogRemoveAddress(item) {
-            // this.editedItem = Object.assign({}, item);
-            //  this.editedIndex = this.customerAddress.indexOf(item);
+            this.customerAddress = item;
             this.dialogRemoveAddress = true;
         },
         save() {
@@ -184,14 +183,51 @@ export default {
             };
             axios.post('/address/save', data)
                 .then((response) => {
+                    return this.saveAddress(response);
 
-                    return this.customerAddress = response.data;
                 })
                 .catch((response) => {
                     return alert('Error :' + response);
                 });
 
+
         },
+        saveAddress(response) {
+
+            return this.$emit('saveAddress', response);
+        },
+        editAddress(item) {
+            const data = {
+                endereco: this.editedItem.address,
+                number: this.editedItem.number,
+                complemento: this.editedItem.complemento,
+                bairro: this.editedItem.bairro,
+                UF: this.editedItem.uf.uf,
+                estado: this.editedItem.uf.state,
+                cep: this.editedItem.zip_code,
+                cidade: this.editedItem.cidade,
+                pais: this.editedItem.country,
+                telefone: this.editedItem.phone,
+            };
+            axios.post(`/address/update/${item.id}`, data)
+                .then((response) => {
+                    alert(response);
+                    return this.updateAddress(response);
+
+                })
+                .catch((response) => {
+                    return alert('Error :' + response);
+                });
+
+
+        },
+        updateAddress(response) {
+            return this.$emit('updateAddress', response);
+        },
+        removeAddress(item){
+           
+            return this.$emit('removeAddress', item);
+        }
     }
 
 }

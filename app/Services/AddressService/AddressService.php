@@ -23,9 +23,13 @@ class AddressService{
             return response()->json($e);
         }
     }
+    public function getAuthenticated(){
+        $customer = Auth::guard('customer')->user();
+        return $customer;
+    }
     public function store(Request $request){
         try{
-            $customer = Auth::guard('customer')->user();
+            $customer = $this->getAuthenticated();
            
             $address = $this->address->create([
                     'endereco' => $request->address,
@@ -40,7 +44,7 @@ class AddressService{
                     'number' => $request->number,
                     'user_id' => $customer->id
                 ]);
-                
+               
                 return response()->json($address);             
         }
         catch(Exception $e){
