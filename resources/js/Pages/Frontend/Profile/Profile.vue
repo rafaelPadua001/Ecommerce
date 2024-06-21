@@ -9,7 +9,7 @@
         <v-sheet class="ma-2 pa-2">
           <div>
             <v-container>
-              <v-row no-gutters>
+              <v-row no-gutters justify="center">
                 <v-col cols="auto">
                   <v-sheet class="ma-1 pa-1">
                     <v-hover>
@@ -23,7 +23,8 @@
                               <v-expand-transition v-if="isHovering">
                                 <template
                                   class="d-flex transition-fast-in-fast-out bg-grey-darken-4 v-card--reveal text-h5"
-                                  v-if="Object.keys(profileImage).length == 0">
+                                  v-if="Object.keys(profileImage).length == 0"
+                                >
                                   <v-btn icon size="x-small" density="confortable" variant="elevated">
                                     <v-icon icon="fa-solid fa-plus fa-2xs" color="red-lighten-1"
                                       @click="uploadProfileImage"></v-icon>
@@ -56,7 +57,7 @@
                               </v-expand-transition>
                             </v-img>
                           </v-avatar>
-                          <v-list-item :title="customer.first_name + customer.last_name"></v-list-item>
+                          <v-list-item :title="customer.first_name + ' ' + customer.last_name"></v-list-item>
 
                           <v-list-item :title="customer.email"></v-list-item>
 
@@ -191,6 +192,7 @@
                                 @close-dialog="this.dialogImage = false"
                                 @update-avatar="updateAvatar"
                               />
+                              
                               <ProfileCustomerDialog 
                                 v-model="customerDialog" 
                                 v-if="customerDialog"
@@ -276,7 +278,7 @@ export default {
     customer: false,
     customerAddress: [],
     profileImage: [],
-    panel: ['first_address', 'secondary_address'],
+    panel: [1, 0],
     address: '',
     number: 0,
     complemento: '',
