@@ -1,5 +1,8 @@
 <template>
-    <v-dialog>
+    <v-dialog
+      transition="dialog-bottom-transition"
+      fullscreen
+    >
       <v-card class="mx-auto">
         <v-toolbar color="transparent">
             <v-toolbar-title> Address Form</v-toolbar-title>

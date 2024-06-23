@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-row no-gutters>
-      <v-col cols="auto" md="12">
+    <v-row justify="center">
+      <v-col cols="auto" >
         <v-sheet class="ma-2 pa-2">
           <div>
             <v-container>
-              <v-row no-gutters justify="center">
-                <v-col cols="auto">
+              <v-row justify="center">
+                <v-col cols="auto" sm="12">
                   <v-sheet class="ma-2 pa-2">
                     <v-hover>
                       <template v-slot="{ isHovering, props }">
@@ -69,17 +69,15 @@
                   </v-sheet>
                 </v-col>
 
-                <v-col cols="auto" md="8">
+                <v-col cols="auto">
                   <v-expansion-panels v-model="panel">
                       <v-expansion-panel>
-                        <v-expansion-panel-title>
+                        <v-expansion-panel-title bg-color="transparent">
                           First Address
                         </v-expansion-panel-title>
                        
-                       
                         <v-expansion-panel-text>
-                          <v-sheet class="ma-2 pa-6">
-                            <FirstAddress 
+                          <FirstAddress 
                               :editedItem="this.editedItem"
                               :customerAddress="this.customerAddress"
                               :uf="this.uf"
@@ -113,7 +111,7 @@
                             
                             </div>
 
-                          </v-sheet>
+                         
                         </v-expansion-panel-text>
                       </v-expansion-panel>
                       <v-expansion-panel>
@@ -242,6 +240,7 @@ export default {
       this.deleteImageDialog = false;
     },
     deleteAvatar(image){
+      EventBus.emit('delete-avatar-image', this.imageRemove);
       return this.profileImage = '';
     },
     deleteProfileImage(item){
