@@ -166,6 +166,7 @@ import axios from 'axios';
 import AddressForm from '../Dialogs/Address.vue';
 import DiscountWindow from '../Coupons/partials/Window.vue';
 import CartList from '../Cart/partials/CartList.vue';
+import { EventBus } from '@/Event/EventBus';
 
 export default {
     components: { AddressForm, DiscountWindow, CartList },
@@ -198,6 +199,9 @@ export default {
             axios.get(`/api/appBar`)
                 .then((response) => {
                     this.appBarColor = JSON.parse(response.data.colors);
+                    if(this.appBarColor){
+                        return EventBus.emit('app-bar-color', this.appBarColor);
+                    }
                     return this.appBar = response.data;
                 })
                 .catch((response) => {

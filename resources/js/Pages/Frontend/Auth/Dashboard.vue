@@ -3,7 +3,7 @@
     <AppBar />
   </div>
 
-  <v-navigation-drawer expand-on-hover rail theme="dark">
+  <v-navigation-drawer expand-on-hover rail theme="dark" :color="this.dashboardColor ?? 'transparent'">
 
     <v-list>
       <v-list-item v-if="avatarUrl && !customers.avatarImage"
@@ -78,7 +78,7 @@ export default {
     address: [],
     addressDialog: false,
     avatarUrl: false,
-
+    dashboardColor: false,
   }),
   watch: {
     closeAddessDialog(val) {
@@ -121,6 +121,9 @@ export default {
 
   },
   created() {
+    EventBus.on('app-bar-color', (color) =>{
+      this.dashboardColor = color;
+    });
     EventBus.on('update-avatar-image', (response) => {
       this.avatarUrl = response;
     });
@@ -129,6 +132,7 @@ export default {
     });
   },
   beforeDestroy() {
+    EventBus.off('app-bar-color');
     EventBus.off('avatar-update-image');
     EventBus.off('delete-avatar-image');
   }
