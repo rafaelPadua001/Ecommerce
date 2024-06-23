@@ -1,11 +1,10 @@
 <template>
-   
-            <v-dialog>
-                <v-row fluid>
-                    <v-col class="d-flex justify-center mb-6 flex-column" cols="auto" md="8">
-                <v-card class="mx-auto text-center" :max-width="1800">
+    <v-dialog>
+        <v-row no-gutters justify="center">
+            <v-col class="d-flex justify-center mb-6 flex-column" cols="auto" >
+                <v-card class="mx-auto text-center" :max-width="500">
                     <v-card-title>
-                       <v-toolbar>
+                        <v-toolbar color="transparent">
                             Remove Image
                             <template v-slot:append>
                                 <v-btn icon>
@@ -15,7 +14,7 @@
                                 </v-btn>
                             </template>
                         </v-toolbar>
-                        
+
                     </v-card-title>
 
                     <v-card-text>
@@ -24,15 +23,15 @@
                                 remove this {{ image.name }} ?
                             </v-col>
                         </v-row>
-                       
+
                     </v-card-text>
 
                     <v-card-actions>
                         <v-btn-group>
-                            <v-btn class="me-2" variant="plain" color="error" @click="remove(image)">
-                                Remove 
+                            <v-btn class="me-2" variant="text" color="error" @click="remove(image)">
+                                Remove
                             </v-btn>
-                            <v-btn class="me-2" variant="plain"  @click="close()">
+                            <v-btn class="me-2" variant="text" @click="close()">
                                 Cancel
                             </v-btn>
                         </v-btn-group>
@@ -40,38 +39,37 @@
 
                 </v-card>
             </v-col>
-    </v-row>
-            </v-dialog>
-       
+        </v-row>
+    </v-dialog>
+
 </template>
 
 <script>
 import axios from 'axios';
-
-    export default {
-        props: ['image'],
-        data: () => ({}),
-        watch:{
-            closeDialog(val){
-                val || this.close();
-            }
+import { EventBus } from '@/Event/EventBus';
+export default {
+    props: ['image'],
+    data: () => ({}),
+    watch: {
+        closeDialog(val) {
+            val || this.close();
+        }
+    },
+    methods: {
+        close() {
+            this.$emit('close-dialog');
         },
-        methods: {
-            close(){
-                this.$emit('close-dialog');
-            },
-            remove(image){
-                axios.delete(`/profileImage/delete/${image.id}`)
+        remove(image) {
+            axios.delete(`/profileImage/delete/${image.id}`)
                 .then((response) => {
+                    EventBus.emit('delete-avatar-image', image);
                     this.close();
                     return this.$emit('delete-image', image);
-                   
-                    //return this.image.splice(this.imageId, 1);
                 })
                 .catch((response) => {
-                return alert('Error :' + response);
+                    return alert('Error :' + response);
                 });
-            }
-        },
-    }
+        }
+    },
+}
 </script>

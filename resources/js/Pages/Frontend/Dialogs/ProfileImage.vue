@@ -1,8 +1,10 @@
 <template>
-    <v-dialog width="auto">
+    <v-dialog
+        transition="dialog-top-transition"
+    >
         <v-row fluid justify="center">
-            <v-col class="d-flex justify-center mb-6 flex-column" cols="auto" md="8">
-                <v-card class="mx-auto text-center" :max-width="1800">
+            <v-col class="d-flex justify-center flex-column" cols="auto">
+                <v-card class="mx-auto text-center" :width="400">
                     <v-card-title>
                         <v-toolbar color="transparent">
                             Profile image

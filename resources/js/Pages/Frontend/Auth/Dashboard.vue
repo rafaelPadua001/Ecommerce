@@ -4,17 +4,18 @@
   </div>
 
   <v-navigation-drawer expand-on-hover rail theme="dark">
-   
+
     <v-list>
-      
-      <v-list-item v-if="!customers.avatarImage && !avatarUrl" prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
+      <v-list-item v-if="avatarUrl && !customers.avatarImage"
+        :prepend-avatar="`./storage/avatars/${avatarUrl.data.original.name}`"
+        :title="customers.first_name + ' ' + customers.last_name" :subtitle="customers.email">
+      </v-list-item>
+      <v-list-item v-else-if="!avatarUrl && customers.avatarImage"
+        :prepend-avatar="`./storage/avatars/${customers.avatarImage}`"
         :title="customers.first_name + ' ' + customers.last_name" :subtitle="customers.email"></v-list-item>
-      <v-list-item v-else-if="avatarUrl && !customers.avatarImage" :prepend-avatar="`./storage/avatars/${avatarUrl.data.original.name}`"
-        :title="customers.first_name + ' ' + customers.last_name" :subtitle="customers.email">
-      </v-list-item>
-      <v-list-item v-else-if="customers.avatarImage" :prepend-avatar="`./storage/avatars/${customers.avatarImage}`"
-        :title="customers.first_name + ' ' + customers.last_name" :subtitle="customers.email">
-      </v-list-item>
+      <v-list-item v-else prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
+        :title="customers.first_name + ' ' + customers.last_name" :subtitle="customers.email"></v-list-item>
+
     </v-list>
 
     <v-divider></v-divider>
@@ -112,20 +113,24 @@ export default {
     closeAddressDialog() {
       return this.addressDialog = false;
     },
-    
+
   },
   mounted() {
     this.getUser();
     this.getAddress();
-    
+
   },
   created() {
     EventBus.on('update-avatar-image', (response) => {
       this.avatarUrl = response;
     });
+    EventBus.on('delete-avatar-image', (item) => {
+      return this.customers.avatarImage = '';
+    });
   },
   beforeDestroy() {
     EventBus.off('avatar-update-image');
+    EventBus.off('delete-avatar-image');
   }
 }
 

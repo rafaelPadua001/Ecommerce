@@ -1,10 +1,8 @@
 2<template>
-    <v-container>
-        <v-sheet>
-            <v-card elevation="0">
-
+   
+            <v-card class="mx-auto" elevation="0" :max-width="450">
                 <v-card-text>
-                    <v-row>
+                    <v-row fluid>
                         <v-col cols="auto" md="12">
                             <label>Address:</label>
                             <v-text-field v-model="editedItem.address" required hide-details
@@ -107,9 +105,7 @@
 
             <RemoveAddressDialog v-model="dialogRemoveAddress" v-if="dialogRemoveAddress"
                 :address="this.customerAddress" @close-dialog="this.dialogRemoveAddress = false" @removeAddress="removeAddress"/>
-        </v-sheet>
-    </v-container>
-
+     
 </template>
 
 <script>
