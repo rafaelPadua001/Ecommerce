@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import {EventBus} from '@/Event/EventBus.js';
+
     export default{
         data: () => ({
             image: [],
@@ -49,8 +51,8 @@
                     }
                 })
                 .then((response) => {
-                 
                     this.$emit('update-avatar', response);
+                    EventBus.emit('update-avatar-image', response);
                     this.$emit('close-dialog');
                     return this.image.push(response.data);
                     

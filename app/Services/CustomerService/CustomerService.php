@@ -25,10 +25,14 @@ class CustomerService
         $this->customer = $customer;
         $this->couponCustomerService = $couponCustomerService;
     }
+    public function getAuthenticated(){
+        $customer = Auth::guard('customer')->user();
+        return $customer;
+    }
     public function getCustomer()
     {
         try {
-            $customer = Auth::guard('customer')->user();
+            $customer = $this->getAuthenticated();
             $customerProfile = ProfileImage::where('customer_id', $customer->id)
                 ->join('customers', 'customers.id', '=', 'profile_images.customer_id')
                 ->select(
@@ -36,8 +40,8 @@ class CustomerService
                     'customers.first_name',
                     'customers.last_name',
                     'customers.email',
-                    'profile_images.name',
-                    'profile_images.extension',
+                    'profile_images.name as avatarImage',
+                    'profile_images.extension as avatarExtension',
                 )
                 ->first();
 
