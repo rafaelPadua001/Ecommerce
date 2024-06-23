@@ -7,10 +7,10 @@
             <v-container>
               <v-row no-gutters justify="center">
                 <v-col cols="auto">
-                  <v-sheet class="ma-1 pa-1">
+                  <v-sheet class="ma-2 pa-2">
                     <v-hover>
                       <template v-slot="{ isHovering, props }">
-                        <v-card class="mx-auto" :max-width="734" v-bind="props" elevation="0">
+                        <v-card class="mx-auto" width="150" v-bind="props" elevation="0">
                           <v-avatar color="grey" size="150">
                             <v-img color="surface-variant" cover
                               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0s9szfX_siS_iDFcfPRqjxs0R1n9Qh2twgox6DHU-h1bBG9BtkBBVmmEWOGj35H3CIIU"
@@ -163,6 +163,7 @@ const phoneMask = ref('');
 <script>
 
 import axios from "axios";
+import { EventBus } from '@/Event/EventBus';
 import FirstAddress from './partials/FirstAddress.vue';
 import ProfileUpload from '../Dialogs/ProfileImage.vue'
 import DeleteImageProfile from "../Profile/profileImage/deleteImageProfile.vue";
@@ -274,7 +275,9 @@ export default {
       
     },
     updateAvatar(response){
-      return this.profileImage = Object.assign({}, response.data.original);
+      this.profileImage = Object.assign({}, response.data.original);
+      return EventBus.emit('update-avatar-image', this.profileImage);
+    //  return this.profileImage = Object.assign({}, response.data.original);
     },
     closeImageDialog() {
       this.dialogImage = false;
