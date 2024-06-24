@@ -36,9 +36,16 @@
 
                     <v-row>
                         <v-col cols="auto">
-                             <p class="text-subtitle-2">
+                            <p class="text-subtitle-2" v-if="totalPrice && !newValuePerInstallments">
                                 <strong>Total Value</strong>
-                                {{ totalPrice }}
+                               
+                               R$ {{ totalPrice  }}
+                                
+                            </p>
+                            <p class="text-subtitle-2" v-else>
+                                <strong>Total Value</strong>
+                               
+                                {{ newValuePerInstallments }}
                                 
                             </p>
                         </v-col>
@@ -77,15 +84,19 @@
                                                     <DebitForm :paymentType="paymentType" :carts="carts"
                                                         :billing_address="billing_address"
                                                         :shippment="this.shippment"
-                                                        @updateCompleted="updateCompleted" />
+                                                        @updateCompleted="updateCompleted"
+                                                    />
                                                 </v-card>
                                             </div>
                                             <div v-if="paymentType == 'credit'">
                                                 <v-card>
-                                                    <CreditForm :paymentType="paymentType" :carts="carts"
+                                                    <CreditForm 
+                                                        :paymentType="paymentType"
+                                                        :carts="carts"
                                                         :billing_address="billing_address"
                                                         :shippment="this.shippment"
                                                         @updateCompleted="updateCompleted"
+                                                        @updateFinalValue="updateFinalValue"
                                                      />
 
 
@@ -145,6 +156,7 @@ export default {
     data: () => ({
         paymentType: false,
         paymentResponse: false,
+        newValuePerInstallments: false,
     }),
     computed: {
         parsedProduct() {
@@ -191,7 +203,10 @@ export default {
         updateCompleted(response){
             this.paymentResponse = response;
             return this.$emit('updateCompleted', this.paymentResponse);
-            
+        },
+        updateFinalValue(newValue){
+            this.newValuePerInstallments = newValue;
+            return this.newValuePerInstallments.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
     }
 

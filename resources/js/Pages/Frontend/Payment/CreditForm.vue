@@ -7,14 +7,12 @@
                         <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
                         <v-text-field v-model="telefone" label="Telefone" outlined
                             v-maska:[phoneOptions]></v-text-field>
-
-
                         <v-text-field v-model="cardHolder" label="Nome do titular do cartão" required></v-text-field>
                         <v-text-field v-model="cardNumber" label="Número do Cartão" required></v-text-field>
                         <v-text-field v-model="expiryDate" label="Data de Expiração (MM/AA)" required></v-text-field>
                         <v-text-field v-model="cvv" label="CVV" required></v-text-field>
-                        <v-combobox v-model="installments" :items="installmentOptions"
-                            label="Installments"></v-combobox>
+                        <v-combobox v-model="installments" :items="installmentOptions" label="Installments"
+                            item-text="text" item-value="value" :onchange="recalcFinalValue()"></v-combobox>
                         <v-select v-model="cardBrand" :items="cardBrands" label="Marca do Cartão" required></v-select>
                         <v-btn :loading="loading" class="flex-grow-1" variant="tonal" color="primary"
                             @click="load">Pagar</v-btn>
@@ -92,6 +90,36 @@ export default {
                 this.payment();
             }, 500);
         },
+        gerenateInstallmentOptions() {
+            const maxInstallments = 12;
+            for (let i = 0; i <= maxInstallments; i++) {
+                const installmentValue = this.totalPrice / i;
+                this.installmentOptions.push({
+                    text: `${i}x R$ ${installmentValue.toFixed(2)} (Total: R$ ${this.formatedFinalValue.toFixed(2)})`,
+                    value: i,
+                });
+            }
+        },
+        recalcFinalValue() {
+
+
+            const totalValue = parseFloat(this.finalValue); // Converte finalValue para um número de ponto flutuante
+            const totalInstallments = parseInt(this.installments); // Converte installments para um número inteiro
+
+            if (isNaN(totalValue) || isNaN(totalInstallments) || totalInstallments === 0) {
+                alert('Por favor, verifique os valores de entrada.');
+                return;
+            }
+
+            const valuePerInstallment = totalValue / totalInstallments;
+
+            // Formata os valores como moeda brasileira
+            const formattedTotalValue = totalValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const formattedValuePerInstallment = valuePerInstallment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            this.updateFinalValue(formattedValuePerInstallment);
+            return formattedValuePerInstallment;
+        },
         payment() {
             const data = {
                 document: this.document,
@@ -130,12 +158,18 @@ export default {
                     this.paymentResponse = response;
                     alert('Error: ' + response);
                     return this.completed(this.paymentResponse);
-                   
+
                 });
         },
         completed(response) {
             return this.$emit('updateCompleted', response);
+        },
+        updateFinalValue(value) {
+            return this.$emit('update-final-value', value);
         }
+    },
+    created() {
+        this.gerenateInstallmentOptions;
     }
 }
 </script>
