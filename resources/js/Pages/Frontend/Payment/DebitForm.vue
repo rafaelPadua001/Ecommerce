@@ -3,7 +3,7 @@
         <v-sheet class="px-2 py-2">
             <v-row fluid justify="center">
                 <v-col>
-               
+                    
                     <v-form>
                         <v-text-field v-model="document" label="CPF do titular" required></v-text-field>
                         <v-text-field v-model="telefone" label="Telefone" outlined
@@ -64,20 +64,6 @@ export default {
         'carts',
         'billing_address',
         'shippment',
-        // 'paymentType',
-        // 'product_id',
-        // 'cart_id',
-        // 'item_id',
-        // 'name',
-        // 'quantity',
-        // 'totalValue',
-        // 'delivery',
-        // 'description',
-        // 'image',
-        // 'color',
-        // 'coupon_id',
-        // 'address',
-
     ],
     data: () => ({
         loading: false,

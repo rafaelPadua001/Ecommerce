@@ -98,7 +98,7 @@
                                 <v-text-field v-model="billing_address.shippment_city" label="Cidade">
 
                                 </v-text-field>
-                                {{ billing_address.shippment_city }}
+                                <!-- {{ billing_address.shippment_city }} -->
                             </v-col>
                             <v-col cols="auto">
 
@@ -108,7 +108,7 @@
                                     :placeholder="customerAddress.uf">
 
                                 </v-select>
-                                {{ billing_address.select_uf }}
+                                <!-- {{ billing_address.select_uf }} -->
                             </v-col>
 
 
@@ -153,7 +153,7 @@
 
                         <v-row>
                             <v-col class="d-flex child-flex">
-                               
+
                                 <v-bagde color="red" :content="item.shippment_quantity" :value="true" bordered>
                                     <v-img v-if="item.images && item.images.length > 0" :width="4"
                                         :src="`./storage/products/${item.images[0]}`"
@@ -166,7 +166,7 @@
                                             </div>
                                         </template>
                                     </v-img>
-                                    
+
                                     <v-img v-else :width="4" :src="`/path/to/default/image.jpg`"
                                         :lazy-src="`/path/to/default/image.jpg`" aspect-ratio="16/9" cover>
                                         <template v-slot:placeholder>
@@ -297,26 +297,26 @@
         </v-col>
     </v-row>
     <div>
-                            <v-dialog v-model="removeDialog">
-                                <v-card>
-                                    <v-toolbar>
-                                        <v-toolbar-title>{{ editedItem.name }}</v-toolbar-title>
-                                    </v-toolbar>
-                                    <v-card-text>
-                                        Você deseja remover este Item ? {{ editedItem.cart_item_id }}
-                                    </v-card-text>
+        <v-dialog v-model="removeDialog">
+            <v-card>
+                <v-toolbar>
+                    <v-toolbar-title>{{ editedItem.name }}</v-toolbar-title>
+                </v-toolbar>
+                <v-card-text>
+                    Você deseja remover este Item ? {{ editedItem.cart_item_id }}
+                </v-card-text>
 
-                                    <v-card-actions>
-                                        <v-btn @click="closeRemoveItemDialog()">
-                                            Close
-                                        </v-btn>
-                                        <v-btn color="error" @click="removeItemConfirm()">
-                                            Confirm
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                        </div>
+                <v-card-actions>
+                    <v-btn @click="closeRemoveItemDialog()">
+                        Close
+                    </v-btn>
+                    <v-btn color="error" @click="removeItemConfirm()">
+                        Confirm
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </div>
 
 </template>
 
@@ -351,7 +351,7 @@ export default {
             { state: 'Goiás', uf: 'GO' },
             { state: 'Maranhão', uf: 'MA' },
         ],
-        
+
         shippment: [],
     }),
     computed: {
@@ -419,7 +419,7 @@ export default {
                 shippment: this.shippment,
             }
             return this.$emit('confirmNext', data);
-           
+
         },
         removeItemDialog(item) {
             this.index = this.carts.findIndex(cartItem => cartItem.cart_item_id === item.cart_item_id);
