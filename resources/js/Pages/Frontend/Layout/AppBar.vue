@@ -31,43 +31,9 @@
                         </v-btn>
 
                         <div>
+                         <CategoriesComponent :categories="this.categories" :color="this.appBarColor"></CategoriesComponent>
 
-
-                            <v-menu :activator="$refs.menuBtn" open-on-hover>
-                                <template v-slot:activator="{ props }">
-                                    <v-btn ref="menuBtn" variant="plain" size="small" v-bind="props">
-                                        <!-- <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
-                                </v-icon> -->
-                                        categories
-                                        <template v-slot:append>
-                                            <v-icon icon="fa-solid fa-chevron-down fa-2xs"></v-icon>
-                                        </template>
-
-
-                                    </v-btn>
-                                </template>
-                                <v-list elevation="0">
-                                    <v-list-item v-if="!categories || categories.length === 0">
-                                        no categories found
-                                    </v-list-item>
-                                    <v-list-item v-else v-for="category in categories" :key="category.id">
-                                        <v-btn variant="flat" size="small"
-                                            :to="{ path: `/subcategories/all/${category.id}`, query: { customer: this.user } }">
-                                            <span>
-                                                <v-avatar color="surface-variant" size="28px">
-                                                    <v-img v-if="category.thumbnail"
-                                                        :src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
-                                                        :lazy-src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
-                                                        :alt="`${category.name}`"></v-img>
-                                                </v-avatar>
-                                            </span>
-                                            <!-- <v-icon v-else :icon="category.icon"></v-icon> -->
-                                            <span>{{ category.name }}</span>
-                                        </v-btn>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-
+                           
 
                         </div>
 
@@ -91,7 +57,7 @@
                                     </template>
                                     <v-row>
                                         <v-col>
-                                            <CartList :carts="carts" />
+                                            <CartList :carts="carts" ></CartList>
                                         </v-col>
                                     </v-row>
                                 </v-menu>
@@ -163,13 +129,14 @@
 
 <script>
 import axios from 'axios';
+import CategoriesComponent from '../Categories/Categories.vue';
 import AddressForm from '../Dialogs/Address.vue';
 import DiscountWindow from '../Coupons/partials/Window.vue';
 import CartList from '../Cart/partials/CartList.vue';
 import { EventBus } from '@/Event/EventBus';
 
 export default {
-    components: { AddressForm, DiscountWindow, CartList },
+    components: { CategoriesComponent, AddressForm, DiscountWindow, CartList },
     data: () => ({
         user: [],
         carts: [],
