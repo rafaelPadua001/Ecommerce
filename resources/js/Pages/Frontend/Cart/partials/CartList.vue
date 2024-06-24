@@ -111,6 +111,7 @@
 <script>
 import cartStorage from '@/Services/CartStorage/CartStorage';
 export default {
+    name: 'cartList',
     props: {
         carts: {
             type: Array,
