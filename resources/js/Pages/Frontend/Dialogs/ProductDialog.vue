@@ -141,8 +141,7 @@
                                     v-for="(color, index) in parsedColors" :key="index">
                                     <v-hover>
                                         <template v-slot:default="{ isHovering, props }">
-                                            {{ parsedQuantityColors }}
-                                            <!-- <div v-if="parsedQuantityColors[index] >= 1">
+                                            <div v-if="parsedQuantityColors[index] >= 1">
                                                 <v-avatar @click="getColors(color)" v-bind="props" :bg-color="color"
                                                     :color="isHovering ? undefined : color" :width="60" rounded="10">
                                                     <template v-slot:append>
@@ -158,7 +157,7 @@
                                                         <v-icon icon="fas fa-close" class="mr-1" size="sm"></v-icon>
                                                     </span>
                                                 </v-avatar>
-                                            </div> -->
+                                            </div>
                                         </template>
                                     </v-hover>
                                 </v-col>
