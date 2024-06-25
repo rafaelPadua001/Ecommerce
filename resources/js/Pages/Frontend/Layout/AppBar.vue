@@ -31,20 +31,16 @@
                         </v-btn>
 
                         <div>
-                         <CategoriesComponent :categories="this.categories" :color="this.appBarColor"></CategoriesComponent>
+                            <CategoriesComponent :categories="this.categories" :color="this.appBarColor">
+                            </CategoriesComponent>
 
-                           
+
 
                         </div>
 
-
-
-                        <!-- <v-btn class="mr-2" variant="plain" to="/">
-                            <v-icon icon="fas fa-globe fa-2xs"></v-icon>
-                        </v-btn> -->
                     </template>
                     <v-spacer></v-spacer>
-                
+
                     <!-- Cart Button-->
                     <div class="d-flex justify-space-around" v-if="Object.keys(carts).length >= 1">
                         <v-row fluid>
@@ -57,7 +53,7 @@
                                     </template>
                                     <v-row>
                                         <v-col>
-                                            <CartList :carts="carts" ></CartList>
+                                            <CartList :carts="carts"></CartList>
                                         </v-col>
                                     </v-row>
                                 </v-menu>
@@ -166,7 +162,7 @@ export default {
             axios.get(`/api/appBar`)
                 .then((response) => {
                     this.appBarColor = JSON.parse(response.data.colors);
-                    if(this.appBarColor){
+                    if (this.appBarColor) {
                         return EventBus.emit('app-bar-color', this.appBarColor);
                     }
                     return this.appBar = response.data;
