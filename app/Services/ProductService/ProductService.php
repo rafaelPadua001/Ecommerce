@@ -44,6 +44,7 @@ class ProductService
         $product = Product::where('products.category_id', '=', $id)
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->join('subcategories', 'subcategories.id', '=', 'categories.id')
+            ->join('product_stocks', 'products.id', '=', 'product_stocks.product_id')
             ->select([
                 'products.*',
                 'categories.id as category_id',
@@ -51,7 +52,9 @@ class ProductService
                 'categories.thumbnail',
                 'categories.name as category_name',
                 'subcategories.id as subcategory_id',
-                'subcategories.name as subcategory_name'
+                'subcategories.name as subcategory_name',
+                'product_stocks.color_qty as color_quantity',
+                'product_stocks.size_qty as size_quantity'
             ])
             ->get();
         return $product;
