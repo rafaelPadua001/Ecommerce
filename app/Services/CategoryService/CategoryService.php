@@ -37,17 +37,7 @@ class CategoryService {
     }
     public function getCategory($id){
         try{
-            $categories = Categories::where('categories.id', $id)
-            ->join('products', 'categories.id', '=', 'products.category_id')
-            ->join('product_stocks', 'products.id', '=', 'product_stocks.product_id')
-            ->select([
-                'categories.id as category_id',
-                'products.*',
-                'product_stocks.color_qty as color_quantity',
-                'product_stocks.size_qty as size_quantity'
-            ])
-            ->first();
-            
+            $categories = Categories::findOrFail($id);
             return $categories;
         }
         catch(Exception $e){

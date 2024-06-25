@@ -333,6 +333,7 @@ export default {
                 });
         },
         buy(product) {
+           console.log(product);
             this.productIndex = this.products.indexOf(product);
             this.selectProduct = Object.assign({}, product);
             this.showProductSeo = true;
