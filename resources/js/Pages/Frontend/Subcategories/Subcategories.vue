@@ -12,7 +12,7 @@
                     <v-row fluid>
                         <v-col class="d-flex justify-start flex-column" cols="auto">
                             <v-card class="mx-auto">
-                                <!-- <v-card-title>Categories</v-card-title>
+                                <v-card-title>Categories</v-card-title>
                                 <v-divider></v-divider>
                                 <v-card-text v-if="category">
                                     <v-row>
@@ -32,7 +32,7 @@
                                         </v-col>
                                         <v-divider></v-divider>
                                     </v-row>
-                                </v-card-text> -->
+                                </v-card-text>
 
                                 <v-card-text v-if="subcategories">
                                     <h5>Subcategories</h5>
@@ -124,9 +124,9 @@
                                                     </v-col>
                                                 </v-row>
                                                 <v-row fluid>
-                                                    <v-col cols="auto">
+                                                    <!-- <v-col cols="auto">
                                                         <p>{{ product.description }}</p>
-                                                    </v-col>
+                                                    </v-col> -->
                                                 </v-row>
                                                 <v-row no-gutters>
                                                     <v-btn-group>
@@ -190,9 +190,6 @@
                                             </v-expand-transition>
                                         </v-card>
                                         </v-card-text>
-                                        
-
-
                                     </v-card>
                                 </v-hover>
                             </v-sheet>
@@ -278,8 +275,7 @@ export default {
         getProducts() {
             axios.get(`/products/category/${this.category_id}`)
                 .then((response) => {
-
-                    return this.products = response.data;
+                  return this.products = response.data;
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);

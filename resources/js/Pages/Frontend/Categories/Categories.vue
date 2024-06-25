@@ -16,6 +16,7 @@
                 </template>
                 <CategoriesList
                     :categories="this.categories"
+                    :color="this.color"
                 ></CategoriesList>
             </v-menu>
         </v-sheet>
@@ -38,3 +39,12 @@ export default {
     },
 }
 </script>
+<style>
+.custom-menu {
+    position: absolute;
+    top: calc(var(--v-toolbar-height) + 10px);
+    /* altura da app-bar + espaço extra */
+    z-index: 9999;
+    /* ou um valor maior do que o z-index da app-bar */
+}
+</style>

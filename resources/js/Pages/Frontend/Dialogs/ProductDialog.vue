@@ -141,12 +141,13 @@
                                     v-for="(color, index) in parsedColors" :key="index">
                                     <v-hover>
                                         <template v-slot:default="{ isHovering, props }">
-                                            <div v-if="parsedQuantityColors[index] >= 1">
+                                            {{ parsedQuantityColors }}
+                                            <!-- <div v-if="parsedQuantityColors[index] >= 1">
                                                 <v-avatar @click="getColors(color)" v-bind="props" :bg-color="color"
                                                     :color="isHovering ? undefined : color" :width="60" rounded="10">
                                                     <template v-slot:append>
-                                                        <!-- {{ parsedQuantityColors[index] }} -->
-                                                        <!-- <span>Available</span> -->
+                                                         {{ parsedQuantityColors[index] }} 
+                                                         <span>Available</span> 
                                                     </template>
                                                 </v-avatar>
                                             </div>
@@ -157,7 +158,7 @@
                                                         <v-icon icon="fas fa-close" class="mr-1" size="sm"></v-icon>
                                                     </span>
                                                 </v-avatar>
-                                            </div>
+                                            </div> -->
                                         </template>
                                     </v-hover>
                                 </v-col>
@@ -416,6 +417,7 @@ export default {
             return JSON.parse(this.selectProduct.colors);
         },
         parsedQuantityColors() {
+            console.log(this.selectProduct);
             return JSON.parse(this.selectProduct.color_quantity);
         },
         parsedSizes() {
