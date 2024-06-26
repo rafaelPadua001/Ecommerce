@@ -23,10 +23,14 @@ class CartController extends Controller
         $this->cartService = $cartService;
         $this->cartItemService = $cartItemService;
     }
+    public function getAuthenticated(){
+        $customer = Auth::guard('customer')->user();
+        return $customer;
+    }
     public function index()
     {
         try {
-            $customer = Auth::guard('customer')->user();
+            $customer = $this->getAuthenticated();
             if (!$customer) {
 
                 return false;

@@ -48,8 +48,15 @@
                                 <v-menu offset-y absolute :close-on-content-click="false">
                                     <template v-slot:activator="{ props }">
                                         <v-btn icon v-bind="props">
-                                            <v-icon icon="fa-solid fa-cart-shopping"></v-icon>
+                                                <v-badge 
+                                                    :content="carts.length"
+                                                    color="red"
+                                                >
+                                            <v-icon icon="fa-solid fa-cart-shopping" size="small"></v-icon>
+                                        </v-badge>
+                                       
                                         </v-btn>
+                                    
                                     </template>
                                     <v-row>
                                         <v-col>
