@@ -46,6 +46,7 @@ class CartService
                     'products.height',
                     'products.width',
                     'products.length',
+                    'products.status'
                 )
                 ->get();
 

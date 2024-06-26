@@ -139,10 +139,13 @@ export default {
             return sizesString => JSON.parse(sizesString);
         },
         totalPrice() {
-            return this.carts.reduce((sum, cart) => {
-                const price = parseFloat(cart.total_price) || 0;
-                return sum + price;
-            }, 0).toFixed(2);
+            return this.carts
+                .filter(cart => cart.cart_item_status) // Filtra apenas os itens que estão ativos
+                .reduce((sum, cart) => {
+                    const price = parseFloat(cart.total_price) || 0;
+                    return sum + price;
+                }, 0)
+                .toFixed(2);
         }
     },
     methods: {
