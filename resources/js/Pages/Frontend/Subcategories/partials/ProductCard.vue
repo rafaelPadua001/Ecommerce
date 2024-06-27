@@ -12,9 +12,9 @@
                                 <v-btn-group class="float-end">
                                     <v-btn icon size="x-small">
                                         <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
-                                            class="bg-transparent" @click="like()"></v-icon>
-                                        <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4" v-else
-                                            @click="like()"></v-icon>
+                                            @click="like(product)"></v-icon>
+                                        <v-icon v-else color="red-darken-4" icon="fa-solid fa-heart fa-2xs"
+                                            @click="dislike(product)"></v-icon>
                                     </v-btn>
                                     <v-btn icon size="x-small">
                                         <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
@@ -119,7 +119,7 @@
                             <div v-if="isHovering"
                                 class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
                                 <v-card-actions>
-                                    <v-btn @click="buy(product)" block>
+                                    <v-btn @click="openBuy(product)" block>
                                         <v-icon icon="fas fa-eye"></v-icon>
                                         <v-tooltip activator="parent" location="end">preview</v-tooltip>
                                     </v-btn>
@@ -136,6 +136,18 @@
 <script>
 export default {
     name: 'ProductCard',
-    props:['product', 'likes']
+    props:['product', 'likes'],
+    methods: {
+        openBuy(product){
+            this.$emit('open-buy-dialog', product);
+        },
+        like(product){
+            this.$emit('like-product', product);
+        },
+        dislike(product){
+            this.$emit('dislike-product', product);
+        }
+        
+    }
  }
 </script>

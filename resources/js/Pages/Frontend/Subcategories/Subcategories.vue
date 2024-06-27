@@ -23,6 +23,9 @@
                            <ProductCard 
                                 :product="product"
                                 :likes="this.likes"
+                                @open-buy-dialog="buy(product)"
+                                @like-product="like(product)"
+                                @dislike-product="dislike(product)"
                            />
                             
                         </v-col>
@@ -83,12 +86,13 @@ export default {
         subcategories: [],
         products: [],
         images: '',
-        likes: false,
+        likes: [],
         productIndex: -1,
         selectProduct: {},
         buyDialog: false,
         value: [10, 100],
         snackbar: false,
+        liked: 0,
     }),
     methods: {
         getCategories() {
@@ -134,12 +138,9 @@ export default {
             })
 
         },
-        like() {
-            if (Object.keys(this.customer).length == 0) {
-                this.snackbar = true;
-            }
+        like(product) {
             if (this.selectProduct >= 1) {
-                axios.post(`products/like/${this.selectProduct.id}`)
+                axios.post(`http://localhost:8000/products/like/${this.selectProduct.id}`)
                     .then((response) => {
                         this.liked += 1;
                         return true;
@@ -149,15 +150,49 @@ export default {
                     });
             }
             else {
-                axios.post(`products/like/${this.product.id}`)
+                axios.post(`http://localhost:8000/products/like/${product.id}`)
                     .then((response) => {
-                        this.liked += 1;
+                      
+                        return this.likes.push(response.data.original.likes);
                         return true;
                     })
                     .catch((response) => {
-                        return;
+                        alert(response);
                     });
             }
+        },
+        dislike(product) {
+            // if (this.customer.length == 0) {
+            //     this.snackbar = true;
+            //     return this.message = 'you need login to exec this action.';
+            // }
+            if(this.selectProduct >= 1){
+                axios.delete(`http://localhost:8000/products/dislike/${this.selectProduct.id}`)
+                .then((response) => {
+                    this.liked -= 1;
+                    console.log(this.liked);
+                    let likeIndex = this.likes.indexOf(this.likes.id);
+                    return this.likes.splice(likeIndex, 1);
+                    //return true;
+                })
+                .catch((response) => {
+                    return alert('Error' + response);
+                });
+            }
+            else{
+                axios.delete(`http://localhost:8000/products/dislike/${product.id}`)
+                    .then((response) => {
+                        console.log('Maconha');
+                      return this.likes = false;
+                    // console.log(this.liked);
+                    // let likeIndex = this.likes.indexOf(this.likes.id);
+                    // return this.likes.splice(likeIndex, 1);
+                    })
+                    .catch((response) => {
+                        alert(response);
+                    });
+            }
+            
         },
         getLikes() {
             axios.get('/likes')
@@ -170,7 +205,6 @@ export default {
                 });
         },
         buy(product) {
-           console.log(product);
             this.productIndex = this.products.indexOf(product);
             this.selectProduct = Object.assign({}, product);
             this.showProductSeo = true;
@@ -186,6 +220,7 @@ export default {
         this.getProducts();
         this.getCategories();
         this.getSubcategories();
+        this.getLikes();
 
     }
 }

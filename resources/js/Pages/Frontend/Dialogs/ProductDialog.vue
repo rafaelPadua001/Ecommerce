@@ -550,10 +550,10 @@ export default {
 
         },
         like() {
-            if (this.customer.length == 0) {
-                this.snackbar = true;
-                return this.message = 'you need login to exec this action.';
-            }
+            // if (this.customer.length == 0) {
+            //     this.snackbar = true;
+            //     return this.message = 'you need login to exec this action.';
+            // }
 
             axios.post(`products/like/${this.selectProduct.id}`)
                 .then((response) => {
