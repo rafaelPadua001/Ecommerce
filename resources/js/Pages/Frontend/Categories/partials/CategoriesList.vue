@@ -4,7 +4,7 @@
             no categories found
         </v-list-item>
         <v-list-item v-else v-for="category in categories" :key="category.id">
-
+          
             <v-btn variant="text" size="small"
                 :to="{ path: `/subcategories/all/${category.id}`, query: { customer: this.user } }">
                 <span>
