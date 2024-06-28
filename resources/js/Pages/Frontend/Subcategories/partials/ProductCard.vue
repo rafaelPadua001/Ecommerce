@@ -3,7 +3,6 @@
 
         <v-hover v-slot="{ isHovering, props }">
             <v-card class="mx-auto elevation-1">
-
                 <v-card-text>
                     <v-card class="mx-auto elevation-0" v-bind="props">
                         <v-toolbar class="bg-transparent">
@@ -11,7 +10,7 @@
                             <template v-slot:append>
                                 <v-btn-group class="float-end">
                                     <v-btn icon size="x-small">
-                                        <v-icon icon="fa-regular fa-heart fa-2xs" v-if="Object.keys(likes).length == 0"
+                                        <v-icon icon="fa-regular fa-heart fa-2xs" v-if="likes.length == 0"
                                             @click="like(product)"></v-icon>
                                         <v-icon v-else color="red-darken-4" icon="fa-solid fa-heart fa-2xs"
                                             @click="dislike(product)"></v-icon>

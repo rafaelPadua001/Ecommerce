@@ -35,13 +35,21 @@
             </v-row>
         </v-card-text>
 
+        <v-card-text>
+            <FilterPrice 
+                :products="this.products"
+            />
+        </v-card-text>
+
     </v-card>
 
 </template>
 
 <script>
+import FilterPrice from '../../RangeProductPrice/RangeSliderPrice.vue';
 export default {
     name: 'CategoriesCard',
-    props: ['category', 'subcategories'],
+    props: ['category', 'subcategories', 'products'],
+    components: {FilterPrice},
 }
 </script>
