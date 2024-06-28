@@ -13,7 +13,8 @@
                         <v-col class="d-flex justify-start flex-column" cols="auto">
                             <CategoriesCard
                                 :category="this.category"
-                                :subcategories="this.subcategories"></CategoriesCard>
+                                :subcategories="this.subcategories"
+                                :products="this.products"></CategoriesCard>
                             
 
                         </v-col>
@@ -154,7 +155,7 @@ export default {
                     .then((response) => {
                       
                         return this.likes.push(response.data.original.likes);
-                        return true;
+                        
                     })
                     .catch((response) => {
                         alert(response);
@@ -182,11 +183,11 @@ export default {
             else{
                 axios.delete(`http://localhost:8000/products/dislike/${product.id}`)
                     .then((response) => {
-                        console.log('Maconha');
-                      return this.likes = false;
-                    // console.log(this.liked);
-                    // let likeIndex = this.likes.indexOf(this.likes.id);
-                    // return this.likes.splice(likeIndex, 1);
+                       
+                    //   return this.likes = false;
+                    console.log(this.liked);
+                    let likeIndex = this.likes.indexOf(this.likes.id);
+                    return this.likes.splice(likeIndex, 1);
                     })
                     .catch((response) => {
                         alert(response);
