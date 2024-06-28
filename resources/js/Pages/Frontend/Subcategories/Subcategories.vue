@@ -14,7 +14,8 @@
                             <CategoriesCard
                                 :category="this.category"
                                 :subcategories="this.subcategories"
-                                :products="this.products"></CategoriesCard>
+                                :products="this.products" 
+                            />
                             
 
                         </v-col>
