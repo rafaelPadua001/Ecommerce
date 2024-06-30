@@ -14,11 +14,13 @@
                             <CategoriesCard
                                 :category="this.category"
                                 :subcategories="this.subcategories"
-                                :products="this.products"></CategoriesCard>
+                                :products="this.products"
+                                @update-value-filter="updateValueFilter"
+                            />
                             
 
                         </v-col>
-
+                       
                         <v-col v-for="product in products" :key="product.id" class="d-flex justify-center flex-column"
                             cols="auto">
                            <ProductCard 
@@ -29,6 +31,12 @@
                                 @dislike-product="dislike(product)"
                            />
                             
+                        </v-col>
+                           <!-- Exibe mensagem se nenhum produto for encontrado -->
+                           <v-col v-if="noProductFound" class="d-flex justify-center" cols="auto">
+                            <v-alert type="info" class="ma-2">
+                                Nenhum produto encontrado para esse intervalo de preços.
+                            </v-alert>
                         </v-col>
 
                         <!-- <v-col class="d-flex justify-end flex-column" cols="2" sm="2">
@@ -86,6 +94,7 @@ export default {
         category_id: null,
         subcategories: [],
         products: [],
+        noProductFound: false,
         images: '',
         likes: [],
         productIndex: -1,
@@ -117,7 +126,8 @@ export default {
         getProducts() {
             axios.get(`/products/category/${this.category_id}`)
                 .then((response) => {
-                  return this.products = response.data;
+                   this.products = response.data;
+                   return this.filteredProducts = this.products; 
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);
@@ -215,6 +225,24 @@ export default {
             this.buyDialog = value;
 
         },
+        updateValueFilter(minPrice, maxPrice){
+            const filtered = this.products.filter(product => {
+                
+                    return product.price >= minPrice && product.price <= maxPrice;
+            });
+
+            this.products = filtered;
+
+            if(filtered.length == 0){
+                this.noProductFound = true;
+                this.filteredProducts = [...this.products]; 
+              //  alert('Nenhum produto encontrado para esse intervalo de preços.');
+                return;
+            } 
+            else{
+                this.noProductFound = false;
+            }
+        }
     },
     mounted() {
         this.category_id = this.$route.params.category_id;

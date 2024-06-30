@@ -36,9 +36,9 @@ class SubcategoriesController extends Controller
         return response()->json($subcategories);
     }
     public function all($category_id){
-        $subcategories = Subcategory::where('category_id', $category_id)
-            ->join('products', 'categories.id as category_id'. 'products.category.id')
-            ->seletect('categories.*', 'product.*')
+        $subcategories = Subcategory::where('subcategories.category_id', $category_id)
+            ->join('products', 'subcategories.id', 'products.subcategory_id')
+            ->select('subcategories.*', 'products.*')
             ->get();
         return response()->json($subcategories);
     }
