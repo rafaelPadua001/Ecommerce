@@ -31,14 +31,6 @@
                                 @dislike-product="dislike(product)"
                            />
                             
-                        </v-col>
-                           <!-- Exibe mensagem se nenhum produto for encontrado -->
-                           <v-col v-if="noProductFound" class="d-flex justify-center" cols="auto">
-                            <v-alert type="info" class="ma-2">
-                                Nenhum produto encontrado para esse intervalo de preços.
-                            </v-alert>
-                        </v-col>
-
                         <!-- <v-col class="d-flex justify-end flex-column" cols="2" sm="2">
                             <v-card class="mx-auto">
                                 <v-card-text>
@@ -226,22 +218,23 @@ export default {
 
         },
         updateValueFilter(minPrice, maxPrice){
-            const filtered = this.products.filter(product => {
-                
-                    return product.price >= minPrice && product.price <= maxPrice;
+            this.products = this.products.filter(product => {
+                return product.price >= minPrice || product.price <= maxPrice;
             });
 
-            this.products = filtered;
+            // this.products = filtered;
 
-            if(filtered.length == 0){
-                this.noProductFound = true;
-                this.products = [...this.products]; 
-              //  alert('Nenhum produto encontrado para esse intervalo de preços.');
-                return;
-            } 
-            else{
-                this.noProductFound = false;
-            }
+            // if(filtered.length >= 1){
+            //    return  this.noProductFound = false;
+               
+            //   //  alert('Nenhum produto encontrado para esse intervalo de preços.');
+            //     return;
+            // } 
+            // else{
+            //     this.noProductFound = false;
+            //     this.noProductFound = true;
+            //     this.products = [...this.products]; 
+            // }
         }
     },
     mounted() {
