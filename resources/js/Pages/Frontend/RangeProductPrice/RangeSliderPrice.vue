@@ -1,58 +1,75 @@
 <template>
-    <!-- {{ this.products }} -->
-    <p class="h5">Filter Price</p>
-    <v-divider></v-divider>
-    <v-range-slider
+    <div>
+      <p class="h5">Filter Price</p>
+      <v-divider></v-divider>
+      <v-range-slider
         v-model="priceRange"
         :max="maxPrice"
-        step="1"
-         thumb-label="always"
+        min="0"
+        step="0.00"
+        thumb-label="always"
         strict
-        @change="displayProducts(priceRange)">
-    </v-range-slider>
-
-    {{ 'min value: R$' + priceRange[0] }}
-    {{ 'max value: R$' + priceRange[1] }}
-    <v-btn @click="displayProducts(priceRange)">Filter</v-btn>
-</template>
-
-<script>
-export default {
+       @change="displayProducts"
+      >
+        <template #thumb-label="{ modelValue }">
+          <span>${{ formatCurrency(modelValue) }}</span>
+        </template>
+      </v-range-slider>
+     
+      <p>Selected Price Range: ${{ formatCurrency(this.priceRange[0]) }} - ${{ formatCurrency(this.priceRange[1]) }}</p>
+   
+      <v-btn @click="selectRange">Filter</v-btn>
+    </div>
+  </template>
+  
+  <script>
+  export default {
     name: 'RangeSliderPrice',
-    props: ['products'],
-    data: () => ({
+    props: {
+      products: {
+        type: Array,
+        required: true
+      }
+    },
+    data() {
+      return {
         priceRange: [0, 0],
-    }),
+        // selectedPriceRange: [0, 0],
+      };
+    },
     computed: {
-        maxPrice() {
-            return this.products.reduce((max, product) => {
-                return product.price > max ? product.price : max;
-            }, 0);
-        },
-        minPrice() {
-            return this.products.reduce((min, product) => {
-                return product.price >= min ? product.price : min;
-            }, 0);
-        }
+      maxPrice() {
+        return this.products.reduce((max, product) => {
+          return product.price > max ? product.price : max;
+        }, 0);
+      },
+      
     },
     watch: {
-        products: {
-            handler() {
-                const prices = this.products.map(product => product.price);
-                this.priceRange = [Math.min(...prices), Math.max(...prices)];
-            },
-            immediate: true,
-            deep: true
-
-        }
+      products: {
+        handler() {
+          const prices = this.products.map(product => product.price);
+          this.priceRange = [Math.min(...prices), Math.max(...prices)];
+        },
+        immediate: true,
+        deep: true
+      }
     },
     methods: {
-        displayProducts(priceRange){
-            alert(priceRange);
-            // alert(value);
-            // alert(this.maxPrice);
-        }
+      displayProducts(value) {
+        
+        this.priceRange[1] = value;
+      },
+      formatCurrency(value) {
+        return parseFloat(value).toFixed(2);
+      },
+      selectRange(){
+        const minPrice = `${this.formatCurrency(this.priceRange[0])}`;
+        const maxPrice = `${this.formatCurrency(this.priceRange[1])}`;
+        return this.$emit('update-product-filter', minPrice, maxPrice);
+      }
+     
     }
-
-}
-</script>
+  }
+  </script>
+  

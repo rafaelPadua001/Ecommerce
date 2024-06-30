@@ -38,6 +38,7 @@
         <v-card-text>
             <FilterPrice 
                 :products="this.products"
+                @update-product-filter="updateFilterValue"
             />
         </v-card-text>
 
@@ -51,5 +52,10 @@ export default {
     name: 'CategoriesCard',
     props: ['category', 'subcategories', 'products'],
     components: {FilterPrice},
+    methods:{
+        updateFilterValue(minPrice, maxPrice){
+            this.$emit('update-value-filter', minPrice, maxPrice);
+        }
+    }
 }
 </script>
