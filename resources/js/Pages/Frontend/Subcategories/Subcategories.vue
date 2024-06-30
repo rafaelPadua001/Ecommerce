@@ -235,7 +235,7 @@ export default {
 
             if(filtered.length == 0){
                 this.noProductFound = true;
-                this.filteredProducts = [...this.products]; 
+                this.products = [...this.products]; 
               //  alert('Nenhum produto encontrado para esse intervalo de preços.');
                 return;
             } 
