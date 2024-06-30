@@ -31,6 +31,9 @@
                                 @dislike-product="dislike(product)"
                            />
                             
+                        </v-col>
+                          
+
                         <!-- <v-col class="d-flex justify-end flex-column" cols="2" sm="2">
                             <v-card class="mx-auto">
                                 <v-card-text>
