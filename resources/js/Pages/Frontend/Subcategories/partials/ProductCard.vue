@@ -6,7 +6,6 @@
                 <v-card-text>
                     <v-card class="mx-auto elevation-0" v-bind="props">
                         <v-toolbar class="bg-transparent">
-
                             <template v-slot:append>
                                 <v-btn-group class="float-end">
                                     <v-btn icon size="x-small">

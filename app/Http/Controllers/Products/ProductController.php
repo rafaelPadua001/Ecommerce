@@ -105,7 +105,7 @@ class ProductController extends Controller
     {
         try {
             $product = Product::findOrFail($id);
-            $customer = Auth::guard('customer')->user();
+            $customer = $this->getAuthenticated();
             $likedProduct = $this->getLikedController($product, $customer);
             return response()->json($likedProduct);
         } catch (Exception $e) {
@@ -125,7 +125,7 @@ class ProductController extends Controller
     public function dislike($id)
     {
         $product = Product::findOrFail($id);
-        $customer = Auth::guard('customer')->user();
+        $customer = $this->getAuthenticated();
         $dislikedProduct = $this->getDisLikedController($product, $customer);
 
         return response()->json($dislikedProduct);
@@ -299,5 +299,9 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return response()->json($e);
         }
+    }
+    public function getAuthenticated(){
+        $customer = Auth::guard('customer')->user();
+        return $customer;
     }
 }

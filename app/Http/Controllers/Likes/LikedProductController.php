@@ -13,7 +13,7 @@ class LikedProductController extends Controller
     //
     public function index(){
         try{
-            $customer = Auth::guard('customer')->user();
+            $customer = $this->getAuthenticated();
             $likes = LikedProduct::where('user_id', $customer->id)->get();
             return response()->json($likes);
         }
@@ -43,5 +43,9 @@ class LikedProductController extends Controller
             return response()->json($e);
         }
        
+    }
+    public function getAuthenticated(){
+        $customer = Auth::guard('customer')->user();
+        return $customer;
     }
 }

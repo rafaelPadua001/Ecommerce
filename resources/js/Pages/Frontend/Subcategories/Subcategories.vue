@@ -11,28 +11,24 @@
                 <v-sheet class="px-2 py-2">
                     <v-row fluid>
                         <v-col class="d-flex justify-start flex-column" cols="auto">
-                            <CategoriesCard
-                                :category="this.category"
-                                :subcategories="this.subcategories"
-                                :products="this.products"
-                                @update-value-filter="updateValueFilter"
-                            />
-                            
+                            <CategoriesCard :category="this.category" :subcategories="this.subcategories"
+                                :products="this.products" @update-value-filter="updateValueFilter" />
+
 
                         </v-col>
-                       
+
                         <v-col v-for="product in products" :key="product.id" class="d-flex justify-center flex-column"
                             cols="auto">
-                           <ProductCard 
-                                :product="product"
-                                :likes="this.likes"
-                                @open-buy-dialog="buy(product)"
-                                @like-product="like(product)"
-                                @dislike-product="dislike(product)"
-                           />
-                            
+                            <ProductCard :product="product" :likes="this.likes" @open-buy-dialog="buy(product)"
+                                @like-product="like(product)" @dislike-product="dislike(product)" />
+
                         </v-col>
-                          
+                        <!-- Exibe mensagem se nenhum produto for encontrado -->
+                        <v-col v-if="noProductFound" class="d-flex justify-center" cols="auto">
+                            <v-card type="info" class="ma-2">
+                                Nenhum produto encontrado para esse intervalo de preços.
+                            </v-card>
+                        </v-col>
 
                         <!-- <v-col class="d-flex justify-end flex-column" cols="2" sm="2">
                             <v-card class="mx-auto">
@@ -121,46 +117,45 @@ export default {
         getProducts() {
             axios.get(`/products/category/${this.category_id}`)
                 .then((response) => {
-                   this.products = response.data;
-                   return this.filteredProducts = this.products; 
+                    this.products = response.data;
+                    return this.filteredProducts = this.products;
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);
                 })
         },
-        getProductSubcategory(subcategory){
+        getProductSubcategory(subcategory) {
             const subcategory_id = subcategory.id;
             const item = subcategory;
             axios.get(`/products/subcategory/${subcategory_id}`)
-            .then((response) => {
-                if(response.data.length >= 1){
-                    return this.products.push(response.data);
-                }
-               
-                return alert('nenhum produto encontrado');
-            })
-            .catch((response) => {
-                return alert('Error:' + response);
-            })
+                .then((response) => {
+                    if (response.data.length >= 1) {
+                        return this.products.push(response.data);
+                    }
+
+                    return alert('nenhum produto encontrado');
+                })
+                .catch((response) => {
+                    return alert('Error:' + response);
+                })
 
         },
         like(product) {
             if (this.selectProduct >= 1) {
-                axios.post(`http://localhost:8000/products/like/${this.selectProduct.id}`)
+                axios.post(`/products/like/${this.selectProduct.id}`)
                     .then((response) => {
                         this.liked += 1;
-                        return true;
+                        return this.likes = response.data.original.likes;
+                        
                     })
                     .catch((response) => {
-                        return;
+                        return alert('Error:' + response);
                     });
             }
             else {
-                axios.post(`http://localhost:8000/products/like/${product.id}`)
+                axios.post(`/products/like/${product.id}`)
                     .then((response) => {
-                      
-                        return this.likes.push(response.data.original.likes);
-                        
+                          return this.likes = response.data.original.likes;
                     })
                     .catch((response) => {
                         alert(response);
@@ -168,13 +163,30 @@ export default {
             }
         },
         dislike(product) {
-            // if (this.customer.length == 0) {
-            //     this.snackbar = true;
-            //     return this.message = 'you need login to exec this action.';
-            // }
-            if(this.selectProduct >= 1){
+            if (this.customer) {
+                this.snackbar = true;
+                return this.message = 'you need login to exec this action.';
+            }
+            if (this.selectProduct >= 1) {
                 axios.delete(`http://localhost:8000/products/dislike/${this.selectProduct.id}`)
-                .then((response) => {
+                    .then((response) => {
+                        this.likes -= 1;
+                        let likeIndex = this.likes.indexOf(this.selectProduct.id);
+                        return this.likes.splice(likeIndex, 1);
+                        //return true;
+                    })
+                    .catch((response) => {
+                        return alert('Error' + response);
+                    });
+            }
+            else {
+        const productId = product.id;
+        const likeId = this.likes;
+        this.likes =
+        console.log(likeId);
+
+        axios.delete(`http://localhost:8000/products/dislike/${productId}`)
+        .then((response) => {
                     this.liked -= 1;
                     console.log(this.liked);
                     let likeIndex = this.likes.indexOf(this.likes.id);
@@ -184,21 +196,8 @@ export default {
                 .catch((response) => {
                     return alert('Error' + response);
                 });
-            }
-            else{
-                axios.delete(`http://localhost:8000/products/dislike/${product.id}`)
-                    .then((response) => {
-                       
-                    //   return this.likes = false;
-                    console.log(this.liked);
-                    let likeIndex = this.likes.indexOf(this.likes.id);
-                    return this.likes.splice(likeIndex, 1);
-                    })
-                    .catch((response) => {
-                        alert(response);
-                    });
-            }
-            
+   }
+
         },
         getLikes() {
             axios.get('/likes')
@@ -220,24 +219,12 @@ export default {
             this.buyDialog = value;
 
         },
-        updateValueFilter(minPrice, maxPrice){
+        updateValueFilter(minPrice, maxPrice) {
             this.products = this.products.filter(product => {
-                return product.price >= minPrice || product.price <= maxPrice;
+
+                return product.price >= minPrice && product.price <= maxPrice;
             });
 
-            // this.products = filtered;
-
-            // if(filtered.length >= 1){
-            //    return  this.noProductFound = false;
-               
-            //   //  alert('Nenhum produto encontrado para esse intervalo de preços.');
-            //     return;
-            // } 
-            // else{
-            //     this.noProductFound = false;
-            //     this.noProductFound = true;
-            //     this.products = [...this.products]; 
-            // }
         }
     },
     mounted() {
