@@ -24,8 +24,8 @@ class CartService
         try {
             $cart = $this->carts->where('carts.user_id', $userId)
                 ->join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
-
                 ->leftJoin('products', 'cart_items.product_id', '=', 'products.id')
+                ->where('cart_items.is_active', 1)
                 ->select(
                     'carts.id as cart_id',
                     'cart_items.quantity as cart_item_quantity',
