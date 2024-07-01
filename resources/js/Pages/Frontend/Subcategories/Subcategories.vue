@@ -146,7 +146,7 @@ export default {
                     .then((response) => {
                         this.liked += 1;
                         return this.likes = response.data.original.likes;
-                        
+
                     })
                     .catch((response) => {
                         return alert('Error:' + response);
@@ -155,7 +155,7 @@ export default {
             else {
                 axios.post(`/products/like/${product.id}`)
                     .then((response) => {
-                          return this.likes = response.data.original.likes;
+                        return this.likes = response.data.original.likes;
                     })
                     .catch((response) => {
                         alert(response);
@@ -180,23 +180,19 @@ export default {
                     });
             }
             else {
-        const productId = product.id;
-        const likeId = this.likes;
-        this.likes =
-        console.log(likeId);
-
-        axios.delete(`http://localhost:8000/products/dislike/${productId}`)
-        .then((response) => {
-                    this.liked -= 1;
-                    console.log(this.liked);
-                    let likeIndex = this.likes.indexOf(this.likes.id);
-                    return this.likes.splice(likeIndex, 1);
-                    //return true;
-                })
-                .catch((response) => {
-                    return alert('Error' + response);
-                });
-   }
+                const productId = product.id
+                const likeId = product.like_id;
+               
+                axios.delete(`/products/dislike/${productId}`)
+                    .then((response) => {
+                        let likeIndex = this.likes.indexOf(likeId, 1);
+                        return this.likes.splice(likeIndex, 1);
+                        //return true;
+                    })
+                    .catch((response) => {
+                        return alert('Error' + response);
+                    });
+            }
 
         },
         getLikes() {
