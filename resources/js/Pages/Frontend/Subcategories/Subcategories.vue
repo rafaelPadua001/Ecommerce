@@ -145,7 +145,7 @@ export default {
                 axios.post(`/products/like/${this.selectProduct.id}`)
                     .then((response) => {
                         this.liked += 1;
-                        return this.likes = response.data.original.likes;
+                        return this.likes.push(response.data.original.likes);
 
                     })
                     .catch((response) => {
@@ -155,7 +155,7 @@ export default {
             else {
                 axios.post(`/products/like/${product.id}`)
                     .then((response) => {
-                        return this.likes = response.data.original.likes;
+                        return this.likes.push(response.data.original.likes);
                     })
                     .catch((response) => {
                         alert(response);
@@ -180,6 +180,7 @@ export default {
                     });
             }
             else {
+                console.log(product)
                 const productId = product.id
                 const likeId = product.like_id;
                
@@ -257,4 +258,4 @@ export default {
 .footer {
     width: 100%;
 }
-</style>./partials/CategoriesCard.vue
+</style>
