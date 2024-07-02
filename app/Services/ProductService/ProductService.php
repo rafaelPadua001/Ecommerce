@@ -3,6 +3,7 @@
 namespace App\Services\ProductService;
 
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Exception;
 
 class ProductService
@@ -11,6 +12,17 @@ class ProductService
     public function __constuct(Product $products)
     {
         $this->products = $products;
+    }
+    public function filterProduct(Request $request)
+    {
+        try {
+            $product = Product::whereBetween('price', [$request->min, $request->max])
+                ->get();
+
+            return $product;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
     public function getAll()
     {
@@ -61,15 +73,15 @@ class ProductService
                 'liked_products.likes'
             ])
             ->get();
-        
+
         return $product;
     }
-    public function getSubcategory($id){
-        try{
+    public function getSubcategory($id)
+    {
+        try {
             $product = Product::where('products.subcategory_id', '=', $id)->get();
             return $product;
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }

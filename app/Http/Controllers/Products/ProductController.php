@@ -74,6 +74,16 @@ class ProductController extends Controller
     {
         dd($request);
     }
+    public function filter(Request $request){
+        try{
+            $productService = $this->productService->filterProduct($request);
+            return response()->json($productService);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+        dd($request);
+    }
     public function getProduct($id)
     {
         try {
