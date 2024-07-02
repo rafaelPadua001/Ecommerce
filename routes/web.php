@@ -148,6 +148,7 @@ Route::get('/products/category/{id}', [ProductController::class, 'getCategory'])
 Route::get('/products/subcategory/{id}', [ProductController::class, 'getSubcategory'])->name('product.subcategory');
 Route::post('/products/like/{id}', [ProductController::class , 'like'])->name('product.like');
 Route::delete('/products/dislike/{id}', [ProductController::class, 'dislike'])->name('product.dislike');
+Route::post('/products/filter', [ProductController::class, 'filter'])->name('Product.filter');
 
 
 //Likes Route

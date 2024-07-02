@@ -53,8 +53,8 @@ export default {
     props: ['category', 'subcategories', 'products'],
     components: {FilterPrice},
     methods:{
-        updateFilterValue(minPrice, maxPrice){
-            this.$emit('update-value-filter', minPrice, maxPrice);
+        updateFilterValue(product){
+            this.$emit('update-value-filter', product);
         }
     }
 }

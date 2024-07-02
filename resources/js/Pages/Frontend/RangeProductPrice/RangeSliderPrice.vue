@@ -66,7 +66,20 @@
       selectRange(){
         const minPrice = `${this.formatCurrency(this.priceRange[0])}`;
         const maxPrice = `${this.formatCurrency(this.priceRange[1])}`;
-        return this.$emit('update-product-filter', minPrice, maxPrice);
+        const data = {
+          min: minPrice,
+          max: maxPrice,
+        };
+
+        axios.post('/products/filter', data)
+        .then((response) => {
+            const filterproducts = response.data;
+           return this.$emit('update-product-filter', filterproducts );
+        })
+        .catch((response) => {
+          return alert('Error: ' + response);
+        });
+       
       }
      
     }

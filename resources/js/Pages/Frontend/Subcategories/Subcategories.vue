@@ -216,12 +216,14 @@ export default {
             this.buyDialog = value;
 
         },
-        updateValueFilter(minPrice, maxPrice) {
-            this.products = this.products.filter(product => {
+        updateValueFilter(product) {
+            console.log(product);
+            if(product.length == 0){
+                alert('nenhum produto encontrado nessa faixa de valor');
+                return;
+            }
 
-                return product.price >= minPrice && product.price <= maxPrice;
-            });
-
+            return this.products = product;
         }
     },
     mounted() {
