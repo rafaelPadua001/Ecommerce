@@ -232,14 +232,14 @@ export default {
                 });
         },
     },
-
     mounted() {
         this.getStore();
         this.getAppBar();
         this.getUser();
         this.getCategories();
         this.getCarts();
-    }
+    },
+   
 }
 
 </script>

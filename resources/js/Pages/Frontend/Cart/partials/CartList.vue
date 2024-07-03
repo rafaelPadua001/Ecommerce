@@ -110,6 +110,7 @@
 
 <script>
 import cartStorage from '@/Services/CartStorage/CartStorage';
+import { EventBus } from '@/Event/EventBus';
 export default {
     name: 'cartList',
     props: {
@@ -173,6 +174,7 @@ export default {
     },
     mounted() {
         this.calculateTotalPrice();
-    }
+    },
+    
 }
 </script>
