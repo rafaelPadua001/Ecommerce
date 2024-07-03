@@ -432,11 +432,6 @@ export default {
 
             return totalPrice.toFixed(2);
         },
-        // formatedShippmentPrice() {
-        //     const shippmentPrice = Number(this.shippment.price);
-        //     const totalShippmentPrice = this.quantity * shippmentPrice;
-        //     return totalShippmentPrice.toFixed(2);
-        // }
     },
     watch: {
         buyDialog(val) {
