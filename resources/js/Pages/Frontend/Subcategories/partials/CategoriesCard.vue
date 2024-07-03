@@ -38,6 +38,7 @@
         <v-card-text>
             <FilterPrice 
                 :products="this.products"
+                :subcategories="this.subcategories"
                 @update-product-filter="updateFilterValue"
             />
         </v-card-text>

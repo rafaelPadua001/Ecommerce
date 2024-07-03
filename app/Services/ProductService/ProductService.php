@@ -16,9 +16,10 @@ class ProductService
     public function filterProduct(Request $request)
     {
         try {
-            $product = Product::whereBetween('price', [$request->min, $request->max])
+            $product = Product::where('subcategory_id', $request->subcategoryId)
+                ->whereBetween('price', [$request->min, $request->max])
                 ->get();
-
+           
             return $product;
         } catch (Exception $e) {
             return $e->getMessage();
