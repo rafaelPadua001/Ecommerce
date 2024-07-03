@@ -377,6 +377,7 @@ import CommentsField from '../Layout/TextFields/Comments.vue';
 import MenuBottomSheet from '../Layout/BottomSheet.vue';
 import RemoveDialog from '../Comment/patials/Remove.vue';
 import axios from 'axios';
+import { EventBus } from '@/Event/EventBus';
 
 export default {
     props: ['selectProduct', 'buyDialog', 'customer', 'likes', 'showProductSeo'],
@@ -490,9 +491,6 @@ export default {
                 'color': this.colors,
                 'size': this.size,
                 'total_price': this.formattedTotalPrice,
-                // 'delivery_price': this.formatedShippmentPrice,
-                // 'delivery': this.shippment,
-                // 'delivery_name': this.delivery_name,
             }
 
             if (!data.color || data.color.length == 0 || !data.size || data.size.length == 0) {
@@ -503,9 +501,8 @@ export default {
 
             axios.post(`/carts/add`, data)
                 .then((response) => {
-                    this.$emit('close-dialog');
-                    return this.cart.push(response.data);
-
+                    this.cart.push(response.data)
+                    return window.location.href='/';
                 })
                 .catch((response) => {
                     this.snackbar = true;
