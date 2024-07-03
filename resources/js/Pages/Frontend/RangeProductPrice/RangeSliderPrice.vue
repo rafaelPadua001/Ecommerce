@@ -1,6 +1,7 @@
 <template>
     <div>
       <p class="h5">Filter Price</p>
+      
       <v-divider></v-divider>
       <v-range-slider
         v-model="priceRange"
@@ -29,11 +30,16 @@
       products: {
         type: Array,
         required: true
-      }
+      },
+      subcategories: {
+        type: Array,
+        required: true
+      },
     },
     data() {
       return {
         priceRange: [0, 0],
+        subcategoryId: false,
         // selectedPriceRange: [0, 0],
       };
     },
@@ -63,12 +69,16 @@
       formatCurrency(value) {
         return parseFloat(value).toFixed(2);
       },
+     
       selectRange(){
         const minPrice = `${this.formatCurrency(this.priceRange[0])}`;
         const maxPrice = `${this.formatCurrency(this.priceRange[1])}`;
+        const subcategory = this.subcategories.map(subcategory => subcategory.subcategory_id);
+        this.subcategoryId = subcategory[0];
         const data = {
           min: minPrice,
           max: maxPrice,
+          subcategoryId: this.subcategoryId,
         };
 
         axios.post('/products/filter', data)
@@ -82,7 +92,8 @@
        
       }
      
-    }
+    },
+   
   }
   </script>
   
