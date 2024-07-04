@@ -14,21 +14,27 @@
                                 :products="this.products" @update-value-filter="updateValueFilter" />
                         </v-col>
                         <v-col v-if="noProductFound">
-                            <v-card>
-                                <v-toolbar>
+                            <v-card class="mx-auto elevation-0">
+                                <v-toolbar class="bg-transparent">
                                     <v-toolbar-title color="transparent">
-                                        Not Found !
+                                        {{ message }}
                                     </v-toolbar-title>
 
-                                    <template v-slot:append>
+                                    <!-- <template v-slot:append>
                                         <v-btn icon @click="closeAlert()">
-                                            <v-icon icon="fas fa-close"></v-icon>
+                                            <v-icon icon="fas fa-close" size="x-small"></v-icon>
                                         </v-btn>
-                                    </template>
+                                    </template> -->
                                 </v-toolbar>
                                 <v-card-text>
+                                    <!-- <v-row>
+                                        <v-col>
+                                            <p class="text-h6">{{ message }}</p>
+                                            
 
-                                    {{ message }}
+                                        </v-col>
+                                    </v-row> -->
+
 
                                 </v-card-text>
 
@@ -227,17 +233,12 @@ export default {
                 this.noProductFound = true;
                 this.message = 'no products found in this price range';
                 setTimeout(() => {
-                this.noProductFound = false;
-            }, 2000);
+                    this.noProductFound = false;
+                }, 1000);
                 return false;
             }
             this.products = product;
-            
-            // return this.products = product;
         },
-        closeAlert() {
-           this.noProductFound = false;
-        }
     },
     mounted() {
         this.category_id = this.$route.params.category_id;
