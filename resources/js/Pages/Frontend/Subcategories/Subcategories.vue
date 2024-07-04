@@ -14,9 +14,27 @@
                                 :products="this.products" @update-value-filter="updateValueFilter" />
                         </v-col>
                         <v-col v-if="noProductFound">
-                            <v-alert title="Not found" type="warning" density="compact" theme="dark">
-                                {{ message }}
-                            </v-alert>
+                            <v-card>
+                                <v-toolbar>
+                                    <v-toolbar-title color="transparent">
+                                        Not Found !
+                                    </v-toolbar-title>
+
+                                    <template v-slot:append>
+                                        <v-btn icon @click="closeAlert()">
+                                            <v-icon icon="fas fa-close"></v-icon>
+                                        </v-btn>
+                                    </template>
+                                </v-toolbar>
+                                <v-card-text>
+
+                                    {{ message }}
+
+                                </v-card-text>
+
+
+                            </v-card>
+
                         </v-col>
                         <v-col v-else v-for="product in products" :key="product.id"
                             class="d-flex justify-center flex-column" cols="auto">
@@ -207,10 +225,18 @@ export default {
         updateValueFilter(product) {
             if (product.length == 0) {
                 this.noProductFound = true;
-                this.message = 'nenhum produto encontrado nessa faixa de valor';
+                this.message = 'no products found in this price range';
+                setTimeout(() => {
+                this.noProductFound = false;
+            }, 2000);
                 return false;
             }
-            return this.products = product;
+            this.products = product;
+            
+            // return this.products = product;
+        },
+        closeAlert() {
+           this.noProductFound = false;
         }
     },
     mounted() {
