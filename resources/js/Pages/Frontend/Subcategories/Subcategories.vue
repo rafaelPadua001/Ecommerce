@@ -7,37 +7,24 @@
         </v-row>
         <v-row fluid>
             <v-col class="d-flex justify-center flex-column" cols="auto">
-                <!-- {{ customer }}  -->
                 <v-sheet class="px-2 py-2">
                     <v-row fluid>
                         <v-col class="d-flex justify-start flex-column" cols="auto">
                             <CategoriesCard :category="this.category" :subcategories="this.subcategories"
                                 :products="this.products" @update-value-filter="updateValueFilter" />
-
-
                         </v-col>
-
-                        <v-col v-for="product in products" :key="product.id" class="d-flex justify-center flex-column"
-                            cols="auto">
+                        <v-col v-if="noProductFound">
+                            <v-alert title="Not found" type="warning" density="compact" theme="dark">
+                                {{ message }}
+                            </v-alert>
+                        </v-col>
+                        <v-col v-else v-for="product in products" :key="product.id"
+                            class="d-flex justify-center flex-column" cols="auto">
                             <ProductCard :product="product" :likes="this.likes" @open-buy-dialog="buy(product)"
                                 @like-product="like(product)" @dislike-product="dislike(product)" />
 
                         </v-col>
-                        <!-- Exibe mensagem se nenhum produto for encontrado -->
-                        <v-col v-if="noProductFound" class="d-flex justify-center" cols="auto">
-                            <v-card type="info" class="ma-2">
-                                Nenhum produto encontrado para esse intervalo de preços.
-                            </v-card>
-                        </v-col>
-
-                        <!-- <v-col class="d-flex justify-end flex-column" cols="2" sm="2">
-                            <v-card class="mx-auto">
-                                <v-card-text>
-                                    Outras infors necessarias aqui
-                                </v-card-text>
-                            </v-card></v-col> -->
                     </v-row>
-
                 </v-sheet>
             </v-col>
         </v-row>
@@ -93,6 +80,7 @@ export default {
         buyDialog: false,
         value: [10, 100],
         snackbar: false,
+        message: '',
         liked: 0,
     }),
     methods: {
@@ -183,7 +171,7 @@ export default {
                 console.log(product)
                 const productId = product.id
                 const likeId = product.like_id;
-               
+
                 axios.delete(`/products/dislike/${productId}`)
                     .then((response) => {
                         let likeIndex = this.likes.indexOf(likeId, 1);
@@ -217,12 +205,11 @@ export default {
 
         },
         updateValueFilter(product) {
-            console.log(product);
-            if(product.length == 0){
-                alert('nenhum produto encontrado nessa faixa de valor');
-                return;
+            if (product.length == 0) {
+                this.noProductFound = true;
+                this.message = 'nenhum produto encontrado nessa faixa de valor';
+                return false;
             }
-
             return this.products = product;
         }
     },
@@ -232,7 +219,6 @@ export default {
         this.getCategories();
         this.getSubcategories();
         this.getLikes();
-
     }
 }
 
