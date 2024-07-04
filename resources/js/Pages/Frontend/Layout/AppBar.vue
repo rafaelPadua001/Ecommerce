@@ -22,7 +22,7 @@
                         <v-divider vertical :thickness="1"></v-divider>
 
                         <div>
-                            <v-btn :to="'/dashboard'" variant="plain" size="small">
+                            <v-btn v-if="!user.original >= 1" :to="'/dashboard'" variant="plain" size="small">
                                 <v-icon icon="fas fa-home"></v-icon>
                             </v-btn>
                         </div>
@@ -189,11 +189,15 @@ export default {
         getUser() {
             axios.get('/customer')
                 .then((response) => {
-                    return this.user = response.data;
+                    console.log(response.data);
+                    this.user = response.data;
+                   
+                    //console.log(Object.keys(this.user.original).length);
+                    return this.user;
                 })
                 .catch((response) => {
 
-                    return false;
+                    return alert('Error: ' + response);
                 });
         },
         getCarts() {
