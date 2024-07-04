@@ -367,7 +367,7 @@ export default {
         },
         subtotal() {
             return this.carts.reduce((acc, item) => {
-                return item.quantity * (acc + item.cart_item_price);
+                return acc + (item.quantity * item.cart_item_price);
             }, 0)
         },
         formattedSubtotal() {
