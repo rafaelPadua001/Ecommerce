@@ -55,7 +55,7 @@ export default {
     components: {FilterPrice},
     methods:{
         updateFilterValue(product){
-            this.$emit('update-value-filter', product);
+           return this.$emit('update-value-filter', product);
         }
     }
 }

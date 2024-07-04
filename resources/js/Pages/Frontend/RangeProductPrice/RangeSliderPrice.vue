@@ -83,8 +83,8 @@
 
         axios.post('/products/filter', data)
         .then((response) => {
-            const filterproducts = response.data;
-           return this.$emit('update-product-filter', filterproducts );
+            const filterProducts = response.data;
+            return this.$emit('update-product-filter', filterProducts );
         })
         .catch((response) => {
           return alert('Error: ' + response);
