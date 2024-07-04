@@ -109,9 +109,9 @@
                             </v-list-item>
 
 
-                            <v-list-item @click="openAddressDialog()">
+                            <v-list-item @click="openAddressDialog()" v-if="!user.original >= 1">
 
-                                <v-list-item-title link>
+                                <v-list-item-title link >
                                     <v-btn class="me-2" size="x-small" variant="flat">
                                         <v-icon icon="far fa-user"></v-icon>
                                         Profile
