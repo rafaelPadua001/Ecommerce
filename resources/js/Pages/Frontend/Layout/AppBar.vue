@@ -21,8 +21,11 @@
 
                         <v-divider vertical :thickness="1"></v-divider>
 
-                        <div>
-                            <v-btn v-if="!user.original >= 1" :to="'/dashboard'" variant="plain" size="small">
+                        <div v-if="!user.original >= 1">
+                            <v-btn  :to="'/'" variant="plain" size="small">
+                                <v-icon icon="fas fa-globe"></v-icon>
+                            </v-btn>
+                            <v-btn  :to="'/dashboard'" variant="plain" size="small">
                                 <v-icon icon="fas fa-home"></v-icon>
                             </v-btn>
                         </div>
@@ -106,9 +109,9 @@
                             </v-list-item>
 
 
-                            <v-list-item @click="openAddressDialog()">
+                            <v-list-item @click="openAddressDialog()" v-if="!user.original >= 1">
 
-                                <v-list-item-title link>
+                                <v-list-item-title link >
                                     <v-btn class="me-2" size="x-small" variant="flat">
                                         <v-icon icon="far fa-user"></v-icon>
                                         Profile
