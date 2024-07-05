@@ -1,9 +1,7 @@
 <template>
     <v-row no-gutters>
         <v-col class="d-flex justify-center flex-column" cols="auto">
-
             <v-card class="mx-auto elevation-0 text-black">
-
                 <v-app-bar :color="this.appBarColor ?? 'trasparent'">
 
                     <!-- <template v-slot:image>
@@ -23,8 +21,11 @@
 
                         <v-divider vertical :thickness="1"></v-divider>
 
-                        <div>
-                            <v-btn :to="'/dashboard'" variant="plain" size="small">
+                        <div v-if="!user.original >= 1">
+                            <v-btn  :to="'/'" variant="plain" size="small">
+                                <v-icon icon="fas fa-globe"></v-icon>
+                            </v-btn>
+                            <v-btn  :to="'/dashboard'" variant="plain" size="small">
                                 <v-icon icon="fas fa-home"></v-icon>
                             </v-btn>
                         </div>
@@ -33,148 +34,38 @@
                         </v-btn>
 
                         <div>
+                            <CategoriesComponent :categories="this.categories" :color="this.appBarColor">
+                            </CategoriesComponent>
 
-
-                            <v-menu :activator="$refs.menuBtn" open-on-hover>
-                                <template v-slot:activator="{ props }">
-                                    <v-btn ref="menuBtn" variant="plain" size="small" v-bind="props">
-                                        <!-- <v-icon icon="fa-solid fa-grip-vertical fa-2xs">
-                                </v-icon> -->
-                                        categories
-                                        <template v-slot:append>
-                                            <v-icon icon="fa-solid fa-chevron-down fa-2xs"></v-icon>
-                                        </template>
-
-
-                                    </v-btn>
-                                </template>
-                                <v-list elevation="0">
-                                    <v-list-item v-if="!categories || categories.length === 0">
-                                        no categories found
-                                    </v-list-item>
-                                    <v-list-item v-else v-for="category in categories" :key="category.id">
-                                        <v-btn variant="flat" size="small" 
-                                            :to="{path: `/subcategories/all/${category.id}`, query: {customer: this.user}}">
-                                            <span>
-                                                <v-avatar color="surface-variant" size="28px">
-                                                    <v-img v-if="category.thumbnail"
-                                                        :src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
-                                                        :lazy-src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
-                                                        :alt="`${category.name}`"></v-img>
-                                                </v-avatar>
-                                            </span>
-                                            <!-- <v-icon v-else :icon="category.icon"></v-icon> -->
-                                            <span>{{ category.name }}</span>
-                                        </v-btn>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
 
 
                         </div>
 
-
-
-                        <!-- <v-btn class="mr-2" variant="plain" to="/">
-                            <v-icon icon="fas fa-globe fa-2xs"></v-icon>
-                        </v-btn> -->
                     </template>
                     <v-spacer></v-spacer>
-
-
 
                     <!-- Cart Button-->
                     <div class="d-flex justify-space-around" v-if="Object.keys(carts).length >= 1">
                         <v-row fluid>
-                            <v-col cols="auto">
-                                <v-menu>
+                            <v-col class="d-flex" cols="auto">
+                                <v-menu offset-y absolute :close-on-content-click="false">
                                     <template v-slot:activator="{ props }">
                                         <v-btn icon v-bind="props">
-                                            <v-icon icon="fa-solid fa-cart-shopping"></v-icon>
+                                                <v-badge 
+                                                    :content="carts.length"
+                                                    color="red"
+                                                >
+                                            <v-icon icon="fa-solid fa-cart-shopping" size="small"></v-icon>
+                                        </v-badge>
+                                       
                                         </v-btn>
+                                    
                                     </template>
-                                    <v-list :items="carts" item-props lines="three"
-                                        style="margin-top: 10px; margin-right: -55px">
-                                        <v-list-item v-for="item in carts" :key="item.id" :value="item.id">
-                                            <div v-if="item && item.is_active == 1">
-                                                <v-row>
-                                                    <v-col cols="auto" md="12" sm="4">
-                                                        <v-card class="mx-auto" elevation="0">
-                                                            <template v-slot:append>
-                                                                <v-btn-group>
-
-                                                                    <v-btn v-bind="props" icon size="x-small"
-                                                                        variant="plain">
-                                                                        <v-icon icon="fas fa-close fa-2xs"
-                                                                            @click="removeItem(item)"></v-icon>
-                                                                    </v-btn>
-                                                                </v-btn-group>
-
-                                                            </template>
-
-                                                            <v-card-text>
-                                                                <v-row no-gutters>
-                                                                    <v-col cols="auto" md="2" sm="4">
-                                                                        <div v-for="(image, index) in JSON.parse(item.images)"
-                                                                            :key="index">
-                                                                            <v-avatar rounded="0" v-if="index === 0">
-                                                                                <v-img :vid-id="image"
-                                                                                    class="align-end text-white"
-                                                                                    aspect-ratio="1"
-                                                                                    :src="`./storage/products/${image}`"
-                                                                                    :lazy-src="`./storage/products/${image}`">
-                                                                                </v-img>
-
-                                                                            </v-avatar>
-                                                                        </div>
-
-
-                                                                    </v-col>
-                                                                    <v-col cols="6" md="4" sm="2">
-                                                                        <div>
-                                                                            <span>{{ item.name }}</span>
-                                                                        </div>
-                                                                    </v-col>
-
-
-                                                                </v-row>
-                                                                <v-row>
-                                                                    <v-col cols="auto" md="2" sm="1">
-                                                                        <v-card v-bind="props" :color="item.color"
-                                                                            :width="30">
-                                                                            <template v-slot:append>
-
-                                                                            </template>
-                                                                        </v-card>
-
-                                                                    </v-col>
-                                                                    <v-col cols="auto" md="5" sm="2">
-                                                                        <span>Price: {{ item.price }}</span>
-                                                                    </v-col>
-                                                                    <v-col cols="auto" md="5" sm="2">
-                                                                        Quantity: {{ item.quantity }}
-                                                                    </v-col>
-                                                                    <v-col cols="auto" sm="2">
-
-                                                                    </v-col>
-
-
-
-                                                                </v-row>
-                                                            </v-card-text>
-                                                        </v-card>
-                                                    </v-col>
-                                                </v-row>
-
-                                                <v-divider></v-divider>
-                                            </div>
-
-                                        </v-list-item>
-
-                                        <v-btn :color="this.appBarColor ?? 'trasparent'" variant="tonal"
-                                            block>Checkout</v-btn>
-
-                                    </v-list>
+                                    <v-row>
+                                        <v-col>
+                                            <CartList :carts="carts"></CartList>
+                                        </v-col>
+                                    </v-row>
                                 </v-menu>
                             </v-col>
                         </v-row>
@@ -218,9 +109,9 @@
                             </v-list-item>
 
 
-                            <v-list-item @click="openAddressDialog()">
+                            <v-list-item @click="openAddressDialog()" v-if="!user.original >= 1">
 
-                                <v-list-item-title link>
+                                <v-list-item-title link >
                                     <v-btn class="me-2" size="x-small" variant="flat">
                                         <v-icon icon="far fa-user"></v-icon>
                                         Profile
@@ -244,10 +135,14 @@
 
 <script>
 import axios from 'axios';
+import CategoriesComponent from '../Categories/Categories.vue';
 import AddressForm from '../Dialogs/Address.vue';
 import DiscountWindow from '../Coupons/partials/Window.vue';
+import CartList from '../Cart/partials/CartList.vue';
+import { EventBus } from '@/Event/EventBus';
+
 export default {
-    components: { AddressForm, DiscountWindow },
+    components: { CategoriesComponent, AddressForm, DiscountWindow, CartList },
     data: () => ({
         user: [],
         carts: [],
@@ -277,6 +172,9 @@ export default {
             axios.get(`/api/appBar`)
                 .then((response) => {
                     this.appBarColor = JSON.parse(response.data.colors);
+                    if (this.appBarColor) {
+                        return EventBus.emit('app-bar-color', this.appBarColor);
+                    }
                     return this.appBar = response.data;
                 })
                 .catch((response) => {
@@ -294,11 +192,15 @@ export default {
         getUser() {
             axios.get('/customer')
                 .then((response) => {
-                    return this.user = response.data;
+                    console.log(response.data);
+                    this.user = response.data;
+                   
+                    //console.log(Object.keys(this.user.original).length);
+                    return this.user;
                 })
                 .catch((response) => {
 
-                    return false;
+                    return alert('Error: ' + response);
                 });
         },
         getCarts() {
@@ -325,16 +227,6 @@ export default {
         closeAddressDialog() {
             this.addressDialog = false;
         },
-        removeItem(item) {
-            axios.delete(`/cartItem/delete/${item.id}`)
-                .then((response) => {
-                    return this.carts.splice(this.carts.indexOf(item), 1);
-                })
-                .catch((response) => {
-                    return alert('Error :' + response);
-                });
-
-        },
         logout() {
             axios.post('/logoutCustomer')
                 .then((response) => {
@@ -347,14 +239,14 @@ export default {
                 });
         },
     },
-
     mounted() {
         this.getStore();
         this.getAppBar();
         this.getUser();
         this.getCategories();
         this.getCarts();
-    }
+    },
+   
 }
 
 </script>

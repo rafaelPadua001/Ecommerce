@@ -113,10 +113,16 @@ const routes = [{
         component: Buy,
         props: route => ({ shippment: JSON.parse(route.query.shippment || 'null'), zip_code: route.query.zip_code })
     },
+    // {
+    //     path: '/carts/buy/:id',
+    //     name: 'carts.buy',
+    //     component: Checkout,
+    // },
     {
-        path: '/carts/buy/:id',
-        name: 'carts.buy',
+        path: '/checkout',
+        name: 'checkout',
         component: Checkout,
+        //props: route => ({ carts: JSON.parse(route.query.carts) })
     },
     {
         path: '/products',

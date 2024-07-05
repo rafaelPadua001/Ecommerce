@@ -25,34 +25,42 @@ class OrderService
             return $e;
         }
     }
-    public function store($request, $responseData)
+    public function store($request, $itemNameJson, $responseData)
     {
+        
         try {
             $request_data = $request->input();
           
             $response = $responseData;
            
             $customer = Auth::guard('customer')->user();
-            
+            $cartItems = $request->input('cartItem');
+            $colors = [];
+            foreach($cartItems as $item){
+                $colors[] = $item['cart_item_colors'];
+            }
+            $colorsJSON = json_encode($colors);
+           
             $order = $this->order->create([
                 'client' => $customer->first_name . ' ' . $customer->last_name,
-                'description' => $request_data['description'],
-                'color' => json_encode($request_data['color']),
+                'products' => $itemNameJson,    
+                'color' => $colorsJSON,
                 'exec_date' => $response['Payment']['ReceivedDate'],
                 'value' => $request['totalValue'],
                 'status' => 'open',
                 'user_id' => $customer->id,
-                'cart_item_id' => $request->cartItem_id,
-                'address' => $request_data['address']['endereco'],
-                'cep' => $request_data['address']['cep'] ?? $request_data['address']['postal_code'],
-                'complemento' => $request_data['address']['complemento'],
-                'bairro' => $request_data['address']['bairro'],
-                'cidade' => $request_data['address']['cidade'],
-                'uf' => $request_data['address']['uf'],
+                //'cart_item_id' => $request->cartItem_id,
+                'address' => $request_data['address']['shippment_address'],
+                'cep' => $request_data['address']['zip_code'] ?? $request_data['address']['postal_code'],
+                'complemento' => $request_data['address']['complemento'] ?? $request_data['address']['shippment_complement'],
+                'bairro' => $request_data['address']['bairro'] ?? 'not register',
+                'cidade' => $request_data['address']['cidade'] ?? $request_data['address']['shippment_city'],
+                'uf' => $request_data['address']['uf'] ?? $request_data['address']['select_uf']['uf'],
                 'pais' => $request_data['address']['pais'] ?? 'Brasil',
             ]);
+            
             $insertId = $this->createOrderId($request, $responseData);
-          
+           
             return response()->json($order);
         } catch (Exception $e) {
 

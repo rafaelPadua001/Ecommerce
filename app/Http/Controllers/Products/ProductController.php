@@ -55,12 +55,15 @@ class ProductController extends Controller
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->leftJoin('subcategories', 'categories.id', '=', 'subcategories.category_id')
             ->leftJoin('coupons', 'products.discount_id', '=', 'coupons.id')
+            ->join('product_stocks', 'products.id', '=', 'product_stocks.product_id')
             ->select(
                 'products.*',
                 'categories.id as category_id',
                 'subcategories.name as subcategoriy_id',
                 'coupons.id as discount_id',
-                'coupons.discount_percentage as discount_percentage'
+                'coupons.discount_percentage as discount_percentage',
+                'product_stocks.color_qty as color_quantity',
+                'product_stocks.size_qty as size_quantity'
             )
             ->get();
 
@@ -69,6 +72,16 @@ class ProductController extends Controller
     }
     public function search(Request $request)
     {
+        dd($request);
+    }
+    public function filter(Request $request){
+        try{
+            $productService = $this->productService->filterProduct($request);
+            return response()->json($productService);
+        }
+        catch(Exception $e){
+            return response()->json($e);
+        }
         dd($request);
     }
     public function getProduct($id)
@@ -102,7 +115,7 @@ class ProductController extends Controller
     {
         try {
             $product = Product::findOrFail($id);
-            $customer = Auth::guard('customer')->user();
+            $customer = $this->getAuthenticated();
             $likedProduct = $this->getLikedController($product, $customer);
             return response()->json($likedProduct);
         } catch (Exception $e) {
@@ -122,7 +135,7 @@ class ProductController extends Controller
     public function dislike($id)
     {
         $product = Product::findOrFail($id);
-        $customer = Auth::guard('customer')->user();
+        $customer = $this->getAuthenticated();
         $dislikedProduct = $this->getDisLikedController($product, $customer);
 
         return response()->json($dislikedProduct);
@@ -296,5 +309,9 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return response()->json($e);
         }
+    }
+    public function getAuthenticated(){
+        $customer = Auth::guard('customer')->user();
+        return $customer;
     }
 }

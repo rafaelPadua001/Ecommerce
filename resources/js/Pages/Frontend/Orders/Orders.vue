@@ -38,7 +38,19 @@
                                     </v-dialog>
                                 </v-toolbar>
                             </template>
+                            <template v-slot:item.color="{ item }">
+                                <v-row>
+                                    <v-col>
+                                        <v-avatar v-for="(color, index) in JSON.parse(item.color)"
+                                            :key="index" :color="color" size="x-small"
+                                        >
+                                        {{ color }}
+                                        </v-avatar>
 
+                                    </v-col>
+
+                                </v-row>
+                            </template>
                             <template v-slot:item.status="{ value }">
                                 <v-chip :color="getColor(value)">
                                     {{ value }}
@@ -53,7 +65,7 @@
                                             icon="fas fa-truck-fast"></v-icon>
 
                                     </v-btn>
-                                 <!--   <v-btn>
+                                    <!--   <v-btn>
                                         <v-icon size="x-small" class="me-2" @click="deleteItem(item)" icon="fas fa-ticket"
                                             color="primary"></v-icon>
                                     </v-btn>
@@ -132,9 +144,9 @@ export default {
                     return alert('Error: ', response);
                 })
         },
-        getColor(status){
-            if(status == 'open') return 'red';
-            else if(status == 'close') return 'green';
+        getColor(status) {
+            if (status == 'open') return 'red';
+            else if (status == 'close') return 'green';
         },
         editItem() {
             alert('teste');

@@ -7,205 +7,48 @@
         </v-row>
         <v-row fluid>
             <v-col class="d-flex justify-center flex-column" cols="auto">
-                <!-- {{ customer }}  -->
                 <v-sheet class="px-2 py-2">
                     <v-row fluid>
                         <v-col class="d-flex justify-start flex-column" cols="auto">
-                            <v-card class="mx-auto">
-                                <!-- <v-card-title>Categories</v-card-title>
-                                <v-divider></v-divider>
-                                <v-card-text v-if="category">
-                                    <v-row>
-                                        <v-col class="d-flex flex-column" cols="auto" sm="2">
-                                            <v-btn class="mr-2" size="small" variant="flat">
-                                                <span>
-                                                    <v-avatar size="26">
-                                                        <v-img v-if="category.thumbnail"
-                                                            :src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
-                                                            :lazy-src="`./storage/Categories/Thumbnails/${category.thumbnail}`"
-                                                            :alt="`${category.name}`"></v-img>
-                                                    </v-avatar>
-                                                </span>
-                                                {{ category.name }}
-                                            </v-btn>
+                            <CategoriesCard :category="this.category" :subcategories="this.subcategories"
+                                :products="this.products" @update-value-filter="updateValueFilter" />
+                        </v-col>
+                        <v-col v-if="noProductFound">
+                            <v-card class="mx-auto elevation-0">
+                                <v-toolbar class="bg-transparent">
+                                    <v-toolbar-title color="transparent">
+                                        {{ message }}
+                                    </v-toolbar-title>
+
+                                    <!-- <template v-slot:append>
+                                        <v-btn icon @click="closeAlert()">
+                                            <v-icon icon="fas fa-close" size="x-small"></v-icon>
+                                        </v-btn>
+                                    </template> -->
+                                </v-toolbar>
+                                <v-card-text>
+                                    <!-- <v-row>
+                                        <v-col>
+                                            <p class="text-h6">{{ message }}</p>
+                                            
 
                                         </v-col>
-                                        <v-divider></v-divider>
-                                    </v-row>
-                                </v-card-text> -->
+                                    </v-row> -->
 
-                                <v-card-text v-if="subcategories">
-                                    <h5>Subcategories</h5>
-                                    <v-row v-for="(subcategory, index) in subcategories" :key="index">
-                                        <v-col class="d-flex justify-start flex-row">
 
-                                            <v-btn class="mr-2" size="small" variant="flat" @click="getProductSubcategory(subcategory)">
-                                                {{ subcategory.name }}
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
                                 </v-card-text>
+
 
                             </v-card>
 
+                        </v-col>
+                        <v-col v-else v-for="product in products" :key="product.id"
+                            class="d-flex justify-center flex-column" cols="auto">
+                            <ProductCard :product="product" :likes="this.likes" @open-buy-dialog="buy(product)"
+                                @like-product="like(product)" @dislike-product="dislike(product)" />
 
                         </v-col>
-
-                        <v-col v-for="product in products" :key="product.id" class="d-flex justify-center flex-column"
-                            cols="auto">
-                           
-                            <v-sheet class="py-2 px-2">
-                                
-                                <v-hover v-slot="{ isHovering, props }">
-                                    <v-card class="mx-auto elevation-1">
-                                       
-                                        <v-card-text>
-                                            <v-card class="mx-auto elevation-0" v-bind="props">
-                                            <v-toolbar class="bg-transparent">
-                                               
-                                                <template v-slot:append>
-                                                    <v-btn-group class="float-end">
-                                                        <v-btn icon size="x-small">
-                                                            <v-icon icon="fa-regular fa-heart fa-2xs"
-                                                                v-if="Object.keys(likes).length == 0"
-                                                                class="bg-transparent" @click="like()"></v-icon>
-                                                            <v-icon icon="fa-solid fa-heart fa-2xs" color="red-darken-4"
-                                                                v-else @click="like()"></v-icon>
-                                                        </v-btn>
-                                                        <v-btn icon size="x-small">
-                                                            <v-icon icon="fa-solid fa-share-nodes fa-2xs"></v-icon>
-
-                                                        </v-btn>
-                                                    </v-btn-group>
-                                                </template>
-                                            </v-toolbar>
-
-                                            <div v-for="(image, index) in JSON.parse(product.images)" :key="index">
-
-                                                <v-img v-if="index == 0" :vid-id="image" aspect-ratio="1/1"
-                                                    :src="`./storage/products/${image}`"
-                                                    :lazy-src="`./storage/products/${image}`" :height="300" :width="300"
-                                                    cover>
-                                                    <div v-if="product.discount_id"
-                                                        class="d-flex justify-end text-center">
-                                                        <v-chip class="ma-2" label
-                                                            :color="cardDiscountColor ?? 'orange-darken-4'"
-                                                            variant="elevated">
-                                                            - {{ product.discount_percentage * 100 }}%
-                                                        </v-chip>
-
-                                                    </div>
-
-                                                    <div v-if="product.discount_id"
-                                                        class="d-flex justify-end text-center">
-                                                        <v-chip class="ma-2" label
-                                                            :color="cardDiscountColor ?? 'orange-darken-4'"
-                                                            variant="elevated">
-                                                            - {{ product.discount_percentage * 100 }}%
-                                                        </v-chip>
-
-                                                    </div>
-
-                                                    <template>
-                                                        <div class="d-flex align-center justify-center fill-height">
-                                                            <v-progress-circular color="grey-lighten-4">
-                                                            </v-progress-circular>
-                                                        </div>
-                                                    </template>
-                                                </v-img>
-                                            </div>
-
-
-                                            <v-card-text>
-                                                <v-row fluid>
-                                                    <v-col cols="auto">
-                                                        <p class="text-h5">{{ product.name }}</p>
-
-                                                    </v-col>
-                                                </v-row>
-                                                <v-row fluid>
-                                                    <v-col cols="auto">
-                                                        <p>{{ product.description }}</p>
-                                                    </v-col>
-                                                </v-row>
-                                                <v-row no-gutters>
-                                                    <v-btn-group>
-                                                        <v-btn class="me-2" size="x-small" variant="outlined"
-                                                            color="orange" v-if="product.slug">
-                                                            {{ product.slug }}
-                                                        </v-btn>
-                                                        <v-btn v-if="product.discount_id" class="me-2" size="x-small"
-                                                            variant="outlined" color="green">
-                                                            {{ product.discount_percentage * 100 }}% off
-                                                        </v-btn>
-                                                    </v-btn-group>
-                                                </v-row>
-
-                                                <v-row no-gutters>
-                                                    <v-col cols="auto" md="6" sm="4">
-                                                        <div v-if="!product.discount_id">
-                                                            <p>
-                                                                <strong>R$:</strong>
-                                                                {{ product.price }}
-                                                            </p>
-                                                        </div>
-                                                        <div v-else>
-                                                            <div>
-                                                                <div>
-                                                                    <p>
-                                                                        <strong>R$:</strong>
-                                                                        {{ (product.price - (product.price *
-                                    product.discount_percentage)).toFixed(2)
-                                                                        }}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </v-col>
-                                                    <v-col col="auto" md="6" sm="6">
-                                                        <p color="red" v-if="product.stock_quantity >= 1">
-                                                            <strong>Qtd:</strong> {{ product.stock_quantity }}
-                                                        </p>
-                                                        <p color="red" v-if="product.stock_quantity === 0">
-                                                            <strong> Fora de Estoque </strong>
-                                                        </p>
-                                                    </v-col>
-                                                    <!--  <v-col col="auto" md="5" sm="4">
-                          <strong>Solds:</strong> 100
-                        </v-col> -->
-                                                </v-row>
-                                            </v-card-text>
-
-                                            <v-expand-transition>
-                                                <div v-if="isHovering"
-                                                    class="d-flex transition-fast-in-fast-out bg-grey-darken-3 v-card-menu--reveal text-h2">
-                                                    <v-card-actions>
-                                                        <v-btn @click="buy(product)" block>
-                                                            <v-icon icon="fas fa-eye"></v-icon>
-                                                            <v-tooltip activator="parent"
-                                                                location="end">preview</v-tooltip>
-                                                        </v-btn>
-                                                    </v-card-actions>
-                                                </div>
-                                            </v-expand-transition>
-                                        </v-card>
-                                        </v-card-text>
-                                        
-
-
-                                    </v-card>
-                                </v-hover>
-                            </v-sheet>
-                        </v-col>
-
-                        <!-- <v-col class="d-flex justify-end flex-column" cols="2" sm="2">
-                            <v-card class="mx-auto">
-                                <v-card-text>
-                                    Outras infors necessarias aqui
-                                </v-card-text>
-                            </v-card></v-col> -->
                     </v-row>
-
                 </v-sheet>
             </v-col>
         </v-row>
@@ -236,11 +79,16 @@
 <script>
 import AppBar from '../Layout/AppBar.vue';
 import ProductDialog from '../Dialogs/ProductDialog.vue';
+import CategoriesCard from './partials/CategoriesCard.vue';
+import ProductCard from './partials/ProductCard.vue';
 
 export default {
+    name: 'Subcategories',
     props: ['customer'],
     components: {
         AppBar,
+        CategoriesCard,
+        ProductCard,
         ProductDialog
     },
     data: () => ({
@@ -248,13 +96,16 @@ export default {
         category_id: null,
         subcategories: [],
         products: [],
+        noProductFound: false,
         images: '',
-        likes: false,
+        likes: [],
         productIndex: -1,
         selectProduct: {},
         buyDialog: false,
         value: [10, 100],
         snackbar: false,
+        message: '',
+        liked: 0,
     }),
     methods: {
         getCategories() {
@@ -278,53 +129,84 @@ export default {
         getProducts() {
             axios.get(`/products/category/${this.category_id}`)
                 .then((response) => {
-
-                    return this.products = response.data;
+                    this.products = response.data;
+                    return this.filteredProducts = this.products;
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);
                 })
         },
-        getProductSubcategory(subcategory){
+        getProductSubcategory(subcategory) {
             const subcategory_id = subcategory.id;
             const item = subcategory;
             axios.get(`/products/subcategory/${subcategory_id}`)
-            .then((response) => {
-                if(response.data.length >= 1){
-                    return this.products.push(response.data);
-                }
-               
-                return alert('nenhum produto encontrado');
-            })
-            .catch((response) => {
-                return alert('Error:' + response);
-            })
+                .then((response) => {
+                    if (response.data.length >= 1) {
+                        return this.products.push(response.data);
+                    }
+
+                    return alert('nenhum produto encontrado');
+                })
+                .catch((response) => {
+                    return alert('Error:' + response);
+                })
 
         },
-        like() {
-            if (Object.keys(this.customer).length == 0) {
-                this.snackbar = true;
-            }
+        like(product) {
             if (this.selectProduct >= 1) {
-                axios.post(`products/like/${this.selectProduct.id}`)
+                axios.post(`/products/like/${this.selectProduct.id}`)
                     .then((response) => {
                         this.liked += 1;
-                        return true;
+                        return this.likes.push(response.data.original.likes);
+
                     })
                     .catch((response) => {
-                        return;
+                        return alert('Error:' + response);
                     });
             }
             else {
-                axios.post(`products/like/${this.product.id}`)
+                axios.post(`/products/like/${product.id}`)
                     .then((response) => {
-                        this.liked += 1;
-                        return true;
+                        return this.likes.push(response.data.original.likes);
                     })
                     .catch((response) => {
-                        return;
+                        alert(response);
                     });
             }
+        },
+        dislike(product) {
+            if (this.customer) {
+                this.snackbar = true;
+                return this.message = 'you need login to exec this action.';
+            }
+            if (this.selectProduct >= 1) {
+                axios.delete(`http://localhost:8000/products/dislike/${this.selectProduct.id}`)
+                    .then((response) => {
+                        this.likes -= 1;
+                        let likeIndex = this.likes.indexOf(this.selectProduct.id);
+                        return this.likes.splice(likeIndex, 1);
+                        //return true;
+                    })
+                    .catch((response) => {
+                        return alert('Error' + response);
+                    });
+            }
+            else {
+                console.log(product)
+                const productId = product.id
+                const likeId = product.like_id;
+
+                axios.delete(`/products/dislike/${productId}`)
+                    .then((response) => {
+                        let likeIndex = this.likes.indexOf(likeId, 1);
+                        return this.likes.splice(likeIndex, 1);
+                        //return true;
+                    })
+                    .catch((response) => {
+                        return alert('Error' + response);
+                    });
+            }
+
         },
         getLikes() {
             axios.get('/likes')
@@ -346,13 +228,24 @@ export default {
             this.buyDialog = value;
 
         },
+        updateValueFilter(product) {
+            if (product.length == 0) {
+                this.noProductFound = true;
+                this.message = 'no products found in this price range';
+                setTimeout(() => {
+                    this.noProductFound = false;
+                }, 1000);
+                return false;
+            }
+            this.products = product;
+        },
     },
     mounted() {
         this.category_id = this.$route.params.category_id;
         this.getProducts();
         this.getCategories();
         this.getSubcategories();
-
+        this.getLikes();
     }
 }
 

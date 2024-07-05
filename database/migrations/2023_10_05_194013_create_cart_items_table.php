@@ -18,9 +18,11 @@ return new class extends Migration
                 $table->unsignedBigInteger('product_id');
                 $table->unsignedBigInteger('user_id');
                 $table->integer('quantity');
-                $table->text('color')->nullable();
+                $table->json('color')->nullable();
                 $table->text('size')->nullable();
                 $table->decimal('price', 8, 2);
+                $table->decimal('delivery_price');
+                $table->decimal('total_price');
                 $table->boolean('is_active')->default(true);
                 $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade');
                 $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

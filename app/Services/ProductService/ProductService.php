@@ -3,6 +3,7 @@
 namespace App\Services\ProductService;
 
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Exception;
 
 class ProductService
@@ -11,6 +12,18 @@ class ProductService
     public function __constuct(Product $products)
     {
         $this->products = $products;
+    }
+    public function filterProduct(Request $request)
+    {
+        try {
+            $product = Product::where('subcategory_id', $request->subcategoryId)
+                ->whereBetween('price', [$request->min, $request->max])
+                ->get();
+           
+            return $product;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
     public function getAll()
     {
@@ -44,6 +57,8 @@ class ProductService
         $product = Product::where('products.category_id', '=', $id)
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->join('subcategories', 'subcategories.id', '=', 'categories.id')
+            ->join('product_stocks', 'products.id', '=', 'product_stocks.product_id')
+            ->leftJoin('liked_products', 'liked_products.product_id', '=', 'products.id')
             ->select([
                 'products.*',
                 'categories.id as category_id',
@@ -51,17 +66,23 @@ class ProductService
                 'categories.thumbnail',
                 'categories.name as category_name',
                 'subcategories.id as subcategory_id',
-                'subcategories.name as subcategory_name'
+                'subcategories.name as subcategory_name',
+                'product_stocks.color_qty as color_quantity',
+                'product_stocks.size_qty as size_quantity',
+                'liked_products.id as like_id',
+                'liked_products.user_id',
+                'liked_products.likes'
             ])
             ->get();
+
         return $product;
     }
-    public function getSubcategory($id){
-        try{
+    public function getSubcategory($id)
+    {
+        try {
             $product = Product::where('products.subcategory_id', '=', $id)->get();
             return $product;
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }
