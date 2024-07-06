@@ -44,19 +44,11 @@
 
                   </v-dialog>
                   <v-dialog v-model="dialogDelete" max-width="500">
-                    <v-card>
-                      <v-card-title class="text-h5">Remove </v-card-title>
-                      <v-card-text>
-                        Are you sure you want to delete this item ?
-                        {{ editedItem.name }}
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
-                        <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">Remove</v-btn>
-                        <v-spacer></v-spacer>
-                      </v-card-actions>
-                    </v-card>
+                    <ProductRemove 
+                      :editedItem="this.editedItem"
+                      @close-delete="closeDelete"
+                      @remove-item="deleteItemConfirm"
+                    />
                   </v-dialog>
                 </v-toolbar>
               </template>
@@ -149,11 +141,13 @@
 import axios from 'axios';
 import Dashboard from '../Auth/Dashboard.vue';
 import ProductForm from './partials/ProductForm.vue';
+import ProductRemove from './partials/ProductRemove.vue';
 
 export default {
   components: {
     Dashboard,
     ProductForm,
+    ProductRemove,
   },
   data: () => ({
     dialog: false,
