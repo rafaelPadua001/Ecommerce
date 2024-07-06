@@ -228,21 +228,8 @@
                     </v-col>
 
                 </v-row>
-                <v-row>
-                    <v-col>
-                        <p class="h5">Price/Quantity</p>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.price" label="Price" prefix="R$ " v-bind="config">
-                        </v-text-field>
-
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.stock_quantity" label="Quantity"></v-text-field>
-                    </v-col>
-                </v-row>
+                
+               
                 <v-row>
                     <v-col>
                         <h5>Scales</h5>
@@ -328,23 +315,23 @@
 
                 <v-row>
                     <v-col cols="12" sm="6" md="4">
-                        <v-switch v-model="editedItem.highlights" label="Highlight" color="success" @click="hl_turn"
-                            :value="this.highlights"></v-switch>
+                        <v-switch v-model="editedItem.highlights" label="Highlight" color="success"
+                            @click="highlights_switch" :value="this.highlights"></v-switch>
 
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                         <v-switch v-model="editedItem.availability" label="Availability" color="success"
-                            @click="av_turn" :value="this.availability"></v-switch>
+                            @click="availability_switch" :value="this.availability"></v-switch>
                     </v-col>
 
                     <v-col cols="12" sm="6" md="4">
                         <v-switch v-model="editedItem.status" label="Status" color="success"
-                            @click="st_turn"></v-switch>
+                            @click="status_switch"></v-switch>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
 
-                        <v-switch v-model="editedItem.launch" label="Launch product" color="success" @click="lc_turn"
-                            :value="this.launch"></v-switch>
+                        <v-switch v-model="editedItem.launch" label="Launch product" color="success"
+                            @click="lauch_switch" :value="this.launch"></v-switch>
                     </v-col>
                 </v-row>
             </v-container>
@@ -368,12 +355,24 @@
 <script>
 export default {
     name: 'ProductForm',
-    props: ['editedItem', 'categories', 'subcategories', 'colors', 'color_qty', 'size_qty'],
+    props: [
+        'editedItem',
+        'highlights',
+        'availability',
+        'status',
+        'launch',
+        'categories',
+        'subcategories',
+        'colors',
+        'color_qty',
+        'size_qty'
+    ],
     data: () => ({
-        highlights: false,
-        availability: false,
-        status: false,
-        launch: false,
+        // highlights: false,
+        // availability: false,
+        // status: false,
+        //launch: false,
+        images: [],
     }),
     computed: {
         formTitle() {
@@ -393,6 +392,24 @@ export default {
     methods: {
         handleFiles() {
             this.$refs.images[0];
+        },
+        previewImages(event) {
+            const files = event.target.files;
+            if (files) {
+                this.images = [];
+                for (let i = 0; i < files.length; i++) {
+                    const reader = new FileReader();
+                    const file = files[i];
+
+                    reader.onload = (e) => {
+                        this.images.push({
+                            src: e.target.result,
+                            name: file.name,
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
         },
         onPriceInput(value) {
 
@@ -415,6 +432,45 @@ export default {
         removeSelectedColor(index) {
             return this.colors.splice(index, 1);
         },
+        highlights_switch() {
+            if (this.editedItem.highlights) {
+                this.editedItem.highlights = 0;
+                return this.$emit('hl_turn', this.editedItem.highlights);
+            }
+
+            this.editedItem.highlights = 1;
+            return this.$emit('hl_turn', this.editedItem.highlights);
+        },
+        availability_switch() {
+            if (this.editedItem.availability) {
+                this.editedItem.availability = 0;
+                return this.$emit('av_turn', this.editedItem.availability);
+            }
+            this.editedItem.availability = 1;
+            return this.$emit('av_turn', this.editedItem.availability);
+        },
+        status_switch() {
+            if (this.editedItem.status) {
+                this.editedItem.status = 0;
+                return this.$emit('st_turn', this.editedItem.status);
+            }
+            this.editedItem.status = 1;
+            return this.$emit('st_turn', this.editedItem.status);
+        },
+        lauch_switch() {
+            if (this.editedItem.launch) {
+          
+                this.editedItem.launch = 0;
+                return this.$emit('lc_turn', this.editedItem.launch);
+            }
+    
+            this.editedItem.launch = 1;
+            return this.$emit('lc_turn', this.editedItem.launch);
+        },
+        save(){
+            this.editedItem.images = this.images;
+            return this.$emit('save', this.editedItem);
+        }
     }
 }
 </script>

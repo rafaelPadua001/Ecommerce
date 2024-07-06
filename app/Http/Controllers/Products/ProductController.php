@@ -193,7 +193,7 @@ class ProductController extends Controller
             'availability' => $request->availability,
             'slug'   => $request->slug,
             'status'  => $request->status,
-            'lauch' => $request->lauch,
+            'launch' => $request->launch,
             'highlight' => $request->highlights ? true : false,
             'user_id' => (int) $request->user_id,
             'discount_id' => $request->has('discount') ? (int)$request->discount : null,
