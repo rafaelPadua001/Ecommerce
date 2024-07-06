@@ -25,11 +25,20 @@
                    
                     <ProductForm 
                       :editedItem="this.editedItem"
+                      :highlights="this.highlights"
+                      :availability="this.availability"
+                      :status="this.status"
+                      :launch="this.launch"
                       :categories="this.categories"
                       :subcategories="this.subcategories"
                       :colors="this.colors"
                       :color_qty="this.color_qty"
                       :size_qty="this.size_qty"
+                      @hl_turn="hl_turn"
+                      @av_turn="av_turn"
+                      @st_turn="st_turn"
+                      @lc_turn="lc_turn"
+                      @save="save"
                      
                     />
 
@@ -327,37 +336,13 @@ export default {
           return alert('Error' + response);
         });
     },
-    previewImages(event) {
-      const files = event.target.files;
-      if (files) {
-        this.images = [];
-        for (let i = 0; i < files.length; i++) {
-          const reader = new FileReader();
-          const file = files[i];
-
-          reader.onload = (e) => {
-            this.images.push({
-              src: e.target.result,
-              name: file.name,
-            });
-          };
-          reader.readAsDataURL(file);
-        }
-      }
-    },
-    handleFiles() {
-      this.$refs.images[0];
-    },
-    onPriceInput(value) {
-
-    },
     hl_turn() {
       if (this.editedItem.highlights) {
-        this.highlights = 0;
+        this.highlights = 1;
         this.editedItem.highlights = this.highlights;
       }
       else {
-        this.highlights = 1;
+        this.highlights = 0;
         this.editedItem.highlights = this.highlights;
       }
 
@@ -385,12 +370,11 @@ export default {
     },
     lc_turn() {
       if (this.editedItem.launch) {
-        this.launch = 0;
+        this.launch = 1;
         this.editedItem.launch = this.launch;
-        alert(this.editedItem.launch);
       }
       else {
-        this.launch = 1;
+        this.launch = 0;
         this.editedItem.launch = this.launch;
       
       }
@@ -531,7 +515,7 @@ export default {
           description: this.editedItem.description,
           category_id: this.editedItem.category_id,
           subcategory_id: this.editedItem.subcategory_name,
-          images: this.images,
+          images: this.editedItem.images,
           platform: this.editedItem.platform,
           video_link: this.editedItem.video_link,
           colors: this.colors,
@@ -555,8 +539,10 @@ export default {
           highlights: this.highlights,
           availability: this.availability,
           status: this.status,
-          lauch: this.lauch
+          launch: this.launch
         };
+
+        console.log(data);
         axios.post(`/products/store`, data,
           {
             headers: {
@@ -580,8 +566,8 @@ export default {
             alert('Error: ' + error);
             return false;
           });
-      }
-      this.close();
+       }
+      // this.close();
     },
   },
   mounted() {
