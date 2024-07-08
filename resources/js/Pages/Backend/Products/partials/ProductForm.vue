@@ -93,7 +93,6 @@
                         </div>
                         <div v-else>
                             <v-row v-if="!previewImages">
-
                                 <v-col v-for="(image, index) in editedItem.images" :key="index" cols="12" md="6">
                                     <v-card>
 
@@ -329,7 +328,7 @@
                             @click="status_switch"></v-switch>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-
+                        
                         <v-switch v-model="editedItem.launch" label="Launch product" color="success"
                             @click="lauch_switch" :value="this.launch"></v-switch>
                     </v-col>
@@ -459,11 +458,9 @@ export default {
         },
         lauch_switch() {
             if (this.editedItem.launch) {
-          
-                this.editedItem.launch = 0;
+                 this.editedItem.launch = 0;
                 return this.$emit('lc_turn', this.editedItem.launch);
             }
-    
             this.editedItem.launch = 1;
             return this.$emit('lc_turn', this.editedItem.launch);
         },
