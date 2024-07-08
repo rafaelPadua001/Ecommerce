@@ -76,9 +76,9 @@
                 <v-row v-if="item.colors !== '0'">
                   <v-col v-if="typeof item.colors === 'string'">
                     <v-row>
-                      <v-col cols="12" md="2" sm="6" v-for="(color, index) in JSON.parse(item.colors)" :key="index">
+                      <v-col cols="12" md="2" sm="6" >
                         <v-chip-goup>
-                          <v-chip :color="color" size="x-small" variant="elevated"></v-chip>
+                          <v-chip v-for="(color, index) in JSON.parse(item.colors)" :key="index" :color="color" size="x-small" variant="elevated"></v-chip>
                         </v-chip-goup>
                       </v-col>
                     </v-row>
@@ -186,7 +186,7 @@ export default {
     highlights: false,
     Availability: false,
     status: false,
-    launch: false,
+    launch: 0,
     headers: [
       { title: 'images', key: 'images' },
       {
@@ -461,9 +461,9 @@ export default {
         const data = {
           name: this.editedItem.name,
           description: this.editedItem.description,
-          category_id: this.editedItem.category_name,
-          subcategory_id: this.editedItem.subcategory_name,
-          images: this.images,
+          category_id: this.editedItem.category_id,
+          subcategory_id: this.editedItem.subcategory_id,
+          images: this.editedItem.images,
           platform: this.editedItem.platform,
           video_link: this.editedItem.video_link,
           colors: this.colors,

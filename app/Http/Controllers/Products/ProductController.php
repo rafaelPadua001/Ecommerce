@@ -82,7 +82,7 @@ class ProductController extends Controller
         catch(Exception $e){
             return response()->json($e);
         }
-        dd($request);
+       
     }
     public function getProduct($id)
     {
@@ -142,26 +142,31 @@ class ProductController extends Controller
     }
     public function uploadImg($request)
     {
-        $randomNames = [];
+        try{
+            $randomNames = [];
 
-
-        foreach ($request->images as $file) {
-
-            if ($file) {
-                $randomName = Str::random(10) . '.webp';
-
-                $fileName = $file['src'];
-
-                $path = Storage::putFileAs('/public/products', $fileName, $randomName);
-
-                // Adiciona o novo nome de arquivo ao array $randomNames
-                $randomNames[] = $randomName;
-                // dd($randomName);
-                $product = Product::where('name', $request->name)->update([
-                    'images' => json_encode($randomNames, true)
-                ]);
+            foreach ($request->images as $file) {
+    
+                if ($file) {
+                    $randomName = Str::random(10) . '.webp';
+    
+                    $fileName = $file['src'];
+    
+                    $path = Storage::putFileAs('/public/products', $fileName, $randomName);
+    
+                    // Adiciona o novo nome de arquivo ao array $randomNames
+                    $randomNames[] = $randomName;
+                    // dd($randomName);
+                    $product = Product::where('name', $request->name)->update([
+                        'images' => json_encode($randomNames, true)
+                    ]);
+                }
             }
         }
+        catch(Exception $e){
+            return response()->json($e);
+        }
+       
 
         return $randomNames;
     }
@@ -176,7 +181,7 @@ class ProductController extends Controller
             'category_id' =>  $category->id,
             'subcategory_id' =>  $subcategory->id,
             'description' => $request->description,
-            'images' => json_encode($upload_file),
+            'images' => json_encode($upload_file) ?? $upload_file,
             'platform' => $request->platform,
             'video_links' => json_encode($request->video_link),
             'colors' => json_encode($request->colors),
@@ -232,14 +237,12 @@ class ProductController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $category = Categories::where('id', $request->category_id)->first();
-        $subcategory = Subcategory::where('id', $request->subcategory_id)->first();
         $upload_file = $this->uploadImg($request);
 
         $product = [
             'name' => $request->name,
-            'category_id' =>  $category->id,
-            'subcategory_id' =>  $subcategory->id,
+            'category_id' =>  $request->category_id,
+            'subcategory_id' =>  $request->subcategory_id,
             'description' => $request->description,
             'images' => json_encode($upload_file),
             'platform' => $request->platform,
@@ -274,24 +277,24 @@ class ProductController extends Controller
 
         $updateStock = $this->productStock->update($request, $id);
 
-        return response()->json($updateProduct);
+        return response()->json($product);
 
-        try {
-            $product = Product::where('id', $id)->update($request->all());
+        // try {
+        //     $product = Product::where('id', $id)->update($request->all());
 
-            if ($request->images) {
-                $this->uploadImg($request);
-            }
-            $upload_file = $request->images;
+        //     if ($request->images) {
+        //         $this->uploadImg($request);
+        //     }
+        //     $upload_file = $request->images;
 
-            $product_id = Product::where('id', $id)->first();
+        //     $product_id = Product::where('id', $id)->first();
 
-            $image_class = $this->getImageClass($upload_file, $id, $request->user_id);
+        //     $image_class = $this->getImageClass($upload_file, $id, $request->user_id);
 
-            //return response()->json($request);
-        } catch (Exception $e) {
-            return response()->json($e);
-        }
+        //     //return response()->json($request);
+        // } catch (Exception $e) {
+        //     return response()->json($e);
+        // }
     }
     public function destroy($id)
     {
