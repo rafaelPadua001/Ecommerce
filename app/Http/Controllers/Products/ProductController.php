@@ -161,7 +161,9 @@ class ProductController extends Controller
                         'images' => json_encode($randomNames, true)
                     ]);
                 }
+                    
             }
+            return $randomNames;
         }
         catch(Exception $e){
             return response()->json($e);
@@ -279,22 +281,7 @@ class ProductController extends Controller
 
         return response()->json($product);
 
-        // try {
-        //     $product = Product::where('id', $id)->update($request->all());
-
-        //     if ($request->images) {
-        //         $this->uploadImg($request);
-        //     }
-        //     $upload_file = $request->images;
-
-        //     $product_id = Product::where('id', $id)->first();
-
-        //     $image_class = $this->getImageClass($upload_file, $id, $request->user_id);
-
-        //     //return response()->json($request);
-        // } catch (Exception $e) {
-        //     return response()->json($e);
-        // }
+        
     }
     public function destroy($id)
     {

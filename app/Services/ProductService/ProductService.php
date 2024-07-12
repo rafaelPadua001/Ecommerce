@@ -96,7 +96,7 @@ class ProductService
     public function update($product, $id)
     {
         $productUpdate = Product::findOrFail($id)->update($product);
-        return response()->json($product);
+        return response()->json($productUpdate);
     }
     public function destroy($id)
     {
