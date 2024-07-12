@@ -403,7 +403,7 @@ export default {
                     reader.onload = (e) => {
                         this.images.push({
                             src: e.target.result,
-                            name: file.name,
+                            name: file.name ?? JSON.parse(this.editedItem.images),
                         });
                     };
                     reader.readAsDataURL(file);

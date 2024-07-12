@@ -265,6 +265,7 @@ export default {
       console.log(`A imagem foi alterada de ${oldUrl} para ${newUrl}`);
       return true;
     },
+   
   },
   created() {
     this.initialize()
@@ -329,6 +330,15 @@ export default {
         .catch((response) => {
           return alert('Error' + response);
         });
+    },
+    parsedImages(images){
+      try{
+        return images;
+      }
+      catch(e){
+        console.error("Erro ao fazer o parse do JSON: " , e);
+        return [];
+      }
     },
     hl_turn() {
       if (this.editedItem.highlights) {
@@ -497,7 +507,9 @@ export default {
         })
           .then((response) => {
             this.close();
-            return Object.assign(this.products[indexProduct], response.data);
+           this.editedItem = Object.assign(this.products[indexProduct], response.data);
+            this.editedItem.images = JSON.parse(this.editedItem.images);
+            return this.products[indexProduct];
           })
           .catch((error) => {
             alert('Error: ' + error);
