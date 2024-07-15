@@ -1,7 +1,6 @@
 <template>
-    {{ name }}
     <v-list>
-        <v-list-item-group v-for="(productName, idx) in name.split('  ')" :key="idx">
+        <v-list-item-group v-for="(productName, idx) in name" :key="idx">
             <v-list-item :key="index">
                 <v-card class="mx-1 my-1" :max-width="500">
                     <v-toolbar class="bg-transparent">
@@ -19,7 +18,7 @@
                                 <v-list>
                                     <v-list-item>
                                         <v-btn icon variant="plain">
-                                            <v-icon icon="fas fa-trash fa-2xs" @click="deleteGaleryDialog(productName)">
+                                            <v-icon icon="fas fa-trash fa-2xs" @click="deleteGaleryDialog(name)">
                                             </v-icon>
 
                                         </v-btn>
@@ -61,10 +60,9 @@
                                         <v-img v-if="image.product_name === productName"
                                             :src="'storage/products/' + image.name + '.' + image.extension"
                                             :lazy-src="'./storage/products/' + image.name + '.' + image.extension"
-                                            :alt="productName"
-                                            class="align-start" gradient="to bottom, rgba(0, 0, 0, .1), rgba(0,0,0,.5)"
-                                            :width="150" aspect-ratio="1" cover
-                                        >
+                                            :alt="productName" class="align-start"
+                                            gradient="to bottom, rgba(0, 0, 0, .1), rgba(0,0,0,.5)" :width="150"
+                                            aspect-ratio="1" cover>
                                             <v-expand-transition>
                                                 <div v-if="isHovering"
                                                     class="d-flex transition-fast-in-fast-out bg-grey-darken-4 v-card-img--reveal text-2"
@@ -119,7 +117,7 @@
                                     </v-card>
                                 </v-hover>
 
-                                
+
                             </v-col>
                         </v-row>
 
@@ -135,12 +133,21 @@
 export default {
     name: 'ProductImageList',
     props: ['images', 'name', 'index'],
-   
+    data: () => ({
+        preview: false,
+    }),
     methods: {
-        deleteGaleryDialog(image){
+        deleteGaleryDialog(image) {
             return this.$emit('delete-galery-dialog', image);
         },
-       
+        previewDialog(item) {
+            this.editedIndex = this.images.indexOf(item);
+            this.editedItem = Object.assign({}, item);
+            this.preview = true;
+        },
+        deleteItem(item) {
+            return this.$emit('delete-item', item);
+        }
     }
 }
 </script>

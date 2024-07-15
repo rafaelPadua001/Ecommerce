@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 //admin
 
 Route::get('/admin', function () {
@@ -80,22 +80,20 @@ Route::get('/admin', function () {
 Route::post('/loginAdmin', [LoginController::class, 'login'])->name('login');
 Route::post('/registerAdmin', [LoginController::class, 'register'])->name('admin.register');
 Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-Route::get('/users', function(){
+Route::get('/users', function () {
     $user = Auth::user();
-    try{
+    try {
         return response()->json($user);
-    }
-    catch(Exception $e){
+    } catch (Exception $e) {
         return response()->json($e);
     }
-   
 });
 
 
 //Customer Routes
 Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
 Route::post('/customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
-Route::post('/login',[LoginController::class, 'login'])->name('cutomer.login');
+Route::post('/login', [LoginController::class, 'login'])->name('cutomer.login');
 Route::post('/registerCustomer', [CustomerController::class, 'store'])->name('store');
 Route::post('/logoutCustomer', [CustomerController::class, 'logout'])->name('logout');
 Route::delete('/customer/delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
@@ -117,8 +115,8 @@ Route::get('/categories/show', [CategoriesController::class, 'show'])->name('cat
 Route::get('/categories/{id}', [CategoriesController::class, 'getCategory'])->name('categories.getCategory');
 Route::post('/categories/store/{id}', [CategoriesController::class, 'create'])->name('create');
 //Cart Routes
-Route::get('/carts',[CartController::class, 'index'])->name('carts.get');
-Route::post('/carts/add',[CartController::class, 'addItem'])->name('carts.get');
+Route::get('/carts', [CartController::class, 'index'])->name('carts.get');
+Route::post('/carts/add', [CartController::class, 'addItem'])->name('carts.get');
 
 Route::get('/cartItem/checkout/{id}', [CartItemController::class, 'checkout'])->name('cartsItem.checkout');
 Route::get('/cartItem/buy', [CartItemController::class, 'buy'])->name('cartsItem.buy');
@@ -146,7 +144,7 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/show', [ProductController::class, 'show'])->name('products.show');
 Route::get('/products/category/{id}', [ProductController::class, 'getCategory'])->name('product.category');
 Route::get('/products/subcategory/{id}', [ProductController::class, 'getSubcategory'])->name('product.subcategory');
-Route::post('/products/like/{id}', [ProductController::class , 'like'])->name('product.like');
+Route::post('/products/like/{id}', [ProductController::class, 'like'])->name('product.like');
 Route::delete('/products/dislike/{id}', [ProductController::class, 'dislike'])->name('product.dislike');
 Route::post('/products/filter', [ProductController::class, 'filter'])->name('Product.filter');
 
@@ -165,6 +163,8 @@ Route::get('/seo', [ProductSeoController::class, 'index'])->name('seo.index')->m
 Route::get('/stocks', [ProductStockController::class, 'index'])->name('stock.index')->middleware('auth');
 
 Route::get('/images', [ProductImagesController::class, 'index'])->name('images.index')->middleware('auth');
+Route::delete('/images/delete/{id}', [ProductImagesController::class, 'destroy'])->name('image.destroy');
+Route::delete('/images/deleteAll/{id}', [ProductImagesController::class, 'destroyAll'])->name('allImages.destroy');
 
 //Videos routes
 Route::get('/videos', [ProductVideoController::class, 'index'])->name('videos.index')->middleware('auth');
@@ -177,7 +177,7 @@ Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
 Route::get('/allOrders', [OrderController::class, 'allOrders'])->name('allOrders')->middleware('auth');
 Route::get('/orders/getOrder/{id}', [OrderController::class, 'getOrder'])->name('getOrder')->middleware('auth');
 Route::get('/orders/getTransaction/{id}', [OrderController::class, 'getTransaction'])->name('getTransaction')->middleware('auth');
-Route::put('/orders/refundTransaction/{id}',[OrderController::class, 'refundTransaction'])->name('refund')->middleware('auth');
+Route::put('/orders/refundTransaction/{id}', [OrderController::class, 'refundTransaction'])->name('refund')->middleware('auth');
 //Route::post('/orders/generatePdf/{id}', [OrderController::class, 'generatePdf'])->name('generatePdf')->middleware('auth');
 Route::post('/orders/alterStatus/{id}', [OrderController::class, 'alterStatus'])->name('order.alterStatus')->middleware('auth');
 //Coupons Routes
@@ -187,7 +187,7 @@ Route::get('/coupons/getWelcome', [CouponsController::class, 'getInitDiscount'])
 Route::post('/coupons/getCoupon/{id}', [CouponCustomerController::class, 'getCoupon'])->name('coupon.getCoupon');
 Route::post('/coupons/update/{id}', [CouponsController::class, 'update'])->name('coupon.update')->middleware('auth');
 Route::delete('/coupons/delete/{id}', [CouponsController::class, 'destroy'])->name('coupon.destroy')->middleware('auth');
- 
+
 //Route Coupons to Customer
 Route::get('/couponsCustomer', [CouponCustomerController::class, 'getAll'])->name('coupon.all');
 Route::delete('/couponsCustomer/delete/{id}', [CouponCustomerController::class, 'remove'])->name('coupon.remove');

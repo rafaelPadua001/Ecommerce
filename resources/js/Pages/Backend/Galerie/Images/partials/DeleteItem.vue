@@ -1,12 +1,13 @@
 <template>
-    <v-dialog v-model="deleteGalery" max-width="500px">
-        <v-card>
-            <v-card-title class="text-h5">Are you sure you want to
+    <v-dialog>
+        <v-card class="mx-auto">
+            <v-card-title class="text-h5">
+                Are you sure you want to
                 delete this
-                item?
+                item ?
             </v-card-title>
             <v-card-text>
-                {{ this.editedItem }}
+                {{ this.editedItem.name }}
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
@@ -19,16 +20,16 @@
 </template>
 
 <script>
-export default {
-    name: 'DeleteGalery',
-    props: ['editedItem'],
-    methods: {
-        deleteItemConfirm() {
-            return this.$emit('deleteConfirm');
-        },
-        closeDelete() {
-            return this.$emit('closeDelete');
+    export default {
+        name: 'DelteItem',
+        props: ['editedItem'],
+        methods: {
+            closeDelete(){
+                return this.$emit('close-delete');
+            },
+            deleteItemConfirm(){
+                return this.$emit('delete-item-confirm');
+            }
         }
     }
-}
 </script>
