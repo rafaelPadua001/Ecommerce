@@ -100,10 +100,6 @@ Route::delete('/seo_product/delete/{id}', [ProductSeoController::class, 'destroy
 //Stocks route
 Route::post('/stocks/update/{id}', [ProductStockController::class, 'update'])->name('seo_product.update');
 
-//Images route
-Route::delete('/images/delete/{id}', [ProductImagesController::class, 'destroy'])->name('image.destroy');
-Route::delete('/images/deleteAll/{id}',[ProductImagesController::class, 'destroyAll'])->name('allImages.destroy');
-
 //Video route
 Route::delete('/videos/delete/{id}', [ProductVideoController::class, 'destroy'])->name('videos.destroy');
 

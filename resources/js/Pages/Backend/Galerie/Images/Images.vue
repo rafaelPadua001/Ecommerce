@@ -17,8 +17,8 @@
                                 :name="name"
                                 :index="index"
                                 :images="this.images"
-                               
                                 @delete-galery-dialog="deleteGaleryDialog"
+                                @delete-item="deleteItem"
                             />
 
                         </div>
@@ -29,9 +29,6 @@
                                 </v-card-text>
                             </v-card>
                         </div>
-
-
-                   
                 </v-col>
 
                 <v-infinite-scroll :color="'primary'" ref="infinite" :height="100" :width="1800" @load="load"
@@ -48,6 +45,13 @@
                     @deleteConfirm="deleteGaleryConfirm"
                     @closeDelete="closeGaleryDialog"      
                 />
+
+                <DeleteItem 
+                    v-model="dialogDelete"
+                    :editedItem="this.editedItem"
+                    @closeDelete="closeDelete"
+                    @delete-item-confirm="deleteItemConfirm"
+                />
             </v-row>
         </v-sheet>
     </v-container>
@@ -60,12 +64,13 @@ import axios from 'axios';
 import Dashboard from '../../Auth/Dashboard.vue';
 import ProductImageList from './partials/productImageList.vue';
 import DeleteGalery from './partials/DeleteGalery.vue';
-import { toHandlers } from 'vue';
+import DeleteItem from './partials/DeleteItem.vue';
 export default {
     components: {
         Dashboard,
         ProductImageList,
-        DeleteGalery
+        DeleteGalery,
+        DeleteItem,
     },
     data: () => ({
         products: [],
@@ -75,7 +80,7 @@ export default {
         editedItem: {},
         defaultItem: {},
         deleteGalery: false,
-        preview: false,
+       
     }),
     watch: {
         dialogDelete(val) {
@@ -84,11 +89,17 @@ export default {
     },
     computed: {
         uniqueNameProduct() {
-            const uniqueNames = [...new Set(this.images.map(
-                item => item.product_name,
-                productId => item.product_id
+            const uniqueItems = [... new Set(this.images.map(
+                item => `${item.product_name}:${item.product_id}`
             ))];
-            return uniqueNames.map(name => name.trim(), productId => productId);
+            return uniqueItems.map(item => {
+                const [productName, productId] = item.split(':');
+
+                return {
+                    product_name: productName.trim(),
+                    product_id: productId
+                };
+            });
         }
     },
     methods: {
@@ -102,32 +113,23 @@ export default {
                     alert('Error :' + response);
                 });
         },
-        getProducts() {
-            axios.get('/products/show')
-                .then((response) => {
-                    return this.products = response.data;
-                })
-                .catch((response) => {
-                    return alert('Error:' + response);
-                });
-        },
         deleteGaleryDialog(image) {
-            // this.editedIndex = this.images.indexOf(image);
+            this.editedIndex = this.images.indexOf(image);
             this.editedItem = image;
             this.deleteGalery = true;
         },
         deleteGaleryConfirm() {
-            alert('delete Galery');
-            // const token = document.head.querySelector('meta[name="csrf-token"]');
-            // axios.delete(`/api/images/deleteAll/${this.editedItem.product_id}`)
-            //     .then((response) => {
-            //         this.images.splice(this.editedItem);
-            //         return true;
-            //     })
-            //     .catch((response) => {
-            //         alert('Error:' + response);
-            //     });
-            // this.closeGaleryDialog();
+            const token = document.head.querySelector('meta[name="csrf-token"]');
+            axios.delete(`/images/deleteAll/${this.editedItem.product_id}`)
+                .then((response) => {
+                    this.images.splice(this.editedItem);
+                    return true;
+                })
+                .catch((response) => {
+                    alert('Error:' + response);
+                    return false;
+                });
+            this.closeGaleryDialog();
 
         },
         closeGaleryDialog() {
@@ -137,19 +139,15 @@ export default {
                 this.editedIndex = -1;
             });
         },
-        previewDialog(item) {
-            this.editedIndex = this.images.indexOf(item);
-            this.editedItem = Object.assign({}, item);
-            this.preview = true;
-        },
         deleteItem(item) {
             this.editedIndex = this.images.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialogDelete = true
         },
         deleteItemConfirm() {
-            axios.delete(`/api/images/delete/${this.editedItem.id}`)
+            axios.delete(`/images/delete/${this.editedItem.id}`)
                 .then((response) => {
+                    this.images.splice(this.editedItem);
                     return true;
                 })
                 .catch((response) => {
@@ -169,7 +167,6 @@ export default {
         },
     },
     created() {
-        // this.getProducts();
         this.getImages();
     }
 }
