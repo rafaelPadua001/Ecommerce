@@ -1,19 +1,32 @@
 {
     "compilerOptions": {
-        "allowJs": true,
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-        "jsx": "preserve",
-        "strict": true,
-        "isolatedModules": true,
-        "target": "ESNext",
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "noEmit": true,
-        "skipLibCheck": true,
-        "paths": {
-            "@/*": ["./resources/js/*"]
-        }
+      "target": "ESNext",                          // Alvo da compilação, usando a última versão do ECMAScript.
+      "module": "ESNext",                          // Usar o sistema de módulos ESNext.
+      "moduleResolution": "node",                  // Resolver módulos usando o padrão Node.js.
+      "jsx": "preserve",                           // Preservar JSX como está.
+      "strict": true,                              // Ativar todas as verificações de tipo estritas.
+      "isolatedModules": true,                     // Tratar cada arquivo como um módulo isolado.
+      "esModuleInterop": true,                     // Adicionar interop de módulos ES para CommonJS.
+      "forceConsistentCasingInFileNames": true,    // Forçar uso consistente de letras maiúsculas e minúsculas.
+      "noEmit": true,                              // Não emitir arquivos de saída.
+      "skipLibCheck": true,                        // Ignorar verificação de tipos em arquivos de declaração.
+      "allowJs": true,                             // Permitir a compilação de arquivos JavaScript.
+      "paths": {
+        "@/*": ["./resources/js/*"]                // Configurar alias para caminhos.
+      },
+      "lib": ["esnext", "dom"],                    // Incluir bibliotecas padrão.
+      "types": ["vite/client"],                    // Incluir tipos específicos do cliente Vite.
+      "useDefineForClassFields": true              // Usar `define` para campos de classe.
     },
-    "include": ["resources/js/**/*.ts", "resources/js/**/*.d.ts", "resources/js/**/*.vue", "resources/js/Pages/Frontend/Checkout/Checkout.vue"]
-}
+    "include": [
+      "resources/js/**/*.ts",                      // Incluir arquivos TypeScript.
+      "resources/js/**/*.d.ts",                    // Incluir arquivos de definição TypeScript.
+      "resources/js/**/*.vue",                     // Incluir arquivos Vue.
+      "resources/js/Pages/Frontend/Checkout/Checkout.vue" // Incluir especificamente o arquivo Checkout.vue.
+    ],
+    "exclude": [
+      "node_modules",                              // Excluir a pasta node_modules.
+      "dist"                                       // Excluir a pasta de saída.
+    ]
+  }
+  
