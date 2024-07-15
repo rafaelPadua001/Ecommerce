@@ -47,6 +47,9 @@ export default {
     methods: {
         edit(coupon){
             return this.$emit('edit-coupon', coupon);
+        },
+        remove(coupon){
+            return this.$emit('remove-coupon', coupon);
         }
     }
 }

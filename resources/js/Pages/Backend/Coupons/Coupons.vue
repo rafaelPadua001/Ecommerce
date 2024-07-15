@@ -20,7 +20,8 @@
                 <v-card-text>
                     <CouponList 
                         :coupons="this.coupons"
-                        @edit-coupon="edit" />
+                        @edit-coupon="edit" 
+                        @remove-coupon="remove"/>
                 </v-card-text>
             </v-card>
         </v-col>
