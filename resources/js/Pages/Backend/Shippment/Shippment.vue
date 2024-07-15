@@ -1,16 +1,16 @@
 <template>
-    <div>
-        <v-row fluid>
-            <v-col>
-                <Dashboard></Dashboard>
-            </v-col>
-        </v-row>
-    </div>
     <v-container>
-        <v-row no-gutters>
-            <v-col class="d-flex justify-center d-flex">
-                <v-sheet>
-                    <v-data-table :headers="headers" :items="shippments" :sort-by="[{ key: 'first_name', order: 'asc' }]">
+        <v-sheet class="py-2 px-2">
+            <v-row fluid>
+                <v-col>
+                    <Dashboard></Dashboard>
+                </v-col>
+            </v-row>
+
+            <v-row no-gutters>
+                <v-col class="d-flex justify-center d-flex">
+                    <v-data-table :headers="headers" :items="shippments"
+                        :sort-by="[{ key: 'first_name', order: 'asc' }]">
                         <template v-slot:item.actions="{ item }">
                             <v-btn-group>
                                 <v-btn class="mr-2" icon size="x-small" variant="plain">
@@ -24,16 +24,16 @@
 
                                 </v-btn>
                                 <v-btn>
-                                    <v-icon size="x-small" class="me-2" @click="generatePrint(item)" icon="fas fa-ticket"
-                                        color="primary"></v-icon>
+                                    <v-icon size="x-small" class="me-2" @click="generatePrint(item)"
+                                        icon="fas fa-ticket" color="primary"></v-icon>
                                 </v-btn>
                                 <v-btn>
                                     <v-icon size="x-small" class="me-2" @click="getPrint(item)" icon="fas fa-print"
                                         color="primary"></v-icon>
                                 </v-btn>
                                 <v-btn>
-                                    <v-icon size="x-small" class="me-2" color="primary" @click="openTrackingDialog(item)"
-                                        icon="fas fa-truck-fast"></v-icon>
+                                    <v-icon size="x-small" class="me-2" color="primary"
+                                        @click="openTrackingDialog(item)" icon="fas fa-truck-fast"></v-icon>
 
                                 </v-btn>
                                 <v-btn class="mr-2" icon @click="deleteItem(item)" size="x-small" variant="plain">
@@ -57,13 +57,9 @@
                             </v-btn>
                         </template>
                     </v-data-table>
+                </v-col>
+            </v-row>
 
-
-                </v-sheet>
-            </v-col>
-        </v-row>
-
-        <div>
             <v-dialog v-model="updateDialog" max-width="500px">
                 <v-card>
                     <v-card-title>Update Form</v-card-title>
@@ -89,12 +85,14 @@
 
                                         <v-text-field v-model="editedItem.quantity" label="Quantity" :placeholder="1">
                                             <template v-slot:append>
-                                                <v-icon class="grey-lighten-4" size="x-small" @click="quantityIncrement">
+                                                <v-icon class="grey-lighten-4" size="x-small"
+                                                    @click="quantityIncrement">
                                                     fas fa-plus fa-2xs
                                                 </v-icon>
                                             </template>
                                             <template v-slot:prepend>
-                                                <v-icon class="grey-lighten-4" size="x-small" @click="quantityDecrement">
+                                                <v-icon class="grey-lighten-4" size="x-small"
+                                                    @click="quantityDecrement">
                                                     fas fa-minus
                                                 </v-icon>
                                             </template>
@@ -187,8 +185,9 @@
 
 
             </v-dialog>
-        </div>
+        </v-sheet>
     </v-container>
+  
 </template>
 
 <script>
