@@ -18,10 +18,7 @@
                     </v-toolbar>
                 </v-card-title>
                 <v-card-text>
-                    <CouponList 
-                        :coupons="this.coupons"
-                        @edit-coupon="edit" 
-                        @remove-coupon="remove"/>
+                    <CouponList :coupons="this.coupons" @edit-coupon="edit" @remove-coupon="remove" />
                 </v-card-text>
             </v-card>
         </v-col>
@@ -30,7 +27,7 @@
         <CreateCoupon v-model="createDialog" :createDialog="createDialog" @create="create"
             @close-dialog="closeDialog" />
 
-        <UpdateCoupon v-model="editDialog"  :editCoupon="editCoupon" @update-coupon="updateCoupon"
+        <UpdateCoupon v-model="editDialog" :editCoupon="editCoupon" @update-coupon="updateCoupon"
             @close-dialog="closeUpdateDialog" />
 
         <v-dialog v-model="removeDialog" width="500">
@@ -91,7 +88,7 @@ export default {
             return this.coupons.push(response.data);
         },
         edit(coupon) {
-            
+
             this.editCoupon = Object.assign({}, coupon);
             return this.editDialog = true;
         },

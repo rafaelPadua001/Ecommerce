@@ -126,8 +126,8 @@ export default {
             const data = {
                 code: editCoupon.code,
                 discount_percentage: editCoupon.discount_percentage,
-                init_date: editCoupon.init_date ? editCoupon.init_date : null,
-                end_date: this.editCoupon.end_date ? this.editCoupon.end_date : null,
+                init_date: editCoupon.init_date.toISOString().split('T')[0] ?? null,
+                end_date: this.editCoupon.end_date.toISOString().split('T')[0] ??  null,
                 init_hour: this.editCoupon.init_hour,
                 end_hour: this.editCoupon.end_hour,
                 is_displayed: this.editCoupon.is_displayed
@@ -142,7 +142,7 @@ export default {
             )
                 .then((response) => {
                     if (response) {
-                        this.$emit('close-dialog');
+                     //  this.$emit('close-dialog');
                         return this.$emit('update-coupon', response);
                     }
 
