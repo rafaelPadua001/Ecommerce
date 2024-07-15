@@ -1,8 +1,7 @@
 <template>
     <v-row>
         <v-col class="d-flex justify-center flex-column">
-            <v-sheet>
-                <v-card>
+            <v-card>
                     <v-card-title>
                         <v-toolbar>
                             New Item
@@ -16,7 +15,7 @@
                         </v-toolbar>
                     </v-card-title>
                     <v-card-text>
-                        <v-sheet>
+                       
                             <v-row>
                                 <v-col cols="12" md="6" sm="3">
                                     <v-text-field v-model="name" label="Enterprise name" :rules="nameRules"
@@ -110,10 +109,10 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12" md="6" sm="3">
-                                    <v-switch v-model="activated" label="Activated ?"></v-switch>
+                                    <v-switch v-model="activated" label="Activated ?" color="success"></v-switch>
                                 </v-col>
                             </v-row>
-                        </v-sheet>
+                       
 
                     </v-card-text>
 
@@ -124,7 +123,7 @@
                         </v-btn-group>
                     </v-card-actions>
                 </v-card>
-            </v-sheet>
+            
 
         </v-col>
     </v-row>
