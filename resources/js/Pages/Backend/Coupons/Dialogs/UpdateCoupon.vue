@@ -31,7 +31,12 @@
             <v-row fluid>
                 <v-col cols="12" sm="4">
                     <label>Init Date:</label>
-                    <v-date-picker v-model="editCoupon.init_date" show-adjacent-months></v-date-picker>
+                    
+                    <v-date-picker 
+                        v-model="editCoupon.init_date"
+                        show-adjacent-months 
+                        elevation="0"
+                        ></v-date-picker>
                     {{ editCoupon.init_date }}
                 </v-col>
                 <v-col cols="12" sm="4">
@@ -99,6 +104,18 @@ export default {
             }
         }
     },
+    watch: {
+        'editCoupon.init_date'(newDate) {
+            if (typeof newDate === 'string') {
+                this.editCoupon.init_date = new Date(newDate);
+            }
+        },
+        'editCoupon.end_date'(newDate) {
+            if (typeof newDate === 'string') {
+                this.editCoupon.end_date = new Date(newDate);
+            }
+        }
+    },
     methods: {
         close() {
             this.$emit('close-dialog');
@@ -139,8 +156,12 @@ export default {
             this.$nextTick(() => {
                 this.$refs.displaySwitch.label = `Display on main page: ${this.isDisplayed.toString()}`
             })
-        }
+        },
         
-    }
+        
+        
+        
+    },
+   
 }
 </script>
