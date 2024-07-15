@@ -297,6 +297,7 @@ export default {
         },
         openRemoveOrderDialog(item) {
             this.removeOrderDialog = true;
+            this.editIndex = this.orders.indexOf(item);
             this.order = Object.assign({}, item);
             //return this.removeOrder(item);
         },
@@ -304,7 +305,7 @@ export default {
             axios.post(`/api/melhorenvio/delete/${this.order.id}`)
                 .then((response) => {
                     this.closeOrderDialog();
-                    return this.orders.splice(item, 1);
+                    return this.orders.splice(this.editIndex, 1);
                 })
                 .catch((response) => {
                     alert('Error :' + response);
