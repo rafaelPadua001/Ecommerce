@@ -35,7 +35,7 @@ class DeliveryController extends Controller
         ];
         $delivery_status = $this->deliveryService->alterStatus($data);
 
-        return $delivery_status;
+        return response()->json($delivery_status);
     }
     public function calculateDelivery(Request $request){
         try{

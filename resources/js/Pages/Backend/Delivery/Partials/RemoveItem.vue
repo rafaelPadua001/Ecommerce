@@ -1,7 +1,6 @@
 <template>
     <v-row>
         <v-col class="d-flex justify-center flex-column">
-            <v-sheet>
                 <v-card class="mx-auto">
                     <v-card-title>
                         <v-toolbar class="bg-transparent">
@@ -27,18 +26,18 @@
 
                 <v-card-actions>
                     <v-btn-group>
-                        <v-btn class="mb-2 " color="error" icon variant="plain" size="sm" @click="remove">
+                        <v-btn color="error"  variant="plain" size="x-small" @click="remove">
                             <v-icon icon="fas fa-trash"></v-icon>
                             Remove
                         </v-btn>
-                        <v-btn class="mr-2" icon variant="outlined" size="sm" @click="close">
+                        <v-btn variant="plain" size="x-small" @click="close">
                             <v-icon icon="fas fa-close"></v-icon>
                             cancel
                         </v-btn>
                     </v-btn-group>
                 </v-card-actions>
             </v-card>
-            </v-sheet>
+            
         </v-col>
     </v-row>
 </template>

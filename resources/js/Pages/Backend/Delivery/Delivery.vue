@@ -1,14 +1,13 @@
 <template>
     <v-container>
-        <v-sheet class="px-2 py-2">
-            <v-row fluid>
+       <v-row no-gutters>
                 <v-col class="d-flex justify-center flex-column" cols="auto">
                     <Dashboard />
                 </v-col>
-            </v-row>
-             <v-row justify="center" no-gutters>
+        </v-row>
+        <v-row justify="center" no-gutters>
                 <v-col class="d-flex justify-center flex-column" cols="auto">
-                    <v-card class="mx-auto">
+                    <v-card class="mx-auto" elevation="0">
                         <v-card-title>
                             <v-toolbar class="bg-transparent">
                                 <template v-slot:prepend>
@@ -28,82 +27,79 @@
                         </v-card-title>
 
                         <v-card-text>
-                            <v-row v-if="Object.keys(deliveries).length >= 1" no-gutters>
+                            <v-row v-if="Object.keys(deliveries).length >= 1" fluid>
                                 <v-col v-for="(delivery, index) in deliveries" :key="index"
                                     class="d-flex justify-center flex-column" cols="auto" md="8" sm="4">
-                                    <v-sheet class="px-1 pa-1">
-                                        <v-card class="mx-auto" :width="200">
-                                            <v-toolbar class="bg-transparent">
-                                                <v-switch 
-                                                        v-model="delivery.activated"
-                                                        label="activated ?"
-                                                        :value="activated[index]"
-                                                        :activator="'#switch-activator-' + index"
-                                                        @change="alterStatus(delivery)"
-                                                        color="success"
-                                                    >
-                                                </v-switch>
-                                               
-                                               
-                                                <template v-slot:append>
-                                                    <v-btn-group :id="'switch-activator-' + index">
-                                                   
-                                                   <v-btn icon variant="plain" :id="'menu-activator-' + index">
-                                                   <v-icon icon="fas fa-ellipsis-vertical"></v-icon>
-                                                   </v-btn>
-
-                                                   
-                                               </v-btn-group>
-                                                </template>
-                                               
-                                                <v-menu :activator="'#menu-activator-' + index">
-                                                    <v-list>
-                                                        <v-list-item-group></v-list-item-group>
-                                                        <v-list-item>
-                                                            <v-list-item-title>
-                                                                <v-btn icon variant="plain" @click="remove(delivery)">
-                                                                    <v-icon icon="fas fa-trash">
-
-                                                                    </v-icon>
-
-                                                                </v-btn>
-
-                                                            </v-list-item-title>
-                                                        </v-list-item>
-                                                    </v-list>
-                                                </v-menu>
-                                            </v-toolbar>
-
-                                            <v-divider></v-divider>
-                                            <v-card-text>
-                                                <v-img :src="`./storage/delivery/${delivery.thumbnail}`"
-                                                    :lazy-src="`./storage/delivery/${delivery.thumbnail}`" cover
-                                                    aspect-ratio="4/9">
-
-                                                </v-img>
-
-                                            </v-card-text>
-                                            <v-card-text>
-                                                <v-row>
-                                                    <v-col>
-                                                        {{ delivery.name }}
-                                                    </v-col>
-                                                </v-row>
-                                                <v-row>
-                                                    <v-col>
-                                                        {{ delivery.url }}
-                                                    </v-col>
-                                                </v-row>
-                                                <v-row>
-                                                    <v-col>
-                                                        {{ delivery.created_at.split('T')[0] }}
-                                                    </v-col>
-                                                </v-row>
+                                    <v-card class="mx-auto" :width="400">
+                                        <v-toolbar class="bg-transparent">
+                                            <v-switch v-model="delivery.activated" label="activated ?"
+                                                :value="activated[index]" :activator="'#switch-activator-' + index"
+                                                @change="alterStatus(delivery)" color="success">
+                                            </v-switch>
 
 
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-sheet>
+                                            <template v-slot:append>
+                                                <v-btn-group :id="'switch-activator-' + index">
+
+                                                    <v-btn icon variant="plain" :id="'menu-activator-' + index">
+                                                        <v-icon icon="fas fa-ellipsis-vertical"></v-icon>
+                                                    </v-btn>
+
+
+                                                </v-btn-group>
+                                            </template>
+
+                                            <v-menu :activator="'#menu-activator-' + index">
+                                                <v-list>
+                                                    <v-list-item>
+                                                        <v-list-item-title>
+                                                            <v-btn icon variant="plain" @click="remove(delivery)">
+                                                                <v-icon icon="fas fa-trash">
+
+                                                                </v-icon>
+
+                                                            </v-btn>
+
+                                                        </v-list-item-title>
+                                                    </v-list-item>
+                                                </v-list>
+                                            </v-menu>
+                                        </v-toolbar>
+
+                                        <v-divider></v-divider>
+                                       
+                                        <v-card-text>
+                                            <v-row>
+                                                <v-col cols="auto">
+                                                    <v-img :width="100"
+                                                        :src="`./storage/delivery/${delivery.thumbnail}`"
+                                                        :lazy-src="`./storage/delivery/${delivery.thumbnail}`"
+                                                        :alt="delivery.thumbnail" cover aspect-ratio="4/9">
+
+                                                    </v-img>
+                                                </v-col>
+                                                <v-col cols="auto">
+                                                    <a :href="delivery.url">{{ delivery.name }}</a> 
+                                                </v-col>
+
+                                            </v-row>
+
+
+
+                                        </v-card-text>
+
+                                        <v-card-text>
+                                            <v-row>
+                                                <v-col>
+                                                    Created: {{ delivery.created_at.split('T')[0] }}
+                                                </v-col>
+                                                <v-col>
+                                                    updated: {{ delivery.updated_at.split('T')[0] }}
+                                                </v-col>
+                                            </v-row>
+                                        </v-card-text>
+                                    </v-card>
+
                                 </v-col>
                             </v-row>
 
@@ -119,7 +115,7 @@
                         </v-card-text>
                     </v-card>
 
-                    <div>
+                    <v-col>
                         <v-dialog v-model="createDialog" transition="dialog-bottom-slide" fullscreen>
                             <NewItem :createDialog="createDialog" @create="create" @close-dialog="closeDialog" />
                         </v-dialog>
@@ -127,10 +123,10 @@
                             <RemoveItem :removeDialog="removeDialog" :delivery="this.editedItem" @remove="removeItem"
                                 @close-dialog="closeRemoveDialog" />
                         </v-dialog>
-                    </div>
+                    </v-col>
                 </v-col>
             </v-row>
-        </v-sheet>
+ 
     </v-container>
 </template>
 
@@ -159,7 +155,10 @@ export default {
         getDelivery() {
             axios.get('/delivery')
                 .then((response) => {
-                    return this.deliveries = response.data;
+                    return this.deliveries = response.data.map(delivery => ({
+                        ...delivery,
+                        activated: delivery.activated === 1,
+                    }));
                 })
                 .catch((response) => {
                     return alert('Error: ' + response);
@@ -175,16 +174,24 @@ export default {
             this.createDialog = false;
         },
         alterStatus(item) {
-
             const data = {
-                status: item.activated,
+                status: item.activated ? 1 : 0,
             };
             axios.post(`/delivery/status/${item.id}`, data)
                 .then((response) => {
-                    return Object.assign(this.deliveries[this.editedIndex], response.data);
+                    const index = this.deliveries.findIndex(d => d.id === item.id);
+                    if (index !== -1) {
+                        return this.$set(this.deliveries, index, {
+                            ...this.deliveries[index],
+                            ...response.data,
+                            activated: response.data.activated === 1
+                        });
+                    }
+                    //   return Object.assign(this.deliveries[this.editedIndex], response.data);
                 })
                 .catch((response) => {
-                    return alert('Error:' + response);
+                    return console.log('Error:' + response);
+
                 });
         },
         remove(item) {

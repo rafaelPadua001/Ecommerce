@@ -59,7 +59,8 @@ class DeliveryService {
         $delivery_update = $this->delivery->findOrFail($data['id'])->update([
             'activated' => $data['status']
         ]);
-        return $delivery_update;
+        $delivery  = $this->delivery->findOrFail($data['id']);
+        return $delivery;
     }
     public function calculate(Request $request, $shippment_company){
         if($request->shippment === $shippment_company->name){
