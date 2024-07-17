@@ -112,7 +112,12 @@
 
             </v-dialog>
             <v-dialog v-model="deleteDialog" max-width="500px">
-                <v-card>
+                <DeleteDialog 
+                    :editedItem="this.editedItem"
+                    @delete-item-confirm="deleteItemConfirm"
+                    @close-delete-dialog="closeDeleteDialog"
+                />
+                <!-- <v-card>
                     <v-card-title>delete item</v-card-title>
 
                     <v-card-text>
@@ -132,7 +137,7 @@
                         </v-btn-group>
                     </v-card-actions>
 
-                </v-card>
+                </v-card> -->
 
 
             </v-dialog>
@@ -145,11 +150,13 @@
 import axios from 'axios';
 import Dashboard from '../Auth/Dashboard.vue';
 import UpdateDialog from './partials/UpdateDialog.vue';
+import DeleteDialog from './partials/DeleteDialog.vue';
 
 export default {
     components: {
         Dashboard,
         UpdateDialog,
+        DeleteDialog,
     },
     data: () => ({
         shippments: [],
@@ -362,6 +369,5 @@ export default {
         this.getShippments();
         this.initialize();
     }
-
 }
 </script>
