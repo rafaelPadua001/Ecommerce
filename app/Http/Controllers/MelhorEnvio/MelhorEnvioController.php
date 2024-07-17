@@ -127,12 +127,12 @@ class MelhorEnvioController extends Controller
                     'User-Agent' => 'rafael.f.p.faria@hotmail.com',
                 ],
             ]);
-            
+
             $orderShippment = json_decode($response->getBody()->getContents(), true);
             $mergedData = array_merge($orderShippment, $request->toArray());
 
             //$this->getOrder($order, $request);
-            
+
             return $mergedData;
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -174,7 +174,6 @@ class MelhorEnvioController extends Controller
 
     public function checkout(Request $request)
     {
-        //dd($request->order);
         try {
             $client = $this->getClient();
             $customer = Auth::guard('customer')->user();
@@ -209,7 +208,6 @@ class MelhorEnvioController extends Controller
     }
     public function generatePrint(Request $request)
     {
-
         try {
             $client = $this->getClient();
             $customer = Auth::guard('customer')->user();
@@ -225,20 +223,20 @@ class MelhorEnvioController extends Controller
 
             if ($response->getStatusCode() === 200) {
                 $responseData = json_decode($response->getBody()->getContents(), true);
-                // Verifique o conteúdo de $responseData
+                
                 return response()->json($responseData);
             } else {
                 return response()->json(['error' => 'Erro na requisição'], $response->getStatusCode());
             }
-            // echo $response->getBody();
+            
             $body = $response->getBody()->getContents();
 
-            // Convertemos a string JSON para um array associativo
+           
             $data = json_decode($body, true);
 
-            // Agora $data contém a resposta da API em formato de array
+           
             return response()->json($data);
-            //  return response()->json($response);
+            
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
