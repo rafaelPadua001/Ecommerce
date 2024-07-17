@@ -83,7 +83,7 @@ class ShippmentService
             $update = $shippment_update->update($request->all());
 
 
-            return $request->all();
+            return $shippment_update;
         } catch (Exception $e) {
             return  $e;
         }
