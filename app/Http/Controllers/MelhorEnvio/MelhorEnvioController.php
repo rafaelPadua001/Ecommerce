@@ -210,7 +210,7 @@ class MelhorEnvioController extends Controller
     {
         try {
             $client = $this->getClient();
-            $customer = Auth::guard('customer')->user();
+            $customer = $this->getCustomer();
             $response = $client->request('POST', 'https://sandbox.melhorenvio.com.br/api/v2/me/shipment/generate', [
                 'json' => ['orders' => [$request->order['delivery_id']]],
                 'headers' => [

@@ -8,16 +8,35 @@
             </v-row>
 
             <v-row no-gutters>
+                
                 <v-col class="d-flex justify-center d-flex">
-                    <v-data-table :headers="headers" :items="shippments"
+                   <v-data-table :headers="headers" :items="shippments"
                         :sort-by="[{ key: 'first_name', order: 'asc' }]">
+                        <template v-slot:top>
+                            <v-toolbar flat class="bg-transparent" >
+                                <v-toolbar-title>
+                                    Shippments
+                                </v-toolbar-title>
+                                <v-divider class="mx-2" inset vertical></v-divider>
+                                <v-spacer></v-spacer>
+                                <v-toolbar-text>
+                                    <v-btn class="mr-2" icon size="x-small" variant="plain">
+                                    <v-icon class="me-2" color="primary" @click="MelhorEnvioCart(item)"
+                                        icon="fas fa-cart-shopping"></v-icon>
+                                    </v-btn>
+                                </v-toolbar-text>
+                            </v-toolbar>
+
+                            
+                        </template>
+                        
                         <template v-slot:item.actions="{ item }">
                             <v-btn-group>
-                                <v-btn class="mr-2" icon size="x-small" variant="plain">
+                                <!-- <v-btn class="mr-2" icon size="x-small" variant="plain">
                                     <v-icon class="me-2" color="primary" @click="MelhorEnvioCart(item)"
                                         icon="fas fa-eye"></v-icon>
 
-                                </v-btn>
+                                </v-btn> -->
                                 <v-btn>
                                     <v-icon size="x-small" class="me-2" color="primary" @click="checkout(item)"
                                         icon="fas fa-basket-shopping"></v-icon>
@@ -59,6 +78,17 @@
                     </v-data-table>
                 </v-col>
             </v-row>
+            <v-col>
+                    <v-dialog 
+                        v-model="errorAlert"
+                        :text="'response'"
+                    >
+                        <v-card>
+                            {{ this.response }}
+                        </v-card>
+                      
+                    </v-dialog>
+                </v-col>
 
             <v-dialog v-model="updateDialog" max-width="500px">
                 <updateDialog :editedItem="this.editedItem" :editedIndex="this.editedIndex" @update-shippment="save"
@@ -200,10 +230,10 @@ export default {
                 title: 'quantity',
                 key: 'quantity'
             },
-            {
-                title: 'delivery_id',
-                key: 'delivery_id'
-            },
+            // {
+            //     title: 'delivery_id',
+            //     key: 'delivery_id'
+            // },
             {
                 title: 'actions',
                 key: 'actions',
@@ -215,6 +245,8 @@ export default {
         editedIndex: -1,
         editedItem: [],
         defaultItem: [],
+        errorAlert: false,
+        response: false,
     }),
     computed: {
         formTitle() {
@@ -280,19 +312,23 @@ export default {
             });
         },
         MelhorEnvioCart(item) {
-            return window.location.href = `https://sandbox.melhorenvio.com.br/carrinho`;
+           return window.location.href = `https://sandbox.melhorenvio.com.br/carrinho`;
         },
         checkout(item) {
             const data = { order: item.delivery_id };
             axios.post('api/melhorenvio/checkout', data)
                 .then((response) => {
                     if (response.data.error) {
-                        alert(response.data.error);
+                      //  alert(response.data.error);
+                        this.errorAlert = true;
+                        this.response = response.data.error;
                     }
+                   
                     console.log(response.data);
                 })
                 .catch((response) => {
-                    console.log(response.error)
+                   // console.log(response.error);
+                    this.errorAlert = true;
                     return alert('Error :', response.error);
                 });
         },
